@@ -1,4 +1,10 @@
 
+# Prerequisites
+
+* bash
+* GNU Make 3.82
+* OpenJDK Runtime Environment (build 13.0.2+8)
+* javac 13.0.2
 
 # Setup 
 ```
@@ -17,7 +23,7 @@ The **$PSS_HOME/src/pssgen.jar** should generated.
 # Run Example
 ```
 $ cd $PSS_HOME/samples
-$ source run.bash
+$ make
 ```
 
 You should see the following logs.
