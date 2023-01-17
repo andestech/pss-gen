@@ -1,0 +1,129 @@
+component pss_top {
+
+	action root_a {
+		activity {
+			do vericore::v5_util_a;
+			do entry_a;
+			do main_a;
+			do vericore::exit_a;
+		}
+	}
+
+	action main_a {
+		rand int	icount;
+		li_a		i0, i1, i2, i3;
+		int		xlen;
+
+		constraint icount in [2, 3, 4];
+
+		exec body ASM  =
+		""".text
+		main:""";
+
+		exec pre_solve {
+			xlen = 64;
+		}
+
+		activity {
+			// action traversal
+			i0;
+
+			// action traversal with inline constraint
+			i1 with {imm == 1;};
+
+			// if else
+			if (icount < 3) {
+				i2 with {imm == 2;};
+			}
+			else {
+				i2 with {imm == 2;};
+				i3 with {imm == 3;};
+			}
+
+			// repeat
+			repeat (3) {
+				do add_a;
+				do sub_a;
+			}
+
+			// schedule
+			do init_a0_a;
+			schedule {
+				do lb_a;
+				do lh_a;
+				do lw_a;
+				do ld_a;
+			}
+
+			// select
+			repeat (10) {
+				select {
+					             [10]: do lb_a;	// weight 10
+						     [20]: do lh_a;	// weight 20
+				                     [30]: do lw_a;	// weight 30
+					(xlen == 64) [40]: do ld_a;	// weight 40
+				}
+			}
+		}
+	}
+
+	action add_a {
+		rand int rs1, rs2, rd;
+
+		constraint rs1 in [1..31];
+		constraint rs2 in [1..31];
+		constraint rd in [1..31];
+
+		exec body ASM  =
+		"""	add	x{{rd}}, x{{rs1}}, x{{rs2}}""";
+	}
+	action sub_a {
+		rand int rs1, rs2, rd;
+
+		constraint rs1 in [1..31];
+		constraint rs2 in [1..31];
+		constraint rd in [1..31];
+
+		exec body ASM  =
+		"""	sub	x{{rd}}, x{{rs1}}, x{{rs2}}""";
+	}
+	action li_a {
+		rand string rd;
+		rand int imm;
+
+		constraint rd in ["t0", "t1"];
+
+		exec body ASM  =
+		"""	li	{{rd}}, {{imm}}""";
+	}
+
+	action entry_a {
+		exec body ASM  =
+		""".option norelax
+		.include "entry.s"
+		""";
+	}
+
+	action init_a0_a {
+		exec body ASM =
+		"""	li	a0, 0	""";
+	}
+
+	action lb_a {
+		exec body ASM =
+		"""	lb	t0, 0(a0)	""";
+	}
+	action lh_a {
+		exec body ASM =
+		"""	lh	t0, 0(a0)	""";
+	}
+	action lw_a {
+		exec body ASM =
+		"""	lw	t0, 0(a0)	""";
+	}
+	action ld_a {
+		exec body ASM =
+		"""	ld	t0, 0(a0)	""";
+	}
+}
+

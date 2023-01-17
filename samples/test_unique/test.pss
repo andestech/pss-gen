@@ -1,0 +1,14 @@
+component pss_top {
+	action root_a {
+		rand bit[1] a[2];
+
+        constraint {
+            a[0] == 0;
+            unique {a[0], a[1]};
+        }
+
+		exec body ASM = """a[0]={{a[0]}}, a[1]={{a[1]}}""";
+	}
+
+}
+

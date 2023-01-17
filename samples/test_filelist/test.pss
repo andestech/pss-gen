@@ -1,0 +1,12 @@
+component pss_top {
+	action root_a {
+		msg::send_a send;
+		msg::display_a disp;
+		activity {
+			send;
+			disp;
+
+			bind send.msg disp.msg;
+		}
+	}
+}

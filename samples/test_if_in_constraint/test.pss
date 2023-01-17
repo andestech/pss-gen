@@ -1,0 +1,19 @@
+component pss_top {
+
+	action root_a {
+		rand string instn;
+		rand int lmul;
+
+        constraint instn in ["vadd_vv", "vsub_vv", "vnsrl_wv", "vnsrl_wv"];
+
+		constraint {
+			if (instn in ["vnsrl_wv", "vnsrl_wv"]) lmul == 4;
+			else lmul == 8;
+		}
+		
+        exec body ASM =
+		"""instn={{instn}}, lmul={{lmul}}""";
+
+	}
+}
+

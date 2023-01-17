@@ -1,0 +1,19 @@
+component pss_top {
+	buffer msg_buf {
+		rand string s;
+	}
+	action display_a {
+		input	msg_buf msg;
+		exec body SV = """$display("{{msg.s}}");""";
+	}
+	action send_a {
+		output msg_buf msg;
+		exec body SV = """$send("{{msg.s}}");""";
+	}
+	action root_a {
+		activity {
+			do display_a with {msg.s == "Hello ";};
+			do display_a with {msg.s == "World ";};
+		}
+	}
+}

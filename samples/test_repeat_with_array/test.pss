@@ -1,0 +1,27 @@
+component pss_top {
+
+    action bit_a {
+        rand bit [2:0] bit_val;
+        
+        exec body ASM  =
+        """bit_val = {{bit_val}}
+        """;
+    }
+    action root_a {
+        rand bit [2:0] bit_arr[8];
+
+        constraint {
+            bit_arr[0] == 0;
+            bit_arr[1] == 1;
+            bit_arr[2] == 2;
+            bit_arr[3] == 3;
+        }
+
+        activity {
+            repeat (i : 4) {
+                do bit_a with {bit_val == bit_arr[i];};
+            }
+        }
+    }
+}
+

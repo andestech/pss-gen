@@ -1,0 +1,14 @@
+component msg {
+	buffer msg_buf {
+		rand string s;
+	}
+	action display_a {
+		input	msg_buf msg;
+        constraint msg.s == "Hello";
+		exec body SV = """disp={{msg.s}}""";
+	}
+	action send_a {
+		output msg_buf msg;
+		exec body SV = """send={{msg.s}}""";
+	}
+}

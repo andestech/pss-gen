@@ -1,0 +1,31 @@
+
+component sub_c {
+	int	v0;
+	int	v1;
+	int	v2;
+
+	exec init_down {
+		v1 = v0 + 1;
+	}
+	exec init_up {
+		v2 = v1 + 1;
+	}
+}
+
+component pss_top {
+	sub_c comp1;
+
+	int v3;
+
+	exec init_down {
+		comp1.v0 = 0;
+	}
+	exec init_up {
+		v3 = comp1.v2 + 1;
+	}
+
+	action root_a {
+		exec body ASM = """v0={{comp1.v0}}, v1={{comp1.v1}}, v2={{comp1.v2}}, v3={{v3}}""";
+	}
+}
+

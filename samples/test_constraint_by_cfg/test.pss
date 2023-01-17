@@ -1,0 +1,22 @@
+component pss_top {
+
+	action root_a {
+		activity {
+			do main_a;
+		}
+	}
+
+	action main_a {
+        softconfig cfg;
+        rand bit [6] sew;
+		constraint {
+            if (cfg.elen == 64)      sew in [8,16,32,64];
+            else                     sew in [8,16,32];
+        }
+
+		exec body ASM  =
+		"""sew={{sew}}""";
+
+	}
+}
+

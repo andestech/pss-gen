@@ -1,0 +1,43 @@
+
+PSS_HOME=/home/users1/alexchen/bin/pss-gen
+
+ANTLR4_JAR_PATH = $(PSS_HOME)/antlr4/antlr-4.9.3-complete.jar
+PSSGEN_JAR_PATH = $(PSS_HOME)/src/pssgen.jar
+
+SRC_PATH = $(PSS_HOME)/src
+#CLASSPATH="$ANTLR4_JAR_PATH:$SRC_PATH:$CLASSPATH"
+
+ANTLR4 = java -jar $(ANTLR4_JAR_PATH)
+GRUN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) org.antlr.v4.gui.TestRig PSS model -gui -f
+
+JAVAC = javac -classpath $(SRC_PATH):$(ANTLR4_JAR_PATH)
+
+PSSGEN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
+
+
+jar:
+	$(ANTLR4) -no-listener -visitor PSS.g4;
+	$(JAVAC) PSS*.java
+	jar cf pssgen.jar *.class
+
+clean:
+	rm $(SRC_PATH)/*.class -f
+
+hello_world: jar
+	$(PSSGEN) hello_world.pss -o test.s -root pss_top::hello_world_a
+
+test: jar
+	$(PSSGEN) test.pss -o test.s -root pss_top::root_a -seed $$RANDOM
+
+test2: jar
+	$(PSSGEN) -f pss.f
+
+test3: jar
+	$(PSSGEN) test2.pss softconfig.pss -o test.s -root pss_top::root_a -seed $$RANDOM
+
+grun:
+	$(GRUN) test.pss
+
+	
+
+

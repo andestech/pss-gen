@@ -1,0 +1,33 @@
+component pss_top {
+
+        action string_a {
+		rand string str;
+		constraint str in ["a", "b", "c"];
+                exec body ASM  =
+                """str = {{str}}
+		""";
+	}
+        action int_a {
+		rand int int_val;
+		constraint int_val in [1..31];
+                exec body ASM  =
+                """int_val = {{int_val}}
+		""";
+	}
+        action bit_a {
+		rand bit [4:0] bit_val;
+		constraint bit_val in [1..31];
+                exec body ASM  =
+                """bit_val = {{bit_val}}
+		""";
+	}
+        action root_a {
+                activity {
+			do string_a with {str == "a";};
+			do int_a with {int_val == 5;};
+			do bit_a with {bit_val == 31;};
+                }
+        }
+
+}
+

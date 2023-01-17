@@ -1,0 +1,30 @@
+component pss_top {
+	action bit_a {
+		rand bit [4:0] bit_val;
+		constraint bit_val in [1..31];
+		exec body ASM  =
+		"""bit_val = {{bit_val}}
+		""";
+	}
+	action root_a {
+		activity {
+			do bit_a with {
+                                bit_val > 30;
+			};
+			do bit_a with {
+                                bit_val < 2;
+			};
+			do bit_a with {
+                                (bit_val > 23) && (bit_val < 25);
+			};
+			do bit_a with {
+                                (bit_val > 31) || (bit_val < 2);
+			};
+			do bit_a with {
+                                bit_val in [0, 1];
+			};
+		}
+	}
+
+}
+

@@ -1,0 +1,231 @@
+
+component vericore {
+	action v5_util_a {
+		int offset   = 8;
+		int offset_1 = 8;
+		int offset_2 = 16;
+		int offset_3 = 24;
+		int offset_4 = 32;
+
+		exec body ASM = """
+.ifdef CORE_UTIL_H
+.else #CORE_UTIL_H
+        .set CORE_UTIL_H, 1
+.ifdef NDS_ADDR_WIDTH_24
+        # note: SIM_CTL_BASE & INTRC_BASE are not defined in addr24 mode.
+        # these are just dummy addresses to avoid out of range memory reference
+        .set SIM_CTL_BASE, 0x00e80000
+        .set INTRC_BASE, 0x00f00000
+.else
+        .set SIM_CTL_BASE, 0xe0000000 + 0x80000
+        .set INTRC_BASE, 0xe4000000
+.endif
+
+.ifndef NDS_NHART
+        .set NDS_NHART, 1
+.endif
+        .set VPE_PASS, 0x01234568
+        .set VPE_FAIL, 0x01234569
+        .set VPE_SKIP, 0x01234571
+        .set VPE_FINISH, 0x01234567
+        .set VPE_MESSAGE_BEGIN, 0xdddd1111
+        .set VPE_MESSAGE_END, 0xddddeeee
+        
+        .set VPE_EVENT_0, 0xeeee0000
+        .set VPE_EVENT_1, 0xeeee0001
+        .set VPE_EVENT_2, 0xeeee0002
+        .set VPE_EVENT_3, 0xeeee0003
+        .set VPE_EVENT_4, 0xeeee0004
+        .set VPE_EVENT_5, 0xeeee0005
+        .set VPE_EVENT_6, 0xeeee0006
+        .set VPE_EVENT_7, 0xeeee0007    
+        .set VPE_EVENT_8, 0xeeee0008    
+        .set VPE_EVENT_9, 0xeeee0009
+        .set VPE_EVENT_a, 0xeeee000a
+        .set VPE_EVENT_b, 0xeeee000b
+        .set VPE_EVENT_c, 0xeeee000c
+        .set VPE_EVENT_d, 0xeeee000d
+        .set VPE_EVENT_e, 0xeeee000e
+        .set VPE_EVENT_f, 0xeeee000f
+
+        .set SID_ONLY_EXIT, 0x5d
+        .set SID_ONLY_ABORT, 0x5e
+
+.macro u_trap_push
+        addi    sp, sp, -{{offset_4}};
+        sd    t0, 0(sp)
+        sd    t1, {{offset_1}}(sp)
+        sd    ra, {{offset_2}}(sp)
+        sd    t2, {{offset_3}}(sp)
+.endm
+
+.macro u_trap_pop
+         ld    t0, 0(sp)
+         ld    t1, {{offset_1}}(sp)
+         ld    ra, {{offset_2}}(sp)
+         ld    t2, {{offset_3}}(sp)
+         addi    sp, sp, {{offset_4}}
+         csrrw   sp, uscratch, sp
+.endm
+
+.macro s_trap_push
+        csrrw   sp, sscratch, sp
+        addi    sp, sp, -{{offset_4}}
+        sd    t0, 0(sp)
+        sd    t1, {{offset_1}}(sp)
+        sd    ra, {{offset_2}}(sp)
+        sd    t2, {{offset_3}}(sp)
+.endm
+
+.macro s_trap_pop
+        ld    t0, 0(sp)
+        ld    t1, {{offset_1}}(sp)
+        ld    ra, {{offset_2}}(sp)
+        ld    t2, {{offset_3}}(sp)
+        addi    sp, sp, {{offset_4}}
+        csrrw   sp, sscratch, sp
+.endm
+
+.macro m_trap_push
+	# SP reg should backup under nested trap or interrupt
+        csrrw   sp, mscratch, sp
+        addi    sp, sp, -{{offset_4}}
+        sd    t0, 0(sp)
+        sd    t1, {{offset_1}}(sp)
+        sd    ra, {{offset_2}}(sp)
+        sd    t2, {{offset_3}}(sp)
+.endm
+        
+.macro m_trap_pop
+        ld      t0, 0(sp)
+        ld      t1, {{offset_1}}(sp)
+        ld      ra, {{offset_2}}(sp)
+        ld      t2, {{offset_3}}(sp)
+        addi    sp, sp, {{offset_4}}
+# SP reg should backup under nested trap or interrupt
+        csrrw   sp, mscratch, sp
+.endm
+        
+.macro debug_push
+# SP reg should backup under nested trap or interrupt
+        csrrw   sp, dscratch0, sp
+        addi    sp, sp, -{{offset_4}}
+        sd      t0, 0(sp)
+        sd      t1, {{offset_1}}(sp)
+        sd      ra, {{offset_2}}(sp)
+        sd      t2, {{offset_3}}(sp)
+.endm
+        
+.macro debug_pop
+        ld    t0, 0(sp)
+        ld    t1, {{offset_1}}(sp)
+        ld    ra, {{offset_2}}(sp)
+        ld    t2, {{offset_3}}(sp)
+        addi    sp, sp, {{offset_4}}
+# SP reg should backup under nested trap or interrupt
+        csrrw   sp, dscratch0, sp
+.endm
+
+.macro sid_only_exit exit_type
+	li      x17, exit_type
+	slli    zero, zero, 0x1f
+	ebreak
+	srai    zero, zero, 0x5
+.endm
+
+.macro ProgramExit
+        li      t0, SIM_CTL_BASE
+        li      t1, VPE_PASS
+        sw      t1, 0(t0)
+16:
+        j       16b
+.endm
+
+.macro ProgramAbort
+                li      t0, SIM_CTL_BASE
+                li      t1, VPE_FAIL
+                sw      t1, 0(t0)
+        17:
+                j       17b
+.endm
+
+.macro ProgramSkip
+                li      t0, SIM_CTL_BASE
+                li      t1, VPE_SKIP
+                sw      t1, 0(t0)
+        18:
+                j       18b
+.endm
+        .macro store_word data, offset, base
+                sd    \data, \offset (\base)
+        .endm
+
+        .macro load_word data, offset, base
+                ld    \data, \offset (\base)
+        .endm
+
+        .macro push_reg reg 
+                addi    sp, sp, {{offset}}
+                sd    \reg, 0 (sp)
+        .endm
+
+        .macro pop_reg reg
+                ld    \reg, 0 (sp)
+                addi    sp, sp, {{offset}}
+        .endm
+
+.macro init_gpr
+        li      ra, 0
+        li      sp, 0x00bffff0
+        csrr    t0, mhartid     
+        slli    t0, t0, 16
+        sub     sp, sp, t0
+        li      gp, 0x00d00000
+        li      tp, 0
+        li      t0, 0
+        li      t1, 0
+        li      t2, 0
+        li      s0, 0
+        li      s1, 0
+        li      a0, 0
+        li      a1, 0
+        li      a2, 0
+        li      a3, 0
+        li      a4, 0
+        li      a5, 0
+        li      a6, 0
+        li      a7, 0
+        li      s2, 0
+        li      s3, 0
+        li      s4, 0
+        li      s5, 0
+        li      s6, 0
+        li      s7, 0
+        li      s8, 0
+        li      s9, 0
+        li      s10, 0
+        li      s11, 0
+        li      t3, 0
+        li      t4, 0
+        li      t5, 0
+        li      t6, 0
+.endm
+
+ .macro csrw_sscratch tmp1, tmp2, value
+ .endm
+
+.macro csrw_uscratch tmp1, tmp2, value1, value2
+.endm
+
+.endif
+""";
+	}
+
+	action exit_a {
+		exec body ASM  =
+		"""	j	_EXIT_POINT	""";
+	}
+
+
+}
+

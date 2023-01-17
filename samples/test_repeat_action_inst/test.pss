@@ -1,0 +1,17 @@
+component pss_top {
+	action root_a {
+		sub_a sub_inst;
+		activity {
+			repeat (2) {
+				sub_inst;
+			}
+		}
+	}
+
+	action sub_a {
+		rand int val;
+		constraint val in [0..100];
+		exec body ASM = """val={{val}}""";
+	}
+}
+

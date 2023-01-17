@@ -1,0 +1,34 @@
+component pss_top {
+
+	string	label_global;
+	int	align_global;
+	int	size_global;
+
+	struct region {
+		rand string label;
+		rand int align;
+		rand int size;
+		rand int base_addr;	
+	}
+
+	region region1;
+
+	exec init_up{
+		label_global = "noncacheable_region";	
+        	align_global = 16;
+		size_global = 4096; 			
+	}
+
+	action root_a {
+		exec post_solve {
+			region1.label = comp.label_global;
+			region1.align = comp.align_global;
+			region1.size = comp.size_global;
+		}
+		exec body ASM = """#region1.label = {{region1.label}}"""; 
+		exec body ASM = """#region1.align = {{region1.align}}"""; 
+		exec body ASM = """#region1.size  = {{region1.size}}"""; 
+	}
+
+}
+

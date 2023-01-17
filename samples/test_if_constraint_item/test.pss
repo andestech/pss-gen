@@ -1,0 +1,56 @@
+/*!
+@weakgroup	test
+@{
+@file
+@author         Luther Lee
+@version        v1.1
+@data           2022/09/29
+@brief          Test declaration, assignment, and index of collection.
+@details
+Reference to [PSSv2.0 Section 17.1.6](https://www.accellera.org/images/downloads/standards/Portable_Test_Stimulus_Standard_v20.pdf)
+
+### Test Command
+
+    make test
+
+
+*/
+component pss_top {
+	action test {
+		rand int data;
+		int flag = 0;
+
+		exec pre_solve {
+			flag = 1;
+		}
+
+		constraint {
+			if (flag == 0) data == -100;
+			else if (flag == 1) data == 100;
+			else if (flag == 2) data == 200;
+			else data == 999;
+		}
+
+		exec post_solve {
+			flag = 2;
+		}
+
+		activity {
+			do printf with {val == flag;};
+			do printf with {val == data;};
+		}
+	}
+	action printf {
+		rand int val;
+		exec body ASM =
+		"""val = {{val}}""";
+	}
+
+	action root_a {
+		activity {
+			do test;
+		}
+	}
+}
+
+/**@}*/

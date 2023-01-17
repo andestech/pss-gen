@@ -1,0 +1,24 @@
+component pss_top {
+	buffer msg_buf {
+		rand string s;
+        constraint s == "Hello";
+	}
+	action display_a {
+		input	msg_buf msg;
+		exec body SV = """disp={{msg.s}}""";
+	}
+	action send_a {
+		output msg_buf msg;
+		exec body SV = """send={{msg.s}}""";
+	}
+	action root_a {
+		send_a send;
+		display_a disp;
+		activity {
+			send;
+			disp;
+
+			bind send.msg disp.msg;
+		}
+	}
+}

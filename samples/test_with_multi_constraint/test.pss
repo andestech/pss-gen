@@ -1,0 +1,48 @@
+component pss_top {
+
+	action multi_string_a {
+		rand string str1;
+		rand string str2;
+		constraint str1 in ["a", "b", "c"];
+		constraint str2 in ["a", "b", "c"];
+		exec body ASM  =
+		"""str1 = {{str1}}, str2 = {{str2}}
+		""";
+	}
+	action multi_int_a {
+		rand int int_val1;
+		rand int int_val2;
+		constraint int_val1 in [1..31];
+		constraint int_val2 in [1..31];
+		exec body ASM  =
+		"""int_val1 = {{int_val1}}, int_val2 = {{int_val2}}
+		""";
+	}
+	action multi_bit_a {
+		rand bit [4:0] bit_val1;
+		rand bit [4:0] bit_val2;
+		constraint bit_val1 in [1..31];
+		constraint bit_val2 in [1..31];
+		exec body ASM  =
+		"""bit_val1 = {{bit_val1}}, bit_val2 = {{bit_val2}}
+		""";
+	}
+	action root_a {
+		activity {
+			do multi_string_a with {
+				str1 == "a";
+				str2 == "b";
+			};
+			do multi_int_a  with {
+				int_val1 == 10;
+				int_val2 == 5;
+			};
+			do multi_bit_a  with {
+				bit_val1 == 15;
+				bit_val2 == 20;
+			};
+		}
+	}
+
+}
+

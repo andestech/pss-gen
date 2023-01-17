@@ -1,0 +1,28 @@
+component pss_top {
+
+    action bit_a {
+        rand bit [2:0] bit_val;
+        
+    }
+    action root_a {
+        rand bit [2:0] bit_arr[8];
+
+        constraint {
+            unique {bit_arr[0], bit_arr[1], bit_arr[2], bit_arr[3], bit_arr[4], bit_arr[5], bit_arr[6], bit_arr[7]};
+        }
+
+        exec body ASM  = """
+	bit_arr[0] = {{bit_arr[0]}}
+	bit_arr[1] = {{bit_arr[1]}}
+	bit_arr[2] = {{bit_arr[2]}}
+	bit_arr[3] = {{bit_arr[3]}}
+	bit_arr[4] = {{bit_arr[4]}}
+	bit_arr[5] = {{bit_arr[5]}}
+	bit_arr[6] = {{bit_arr[6]}}
+	bit_arr[7] = {{bit_arr[7]}}
+        """;
+
+    }
+
+}
+

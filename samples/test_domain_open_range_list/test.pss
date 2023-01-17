@@ -1,0 +1,19 @@
+component pss_top {
+
+	action bit_a {
+		rand bit [4:0] bit_val;
+
+                constraint bit_val in [0,1];
+		
+		exec body ASM  =
+		"""bit_val = {{bit_val}}
+		""";
+	}
+	action root_a {
+		activity {
+                        do bit_a;
+                }
+	}
+
+}
+

@@ -1,0 +1,4 @@
+$send("World ");
+$send("Hello ");
+$display("Hello ");
+$display("World ");

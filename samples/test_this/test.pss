@@ -1,0 +1,15 @@
+component pss_top {
+	action root_a {
+		int a = 1234;
+		activity {
+			do sub_a with {a == this.a;};
+		}
+	}
+
+	action sub_a {
+		rand int a;
+		exec body ASM = """a={{a}}""";
+
+	}
+}
+
