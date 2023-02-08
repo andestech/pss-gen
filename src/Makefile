@@ -1,10 +1,8 @@
 
-PSS_HOME=/home/users1/alexchen/bin/pss-gen
+ANTLR4_JAR_PATH = ${PSS_HOME}/antlr4/antlr-4.9.3-complete.jar
+PSSGEN_JAR_PATH = ${PSS_HOME}/src/pssgen.jar
 
-ANTLR4_JAR_PATH = $(PSS_HOME)/antlr4/antlr-4.9.3-complete.jar
-PSSGEN_JAR_PATH = $(PSS_HOME)/src/pssgen.jar
-
-SRC_PATH = $(PSS_HOME)/src
+SRC_PATH = ${PSS_HOME}/src
 #CLASSPATH="$ANTLR4_JAR_PATH:$SRC_PATH:$CLASSPATH"
 
 ANTLR4 = java -jar $(ANTLR4_JAR_PATH)
@@ -15,7 +13,7 @@ JAVAC = javac -classpath $(SRC_PATH):$(ANTLR4_JAR_PATH)
 PSSGEN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
 
 
-jar:
+jar: guard-PSS_HOME
 	$(ANTLR4) -no-listener -visitor PSS.g4;
 	$(JAVAC) PSS*.java
 	jar cf pssgen.jar *.class
@@ -38,6 +36,10 @@ test3: jar
 grun:
 	$(GRUN) test.pss
 
-	
+guard-%:
+	@ if [ "${${*}}" = "" ]; then \
+		echo "Environment variable $* not set"; \
+		exit 1; \
+	fi
 
 
