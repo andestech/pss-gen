@@ -1,0 +1,8 @@
+*.class
+src/PSS.interp
+src/PSS.tokens
+src/PSSLexer.interp
+src/PSSLexer.tokens
+src/pssgen.jar
+samples/**/*.log
+samples/**/test.s
