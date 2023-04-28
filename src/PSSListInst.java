@@ -17,11 +17,10 @@ public class PSSListInst extends PSSInst {
 
         PSSSetVal valset = (PSSSetVal) val;
         m_list.clear();
-        for (int i = 0; i < valset.getValList().size(); i++) {
-            PSSInst item_inst = m_type_model.declInst("", m_rand);
-            PSSVal item_val = val.indexOf(i);
-            item_inst.assign(item_val);
-            m_list.add(item_inst);
+        for (PSSVal itemVal: valset.getValList()) {
+            PSSInst itemInst = m_type_model.declInst("", m_rand);
+            itemInst.assign(itemVal);
+            m_list.add(itemInst);
         }
 	}
 
