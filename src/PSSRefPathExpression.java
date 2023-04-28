@@ -5,10 +5,12 @@ import java.util.regex.Matcher;
 public class PSSRefPathExpression extends PSSExpression {
 	String		m_id;
 	String		m_index;
+    ArrayList<PSSHierarchicalIDExpression> m_hierarchical_id_list;
 
 	public PSSRefPathExpression(String text) {
 		Pattern pattern = Pattern.compile("(.*)\\[(.*)\\]");
 		Matcher m = pattern.matcher(text);
+        m_hierarchical_id_list = new ArrayList<PSSHierarchicalIDExpression>();
 
 		if (m.find()) {
 			m_id = m.group(1);
@@ -22,6 +24,11 @@ public class PSSRefPathExpression extends PSSExpression {
 		}
 
 	}
+
+    public void addHierarchicalID(PSSExpression h) {
+        PSSHierarchicalIDExpression _h = (PSSHierarchicalIDExpression) h;
+        m_hierarchical_id_list.add(_h);
+    }
 
 	private PSSInst getScalarInst(PSSInst var) {
 		PSSInst id_var = var.findInstance(m_id);
@@ -70,6 +77,9 @@ public class PSSRefPathExpression extends PSSExpression {
 
 	public PSSVal eval(PSSInst var) {
 		PSSInst inst = getInst(var);
+        for (PSSHierarchicalIDExpression h: m_hierarchical_id_list) {
+            inst = h.getInst(inst);
+        }
 		return inst.toVal();
 	}
 

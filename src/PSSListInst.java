@@ -24,6 +24,15 @@ public class PSSListInst extends PSSInst {
         }
 	}
 
+    public PSSVal toVal() {
+        if (m_list.size() == 0)
+            PSSMessage.Error("ListInst", "'" + getHierarchyId() + "' is not initialized");
+        PSSSetVal collectedVal = new PSSSetVal();
+        for (PSSInst elem: m_list)
+            collectedVal.addVal(elem.toVal());
+        return (PSSVal) collectedVal;
+    }
+
 	public void randomize() {
         // PSS Standard V2.0 - 8.1 Data types General
         // The list collection type is not randomizable.

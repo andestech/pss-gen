@@ -24,6 +24,8 @@ component pss_top {
 		int array1[3];
 		int array2[3];
 		array<int, 3> my_array;
+		array<int, 5> my_array_5;
+		list<int> my_array_5_list;
 		list<int> my_list;
 		map<string, int> my_map;
 		map<string, string> my_map_string;
@@ -37,6 +39,8 @@ component pss_top {
 			array1[2] = 1;
 			array2 = {13,12,11};
 			my_array = {23, 22, 21};
+			my_array_5 = {5, 4, 3, 2, 1};
+            my_array_5_list = my_array_5.to_list();
 			my_list = {33, 32, 31};
 			my_map = {"a":43, "b":50, "c":41};
             my_map_string = {"x":"xxx", "y":"yyy", "z":"zzzz" };
@@ -49,6 +53,9 @@ component pss_top {
 			do printf with {val == array1[1];};
 			do printf with {val == array2[1];};
 			do printf with {val == my_array[1];};
+			do printf with {val == my_array_5.size();};
+			do printf with {val == my_array_5.sum();};
+			do printf with {val == my_array_5_list[0];};
 			do printf with {val == my_list[1];};
 			do printf with {val == my_map["b"];};
 			do print_string with {sss == my_map_string["x"];};

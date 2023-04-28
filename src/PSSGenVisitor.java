@@ -772,8 +772,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			exp_stack.push(new PSSPrimaryExpression(new PSSBoolVal(text)));
 		}
 		else if (ctx.ref_path() != null) {
-			String text = ctx.getText();
-			exp_stack.push(new PSSRefPathExpression(text));
+            visit(ctx.ref_path());
 		}
 		else if (ctx.paren_expr() != null) {
 			visit(ctx.paren_expr().expression());
@@ -786,6 +785,53 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		}
 		return 0;
 	}
+
+    @Override
+    public Integer visitMember_path_elem(PSSParser.Member_path_elemContext ctx) {
+        if (ctx.expression() != null)
+            PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+
+        boolean isFunctionCall = ctx.getText().matches(".+\\(.*\\)");
+        if (!isFunctionCall)
+            PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+        PSSMemberPathElemExpression e =
+            new PSSMemberPathElemExpression(ctx.identifier().getText(), isFunctionCall);
+        if (ctx.function_parameter_list() != null) {
+            for (int i=0; i<ctx.function_parameter_list().expression().size(); i++) {
+                //PSSVal val = ctx.function_parameter_list().expression(i).eval();
+                //e.addPara(val);
+            }
+        }
+        exp_stack.push(e);
+        return 0;
+    }
+
+    @Override
+    public Integer visitHierarchical_id(PSSParser.Hierarchical_idContext ctx) {
+        PSSHierarchicalIDExpression e = new PSSHierarchicalIDExpression();
+        for (int i=0; i<ctx.member_path_elem().size(); i++) {
+            visit(ctx.member_path_elem(i));
+            e.addMemberElement(exp_stack.pop());
+        }
+        exp_stack.push(e);
+        return 0;
+    }
+
+    @Override
+    public Integer visitRef_path(PSSParser.Ref_pathContext ctx) {
+        if (ctx.static_ref_path() == null)
+            PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+
+        PSSRefPathExpression e = new PSSRefPathExpression(ctx.static_ref_path().getText());
+        if (ctx.hierarchical_id() != null) {
+            visit(ctx.hierarchical_id());
+            e.addHierarchicalID(exp_stack.pop());
+        }
+        exp_stack.push(e);
+        return 0;
+    }
+
+
 
 	@Override
 	public Integer visitAggregate_literal(PSSParser.Aggregate_literalContext ctx) {
