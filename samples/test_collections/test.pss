@@ -45,7 +45,7 @@ component pss_top {
 			do printf with {val == array1[1];};
 			do printf with {val == array2[1];};
 			do printf with {val == my_array[1];};
-			// do printf with {val == my_list[1];};    // Fixme: PSS-ERROR: [LISTINDEX] '<pss_top>.<root_a>.<test>.my_list' index '1' is out of range
+			do printf with {val == my_list[1];};
 			// do printf with {val == my_map["b"];};
 			// do printf with {val == my_set[1];};
 		}
