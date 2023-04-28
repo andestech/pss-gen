@@ -13,6 +13,8 @@ public class PSSRefPathExpression extends PSSExpression {
 		if (m.find()) {
 			m_id = m.group(1);
 			m_index = m.group(2);
+            if (m_index.matches("^\".*\"$"))
+                m_index = m_index.substring(1, m_index.length() - 1);
 		}
 		else {
 			m_id = text;
@@ -31,7 +33,18 @@ public class PSSRefPathExpression extends PSSExpression {
 
 	public PSSInst getInst(PSSInst var) {
 		if (m_index != null) {
-			return getArrayElement(var);
+            PSSInst id_var = var.findInstance(m_id);
+            if (id_var == null) {
+                PSSMessage.Error("REF-0002", "Cannot find variable '" + m_id + "'");
+            }
+            PSSInst element_var = null;
+            if (id_var instanceof PSSArrayInst || id_var instanceof PSSListInst)
+                element_var = getArrayElement(id_var);
+            else if (id_var instanceof PSSMapInst)
+                element_var = getMapElement(id_var);
+            else
+                PSSMessage.Fatal("Unknown reference type");
+            return element_var;
 		}
 		else {
 			return getScalarInst(var);
@@ -39,27 +52,21 @@ public class PSSRefPathExpression extends PSSExpression {
 	}
 
 
-	private PSSInst getArrayElement(PSSInst var) {
-		PSSInst array_var = var.findInstance(m_id);
-		if (array_var == null) {
-			PSSMessage.Error("REF-0002", "Cannot find variable '" + m_id + "'");
-		}
-		int index;
+    private PSSInst getArrayElement(PSSInst array_var) {
+        if (!m_index.matches("[0-9]+")) {
+            PSSMessage.Error("REF-0003", m_index + "is not an integer reference.");
+        }
+        return array_var.indexOf(Integer.valueOf(m_index));
+    }
 
-		if (m_index.matches("[0-9]+")) {
-			index = Integer.valueOf(m_index);
-		}
-		else {
-			PSSInst index_var = var.findInstance(m_index);
-			if (array_var == null) {
-				PSSMessage.Error("REF-0003", "Cannot find variable '" + m_index + "'");
-			}
-			index = index_var.toVal().toInt();
-		}
-
-		
-		return array_var.indexOf(index);
-	}
+    private PSSInst getMapElement(PSSInst id_var) {
+        PSSMapInst mapInst = (PSSMapInst) id_var;
+        PSSInst elementInst = mapInst.get(m_index);
+        if (elementInst == null) {
+            PSSMessage.Error("REF-0004", "Failed to get the element of "+m_id+"["+m_index+"].");
+        }
+        return elementInst;
+    }
 
 	public PSSVal eval(PSSInst var) {
 		PSSInst inst = getInst(var);

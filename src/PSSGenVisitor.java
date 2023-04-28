@@ -314,7 +314,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitMap_type(PSSParser.Map_typeContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+        visit(ctx.data_type(0));
+        PSSModel key_data_type = cur_data_type;
+        visit(ctx.data_type(1));
+        PSSModel val_data_type = cur_data_type;
+
+        cur_data_type = new PSSMapModel(key_data_type, val_data_type);
 		return 0;
 	}
 
@@ -792,6 +797,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 				aggregate_exp.addExpression(item);
 			}
 		}
+        else if (ctx.map_literal() != null) {
+            for (int i=0; i<ctx.map_literal().map_literal_item().size(); i++) {
+                visit(ctx.map_literal().map_literal_item(i).expression(0));
+                PSSExpression key = exp_stack.pop();
+                visit(ctx.map_literal().map_literal_item(i).expression(1));
+                PSSExpression val = exp_stack.pop();
+
+                PSSMapExpression map_exp = new PSSMapExpression(key, val);
+                aggregate_exp.addExpression(map_exp);
+            }
+        }
 		else {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		}
