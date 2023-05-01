@@ -1,24 +1,33 @@
+// Copyright (C) 2021, Andes Technology Corp. Confidential Proprietary
 import java.util.*;
 
 public class PSSMapExpression extends PSSExpression {
-    public PSSExpression m_key;
-    public PSSExpression m_val;
 
-    public PSSMapExpression(PSSExpression key, PSSExpression val) {
-        m_key = key;
-        m_val = val;
-    }
+	private Map<PSSExpression, PSSExpression> map = new HashMap<PSSExpression, PSSExpression>();
 
-    public PSSVal eval(PSSInst var) {
-        PSSSetVal result = new PSSSetVal();
-        PSSVal key = m_key.eval(var);
-        PSSVal val = m_val.eval(var);
-        result.getValList().add(0, key);
-        result.getValList().add(1, val);
-        return result;
-    }
+	public PSSMapExpression() {
+	}
 
-    public String getText() {
-        return "{"+m_key.getText()+":"+m_val.getText()+"}";
-    }
+	public void add(PSSExpression key, PSSExpression val) {
+		map.put(key, val);
+	}
+
+	public PSSMapVal eval(PSSInst var) {
+		PSSMapVal res = new PSSMapVal();
+		for (PSSExpression k : map.keySet()) {
+			PSSExpression v = map.get(k);
+			res.insert(k.eval(var), v.eval(var));
+		}
+		return res;
+	}
+
+	public String getText() {
+		List<String> strs = new ArrayList<String>();
+		for (PSSExpression k : map.keySet()) {
+			PSSExpression v = map.get(k);
+			strs.add(k.getText() + ": " + v.getText());
+		}
+		return "{ " + String.join(", ", strs) + " }";
+	}
+
 }

@@ -831,33 +831,34 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
         return 0;
     }
 
-
-
 	@Override
 	public Integer visitAggregate_literal(PSSParser.Aggregate_literalContext ctx) {
-		PSSAggregateExpression aggregate_exp = new PSSAggregateExpression();
+		PSSExpression res = null;
 		if (ctx.value_list_literal() != null) {
+			PSSAggregateExpression exp = new PSSAggregateExpression();
 			for (int i=0; i<ctx.value_list_literal().expression().size(); i++) {
 				visit(ctx.value_list_literal().expression(i));
 				PSSExpression item = exp_stack.pop();
-				aggregate_exp.addExpression(item);
+				exp.addExpression(item);
 			}
+			res = exp;
 		}
         else if (ctx.map_literal() != null) {
+			PSSMapExpression exp = new PSSMapExpression();
             for (int i=0; i<ctx.map_literal().map_literal_item().size(); i++) {
                 visit(ctx.map_literal().map_literal_item(i).expression(0));
                 PSSExpression key = exp_stack.pop();
                 visit(ctx.map_literal().map_literal_item(i).expression(1));
                 PSSExpression val = exp_stack.pop();
-
-                PSSMapExpression map_exp = new PSSMapExpression(key, val);
-                aggregate_exp.addExpression(map_exp);
+				exp.add(key, val);
             }
+			res = exp;
         }
 		else {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		}
-		exp_stack.push(aggregate_exp);
+		if (res != null)
+			exp_stack.push(res);
 		return 0;
 	}
 

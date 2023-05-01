@@ -58,7 +58,6 @@ public class PSSRefPathExpression extends PSSExpression {
 		}
 	}
 
-
     private PSSInst getArrayElement(PSSInst array_var) {
         if (!m_index.matches("[0-9]+")) {
             PSSMessage.Error("REF-0003", m_index + "is not an integer reference.");
@@ -67,6 +66,7 @@ public class PSSRefPathExpression extends PSSExpression {
     }
 
     private PSSInst getMapElement(PSSInst id_var) {
+		PSSMessage.Debug("[" + this.getClass().getName() + "] Access map index " + m_index + " of " + m_id);
         PSSMapInst mapInst = (PSSMapInst) id_var;
         PSSInst elementInst = mapInst.get(m_index);
         if (elementInst == null) {
@@ -91,4 +91,5 @@ public class PSSRefPathExpression extends PSSExpression {
 			return m_id + "[" + m_index + "]";
 		}
 	}
+
 }
