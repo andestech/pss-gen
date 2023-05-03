@@ -226,14 +226,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	@Override
 	public Integer visitProcedural_assignment_stmt(PSSParser.Procedural_assignment_stmtContext ctx) {
 
-		String ref = ctx.ref_path().getText();
-
-		PSSRefPathExpression ref_exp = new PSSRefPathExpression(ref);
+		visit(ctx.ref_path());
+		PSSRefPathExpression ref_exp = (PSSRefPathExpression) exp_stack.pop();
 
 		String op = ctx.assign_op().getText();
 
 		visit(ctx.expression());
-
 		PSSExpression expression = exp_stack.pop();
 
 		PSSAssignProcStmt stmt = new PSSAssignProcStmt(ref_exp, op, expression);
@@ -504,7 +502,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		String language = ctx.language_identifier().getText();
 		String exec_kind = ctx.exec_kind().getText();
 		String code = ctx.string_literal().getText();
-		PSSTargetCode node = new PSSTargetCode(exec_kind, language, code);
+		PSSTargetCode node = new PSSTargetCode(root, exec_kind, language, code);
 
 
 		((PSSAction)root).addTargetCode(node);
@@ -629,8 +627,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSUniqueConstraint constraint = new PSSUniqueConstraint();
 		
 		for (int i=0; i<ctx.hierarchical_id_list().hierarchical_id().size(); i++) {
-			String id = ctx.hierarchical_id_list().hierarchical_id(i).getText();
-			constraint.add(id);
+			visit(ctx.hierarchical_id_list().hierarchical_id(i));
+			constraint.add((PSSHierarchicalIDExpression)exp_stack.pop());
 		}
 
 		constraint_list.add(constraint);
@@ -792,20 +790,24 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
     @Override
     public Integer visitMember_path_elem(PSSParser.Member_path_elemContext ctx) {
-        if (ctx.expression() != null)
-            PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-
-		PSSMemberPathElemExpression e =
-            new PSSMemberPathElemExpression(ctx.identifier().getText());
+		String id = ctx.identifier().getText();
+		List<PSSExpression> args = null;
+		PSSExpression index = null;
         if (ctx.function_parameter_list() != null) {
-			List<PSSExpression> args = new ArrayList<PSSExpression>();
+			args = new ArrayList<PSSExpression>();
             for (int i=0; i<ctx.function_parameter_list().expression().size(); i++) {
                 visit(ctx.function_parameter_list().expression(i));
 				args.add(exp_stack.pop());
             }
-			e.setArguments(args);
         }
+		if (ctx.expression() != null) {
+			visit(ctx.expression());
+			index = exp_stack.pop();
+		}
+
+		PSSMemberPathElemExpression e = new PSSMemberPathElemExpression(id, args, index);
         exp_stack.push(e);
+
         return 0;
     }
 
@@ -814,27 +816,48 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
         PSSHierarchicalIDExpression e = new PSSHierarchicalIDExpression();
         for (int i=0; i<ctx.member_path_elem().size(); i++) {
             visit(ctx.member_path_elem(i));
-            e.addMemberElement(exp_stack.pop());
+            e.addMemberElement((PSSMemberPathElemExpression)exp_stack.pop());
         }
         exp_stack.push(e);
+
         return 0;
     }
 
     @Override
     public Integer visitRef_path(PSSParser.Ref_pathContext ctx) {
-		/* Fall back to the original implementation? */
-        if (ctx.static_ref_path() == null) {
-			String text = ctx.getText();
-			exp_stack.push(new PSSRefPathExpression(text));
-			return 0;
+        if (ctx.static_ref_path() == null)
+			PSSMessage.Fatal("super in ref_path is not implemented");
+
+		String type_identifier_elem = null;
+		if (ctx.static_ref_path().type_identifier_elem() != null) {
+			List<String> strs = new ArrayList<String>();
+			for (int i = 0; i < ctx.static_ref_path().type_identifier_elem().size(); i++) {
+				strs.add(ctx.static_ref_path().type_identifier_elem(i).getText() + "::");
+			}
+			type_identifier_elem = String.join("", strs);
 		}
 
-        PSSRefPathExpression e = new PSSRefPathExpression(ctx.static_ref_path().getText());
+		visit(ctx.static_ref_path().member_path_elem());
+		PSSMemberPathElemExpression static_ref_path = (PSSMemberPathElemExpression) exp_stack.pop();
+
+		PSSHierarchicalIDExpression hierarchical_id = null;
         if (ctx.hierarchical_id() != null) {
             visit(ctx.hierarchical_id());
-            e.addHierarchicalID(exp_stack.pop());
+			hierarchical_id = (PSSHierarchicalIDExpression) exp_stack.pop();
         }
+
+		PSSExpression bit_slice_from = null;
+		PSSExpression bit_slice_to = null;
+		if (ctx.bit_slice() != null) {
+			visit(ctx.bit_slice().constant_expression(0));
+			bit_slice_from = exp_stack.pop();
+			visit(ctx.bit_slice().constant_expression(1));
+			bit_slice_to = exp_stack.pop();
+		}
+
+        PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, hierarchical_id, null, null);
         exp_stack.push(e);
+
         return 0;
     }
 

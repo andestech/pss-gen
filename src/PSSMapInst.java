@@ -32,7 +32,7 @@ public class PSSMapInst extends PSSInst {
             return delete(args.get(0));
         }
     };
-    
+
     NativeMethod m_method_insert = new NativeMethod("insert", 2) {
         protected PSSInst doEval(List<PSSVal> args) {
             insert(args.get(0), args.get(1));
@@ -103,6 +103,16 @@ public class PSSMapInst extends PSSInst {
         }
     }
 
+    @Override
+    public PSSInst indexOf(PSSVal key) {
+        PSSVal val = m_map.get(key);
+        if (val == null) {
+            PSSMessage.Fatal("Accessing a non-existing index " + key.getText());
+            return null;
+        }
+        return getValueInst(val);
+    }
+
     /**
      * Returns the value associated with the specified key.
      *
@@ -146,9 +156,7 @@ public class PSSMapInst extends PSSInst {
      * @return the value associated with the key before being removed
      */
     public PSSInst delete(PSSVal key) {
-        PSSMessage.Debug("deleting: " + key.getText());
         PSSVal v = m_map.delete(key);
-        PSSMessage.Debug("deleted: " + key.getText());
         return v == null ? null : getValueInst(v);
     }
 

@@ -24,7 +24,8 @@ public class PSSInst {
 		public PSSInst eval(List<PSSVal> args) {
 			if (m_nargs >= 0 && args.size() != m_nargs) {
 				PSSMessage.Fatal(
-						"Mismatched number of parameters to " + m_id + "." + m_name + " (expected = " + m_nargs + ", actual = "
+						"Mismatched number of parameters to " + m_id + "." + m_name + " (expected = " + m_nargs
+								+ ", actual = "
 								+ args.size() + ").");
 			}
 			return doEval(args);
@@ -161,7 +162,13 @@ public class PSSInst {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::init_down is not impelemented");
 	}
 
-	public PSSInst indexOf(int index) {
+	/**
+	 * Access the element at a specified index.
+	 *
+	 * @param index an index
+	 * @return
+	 */
+	public PSSInst indexOf(PSSVal index) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::indexOf is not impelemented");
 		return null;
 	}

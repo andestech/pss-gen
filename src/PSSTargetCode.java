@@ -4,12 +4,14 @@ import java.util.regex.Matcher;
 
 public class PSSTargetCode extends PSSModel {
 	
+	PSSModel m_root;
 	String m_exec_kind;
 	String m_language;
 	String m_code;
 
-	public PSSTargetCode (String exec_kind, String language, String code) {
+	public PSSTargetCode (PSSModel root, String exec_kind, String language, String code) {
 		super("");
+		m_root = root;
 		m_exec_kind = exec_kind;
 		m_language = language;
 		m_code = code.replace("\"\"\"", "");
@@ -38,7 +40,7 @@ public class PSSTargetCode extends PSSModel {
 				String prefix = residual.substring(0, start);
 				String ref = m.group(1);
 
-				PSSRefPathExpression ref_exp = new PSSRefPathExpression(ref);
+				PSSRefPathExpression ref_exp = PSSRefPathExpression.fromString(m_root, ref);
 
 				PSSInst var = ref_exp.getInst(inst);
 
@@ -61,6 +63,7 @@ public class PSSTargetCode extends PSSModel {
 		if (result.length() > 0) {
 			PSSTest.println(result);
 		}
+
 	}
 
 

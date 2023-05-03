@@ -29,8 +29,9 @@ public class PSSArrayInst extends PSSInst {
 		}
 	}
 
-	public PSSInst indexOf(int index) {
-		return m_array_elems.get(index);
+    @Override
+	public PSSInst indexOf(PSSVal index) {
+		return m_array_elems.get(index.toInt());
 	}
 
     public PSSInst evalMethod(String identifier, List<PSSVal> args) {
