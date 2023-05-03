@@ -795,12 +795,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
         if (ctx.expression() != null)
             PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 
-        boolean isFunctionCall = ctx.getText().matches(".+\\(.*\\)");
-        if (!isFunctionCall) {
-			throw new IllegalArgumentException();
-            //PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		}
-        PSSMemberPathElemExpression e =
+		PSSMemberPathElemExpression e =
             new PSSMemberPathElemExpression(ctx.identifier().getText());
         if (ctx.function_parameter_list() != null) {
 			List<PSSExpression> args = new ArrayList<PSSExpression>();
@@ -827,8 +822,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
     @Override
     public Integer visitRef_path(PSSParser.Ref_pathContext ctx) {
-        if (ctx.static_ref_path() == null)
-            PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		/* Fall back to the original implementation? */
+        if (ctx.static_ref_path() == null) {
+			String text = ctx.getText();
+			exp_stack.push(new PSSRefPathExpression(text));
+			return 0;
+		}
 
         PSSRefPathExpression e = new PSSRefPathExpression(ctx.static_ref_path().getText());
         if (ctx.hierarchical_id() != null) {
