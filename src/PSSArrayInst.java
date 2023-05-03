@@ -33,7 +33,7 @@ public class PSSArrayInst extends PSSInst {
 		return m_array_elems.get(index);
 	}
 
-    public PSSInst evalMethod(String identifier) {
+    public PSSInst evalMethod(String identifier, List<PSSVal> args) {
         PSSInst inst = null;
         if (identifier.equals("size")) {
             PSSIntInst intInst = new PSSIntInst(m_id+".size()", false, 32, false);

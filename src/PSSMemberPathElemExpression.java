@@ -1,38 +1,64 @@
 import java.util.*;
-import java.lang.reflect.*;
 
 public class PSSMemberPathElemExpression extends PSSExpression {
 
     String identifier;
-    boolean isFunctionCall;
-    ArrayList<PSSVal> function_parameter_list;
+    List<PSSExpression> function_parameter_list = null;
+    PSSExpression array_index = null;
 
-    public PSSMemberPathElemExpression(String id, boolean isCall) {
+    public PSSMemberPathElemExpression(String id) {
         identifier = id;
-        isFunctionCall = isCall;
-        function_parameter_list = new ArrayList<PSSVal>();
     }
 
-    public void addPara(PSSVal val) {
-        function_parameter_list.add(val);
+    public void setArguments(List<PSSExpression> args) {
+        function_parameter_list = args;
+    }
+
+    public void setArrayIndex(PSSExpression idx) {
+        array_index = idx;
     }
 
     // TODO: how to improve this method? Function pointer? getMethod.invoke()?
-    private PSSInst evalMethodIdentifier(PSSInst var) {
-        PSSInst inst = null;
-        if (var instanceof PSSArrayInst)
-            inst = PSSArrayInst.class.cast(var).evalMethod(identifier);
-        else
-            PSSMessage.Fatal("Unsupported data type");
-        return inst;
+    private PSSInst evalMethod(PSSInst var) {
+		/* Evaluate arguments */
+		List<PSSVal> vals = new ArrayList<PSSVal>();
+		for (PSSExpression arg : function_parameter_list) {
+			vals.add(arg.eval(var));
+		}
+
+        /* Invoke method */
+        PSSInst res = var.evalMethod(identifier, vals);
+
+        return res;
     }
 
     public PSSInst getInst(PSSInst var) {
-        PSSInst inst = null;
-        if (isFunctionCall) {
-            inst = evalMethodIdentifier(var);
+        PSSInst res =  null;
+        if (function_parameter_list == null) {
+            res = var.findInstance(identifier);
+        } else {
+            res = evalMethod(var);
         }
-        return inst;
+        return res;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(identifier);
+        if (function_parameter_list != null) {
+            sb.append("(");
+            List<String> strs = new ArrayList<String>();
+            for (PSSExpression e : function_parameter_list) {
+                strs.add(e.getText());
+            }
+            sb.append(String.join(", ", strs));
+            sb.append(")");
+        }
+        if (array_index != null) {
+            sb.append("[" + array_index.getText() + "]");
+        }
+        return sb.toString();
     }
 
 }

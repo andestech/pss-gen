@@ -1,17 +1,33 @@
 import java.util.*;
 
-public class PSSFunctionCall {
+
+public class PSSFunctionCall extends PSSExpression {
 	String m_path;
 	String m_id;
+	List<PSSExpression> args = null;
 
-	PSSFunctionCall(String path, String id) {
+	PSSFunctionCall(String path, String id, List<PSSExpression> args) {
 		m_path = path;
 		m_id = id;
+		this.args = args;
 	}
 
 	public PSSVal eval(PSSInst var) {
-		PSSMessage.Fatal(getClass().getSimpleName() + ".eval() is not implemented");
-		return null;
+		PSSMessage.Debug("[PSSFunctionCall] calling function " + m_id + " of " + m_path);
+		/* Evaluate arguments */
+		List<PSSVal> vals = new ArrayList<PSSVal>();
+		for (PSSExpression arg : args) {
+			vals.add(arg.eval(var));
+		}
+		PSSInst inst = var;
+		for (String p : m_path.split("\\.")) {
+			if (p != "")
+				inst = inst.findInstance(p);
+		}
+		PSSInst res = inst.evalMethod(m_id, vals);
+		/* A void function may return null. */
+		return res == null ? null : res.toVal();
 	}
+
 }
 

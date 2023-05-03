@@ -21,4 +21,12 @@ public class PSSHierarchicalIDExpression extends PSSExpression {
         return inst;
     }
 
+    @Override
+    public String toString() {
+        List<String> strs = new ArrayList<String>();
+        for (PSSMemberPathElemExpression e : m_member_list)
+            strs.add(e.toString());
+        return String.join(".", strs);
+    }
+
 }

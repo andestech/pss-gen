@@ -403,8 +403,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitProcedural_void_function_call_stmt(PSSParser.Procedural_void_function_call_stmtContext ctx) {
-
 		visit(ctx.function_call());
+		PSSExpression func = exp_stack.pop();
+		if (!(func instanceof PSSFunctionCall))
+			PSSMessage.Fatal("Return type of function_call is not PSSFunctionCall.");
+		PSSVoidFunctionCall stmt = new PSSVoidFunctionCall((PSSFunctionCall)func);
+		proc_stmt_list.add(stmt);
 		return 0;
 	}
 
@@ -792,15 +796,19 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
             PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 
         boolean isFunctionCall = ctx.getText().matches(".+\\(.*\\)");
-        if (!isFunctionCall)
-            PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+        if (!isFunctionCall) {
+			throw new IllegalArgumentException();
+            //PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
         PSSMemberPathElemExpression e =
-            new PSSMemberPathElemExpression(ctx.identifier().getText(), isFunctionCall);
+            new PSSMemberPathElemExpression(ctx.identifier().getText());
         if (ctx.function_parameter_list() != null) {
+			List<PSSExpression> args = new ArrayList<PSSExpression>();
             for (int i=0; i<ctx.function_parameter_list().expression().size(); i++) {
-                //PSSVal val = ctx.function_parameter_list().expression(i).eval();
-                //e.addPara(val);
+                visit(ctx.function_parameter_list().expression(i));
+				args.add(exp_stack.pop());
             }
+			e.setArguments(args);
         }
         exp_stack.push(e);
         return 0;
@@ -915,8 +923,16 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			path = path + ctx.member_path_elem(i).getText() + ".";
 		}
 
-		PSSFunctionCall func_call = new PSSFunctionCall(path, id);
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		List<PSSExpression> args = new ArrayList<PSSExpression>();
+		List<PSSParser.ExpressionContext> args_ctx = ctx.function_parameter_list().expression();
+		for (int i = 0; i < args_ctx.size(); i++) {
+			visitExpression(args_ctx.get(i));
+			args.add(exp_stack.pop());
+		}
+
+		PSSFunctionCall func_call = new PSSFunctionCall(path, id, args);
+		exp_stack.push(func_call);
+		//PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
 	}
 

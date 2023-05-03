@@ -66,18 +66,24 @@ public class PSSRefPathExpression extends PSSExpression {
     }
 
     private PSSInst getMapElement(PSSInst id_var) {
-		PSSMessage.Debug("[" + this.getClass().getName() + "] Access map index " + m_index + " of " + m_id);
+		PSSMessage.Debug("[PSSRefPathExpression] Access map index " + m_index + " of " + m_id);
+		PSSInst res = null;
         PSSMapInst mapInst = (PSSMapInst) id_var;
-        PSSInst elementInst = mapInst.get(m_index);
-        if (elementInst == null) {
-            PSSMessage.Error("REF-0004", "Failed to get the element of "+m_id+"["+m_index+"].");
-        }
-        return elementInst;
+		if (m_index == null)
+			res = mapInst;
+		else {
+        	res = mapInst.get(m_index);
+        	if (res == null)
+            	PSSMessage.Error("REF-0004", "Failed to get the element of "+m_id+"["+m_index+"].");
+		}
+        return res;
     }
 
 	public PSSVal eval(PSSInst var) {
 		PSSInst inst = getInst(var);
         for (PSSHierarchicalIDExpression h: m_hierarchical_id_list) {
+			/* example, my_map.size() in an expression => inst = my_map, h = size */
+			PSSMessage.Debug("[PSSRefPathExpression] follow hierarchy ID " + h + " of " + m_id + "[" + m_index + "]");
             inst = h.getInst(inst);
         }
 		return inst.toVal();

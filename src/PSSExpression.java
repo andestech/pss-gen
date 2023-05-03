@@ -22,4 +22,10 @@ public class PSSExpression {
 	public String getText() {
 		return "";
 	}
+
+	@Override
+	public int hashCode() {
+		return getText().hashCode();
+	}
+
 }
