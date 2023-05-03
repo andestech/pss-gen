@@ -55,106 +55,211 @@ public class PSSVal implements Comparable<PSSVal> {
 	}
 
 	// Binary Operators
+
+	/**
+	 * "==" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal Equal(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Equal is not implemented");
 		return null;
 	}
 
+	/**
+	 * "!=" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal NotEqual(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::NotEqual is not implemented");
 		return null;
 	}
 
+	/**
+	 * ">" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal GreaterThan(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::GreaterThan is not implemented");
 		return null;
 	}
 
+	/**
+	 * ">=" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal GreaterEqual(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::GreaterEqual is not implemented");
 		return null;
 	}
 
+	/**
+	 * "<=" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal LessEqual(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LessEqual is not implemented");
 		return null;
 	}
 
+	/**
+	 * "<" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal LessThan(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LessThan is not implemented");
 		return null;
 	}
 
+	/**
+	 * "+" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal Add(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Add is not implemented");
 		return null;
 	}
 
+	/**
+	 * "-" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal Sub(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Sub is not implemented");
 		return null;
 	}
 
+	/**
+	 * "*" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal Mul(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Mul is not implemented");
 		return null;
 	}
 
+	/**
+	 * "/" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal Div(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Div is not implemented");
 		return null;
 	}
 
+	/**
+	 * "%" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal Mod(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Mod is not implemented");
 		return null;
 	}
 
+	/**
+	 * "<<" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal LeftShift(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LeftShift is not implemented");
 		return null;
 	}
 
+	/**
+	 * ">>" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal RightShift(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::RightShift is not implemented");
 		return null;
 	}
 
+	/**
+	 * "&&" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal LogicalAnd(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalAnd is not implemented");
 		return null;
 	}
 
+	/**
+	 * "||" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal LogicalOr(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalOr is not implemented");
 		return null;
 	}
 
+	/**
+	 * "in" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal InRange(PSSVal lhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::InRange is not implemented");
 		return null;
 	}
 
+	/**
+	 * "!" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSBoolVal LogicalNot() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalOr is not implemented");
 		return null;
 	}
 
+	/**
+	 * "&" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal BitwiseAnd(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseAnd is not implemented");
 		return null;
 	}
 
+	/**
+	 * "|" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal BitwiseOr(PSSVal rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseOr is not implemented");
 		return null;
 	}
 
+	/**
+	 * Unary "^" operator
+	 * @return
+	 */
 	public PSSVal BitwiseNot() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseNot is not implemented");
 		return null;
 	}
 
+	/**
+	 * Unary "-" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal UnaryMinus() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::UnaryMinus is not implemented");
 		return null;
@@ -171,6 +276,11 @@ public class PSSVal implements Comparable<PSSVal> {
 		return null;
 	}
 
+	/**
+	 * "[]" operator
+	 * @param rhs
+	 * @return
+	 */
 	public PSSVal indexOf(int index) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::indexOf is not implemented");
 		return null;

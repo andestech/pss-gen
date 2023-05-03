@@ -123,6 +123,20 @@ public class PSSMapVal extends PSSVal {
 	}
 
 	@Override
+	public PSSBoolVal Equal(PSSVal v) {
+		if (v instanceof PSSMapVal) {
+			PSSMapVal m = (PSSMapVal) v;
+			return new PSSBoolVal(m_map.equals(m.m_map));
+		}
+		return new PSSBoolVal(false);
+	}
+
+	@Override
+	public PSSBoolVal NotEqual(PSSVal v) {
+		return Equal(v).LogicalNot();
+	}
+
+	@Override
 	public String getText() {
 		List<String> strs = new ArrayList<String>();
 

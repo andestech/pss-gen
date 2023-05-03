@@ -195,7 +195,7 @@ public class PSSIntVal extends PSSVal {
 	public boolean equals(Object o) {
 		if (o instanceof PSSIntVal) {
 			PSSIntVal i = (PSSIntVal) o;
-			return m_val == i.m_val;
+			return m_val.equals(i.m_val);
 		}
 		return false;
 	}

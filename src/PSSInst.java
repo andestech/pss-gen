@@ -165,7 +165,7 @@ public class PSSInst {
 	}
 
 	/**
-	 * Access the element at a specified index.
+	 * Access the element at a specified index via "[]" operator.
 	 *
 	 * @param index an index
 	 * @return
