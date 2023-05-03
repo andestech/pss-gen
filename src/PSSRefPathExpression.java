@@ -68,7 +68,7 @@ public class PSSRefPathExpression extends PSSExpression {
 	@Override
 	public String getText() {
 		return (m_type_identifier_elems == null ? "" : m_type_identifier_elems) + m_static_ref_path.getText()
-				+ (m_hierarchical_id == null ? "" : m_hierarchical_id.getText())
+				+ (m_hierarchical_id == null ? "" : "." + m_hierarchical_id.getText())
 				+ (m_bit_slice_from == null || m_bit_slice_to == null ? ""
 						: "[" + m_bit_slice_from.getText() + ":" + m_bit_slice_to.getText());
 	}

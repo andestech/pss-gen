@@ -121,6 +121,8 @@ public class PSSInst {
 	public PSSInst findInstance(String hierarchy_id) {
 		if (hierarchy_id.matches("comp")) {
 			return getComponentInst();
+		} else if (hierarchy_id.matches("this")) {
+			return m_parent;
 		} else if (hierarchy_id.matches("comp\\..*")) {
 			PSSInst comp = getComponentInst();
 			if (comp != null) {
