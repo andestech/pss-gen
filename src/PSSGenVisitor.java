@@ -323,7 +323,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitSet_type(PSSParser.Set_typeContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+        visit(ctx.data_type());
+        PSSModel data_type = cur_data_type;
+        cur_data_type = new PSSSetModel(data_type);
 		return 0;
 	}
 
@@ -733,6 +735,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSExpression left = exp_stack.pop();
 			exp_stack.push(new PSSInExpression(left, right));
 		}
+        else if (ctx.collection_expression() != null) {
+            visit(ctx.expression(0));
+            visit(ctx.collection_expression());
+            PSSExpression right = exp_stack.pop();
+            PSSExpression left = exp_stack.pop();
+            exp_stack.push(new PSSInExpression(left, right));
+        }
 		else {
 			PSSMessage.Error("VISITOR-0001", "visitExpression is not fully implemented yet");
 		}
@@ -787,6 +796,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		}
 		return 0;
 	}
+
+    @Override
+    public Integer visitCollection_expression(PSSParser.Collection_expressionContext ctx) {
+        visit(ctx.expression());
+        return 0;
+    }
 
     @Override
     public Integer visitMember_path_elem(PSSParser.Member_path_elemContext ctx) {

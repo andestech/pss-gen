@@ -16,6 +16,25 @@ public class PSSSetVal extends PSSVal {
 		m_list.clear();
 	}
 
+    public int size() {
+        return m_list.size();
+    }
+
+    public PSSVal delete(PSSVal elem) {
+        if (m_list.contains(elem))
+            return m_list.remove(m_list.indexOf(elem));
+        else {
+            PSSMessage.Error("", "The element '" + elem.getText() + "' does not exist.");
+            return null;
+        }
+    }
+
+    public void insert(PSSVal elem) {
+        // If the element already exists, Set.insert() shall have no effect.
+        if (!m_list.contains(elem))
+            m_list.add(elem);
+    }
+
 	public ArrayList<PSSVal> getValList() {
 		return m_list;
 	}
@@ -50,6 +69,27 @@ public class PSSSetVal extends PSSVal {
 			return item;
 		}
 	}
+
+    @Override
+    public PSSBoolVal Equal(PSSVal rhs) {
+        if (rhs instanceof PSSSetVal) {
+            PSSSetVal rset = (PSSSetVal) rhs;
+            if (m_list.size() == rset.getValList().size()) {
+                // TODO: Change "ArrayList<PSSVal>" to "HashSet<PSSVal>"
+                for (PSSVal l: m_list) {
+                    if (!rset.InRange(l).toBool())
+                        return new PSSBoolVal(false);
+                }
+                return new PSSBoolVal(true);
+            }
+        }
+        return new PSSBoolVal(false);
+    }
+
+    @Override
+    public PSSBoolVal NotEqual(PSSVal rhs) {
+        return Equal(rhs).LogicalNot();
+    }
 
 	public PSSBoolVal InRange(PSSVal lhs) {
 		for (int i = 0; i < m_list.size(); i++) {
