@@ -119,7 +119,7 @@ public class PSSIntDomain extends PSSDomain {
 					result.addVal(new PSSRangeVal(min.toBigInteger(), max.toBigInteger()));
 				}
 				else if (max.Equal(val).toBool()) {
-					max = max.Sub(PSSIntVal.ONE());	
+					max = max.Sub(PSSIntVal.ONE());
 					result.addVal(new PSSRangeVal(min.toBigInteger(), max.toBigInteger()));
 				}
 				else if (item.InRange(val).toBool()) {
@@ -223,19 +223,4 @@ public class PSSIntDomain extends PSSDomain {
 		return "{" + text + "}";
 	}
 
-	@Override
-	public int toInt() {
-		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to Int");
-		return 0;
-	}
-	@Override
-	public String toStr() {
-		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to string");
-		return "";
-	}
-	@Override
-	public boolean toBool() {
-		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to boolean");
-		return false;
-	}
 }

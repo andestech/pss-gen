@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class PSSDomain extends PSSVal {
+public class PSSDomain {
 	public PSSDomain () {
 		;
 	}
