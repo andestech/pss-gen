@@ -24,7 +24,7 @@ public class PSSEnumModel extends PSSModel {
 	}
 	public void declEnumItem(PSSInst inst) {
 		m_items.forEach((key, v) -> {
-			PSSIntInst item = new PSSIntInst(key, false, 32, true);
+			PSSIntInst item = new PSSIntInst(key, false, PSSIntModel.DEFAULT_INT_SIZE, true);
 			PSSIntVal val = new PSSIntVal(v);
 			item.assign(val);
 			inst.addInst(item);
@@ -32,7 +32,7 @@ public class PSSEnumModel extends PSSModel {
 	}
 
 	public void dump (String indent) {
-		
+
 		System.out.println(indent + "enum " +  m_id + " {");
 
 		m_items.forEach((key, v) -> {

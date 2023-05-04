@@ -23,12 +23,12 @@ public class PSSRepeatActivity extends PSSActivity {
 		}
 		else {
 			for (int i=0; i<count.toInt(); i++) {
-				// Create a instant for containing index 
+				// Create a instant for containing index
 				PSSRepeatInst repeat_inst = new PSSRepeatInst();
 				inst.addInst(repeat_inst);
 
 				// Create a int inst for index
-				PSSIntInst index_inst = new PSSIntInst(m_index_id, false, 32, true);
+				PSSIntInst index_inst = new PSSIntInst(m_index_id, false, PSSIntModel.DEFAULT_INT_SIZE, true);
 				index_inst.assign(new PSSIntVal(i));
 				repeat_inst.addInst(index_inst);
 

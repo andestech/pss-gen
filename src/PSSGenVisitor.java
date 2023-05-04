@@ -62,7 +62,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		for (int i=0; i<ctx.component_body_item().size(); i++) {
 			visit(ctx.component_body_item(i));
 		}
-		
+
 		root = node.m_parent;
 
 		return 0;
@@ -212,7 +212,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		}
 		else {
 			visit(ctx.exec_super_stmt());
-			
+
 		}
 
 		return 0;
@@ -333,7 +333,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitInteger_type(PSSParser.Integer_typeContext ctx) {
 		// bit[7]	// [constant_expression]
 		// bit[3:0]	// [constant_expression (':' number)? ]
-		
+
 		if (ctx.domain_open_range_list() != null) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		}
@@ -352,10 +352,10 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		}
 		else {
 			if (sign) {
-				width = 32;
+				width = PSSIntModel.DEFAULT_INT_SIZE;
 			}
 			else {
-				width = 1;
+				width = PSSIntModel.DEFAULT_BIT_SIZE;
 			}
 		}
 
@@ -423,7 +423,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		visit(ctx.expression());
 		PSSExpression cond = exp_stack.pop();
 
-		visit(ctx.procedural_stmt());	
+		visit(ctx.procedural_stmt());
 		PSSProcStmt stmt = proc_stmt_list.remove(0);
 
 		PSSRepeatProcStmt repeat_stmt = new PSSRepeatProcStmt(cond, stmt);
@@ -436,7 +436,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		visit(ctx.expression());
 		PSSExpression cond = exp_stack.pop();
 
-		visit(ctx.procedural_stmt());	
+		visit(ctx.procedural_stmt());
 		PSSProcStmt stmt = proc_stmt_list.remove(0);
 
 		PSSRepeatWhileProcStmt repeat_while_stmt = new PSSRepeatWhileProcStmt(cond, stmt);
@@ -449,7 +449,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		visit(ctx.expression());
 		PSSExpression cond = exp_stack.pop();
 
-		visit(ctx.procedural_stmt());	
+		visit(ctx.procedural_stmt());
 		PSSProcStmt stmt = proc_stmt_list.remove(0);
 
 		PSSWhileProcStmt while_stmt = new PSSWhileProcStmt(cond, stmt);
@@ -467,12 +467,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		visit(ctx.expression());
 		PSSExpression cond = exp_stack.pop();
 
-		visit(ctx.procedural_stmt(0));	
+		visit(ctx.procedural_stmt(0));
 		PSSProcStmt true_path = proc_stmt_list.remove(0);
 		PSSProcStmt false_path = null;
 
 		if (ctx.procedural_stmt().size() == 2) {
-			visit(ctx.procedural_stmt(1));	
+			visit(ctx.procedural_stmt(1));
 			false_path = proc_stmt_list.remove(0);
 		}
 
@@ -616,7 +616,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		}
 
 		constraint_list.add(constraint);
-		
+
 		return 0;
 	}
 	@Override
@@ -627,7 +627,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	@Override
 	public Integer visitUnique_constraint_item(PSSParser.Unique_constraint_itemContext ctx) {
 		PSSUniqueConstraint constraint = new PSSUniqueConstraint();
-		
+
 		for (int i=0; i<ctx.hierarchical_id_list().hierarchical_id().size(); i++) {
 			visit(ctx.hierarchical_id_list().hierarchical_id(i));
 			constraint.add((PSSHierarchicalIDExpression)exp_stack.pop());
@@ -645,7 +645,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSExpression right = exp_stack.pop();
 			PSSExpression left = exp_stack.pop();
 			String op = ctx.binary_operator().getText();
-			
+
 
 			switch (op) {
 			case "==":
@@ -912,12 +912,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
 
 		for (int i=0; i<ctx.open_range_value().size(); i++) {
-			
+
 			visit(ctx.open_range_value(i));
 			PSSOpenRangeValueExpression value = (PSSOpenRangeValueExpression) exp_stack.pop();
 
 			open_range_list.addOpenRangeValueExpression(value);
-			
+
 		}
 
 		exp_stack.push(open_range_list);
@@ -998,12 +998,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		PSSIfElseActivity if_else_stmt = new PSSIfElseActivity(cond);
 
-		visit(ctx.activity_stmt(0));	
+		visit(ctx.activity_stmt(0));
 		PSSActivity true_stmt = activity_stack.pop();
 		if_else_stmt.addTrueStmt(true_stmt);
 
 		if (ctx.activity_stmt().size() == 2) {
-			visit(ctx.activity_stmt(1));	
+			visit(ctx.activity_stmt(1));
 			PSSActivity false_stmt = activity_stack.pop();
 			if_else_stmt.addFalseStmt(false_stmt);
 		}
@@ -1022,7 +1022,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		visit(ctx.expression());
 		PSSExpression count = exp_stack.pop();
 
-		visit(ctx.activity_stmt());	
+		visit(ctx.activity_stmt());
 		PSSActivity stmt = activity_stack.pop();
 
 		PSSRepeatActivity repeat_stmt = new PSSRepeatActivity(count, stmt, index_id);
@@ -1036,7 +1036,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			visit(ctx.activity_stmt(i));
 			PSSActivity stmt = activity_stack.pop();
 			sequence_stmt.addActivity(stmt);
-			
+
 		}
 		activity_stack.push(sequence_stmt);
 		return 0;
@@ -1144,8 +1144,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSDataDeclModel data_decl = new PSSDataDeclModel(data_type);
 
 		for (int i=0; i<ctx.data_instantiation().size(); i++) {
-			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i); 
-			
+			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
+
 			String id = data_inst.identifier().getText();
 
 

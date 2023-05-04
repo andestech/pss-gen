@@ -137,7 +137,7 @@ public class PSSMapInst extends PSSInst {
      * @return the size of this map instance
      */
     public PSSIntInst size() {
-        PSSIntInst res = new PSSIntInst(m_id + ".size()", false, 32, false);
+        PSSIntInst res = new PSSIntInst(m_id + ".size()", false, PSSIntModel.DEFAULT_INT_SIZE, false);
         res.assign(new PSSIntVal(m_map.size()));
         return res;
     }
