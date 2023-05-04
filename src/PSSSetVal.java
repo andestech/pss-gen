@@ -35,7 +35,7 @@ public class PSSSetVal extends PSSVal {
             m_list.add(elem);
     }
 
-	public ArrayList<PSSVal> getValList() {
+	public List<PSSVal> getValList() {
 		return m_list;
 	}
 
