@@ -14,10 +14,12 @@ public class PSSStringVal extends PSSVal {
 		m_bound = bound;
 	}
 
+    @Override
 	public boolean isBound() {
 		return m_bound;
 	}
 
+    @Override
 	public String getText() {
 		if (m_bound) {
 			return m_str;
@@ -26,45 +28,52 @@ public class PSSStringVal extends PSSVal {
 		}
 	}
 
+    @Override
 	public int toInt() {
 		PSSMessage.Error("STRINTVAL", "StrintVal cannot be converted to string");
 		return 0;
 	}
 
-	public String toString() {
+    @Override
+	public String toStr() {
 		return m_str;
 	}
 
+    @Override
 	public boolean toBool() {
 		return true; // # string is always true
 	}
 
 	//
+    @Override
 	public PSSBoolVal Equal(PSSVal rhs) {
-		String rhs_str = rhs.toString();
+		String rhs_str = rhs.toStr();
 		return new PSSBoolVal(m_str.equals(rhs_str));
 	}
 
+    @Override
 	public PSSBoolVal NotEqual(PSSVal rhs) {
-		String rhs_str = rhs.toString();
+		String rhs_str = rhs.toStr();
 		return new PSSBoolVal(!m_str.equals(rhs_str));
 	}
 
+    @Override
 	public PSSBoolVal InRange(PSSVal rhs) {
 		return Equal(rhs);
 	}
 
+    @Override
 	public PSSStringVal join(PSSVal rhs) {
 		if (m_bound) {
 			if (!rhs.isBound()) {
 				return new PSSStringVal(m_str);
-			} else if (m_str.equals(rhs.toString())) {
+			} else if (m_str.equals(rhs.toStr())) {
 				return new PSSStringVal(m_str);
 			} else {
 				return null;
 			}
 		} else {
-			return new PSSStringVal(rhs.toString());
+			return new PSSStringVal(rhs.toStr());
 		}
 	}
 

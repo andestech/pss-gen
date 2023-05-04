@@ -175,10 +175,11 @@ public class PSSMapInst extends PSSInst {
      *
      * @return the key set
      */
-    public PSSInst keys() {
-        /* TODO: implement this */
-        PSSMessage.Fatal("[" + getClass().getName() + "] To be implemented when set implementation is done");
-        return null;
+    public PSSSetInst keys() {
+        PSSSetInst res = new PSSSetModel(m_key_type).declInst(m_id + ".keys()", false);
+        for (PSSVal k : m_map.keys().getValList())
+            res.insert(k);
+        return res;
     }
 
     /**

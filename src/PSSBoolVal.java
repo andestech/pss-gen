@@ -11,34 +11,41 @@ public class PSSBoolVal extends PSSVal {
 		m_val = val;
 	}
 
+    @Override
 	public String getText() {
 		return String.valueOf(m_val);
 	}
 
+    @Override
 	public int toInt() {
 		PSSMessage.Error("INTVAL", "BoolVal cannot be converted to int");
 		return 0;
 	}
 
-	public String toString() {
+    @Override
+	public String toStr() {
 		PSSMessage.Error("INTVAL", "IntVal cannot be converted to string");
 		return "";
 	}
 
+    @Override
 	public boolean toBool() {
 		return m_val;
 	}
 
+    @Override
 	public PSSBoolVal LogicalAnd(PSSVal rhs) {
 		boolean rhs_val = rhs.toBool();
 		return new PSSBoolVal(m_val && rhs_val);
 	}
 
+    @Override
 	public PSSBoolVal LogicalOr(PSSVal rhs) {
 		boolean rhs_val = rhs.toBool();
 		return new PSSBoolVal(m_val || rhs_val);
 	}
 
+    @Override
 	public PSSBoolVal LogicalNot() {
 		return new PSSBoolVal(!m_val);
 	}

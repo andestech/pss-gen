@@ -223,14 +223,17 @@ public class PSSIntDomain extends PSSDomain {
 		return "{" + text + "}";
 	}
 
+	@Override
 	public int toInt() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to Int");
 		return 0;
 	}
-	public String toString() {
+	@Override
+	public String toStr() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to string");
 		return "";
 	}
+	@Override
 	public boolean toBool() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to boolean");
 		return false;

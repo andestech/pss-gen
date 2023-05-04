@@ -98,7 +98,7 @@ public class PSSStringDomain extends PSSDomain {
 		PSSVal item = m_list.get(randi);
 
 		if (item.isBound()) {
-			return new PSSStringVal(item.toString());
+			return new PSSStringVal(item.toStr());
 		}
 		else {
 			String str = PSSRandom.nextString();

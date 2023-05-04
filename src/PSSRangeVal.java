@@ -11,10 +11,12 @@ public class PSSRangeVal extends PSSVal {
 		m_max = end;
 	}
 
+    @Override
 	public boolean isRangeVal() {
 		return true;
 	}
 
+    @Override
 	public PSSVal reduceLessEqual(PSSVal val) {
 		// reduceLessEqual(7)
 		// [8..9] -> null
@@ -34,6 +36,7 @@ public class PSSRangeVal extends PSSVal {
 		}
 	}
 
+    @Override
 	public PSSVal reduceGreaterEqual(PSSVal val) {
 		// reduceGreaterEqual(5)
 		// [1..4] -> null
@@ -52,10 +55,12 @@ public class PSSRangeVal extends PSSVal {
 		}
 	}
 
+    @Override
 	public PSSVal getMin() {
 		return new PSSIntVal(m_min);
 	}
 
+    @Override
 	public PSSVal getMax() {
 		return new PSSIntVal(m_max);
 	}
@@ -73,6 +78,7 @@ public class PSSRangeVal extends PSSVal {
 		return new PSSRangeVal(min, max);
 	}
 
+    @Override
 	public PSSVal join(PSSVal val) {
 		if (val.isRangeVal()) {
 			BigInteger min = val.getMin().toBigInteger();
@@ -98,30 +104,36 @@ public class PSSRangeVal extends PSSVal {
 		}
 	}
 
+    @Override
 	public PSSBoolVal InRange(PSSVal val) {
 		BigInteger int_val = val.toBigInteger();
 		return new PSSBoolVal((m_min.compareTo(int_val) <= 0) && (m_max.compareTo(int_val) >= 0));
 	}
 
+    @Override
 	public String getText() {
 		return m_min.toString(10) + ".." + m_max.toString(10);
 	}
 
+    @Override
 	public int toInt() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to int");
 		return 0;
 	}
 
-	public String toString() {
+    @Override
+	public String toStr() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to string");
 		return "";
 	}
 
+    @Override
 	public boolean toBool() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to bool");
 		return false;
 	}
 
+    @Override
 	public PSSVal randomIn() {
 		BigInteger rand_val = PSSRandom.nextBigInteger(m_min, m_max);
 		return new PSSIntVal(rand_val);

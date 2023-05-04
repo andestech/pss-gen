@@ -12,6 +12,7 @@ public class PSSHierarchicalIDExpression extends PSSExpression {
         m_member_list.add(m);
     }
 
+    @Override
     public PSSInst getInst(PSSInst var) {
         PSSInst inst = var;
         for (PSSMemberPathElemExpression m : m_member_list)

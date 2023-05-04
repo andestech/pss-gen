@@ -1,9 +1,16 @@
 import java.math.*;
 
+/**
+ * This class provides a default implementation of values. All operations are
+ * not implemented by default except:
+ * <ul>
+ * <li>{@code isRangeVal}: {@code false} by default</li>
+ * <li>{@code isBound}: {@code true} by default</li>
+ * </ul>
+ */
 public class PSSVal implements Comparable<PSSVal> {
 
 	public PSSVal() {
-		;
 	}
 
 	public String getText() {
@@ -14,11 +21,6 @@ public class PSSVal implements Comparable<PSSVal> {
 	public String toTargetCode() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::toTargetCode is not implemented");
 		return "";
-	}
-
-	public int toInt() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::toInt is not implemented");
-		return 0;
 	}
 
 	public boolean isRangeVal() {
@@ -34,16 +36,41 @@ public class PSSVal implements Comparable<PSSVal> {
 		return null;
 	}
 
+	/**
+	 * Converts this value to a big integer.
+	 * 
+	 * @return the converted big integer
+	 */
 	public BigInteger toBigInteger() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::toBigInteger is not implemented");
 		return null;
 	}
 
-	public String toString() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::toString is not implemented");
+	/**
+	 * Converts this value to an integer according PSS documentation.
+	 * 
+	 * @return the converted integer
+	 */
+	public int toInt() {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::toInt is not implemented");
+		return 0;
+	}
+
+	/**
+	 * Converts this value to a string according PSS documentation.
+	 * 
+	 * @return the converted string
+	 */
+	public String toStr() {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::toStr is not implemented");
 		return "";
 	}
 
+	/**
+	 * Converts this value to a boolean according PSS documentation.
+	 * 
+	 * @return the converted boolean
+	 */
 	public boolean toBool() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::toBool is not implemented");
 		return false;
@@ -58,6 +85,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "==" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -68,6 +96,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "!=" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -78,6 +107,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * ">" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -88,6 +118,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * ">=" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -98,6 +129,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "<=" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -108,6 +140,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "<" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -118,6 +151,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "+" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -128,6 +162,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "-" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -138,6 +173,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "*" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -148,6 +184,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "/" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -158,6 +195,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "%" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -168,6 +206,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "<<" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -178,6 +217,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * ">>" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -188,6 +228,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "&&" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -198,6 +239,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "||" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -208,6 +250,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "in" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -218,6 +261,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "!" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -228,6 +272,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "&" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -238,6 +283,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * "|" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -248,6 +294,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * Unary "^" operator
+	 * 
 	 * @return
 	 */
 	public PSSVal BitwiseNot() {
@@ -257,6 +304,7 @@ public class PSSVal implements Comparable<PSSVal> {
 
 	/**
 	 * Unary "-" operator
+	 * 
 	 * @param rhs
 	 * @return
 	 */
@@ -277,7 +325,8 @@ public class PSSVal implements Comparable<PSSVal> {
 	}
 
 	/**
-	 * "[]" operator
+	 * "[]" operator, bit-select
+	 * 
 	 * @param rhs
 	 * @return
 	 */

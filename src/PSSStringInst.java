@@ -38,7 +38,7 @@ public class PSSStringInst extends PSSInst {
 		return true;
 	}
 	public void randomize_one() {
-		m_str = m_domain.random().toString();
+		m_str = m_domain.random().toStr();
 		//PSSMessage.Debug("randomize_one: str = " + m_str);
 	}
 	public void randomize() {
@@ -56,7 +56,7 @@ public class PSSStringInst extends PSSInst {
 		}
 	}
 	public void assign(PSSVal val) {
-		m_str = val.toString();
+		m_str = val.toStr();
 		m_initialized = true;
 	}
 
