@@ -67,8 +67,8 @@ public class PSSMapVal extends PSSVal {
 	 *
 	 * @return a set containing the map keys
 	 */
-	public PSSArrayVal keys() {
-		PSSArrayVal keys = new PSSArrayVal();
+	public PSSListVal keys() {
+		PSSListVal keys = new PSSListVal();
 		for (PSSVal k : m_map.keySet())
 			keys.add(k);
 		return keys;

@@ -132,7 +132,7 @@ public class PSSStringDomain extends PSSDomain {
 	}
 
 	@Override
-	public PSSStringDomain reduceDomainIn(PSSArrayVal val) {
+	public PSSStringDomain reduceDomainIn(PSSListVal val) {
 		List<PSSVal> list = val.getValList();
 		return join(list);
 	}

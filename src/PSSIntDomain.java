@@ -236,7 +236,7 @@ public class PSSIntDomain extends PSSDomain {
 	}
 
 	@Override
-	public PSSIntDomain reduceDomainIn(PSSArrayVal val) {
+	public PSSIntDomain reduceDomainIn(PSSListVal val) {
 		List<PSSVal> list = val.getValList();
 		return join(list);
 	}

@@ -14,7 +14,7 @@ public class PSSInExpression extends PSSExpression {
 		PSSDomainMap map = new PSSDomainMap();
 		PSSInst leftInst = m_left.getInst(var);
 		if (leftInst != null) {
-			PSSArrayVal rightVal = (PSSArrayVal) m_right.eval(var);
+			PSSListVal rightVal = (PSSListVal) m_right.eval(var);
 			PSSDomain left_domain = leftInst.getInitDomain();
 			left_domain = left_domain.reduceDomainIn(rightVal);
 			map.add(leftInst, left_domain);

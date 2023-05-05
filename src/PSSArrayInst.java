@@ -48,9 +48,9 @@ public class PSSArrayInst extends PSSInst {
 	}
 
 	public void assign(PSSVal val) {
-        if (!(val instanceof PSSArrayVal))
+        if (!(val instanceof PSSListVal))
             PSSMessage.Fatal("The array type should be assigned as a PSSArrayVal");
-        PSSArrayVal arrayVal = (PSSArrayVal) val;
+        PSSListVal arrayVal = (PSSListVal) val;
 
         if (arrayVal.size() != m_dim)
             PSSMessage.Fatal("The size of the array is different to " +
@@ -58,7 +58,7 @@ public class PSSArrayInst extends PSSInst {
 
         for (int i = 0; i < m_dim; i++) {
             PSSInst elemInst = m_array.get(i);
-            PSSVal elemVal = arrayVal.getArray().get(i);
+            PSSVal elemVal = arrayVal.getValList().get(i);
             elemInst.assign(elemVal);
         }
 	}
@@ -106,10 +106,10 @@ public class PSSArrayInst extends PSSInst {
     }
 
     @Override
-    public PSSArrayVal toVal() {
-        PSSArrayVal res = new PSSArrayVal();
+    public PSSListVal toVal() {
+        PSSListVal res = new PSSListVal();
         for (PSSInst elem: m_array)
-            res.insert(elem.toVal());
+            res.add(elem.toVal());
         return res;
     }
 

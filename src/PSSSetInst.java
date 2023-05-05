@@ -3,7 +3,8 @@ import java.util.*;
 public class PSSSetInst extends PSSInst {
 
     PSSModel m_type_model;
-    PSSSetVal m_set = new PSSSetVal();
+
+    Set<PSSVal> m_set = new HashSet<PSSVal>();
 
     NativeMethod m_method_size = new NativeMethod("size", 0) {
         protected PSSInst doEval(List<PSSVal> args) {
@@ -58,9 +59,9 @@ public class PSSSetInst extends PSSInst {
 
     @Override
     public void assign(PSSVal val) {
-        if (!(val instanceof PSSArrayVal))
+        if (!(val instanceof PSSListVal))
             PSSMessage.Fatal("The set type should be assigned as a value_list_literal.");
-        PSSArrayVal s = (PSSArrayVal) val;
+        PSSListVal s = (PSSListVal) val;
 
         m_set.clear();
         for (PSSVal e: s.getValList())
@@ -85,11 +86,11 @@ public class PSSSetInst extends PSSInst {
     }
 
     public void delete(PSSVal elem) {
-        m_set.delete(elem);
+        m_set.remove(elem);
     }
 
     public void insert(PSSVal e) {
-        m_set.insert(e);
+        m_set.add(e);
     }
 
     public PSSInst to_list() {
@@ -98,10 +99,10 @@ public class PSSSetInst extends PSSInst {
     }
 
     @Override
-    public PSSSetVal toVal() {
-        PSSSetVal collectedVal = new PSSSetVal();
-        for (PSSVal elem: m_set.getValList())
-            collectedVal.insert(elem);
+    public PSSListVal toVal() {
+        PSSListVal collectedVal = new PSSListVal();
+        for (PSSVal elem: m_set)
+            collectedVal.add(elem);
         return collectedVal;
     }
 

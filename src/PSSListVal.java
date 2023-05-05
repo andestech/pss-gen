@@ -1,63 +1,54 @@
 import java.util.*;
 
-public class PSSArrayVal extends PSSVal {
+/**
+ * A {@code PSSListVal} is a value_list_literal
+ */
+public class PSSListVal extends PSSVal {
 
-    private ArrayList<PSSVal> m_array = new ArrayList<PSSVal>();
+    private List<PSSVal> m_list = new ArrayList<PSSVal>();
 
-    public PSSArrayVal() {
+    public PSSListVal() {
     }
 
     public int size() {
-        return m_array.size();
+        return m_list.size();
     }
 
     public int sum() {
-        if (!(m_array.get(0) instanceof PSSIntVal))
+        if (!(m_list.get(0) instanceof PSSIntVal))
             PSSMessage.Fatal("Array.sum() is only used on Int type");
 
         int sum = 0;
-        for (PSSVal e: m_array)
+        for (PSSVal e: m_list)
             sum += e.toInt();
         return sum;
     }
 
-    public void addVal(PSSVal elem) {
-        m_array.add(elem);
-    }
-
     public void add(PSSVal elem) {
-        m_array.add(elem);
+        m_list.add(elem);
     }
 
-    public void insert(PSSVal elem) {
-        m_array.add(elem);
-    }
-
-    public ArrayList<PSSVal> getArray() {
-        return m_array;
-    }
-
-    public ArrayList<PSSVal> getValList() {
-        return m_array;
+    public List<PSSVal> getValList() {
+        return m_list;
     }
 
     @Override
     public String getText() {
 		List<String> strs = new ArrayList<String>();
-        for (PSSVal elem: m_array)
+        for (PSSVal elem: m_list)
             strs.add(elem.getText());
         return "{ " + String.join(", ", strs) + " }";
     }
 
     @Override
     public int compareTo(PSSVal o) {
-        if (o instanceof PSSArrayVal) {
-            PSSArrayVal a = (PSSArrayVal) o;
-            int c = Integer.valueOf(m_array.size()).compareTo(Integer.valueOf(a.m_array.size()));
+        if (o instanceof PSSListVal) {
+            PSSListVal a = (PSSListVal) o;
+            int c = Integer.valueOf(m_list.size()).compareTo(Integer.valueOf(a.m_list.size()));
             if (c != 0)
                 return c;
-            List<PSSVal> mylist = new ArrayList<PSSVal>(m_array);
-            List<PSSVal> olist = new ArrayList<PSSVal>(a.m_array);
+            List<PSSVal> mylist = new ArrayList<PSSVal>(m_list);
+            List<PSSVal> olist = new ArrayList<PSSVal>(a.m_list);
             Collections.sort(mylist);
             Collections.sort(olist);
             for (int i = 0; i < mylist.size(); i++) {
@@ -72,22 +63,32 @@ public class PSSArrayVal extends PSSVal {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof PSSArrayVal) {
-			PSSArrayVal r = (PSSArrayVal) o;
-			return m_array.size() == r.m_array.size() && m_array.containsAll(r.m_array);
+		if (o instanceof PSSListVal) {
+			PSSListVal r = (PSSListVal) o;
+			return m_list.size() == r.m_list.size() && m_list.containsAll(r.m_list);
 		}
 		return false;
 	}
 
     @Override
     public PSSVal randomIn() {
-        int size = m_array.size();
+        int size = m_list.size();
         int randi = PSSRandom.nextInt(0, size - 1);
-        PSSVal item = m_array.get(randi);
+        PSSVal item = m_list.get(randi);
 
         if (item.isRangeVal())
             return item.randomIn();
         return item;
+    }
+
+    public PSSBoolVal InRange(PSSVal lhs) {
+        for (int i=0; i<m_list.size(); i++) {
+                PSSVal item = m_list.get(i);
+                if (item.InRange(lhs).toBool()) {
+                        return new PSSBoolVal(true);
+                }
+        }
+        return new PSSBoolVal(false);
     }
 
     @Override

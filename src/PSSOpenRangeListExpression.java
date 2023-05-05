@@ -3,7 +3,7 @@ import java.util.*;
 public class PSSOpenRangeListExpression extends PSSExpression {
 
 	public ArrayList<PSSOpenRangeValueExpression> m_list;
-	
+
 
 	public PSSOpenRangeListExpression() {
 		m_list = new ArrayList<PSSOpenRangeValueExpression>();
@@ -14,15 +14,14 @@ public class PSSOpenRangeListExpression extends PSSExpression {
 	}
 
 	public PSSVal eval(PSSInst var) {
-		PSSArrayVal result = new PSSArrayVal();
+		PSSListVal result = new PSSListVal();
 
 		for (int i=0; i<m_list.size(); i++) {
 			PSSOpenRangeValueExpression item = m_list.get(i);
 
 			PSSVal item_val = item.eval(var);
-			result.addVal(item_val);
+			result.add(item_val);
 		}
-
 
 		return result;
 	}
