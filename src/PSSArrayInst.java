@@ -2,68 +2,115 @@ import java.util.*;
 
 public class PSSArrayInst extends PSSInst {
     PSSModel m_type_model;
-	ArrayList<PSSInst> m_array_elems;
+    int m_dim = 0;
+    ArrayList<PSSInst> m_array = new ArrayList<PSSInst>();
+
+    NativeMethod m_method_size = new NativeMethod("size", 0) {
+        protected PSSInst doEval(List<PSSVal> args) {
+            return size();
+        }
+    };
+
+    NativeMethod m_method_sum = new NativeMethod("sum", 0) {
+        protected PSSInst doEval(List<PSSVal> args) {
+            return sum();
+        }
+    };
+
+    NativeMethod m_method_to_list = new NativeMethod("to_list", 0) {
+        protected PSSInst doEval(List<PSSVal> args) {
+            return to_list();
+        }
+    };
+
+    NativeMethod m_method_to_set = new NativeMethod("to_set", 0) {
+        protected PSSInst doEval(List<PSSVal> args) {
+            return to_set();
+        }
+    };
 
 	PSSArrayInst(String id, PSSModel type_model, int dim, boolean rand) {
-		super(id, "", false);
+        super(id, "array<"+type_model.m_id+">", rand);
+        if (dim <= 0)
+            PSSMessage.Error("ArrayInst", "'"+id+"' is a zero-length array");
+
         m_type_model = type_model;
-		m_array_elems = new ArrayList<PSSInst>();
-		for (int i=0; i<dim; i++) {
-			PSSInst inst = type_model.declInst(id + "[" + i + "]", rand);
-			m_array_elems.add(inst);
-		}
+        m_dim = dim;
+        for (int i = 0; i < m_dim; i++) {
+            PSSInst inst = m_type_model.declInst(id + "[" + i + "]", m_rand);
+            m_array.add(inst);
+        }
+
+        addNativeMethod(m_method_size);
+        addNativeMethod(m_method_sum);
+        addNativeMethod(m_method_to_list);
+        addNativeMethod(m_method_to_set);
 	}
 
 	public void assign(PSSVal val) {
-		for (int i=0; i<m_array_elems.size(); i++) {
-			PSSInst item = m_array_elems.get(i);
-			PSSVal item_val = val.indexOf(i);
-			item.assign(item_val);
-		}
-	}
+        if (!(val instanceof PSSSetVal)) // FIXME
+            PSSMessage.Fatal("The array type should be assigned as a PSSSetVal");
+        PSSSetVal arrayVal = (PSSSetVal) val;
 
-	public void randomize() {
-		for (int i=0; i<m_array_elems.size(); i++) {
-			PSSInst item = m_array_elems.get(i);
-			item.randomize();
-		}
+        if (arrayVal.size() != m_dim)
+            PSSMessage.Fatal("The size of the array is different to " +
+                    "the assigned aggregate literal");
+
+        for (int i = 0; i < m_dim; i++) {
+            PSSInst elemInst = m_array.get(i);
+            PSSVal elemVal = arrayVal.getValList().get(i); // FIXME
+            elemInst.assign(elemVal);
+        }
 	}
 
     @Override
+    public void randomize() {
+        if (m_rand) {
+            for (PSSInst elem: m_array)
+                elem.randomize();
+        }
+    }
+
+    @Override
 	public PSSInst indexOf(PSSVal index) {
-		return m_array_elems.get(index.toInt());
+        if (!(index instanceof PSSIntVal))
+            PSSMessage.Error("ArrayInst",
+                    "The index of an array must be a PSSIntVal");
+        PSSIntVal intIndex = (PSSIntVal) index;
+        return m_array.get(intIndex.toInt());
 	}
 
-    public PSSInst evalMethod(String identifier, List<PSSVal> args) {
-        PSSInst inst = null;
-        if (identifier.equals("size")) {
-            PSSIntInst intInst = new PSSIntInst(m_id+".size()", false, 32, false);
-            intInst.assign(PSSNumber.newDecNumber(Integer.toString(m_array_elems.size())));
-            inst = intInst;
-        } else if (identifier.equals("sum")) {
-            if (m_type_model instanceof PSSIntModel) {
-                int sum = 0;
-                for (PSSInst elem: m_array_elems)
-                    sum += elem.toVal().toInt();
-                PSSIntInst intInst = new PSSIntInst(m_id+".size()", false, 32, false);
-                intInst.assign(PSSNumber.newDecNumber(Integer.toString(sum)));
-                inst = intInst;
-            } else {
-                PSSMessage.Error("",
-                    "Array's sum() method can only be used on numeric data type.");
-            }
-        } else if (identifier.equals("to_list")) {
-            PSSSetVal collectedVal = new PSSSetVal();
-            for (PSSInst elem: m_array_elems)
-                collectedVal.addVal(elem.toVal());
-            PSSListInst listInst = new PSSListInst(m_id+".to_list()", m_type_model, false);
-            listInst.assign(collectedVal);
-            inst = listInst;
-        } else if (identifier.equals("to_set")) {
-            PSSMessage.Fatal("Currently unsupported");
-        } else
-            PSSMessage.Fatal("Unsupported Array method");
-        return inst;
+    public PSSIntInst size() {
+        PSSIntInst res = new PSSIntInst(m_id + ".size()", false,
+                PSSIntModel.DEFAULT_INT_SIZE, false);
+        res.assign(new PSSIntVal(m_dim));
+        return res;
+    }
+
+    public PSSIntInst sum() {
+        int sum = this.toVal().sum();
+        PSSIntInst res = new PSSIntInst(m_id + ".sum()", false,
+                PSSIntModel.DEFAULT_INT_SIZE, false);
+        res.assign(new PSSIntVal(sum));
+        return res;
+    }
+
+    public PSSListInst to_list() {
+        PSSMessage.Fatal("Yet to be implemented");
+        return null;
+    }
+
+    public PSSSetInst to_set() {
+        PSSMessage.Fatal("Yet to be implemented");
+        return null;
+    }
+
+    @Override
+    public PSSArrayVal toVal() {
+        PSSArrayVal res = new PSSArrayVal();
+        for (PSSInst elem: m_array)
+            res.insert(elem.toVal());
+        return res;
     }
 
 };
