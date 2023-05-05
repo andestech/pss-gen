@@ -139,7 +139,7 @@ public abstract class PSSDomain {
 	 * @return a domain reduced from this one by keeping only elements in the set
 	 *         {@code val}
 	 */
-	public PSSDomain reduceDomainIn(PSSSetVal val) {
+	public PSSDomain reduceDomainIn(PSSArrayVal val) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainIn is not impelemented");
 		return null;
 	}

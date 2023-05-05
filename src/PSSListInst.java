@@ -12,10 +12,10 @@ public class PSSListInst extends PSSInst {
 	}
 
 	public void assign(PSSVal val) {
-        if (!PSSSetVal.class.isInstance(val))
+        if (!PSSArrayVal.class.isInstance(val))
             PSSMessage.Fatal("The list type should be assigned as a list_literal.");
 
-        PSSSetVal valset = (PSSSetVal) val;
+        PSSArrayVal valset = (PSSArrayVal) val;
         m_list.clear();
         for (PSSVal itemVal: valset.getValList()) {
             PSSInst itemInst = m_type_model.declInst("", m_rand);
@@ -27,7 +27,7 @@ public class PSSListInst extends PSSInst {
     public PSSVal toVal() {
         if (m_list.size() == 0)
             PSSMessage.Error("ListInst", "'" + getHierarchyId() + "' is not initialized");
-        PSSSetVal collectedVal = new PSSSetVal();
+        PSSArrayVal collectedVal = new PSSArrayVal(); // FIXME: PSSListVal
         for (PSSInst elem: m_list)
             collectedVal.addVal(elem.toVal());
         return (PSSVal) collectedVal;

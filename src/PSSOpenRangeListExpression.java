@@ -14,7 +14,7 @@ public class PSSOpenRangeListExpression extends PSSExpression {
 	}
 
 	public PSSVal eval(PSSInst var) {
-		PSSSetVal result = new PSSSetVal();
+		PSSArrayVal result = new PSSArrayVal();
 
 		for (int i=0; i<m_list.size(); i++) {
 			PSSOpenRangeValueExpression item = m_list.get(i);

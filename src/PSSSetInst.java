@@ -58,9 +58,9 @@ public class PSSSetInst extends PSSInst {
 
     @Override
     public void assign(PSSVal val) {
-        if (!(val instanceof PSSSetVal))
+        if (!(val instanceof PSSArrayVal))
             PSSMessage.Fatal("The set type should be assigned as a value_list_literal.");
-        PSSSetVal s = (PSSSetVal) val;
+        PSSArrayVal s = (PSSArrayVal) val;
 
         m_set.clear();
         for (PSSVal e: s.getValList())

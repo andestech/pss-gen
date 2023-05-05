@@ -21,11 +21,23 @@ public class PSSArrayVal extends PSSVal {
         return sum;
     }
 
+    public void addVal(PSSVal elem) {
+        m_array.add(elem);
+    }
+
+    public void add(PSSVal elem) {
+        m_array.add(elem);
+    }
+
     public void insert(PSSVal elem) {
         m_array.add(elem);
     }
 
     public ArrayList<PSSVal> getArray() {
+        return m_array;
+    }
+
+    public ArrayList<PSSVal> getValList() {
         return m_array;
     }
 
@@ -66,5 +78,34 @@ public class PSSArrayVal extends PSSVal {
 		}
 		return false;
 	}
+
+    @Override
+    public PSSVal randomIn() {
+        int size = m_array.size();
+        int randi = PSSRandom.nextInt(0, size - 1);
+        PSSVal item = m_array.get(randi);
+
+        if (item.isRangeVal())
+            return item.randomIn();
+        return item;
+    }
+
+    @Override
+    public int toInt() {
+        PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to Int");
+        return 0;
+    }
+
+    @Override
+    public String toStr() {
+        PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to string");
+        return "";
+    }
+
+    @Override
+    public boolean toBool() {
+        PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to boolean");
+        return false;
+    }
 
 }
