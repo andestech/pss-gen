@@ -1,5 +1,7 @@
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * A {PSSMapInst} is an instance of {@link PSSMapModel}.
@@ -12,7 +14,11 @@ public class PSSMapInst extends PSSInst {
     /** The value type */
     PSSModel m_val_type;
 
-    PSSMapVal m_map = new PSSMapVal();
+    /** a map from keys to values */
+    Map<PSSVal, PSSInst> m_map = new HashMap<PSSVal, PSSInst>();
+
+    /** the size attribute */
+    private PSSIntInst m_size = new PSSIntInst(m_id + ".size()", false, PSSIntModel.DEFAULT_INT_SIZE, false);
 
     NativeMethod m_method_size = new NativeMethod("size", 0) {
         protected PSSInst doEval(List<PSSVal> args) {
@@ -105,30 +111,16 @@ public class PSSMapInst extends PSSInst {
 
     @Override
     public PSSInst indexOf(PSSVal key) {
-        PSSVal val = m_map.get(key);
+        /*
+         * TODO: currently, both getting the instance at index i and getting the value
+         * at index i use this function, they should be different
+         */
+        PSSInst val = m_map.get(key);
         if (val == null) {
-            PSSMessage.Fatal("Accessing a non-existing index " + key.getText());
-            return null;
+            val = m_val_type.declInst(false);
+            m_map.put(key, val);
         }
-        return getValueInst(val);
-    }
-
-    /**
-     * Returns the value associated with the specified key.
-     *
-     * @param kstr a key
-     * @return the value associated with {@code kstr}
-     */
-    public PSSInst get(String kstr) {
-        /* TODO: can we detect the type of the key? */
-        PSSInst res = null;
-        for (PSSVal k : m_map.keys().getValList()) {
-            if (k.getText().equals(kstr)) {
-                res = getValueInst(m_map.get(k));
-                break;
-            }
-        }
-        return res;
+        return val;
     }
 
     /**
@@ -137,9 +129,8 @@ public class PSSMapInst extends PSSInst {
      * @return the size of this map instance
      */
     public PSSIntInst size() {
-        PSSIntInst res = new PSSIntInst(m_id + ".size()", false, PSSIntModel.DEFAULT_INT_SIZE, false);
-        res.assign(new PSSIntVal(m_map.size()));
-        return res;
+        m_size.assign(new PSSIntVal(m_map.size()));
+        return m_size;
     }
 
     /**
@@ -156,8 +147,10 @@ public class PSSMapInst extends PSSInst {
      * @return the value associated with the key before being removed
      */
     public PSSInst delete(PSSVal key) {
-        PSSVal v = m_map.delete(key);
-        return v == null ? null : getValueInst(v);
+        PSSInst val = m_map.remove(key);
+        if (val == null)
+            PSSMessage.Fatal("Accessing a non-existing key " + key.getText() + " of map " + m_id);
+        return val;
     }
 
     /**
@@ -167,7 +160,12 @@ public class PSSMapInst extends PSSInst {
      * @param v a value
      */
     public void insert(PSSVal k, PSSVal v) {
-        m_map.insert(k, v);
+        PSSInst val = m_map.get(k);
+        if (val == null) {
+            val = m_val_type.declInst(false);
+            m_map.put(k, val);
+        }
+        val.assign(v);
     }
 
     /**
@@ -177,7 +175,7 @@ public class PSSMapInst extends PSSInst {
      */
     public PSSSetInst keys() {
         PSSSetInst res = new PSSSetModel(m_key_type).declInst(m_id + ".keys()", false);
-        for (PSSVal k : m_map.keys().getValList())
+        for (PSSVal k : m_map.keySet())
             res.insert(k);
         return res;
     }
@@ -189,24 +187,24 @@ public class PSSMapInst extends PSSInst {
      */
     public PSSListInst values() {
         PSSListInst res = new PSSListModel(m_val_type).declInst(m_id + ".values()", m_rand);
-        for (PSSVal v : m_map.values())
+        for (PSSInst v : m_map.values())
             ; /* TODO: add to res */
-        PSSMessage.Fatal("[" + getClass().getName() + "] To be implemented when set implementation is done");
+        PSSMessage.Fatal("[" + getClass().getName() + "] To be implemented when list implementation is done");
         return null;
     }
 
     @Override
     public PSSMapVal toVal() {
         PSSMapVal res = new PSSMapVal();
-        for (PSSVal k : m_map.keys().getValList()) {
-            res.insert(k, m_map.get(k));
+        for (PSSVal k : m_map.keySet()) {
+            res.insert(k, m_map.get(k).toVal());
         }
         return res;
     }
 
     public void randomize() {
-        // PSS Standard V2.0 - 8.1 Data types General
-        // The list collection type is not randomizable.
+        // PSS V2.0 - 8.1 General
+        // The map collection type is not randomizable.
     }
 
 }
