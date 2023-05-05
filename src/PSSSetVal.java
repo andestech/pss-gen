@@ -20,12 +20,12 @@ public class PSSSetVal extends PSSVal {
         return m_list.size();
     }
 
-    public PSSVal delete(PSSVal elem) {
+    public void delete(PSSVal elem) {
         if (m_list.contains(elem))
-            return m_list.remove(m_list.indexOf(elem));
+            m_list.remove(elem);
         else {
-            PSSMessage.Error("", "The element '" + elem.getText() + "' does not exist.");
-            return null;
+            PSSMessage.Error("PSSSetVal",
+                    "The element '" + elem.getText() + "' does not exist.");
         }
     }
 

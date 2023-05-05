@@ -20,7 +20,8 @@ public class PSSSetInst extends PSSInst {
 
     NativeMethod m_method_delete = new NativeMethod("delete", 1) {
         protected PSSInst doEval(List<PSSVal> args) {
-            return delete(args.get(0));
+            delete(args.get(0));
+            return null;
         }
     };
 
@@ -83,9 +84,8 @@ public class PSSSetInst extends PSSInst {
         m_set.clear();
     }
 
-    public PSSInst delete(PSSVal elem) {
-        PSSVal v = m_set.delete(elem);
-        return v == null ? null : getElemInst(v);
+    public void delete(PSSVal elem) {
+        m_set.delete(elem);
     }
 
     public void insert(PSSVal e) {
