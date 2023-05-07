@@ -41,6 +41,16 @@ public class PSSListVal extends PSSVal {
     }
 
     @Override
+    public PSSBoolVal Equal(PSSVal v) {
+        return new PSSBoolVal(this.equals(v));
+    }
+
+    @Override
+    public PSSBoolVal NotEqual(PSSVal v) {
+        return this.Equal(v).LogicalNot();
+    }
+
+    @Override
     public int compareTo(PSSVal o) {
         if (o instanceof PSSListVal) {
             PSSListVal a = (PSSListVal) o;
@@ -49,8 +59,6 @@ public class PSSListVal extends PSSVal {
                 return c;
             List<PSSVal> mylist = new ArrayList<PSSVal>(m_list);
             List<PSSVal> olist = new ArrayList<PSSVal>(a.m_list);
-            Collections.sort(mylist);
-            Collections.sort(olist);
             for (int i = 0; i < mylist.size(); i++) {
                 c = mylist.get(i).compareTo(olist.get(i));
                 if (c != 0)
@@ -65,7 +73,7 @@ public class PSSListVal extends PSSVal {
 	public boolean equals(Object o) {
 		if (o instanceof PSSListVal) {
 			PSSListVal r = (PSSListVal) o;
-			return m_list.size() == r.m_list.size() && m_list.containsAll(r.m_list);
+			return m_list.size() == r.m_list.size() && m_list.equals(r.m_list);
 		}
 		return false;
 	}
@@ -81,6 +89,7 @@ public class PSSListVal extends PSSVal {
         return item;
     }
 
+    @Override
     public PSSBoolVal InRange(PSSVal lhs) {
         for (int i=0; i<m_list.size(); i++) {
                 PSSVal item = m_list.get(i);

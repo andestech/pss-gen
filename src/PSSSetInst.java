@@ -51,12 +51,6 @@ public class PSSSetInst extends PSSInst {
         addNativeMethod(m_method_to_list);
     }
 
-    private PSSInst getElemInst(PSSVal e) {
-        PSSInst elem = m_type_model.declInst(m_id + ":elem=" + e.getText(), m_rand);
-        elem.assign(e);
-        return elem;
-    }
-
     @Override
     public void assign(PSSVal val) {
         m_set.clear();
@@ -70,8 +64,8 @@ public class PSSSetInst extends PSSInst {
             for (PSSVal e : s.getSet()) {
                 insert(e);
             }
-        }
-        PSSMessage.Fatal("The set type should be assigned as a value_list_literal.");
+        } else
+            PSSMessage.Fatal("The set type should be assigned as a value_list_literal.");
     }
 
     @Override
@@ -90,10 +84,13 @@ public class PSSSetInst extends PSSInst {
     }
 
     public void delete(PSSVal elem) {
-        m_set.remove(elem);
+        if (!m_set.remove(elem))
+            PSSMessage.Error("SetInst", "Deleting \"" + elem.getText() + "\"" +
+                    "is illegal because it does not exist in \"" + m_id + "\"");
     }
 
     public void insert(PSSVal e) {
+        // TODO: Check type. Should we add getTypeModel() in PSSVal?
         m_set.add(e);
     }
 
