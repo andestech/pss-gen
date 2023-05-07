@@ -21,6 +21,18 @@ public class PSSHierarchicalIDExpression extends PSSExpression {
     }
 
     @Override
+    public PSSVal eval(PSSInst var) {
+        PSSVal res = null;
+        if (m_member_list.size() > 0) {
+            PSSInst inst = var;
+            for (int i = 0; i < m_member_list.size() - 1; i++)
+                inst = m_member_list.get(i).getInst(inst);
+            res = m_member_list.get(m_member_list.size() - 1).eval(inst);
+        }
+        return res;
+    }
+
+    @Override
     public String getText() {
         List<String> strs = new ArrayList<String>();
         for (PSSMemberPathElemExpression e : m_member_list)

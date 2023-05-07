@@ -7,34 +7,34 @@ public class PSSSetInst extends PSSInst {
     Set<PSSVal> m_set = new HashSet<PSSVal>();
 
     NativeMethod m_method_size = new NativeMethod("size", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return size();
         }
     };
 
     NativeMethod m_method_clear = new NativeMethod("clear", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             clear();
             return null;
         }
     };
 
     NativeMethod m_method_delete = new NativeMethod("delete", 1) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             delete(args.get(0));
             return null;
         }
     };
 
     NativeMethod m_method_insert = new NativeMethod("insert", 1) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             insert(args.get(0));
             return null;
         }
     };
 
     NativeMethod m_method_to_list = new NativeMethod("to_list", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return to_list();
         }
     };
@@ -81,10 +81,8 @@ public class PSSSetInst extends PSSInst {
         return null;
     }
 
-    public PSSIntInst size() {
-        PSSIntInst res = new PSSIntInst(m_id + ".size()", false, PSSIntModel.DEFAULT_INT_SIZE, false);
-        res.assign(new PSSIntVal(m_set.size()));
-        return res;
+    public PSSIntVal size() {
+        return new PSSIntVal(m_set.size());
     }
 
     public void clear() {
@@ -99,7 +97,7 @@ public class PSSSetInst extends PSSInst {
         m_set.add(e);
     }
 
-    public PSSInst to_list() {
+    public PSSVal to_list() {
         PSSMessage.Fatal("[" + getClass().getName() + "] To be implement");
         return null;
     }

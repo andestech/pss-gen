@@ -349,7 +349,7 @@ public class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal indexOf(int index) {
+	public PSSVal indexOf(PSSVal index) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::indexOf is not implemented");
 		return null;
 	}

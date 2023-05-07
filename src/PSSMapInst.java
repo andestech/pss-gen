@@ -17,43 +17,40 @@ public class PSSMapInst extends PSSInst {
     /** a map from keys to values */
     Map<PSSVal, PSSInst> m_map = new HashMap<PSSVal, PSSInst>();
 
-    /** the size attribute */
-    private PSSIntInst m_size = new PSSIntInst(m_id + ".size()", false, PSSIntModel.DEFAULT_INT_SIZE, false);
-
     NativeMethod m_method_size = new NativeMethod("size", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return size();
         }
     };
 
     NativeMethod m_method_clear = new NativeMethod("clear", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             clear();
             return null;
         }
     };
 
     NativeMethod m_method_delete = new NativeMethod("delete", 1) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return delete(args.get(0));
         }
     };
 
     NativeMethod m_method_insert = new NativeMethod("insert", 2) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             insert(args.get(0), args.get(1));
             return null;
         }
     };
 
     NativeMethod m_method_keys = new NativeMethod("keys", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return keys();
         }
     };
 
     NativeMethod m_method_values = new NativeMethod("values", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return values();
         }
     };
@@ -128,9 +125,8 @@ public class PSSMapInst extends PSSInst {
      *
      * @return the size of this map instance
      */
-    public PSSIntInst size() {
-        m_size.assign(new PSSIntVal(m_map.size()));
-        return m_size;
+    public PSSIntVal size() {
+        return new PSSIntVal(m_map.size());
     }
 
     /**
@@ -146,11 +142,11 @@ public class PSSMapInst extends PSSInst {
      * @param key a key
      * @return the value associated with the key before being removed
      */
-    public PSSInst delete(PSSVal key) {
+    public PSSVal delete(PSSVal key) {
         PSSInst val = m_map.remove(key);
         if (val == null)
             PSSMessage.Fatal("Accessing a non-existing key " + key.getText() + " of map " + m_id);
-        return val;
+        return val.toVal();
     }
 
     /**
@@ -173,8 +169,8 @@ public class PSSMapInst extends PSSInst {
      *
      * @return the key set
      */
-    public PSSSetInst keys() {
-        PSSSetInst res = new PSSSetModel(m_key_type).declInst(m_id + ".keys()", false);
+    public PSSSetVal keys() {
+        PSSSetVal res = new PSSSetVal();
         for (PSSVal k : m_map.keySet())
             res.insert(k);
         return res;
@@ -185,11 +181,10 @@ public class PSSMapInst extends PSSInst {
      *
      * @return the value list
      */
-    public PSSListInst values() {
-        PSSListInst res = new PSSListModel(m_val_type).declInst(m_id + ".values()", m_rand);
+    public PSSListVal values() {
+        PSSListVal res = new PSSListVal();
         for (PSSInst v : m_map.values())
-            ; /* TODO: add to res */
-        PSSMessage.Fatal("[" + getClass().getName() + "] To be implemented when list implementation is done");
+            res.add(v.toVal());
         return null;
     }
 

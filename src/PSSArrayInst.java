@@ -6,25 +6,25 @@ public class PSSArrayInst extends PSSInst {
     ArrayList<PSSInst> m_array = new ArrayList<PSSInst>();
 
     NativeMethod m_method_size = new NativeMethod("size", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return size();
         }
     };
 
     NativeMethod m_method_sum = new NativeMethod("sum", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return sum();
         }
     };
 
     NativeMethod m_method_to_list = new NativeMethod("to_list", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return to_list();
         }
     };
 
     NativeMethod m_method_to_set = new NativeMethod("to_set", 0) {
-        protected PSSInst doEval(List<PSSVal> args) {
+        protected PSSVal doEval(List<PSSVal> args) {
             return to_set();
         }
     };
@@ -80,27 +80,21 @@ public class PSSArrayInst extends PSSInst {
         return m_array.get(intIndex.toInt());
 	}
 
-    public PSSIntInst size() {
-        PSSIntInst res = new PSSIntInst(m_id + ".size()", false,
-                PSSIntModel.DEFAULT_INT_SIZE, false);
-        res.assign(new PSSIntVal(m_dim));
-        return res;
+    public PSSIntVal size() {
+        return new PSSIntVal(m_dim);
     }
 
-    public PSSIntInst sum() {
+    public PSSIntVal sum() {
         int sum = this.toVal().sum();
-        PSSIntInst res = new PSSIntInst(m_id + ".sum()", false,
-                PSSIntModel.DEFAULT_INT_SIZE, false);
-        res.assign(new PSSIntVal(sum));
-        return res;
+        return new PSSIntVal(sum);
     }
 
-    public PSSListInst to_list() {
+    public PSSListVal to_list() {
         PSSMessage.Fatal("Yet to be implemented");
         return null;
     }
 
-    public PSSSetInst to_set() {
+    public PSSSetVal to_set() {
         PSSMessage.Fatal("Yet to be implemented");
         return null;
     }

@@ -92,6 +92,11 @@ public class PSSListVal extends PSSVal {
     }
 
     @Override
+    public PSSVal indexOf(PSSVal index) {
+        return m_list.get(index.toInt());
+    }
+
+    @Override
     public int toInt() {
         PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to Int");
         return 0;

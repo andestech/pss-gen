@@ -24,9 +24,7 @@ public class PSSFunctionCall extends PSSExpression {
 			if (p != "")
 				inst = inst.findInstance(p);
 		}
-		PSSInst res = inst.evalMethod(m_id, vals);
-		/* A void function may return null. */
-		return res == null ? null : res.toVal();
+		return inst.evalMethod(m_id, vals);
 	}
 
 }

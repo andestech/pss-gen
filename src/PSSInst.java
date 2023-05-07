@@ -19,9 +19,9 @@ public class PSSInst {
 			m_nargs = nargs;
 		}
 
-		protected abstract PSSInst doEval(List<PSSVal> args);
+		protected abstract PSSVal doEval(List<PSSVal> args);
 
-		public PSSInst eval(List<PSSVal> args) {
+		public PSSVal eval(List<PSSVal> args) {
 			if (m_nargs >= 0 && args.size() != m_nargs) {
 				PSSMessage.Fatal(
 						"Mismatched number of parameters to " + m_id + "." + m_name + " (expected = " + m_nargs
@@ -241,7 +241,7 @@ public class PSSInst {
 
 	/**
 	 * Registers a native method of this instance.
-	 * 
+	 *
 	 * @param m
 	 */
 	protected void addNativeMethod(NativeMethod m) {
@@ -250,12 +250,12 @@ public class PSSInst {
 
 	/**
 	 * Invokes exposed methods of this instance.
-	 * 
+	 *
 	 * @param name the name of the method
 	 * @param args the arguments passed to the method
 	 * @return the result of the invocation
 	 */
-	public PSSInst evalMethod(String name, List<PSSVal> args) {
+	public PSSVal evalMethod(String name, List<PSSVal> args) {
 		NativeMethod m = m_native_methods.get(name);
 		if (m == null)
 			PSSMessage.Fatal(getClass().getSimpleName() + "::method " + name + " is not impelemented");

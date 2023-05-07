@@ -17,7 +17,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     }
 
     // TODO: how to improve this method? Function pointer? getMethod.invoke()?
-    private PSSInst evalMethod(PSSInst var, String name, List<PSSExpression> args) {
+    private PSSVal evalMethod(PSSInst var, String name, List<PSSExpression> args) {
         /* Evaluate arguments */
         List<PSSVal> vals = new ArrayList<PSSVal>();
         for (PSSExpression arg : args) {
@@ -25,7 +25,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         }
 
         /* Invoke method */
-        PSSInst res = var.evalMethod(name, vals);
+        PSSVal res = var.evalMethod(name, vals);
         return res;
     }
 
@@ -34,11 +34,27 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         PSSInst inst = null;
         if (m_function_parameter_list == null)
             inst = var.findInstance(m_id);
-        else
-            inst = evalMethod(var, m_id, m_function_parameter_list);
+        else {
+            PSSVal val = evalMethod(var, m_id, m_function_parameter_list);
+            if (val instanceof PSSRefVal)
+                inst = ((PSSRefVal) val).getInst();
+        }
         if (m_index != null)
             inst = inst.indexOf(m_index.eval(var));
         return inst;
+    }
+
+    @Override
+    public PSSVal eval(PSSInst var) {
+        PSSVal res = null;
+        if (m_function_parameter_list == null) {
+            PSSInst inst = var.findInstance(m_id);
+            res = inst.toVal();
+        } else
+            res = evalMethod(var, m_id, m_function_parameter_list);
+        if (m_index != null)
+            res = res.indexOf(m_index.eval(var));
+        return res;
     }
 
     @Override

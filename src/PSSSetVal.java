@@ -52,7 +52,7 @@ public class PSSSetVal extends PSSVal {
 	}
 
     @Override
-	public PSSVal indexOf(int index) {
+	public PSSVal indexOf(PSSVal index) {
         PSSMessage.Fatal("Set has no index operator");
         return null;
 	}
