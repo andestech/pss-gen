@@ -3,6 +3,8 @@ component pss_top {
 		array <int, 3> a = {4, 5, 6};
 		array <int, 3> b;
 		array <int, 3> c;
+		array <int, 3> d = {10, 11, 12};
+		array <int, 3> e = {11, 10, 12};
 
 		exec pre_solve {
 			b[0] = 7;
@@ -27,7 +29,17 @@ component pss_top {
 				a[1] == c[1];
 				a[2] == c[2];
 			};
+            if (c == d)
+                do printf with {val == 1;};
+            if (c != e)
+                do printf with {val == 1;};
 		}
+	}
+
+	action printf {
+		rand int val;
+		exec body ASM =
+		"""val = {{val}}""";
 	}
 
 	action sub_a {
