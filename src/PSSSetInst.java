@@ -59,13 +59,19 @@ public class PSSSetInst extends PSSInst {
 
     @Override
     public void assign(PSSVal val) {
-        if (!(val instanceof PSSListVal))
-            PSSMessage.Fatal("The set type should be assigned as a value_list_literal.");
-        PSSListVal s = (PSSListVal) val;
-
         m_set.clear();
-        for (PSSVal e: s.getValList())
-            insert(e);
+
+        if (val instanceof PSSListVal) {
+            PSSListVal s = (PSSListVal) val;
+            for (PSSVal e: s.getValList())
+                insert(e);
+        } else if (val instanceof PSSSetVal) {
+            PSSSetVal s = (PSSSetVal) val;
+            for (PSSVal e : s.getSet()) {
+                insert(e);
+            }
+        }
+        PSSMessage.Fatal("The set type should be assigned as a value_list_literal.");
     }
 
     @Override
@@ -99,8 +105,8 @@ public class PSSSetInst extends PSSInst {
     }
 
     @Override
-    public PSSListVal toVal() {
-        PSSListVal collectedVal = new PSSListVal();
+    public PSSSetVal toVal() {
+        PSSSetVal collectedVal = new PSSSetVal();
         for (PSSVal elem: m_set)
             collectedVal.add(elem);
         return collectedVal;
