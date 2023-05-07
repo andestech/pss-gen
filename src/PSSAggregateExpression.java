@@ -4,7 +4,6 @@ public class PSSAggregateExpression extends PSSExpression {
 
 	public ArrayList<PSSExpression> m_list;
 
-
 	public PSSAggregateExpression() {
 		m_list = new ArrayList<PSSExpression>();
 	}
@@ -13,10 +12,19 @@ public class PSSAggregateExpression extends PSSExpression {
 		m_list.add(item);
 	}
 
+	/**
+	 * Returns {@code true} if this is an empty aggregate literal.
+	 *
+	 * @return {@code true} if this is an empty aggregate literal
+	 */
+	public boolean isEmpty() {
+		return m_list.isEmpty();
+	}
+
 	public PSSVal eval(PSSInst var) {
 		PSSListVal result = new PSSListVal();
 
-		for (int i=0; i<m_list.size(); i++) {
+		for (int i = 0; i < m_list.size(); i++) {
 			PSSExpression item = m_list.get(i);
 
 			PSSVal item_val = item.eval(var);
@@ -29,16 +37,15 @@ public class PSSAggregateExpression extends PSSExpression {
 	public String getText() {
 		String text = "";
 
-		for (int i=0; i<m_list.size(); i++) {
+		for (int i = 0; i < m_list.size(); i++) {
 			PSSExpression item = m_list.get(i);
 
 			if (text.length() == 0) {
 				text = text.concat(item.getText());
-			}
-			else {
+			} else {
 				text = text.concat(", " + item.getText());
 			}
 		}
-		return "[ " + text + " ]";
+		return "{ " + text + " }";
 	}
 }

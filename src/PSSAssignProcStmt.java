@@ -16,6 +16,18 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 		PSSInst leftInst = m_ref.getInst(inst);
 		PSSVal rightVal = m_expression.eval(inst);
 
+		/* Special treatment of empty aggregate literal */
+		if (m_expression instanceof PSSAggregateExpression
+				&& ((PSSAggregateExpression) m_expression).isEmpty()) {
+			if (leftInst instanceof PSSListInst) {
+				rightVal = new PSSListVal();
+			} else if (leftInst instanceof PSSSetInst) {
+				rightVal = new PSSSetVal();
+			} else if (leftInst instanceof PSSMapInst) {
+				rightVal = new PSSMapVal();
+			}
+		}
+
 		leftInst.assign(rightVal);
 
 	}

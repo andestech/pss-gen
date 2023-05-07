@@ -879,7 +879,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	@Override
 	public Integer visitAggregate_literal(PSSParser.Aggregate_literalContext ctx) {
 		PSSExpression res = null;
-		if (ctx.value_list_literal() != null) {
+		if (ctx.empty_aggregate_literal() != null) {
+			res = new PSSAggregateExpression();
+		} else if (ctx.value_list_literal() != null) {
 			PSSAggregateExpression exp = new PSSAggregateExpression();
 			for (int i=0; i<ctx.value_list_literal().expression().size(); i++) {
 				visit(ctx.value_list_literal().expression(i));
