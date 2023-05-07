@@ -1,0 +1,69 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/02
+@brief          Test declaration, assignment, and access.
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> Section 8.8.4 : Maps <br>
+
+### Test Command
+
+    make test
+
+*/
+component pss_top {
+    action test {
+        // Test declaration
+        map<string, int> map1;
+        map<string, string> map2;
+        map<int, string> map3;
+        map<string, int> map4;
+
+        // Test assignment
+        exec post_solve {
+            map1 = {"a":43, "b":50, "c":41};
+            map2 = {"x":"xxx", "y":"yyy", "z":"zzz" };
+            map3 = {10:"10", 20:"20", 30:"30" };
+            map4 = {"b":50, "c":41, "d":63};
+            map1.insert("d", 27);     // map1 = {"a":43, "b":50, "c":41, "d":27};
+            map1.delete("a");         // map1 = {"b":50, "c":41, "d":27};
+            map1.insert("d", 63);     // map1 = {"b":50, "c":41, "d":63};
+            map2["20"] = map3[30];    // map2 = {"x":"xxx", "y":"yyy", "z":"zzz", "20":30 };
+            map3[20] = map2["x"];     // map3 = {10:"10", 20:"xxx", 30:"30" };
+        }
+
+        // Test index
+        activity {
+            if (map1 == map4)
+              do printf with { val == map1["d"]; };        // val = 63
+            if (map2.size() > 2)
+              do printf with { val == map2.size(); };      // val = 4
+            if (map1["d"] > 60)
+              do print_string with { sss == map2["20"]; }; // sss = 30
+            do print_string with {sss == map3[20];};       // sss = xxx
+        }
+    }
+
+    action printf {
+        rand int val;
+        exec body ASM =
+        """val = {{val}}""";
+    }
+
+    action print_string {
+        rand string sss;
+        exec body ASM =
+        """sss = {{sss}}""";
+    }
+
+    action root_a {
+        activity {
+            do test;
+        }
+    }
+}
+
+/**@}*/
