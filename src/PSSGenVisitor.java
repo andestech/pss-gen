@@ -955,12 +955,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitFunction_ref_path(PSSParser.Function_ref_pathContext ctx) {
-		String path = "";
-		String id = ctx.identifier().getText();
-
+		PSSHierarchicalIDExpression path = new PSSHierarchicalIDExpression();
 		for (int i=0; i<ctx.member_path_elem().size(); i++) {
-			path = path + ctx.member_path_elem(i).getText() + ".";
+			visit(ctx.member_path_elem(i));
+			path.addMemberElement((PSSMemberPathElemExpression)exp_stack.pop());
 		}
+
+		String id = ctx.identifier().getText();
 
 		List<PSSExpression> args = new ArrayList<PSSExpression>();
 		List<PSSParser.ExpressionContext> args_ctx = ctx.function_parameter_list().expression();
