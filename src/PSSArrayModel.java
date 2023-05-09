@@ -1,8 +1,8 @@
-import java.util.*;
 
 public class PSSArrayModel extends PSSModel {
 
 	PSSModel m_type_model;
+
 	PSSExpression m_size_exp;
 
 	public PSSArrayModel (PSSModel type_model, PSSExpression size_exp) {
@@ -23,4 +23,5 @@ public class PSSArrayModel extends PSSModel {
 	public void dump (String indent) {
 		System.out.println(indent + getText());
 	}
+
 }

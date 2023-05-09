@@ -8,13 +8,10 @@ import java.util.HashMap;
  */
 public class PSSMapInst extends PSSInst {
 
-    /** The key type */
-    PSSModel m_key_type;
+    /** The map type */
+    PSSMapModel m_map_type;
 
-    /** The value type */
-    PSSModel m_val_type;
-
-    /** a map from keys to values */
+    /** A map from keys to values */
     Map<PSSVal, PSSInst> m_map = new HashMap<PSSVal, PSSInst>();
 
     NativeMethod m_method_size = new NativeMethod("size", 0) {
@@ -62,12 +59,12 @@ public class PSSMapInst extends PSSInst {
      * @param key_type the key type
      * @param val_type the value type
      */
-    public PSSMapInst(String id, PSSModel key_type, PSSModel val_type) {
-        super(id, "map<" + key_type.m_id + "," + val_type.m_id + ">", false);
-        PSSMessage.Debug("[" + this.getClass().getName() + "] Creating MapInst: m_key_type = " + key_type.getId()
-                + ", value = " + val_type.getId());
-        m_key_type = key_type;
-        m_val_type = val_type;
+    public PSSMapInst(String id, PSSMapModel map_type) {
+        super(id, "map<" + map_type.getKeyType().m_id + "," + map_type.getValueType().m_id + ">", false);
+        PSSMessage.Debug(
+                "[" + this.getClass().getName() + "] Creating MapInst: m_key_type = " + map_type.getKeyType().getId()
+                        + ", value = " + map_type.getValueType().getId());
+        m_map_type = map_type;
 
         /* register native methods */
         addNativeMethod(m_method_size);
@@ -78,27 +75,14 @@ public class PSSMapInst extends PSSInst {
         addNativeMethod(m_method_values);
     }
 
-    private PSSInst getKeyInst(PSSVal k) {
-        PSSInst ki = m_key_type.declInst(m_id + ":key=" + k.getText(), m_rand);
-        ki.assign(k);
-        return ki;
-    }
-
-    private PSSInst getValueInst(PSSVal v) {
-        PSSInst vi = m_val_type.declInst(m_rand + ":val=" + v.getText(), m_rand);
-        vi.assign(v);
-        return vi;
-    }
-
     @Override
     public void assign(PSSVal val) {
         if (!(val instanceof PSSMapVal))
             PSSMessage.Fatal("A map can only be assigned a map_literal.");
         PSSMapVal m = (PSSMapVal) val;
 
-        PSSMessage.Debug("[" + this.getClass().getName() + "] Assigning value " + val.getText() + " to " + this.m_id);
+        PSSMessage.Debug("[" + getClass().getName() + "] Assigning value " + val.getText() + " to " + this.m_id);
 
-        /* TODO: check the type of PSSVal */
         m_map.clear();
         for (PSSVal k : m.keys().getValList()) {
             PSSVal v = m.get(k);
@@ -108,13 +92,13 @@ public class PSSMapInst extends PSSInst {
 
     @Override
     public PSSInst indexOf(PSSVal key) {
-        /*
-         * TODO: currently, both getting the instance at index i and getting the value
-         * at index i use this function, they should be different
-         */
+        if (!m_map_type.getKeyType().isCompatible(key.getTypeModel()))
+            PSSMessage.Error("", "The key type " + key.getTypeModel().getText() + " of " + key.getText()
+                    + " is incompatible with map " + m_id);
+
         PSSInst val = m_map.get(key);
         if (val == null) {
-            val = m_val_type.declInst(false);
+            val = m_map_type.getValueType().declInst(false);
             m_map.put(key, val);
         }
         return val;
@@ -143,6 +127,10 @@ public class PSSMapInst extends PSSInst {
      * @return the value associated with the key before being removed
      */
     public PSSVal delete(PSSVal key) {
+        if (!m_map_type.getKeyType().isCompatible(key.getTypeModel()))
+            PSSMessage.Error("", "The key type " + key.getTypeModel().getText() + " of " + key.getText()
+                    + " is incompatible with map " + m_id);
+
         PSSInst val = m_map.remove(key);
         if (val == null)
             PSSMessage.Fatal("Accessing a non-existing key " + key.getText() + " of map " + m_id);
@@ -156,9 +144,16 @@ public class PSSMapInst extends PSSInst {
      * @param v a value
      */
     public void insert(PSSVal k, PSSVal v) {
+        if (!m_map_type.getKeyType().isCompatible(k.getTypeModel()))
+            PSSMessage.Error("", "The key type " + k.getTypeModel().getText() + " of " + k.getText()
+                    + " is incompatible with map " + m_id);
+        if (!m_map_type.getValueType().isCompatible(v.getTypeModel()))
+            PSSMessage.Error("", "The value type " + v.getTypeModel().getText() + " of " + v.getText()
+                    + " is incompatible with map " + m_id);
+
         PSSInst val = m_map.get(k);
         if (val == null) {
-            val = m_val_type.declInst(false);
+            val = m_map_type.getValueType().declInst(false);
             m_map.put(k, val);
         }
         val.assign(v);
@@ -170,7 +165,7 @@ public class PSSMapInst extends PSSInst {
      * @return the key set
      */
     public PSSSetVal keys() {
-        PSSSetVal res = new PSSSetVal();
+        PSSSetVal res = new PSSSetVal(m_map_type.getKeyType());
         for (PSSVal k : m_map.keySet())
             res.insert(k);
         return res;
@@ -182,7 +177,7 @@ public class PSSMapInst extends PSSInst {
      * @return the value list
      */
     public PSSListVal values() {
-        PSSListVal res = new PSSListVal();
+        PSSListVal res = new PSSListVal(m_map_type.getValueType());
         for (PSSInst v : m_map.values())
             res.add(v.toVal());
         return null;
@@ -190,7 +185,7 @@ public class PSSMapInst extends PSSInst {
 
     @Override
     public PSSMapVal toVal() {
-        PSSMapVal res = new PSSMapVal();
+        PSSMapVal res = new PSSMapVal(m_type_decl);
         for (PSSVal k : m_map.keySet()) {
             res.insert(k, m_map.get(k).toVal());
         }

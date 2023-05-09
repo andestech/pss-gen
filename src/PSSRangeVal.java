@@ -1,22 +1,27 @@
 import java.util.*;
 import java.math.*;
 
+/**
+ * A range value is used internally. There is not type model for
+ * {@code PSSRangeVal}.
+ */
 public class PSSRangeVal extends PSSVal {
 
 	BigInteger m_min;
 	BigInteger m_max;
 
 	public PSSRangeVal(BigInteger begin, BigInteger end) {
+		super(null);
 		m_min = begin;
 		m_max = end;
 	}
 
-    @Override
+	@Override
 	public boolean isRangeVal() {
 		return true;
 	}
 
-    @Override
+	@Override
 	public PSSVal reduceLessEqual(PSSVal val) {
 		// reduceLessEqual(7)
 		// [8..9] -> null
@@ -36,7 +41,7 @@ public class PSSRangeVal extends PSSVal {
 		}
 	}
 
-    @Override
+	@Override
 	public PSSVal reduceGreaterEqual(PSSVal val) {
 		// reduceGreaterEqual(5)
 		// [1..4] -> null
@@ -55,12 +60,12 @@ public class PSSRangeVal extends PSSVal {
 		}
 	}
 
-    @Override
+	@Override
 	public PSSVal getMin() {
 		return new PSSIntVal(m_min);
 	}
 
-    @Override
+	@Override
 	public PSSVal getMax() {
 		return new PSSIntVal(m_max);
 	}
@@ -78,7 +83,7 @@ public class PSSRangeVal extends PSSVal {
 		return new PSSRangeVal(min, max);
 	}
 
-    @Override
+	@Override
 	public PSSVal join(PSSVal val) {
 		if (val.isRangeVal()) {
 			BigInteger min = val.getMin().toBigInteger();
@@ -104,36 +109,36 @@ public class PSSRangeVal extends PSSVal {
 		}
 	}
 
-    @Override
+	@Override
 	public PSSBoolVal InRange(PSSVal val) {
 		BigInteger int_val = val.toBigInteger();
 		return new PSSBoolVal((m_min.compareTo(int_val) <= 0) && (m_max.compareTo(int_val) >= 0));
 	}
 
-    @Override
+	@Override
 	public String getText() {
 		return m_min.toString(10) + ".." + m_max.toString(10);
 	}
 
-    @Override
+	@Override
 	public int toInt() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to int");
 		return 0;
 	}
 
-    @Override
+	@Override
 	public String toStr() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to string");
 		return "";
 	}
 
-    @Override
+	@Override
 	public boolean toBool() {
 		PSSMessage.Error("RANGEVAL", "IntVal cannot be converted to bool");
 		return false;
 	}
 
-    @Override
+	@Override
 	public PSSIntVal randomIn() {
 		BigInteger rand_val = PSSRandom.nextBigInteger(m_min, m_max);
 		return new PSSIntVal(rand_val);

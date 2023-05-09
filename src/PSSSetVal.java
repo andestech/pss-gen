@@ -1,19 +1,22 @@
-
-// Copyright (C) 2021, Andes Technology Corp. Confidential Proprietary
 import java.util.*;
 
 public class PSSSetVal extends PSSVal {
 
     Set<PSSVal> m_set = new HashSet<PSSVal>();
 
-	public PSSSetVal() {
+	public PSSSetVal(PSSModel type) {
+        super(type);
 	}
 
 	public void add(PSSVal item) {
+        if (getTypeModel() == null)
+            setTypeModel(new PSSSetModel(item.getTypeModel()));
 		m_set.add(item);
 	}
 
     public void insert(PSSVal elem) {
+        if (getTypeModel() == null)
+            setTypeModel(new PSSSetModel(elem.getTypeModel()));
         m_set.add(elem);
     }
 

@@ -1,4 +1,3 @@
-import java.util.*;
 
 public class PSSAssignProcStmt extends PSSProcStmt {
 
@@ -20,11 +19,11 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 		if (m_expression instanceof PSSAggregateExpression
 				&& ((PSSAggregateExpression) m_expression).isEmpty()) {
 			if (leftInst instanceof PSSListInst) {
-				rightVal = new PSSListVal();
+				rightVal = new PSSListVal(null);
 			} else if (leftInst instanceof PSSSetInst) {
-				rightVal = new PSSSetVal();
+				rightVal = new PSSSetVal(null);
 			} else if (leftInst instanceof PSSMapInst) {
-				rightVal = new PSSMapVal();
+				rightVal = new PSSMapVal(null);
 			}
 		}
 

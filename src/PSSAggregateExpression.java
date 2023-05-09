@@ -22,12 +22,14 @@ public class PSSAggregateExpression extends PSSExpression {
 	}
 
 	public PSSVal eval(PSSInst var) {
-		PSSListVal result = new PSSListVal();
+		PSSListVal result = new PSSListVal(null);
 
 		for (int i = 0; i < m_list.size(); i++) {
 			PSSExpression item = m_list.get(i);
 
 			PSSVal item_val = item.eval(var);
+			if (result.getTypeModel() == null)
+				result.setTypeModel(item_val.getTypeModel());
 			result.add(item_val);
 		}
 

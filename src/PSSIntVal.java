@@ -5,10 +5,12 @@ public class PSSIntVal extends PSSVal {
 	BigInteger m_val;
 
 	public PSSIntVal(BigInteger val) {
+		super(PSSIntModel.getDefaultDecimalModel());
 		m_val = val;
 	}
 
 	public PSSIntVal(int val) {
+		super(PSSIntModel.getDefaultDecimalModel());
 		m_val = BigInteger.valueOf(val);
 	}
 

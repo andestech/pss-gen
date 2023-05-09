@@ -7,7 +7,8 @@ public class PSSListVal extends PSSVal {
 
     private List<PSSVal> m_list = new ArrayList<PSSVal>();
 
-    public PSSListVal() {
+    public PSSListVal(PSSModel type) {
+        super(type);
     }
 
     public int size() {

@@ -1,5 +1,3 @@
-// Copyright (C) 2021, Andes Technology Corp. Confidential Proprietary
-
 import java.math.BigInteger;
 
 /**
@@ -10,6 +8,7 @@ public class PSSRefVal extends PSSVal {
     PSSInst m_inst = null;
 
     public PSSRefVal(PSSInst inst) {
+		super(inst.getTypeModel());
         m_inst = inst;
     }
 

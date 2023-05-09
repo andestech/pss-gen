@@ -8,9 +8,31 @@ import java.math.*;
  * <li>{@code isBound}: {@code true} by default</li>
  * </ul>
  */
-public class PSSVal implements Comparable<PSSVal> {
+public abstract class PSSVal implements Comparable<PSSVal> {
 
-	public PSSVal() {
+	/** the type of this value */
+	PSSModel m_type;
+
+	public PSSVal(PSSModel type) {
+		m_type = type;
+	}
+
+	/**
+	 * Returns the type model of this value.
+	 *
+	 * @return the type model of this value
+	 */
+	public PSSModel getTypeModel() {
+		return m_type;
+	}
+
+	/**
+	 * Sets the type model of this value.
+	 *
+	 * @param type the type model of this value
+	 */
+	public void setTypeModel(PSSModel type) {
+		m_type = type;
 	}
 
 	public String getText() {

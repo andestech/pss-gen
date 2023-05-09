@@ -8,13 +8,42 @@ import java.util.HashMap;
 /**
  * A {@code PSSMapVal} is an evaluation of a {@link PSSMapExpression}.
  *
- * TODO: keep the types of the keys and values (make this class generic?)
  */
 public class PSSMapVal extends PSSVal {
 
 	private Map<PSSVal, PSSVal> m_map = new HashMap<PSSVal, PSSVal>();
 
-	public PSSMapVal() {
+	public PSSMapVal(PSSModel type) {
+		super(type);
+	}
+
+	private PSSMapModel getMapType() {
+		PSSMapModel res = null;
+		PSSModel m = getTypeModel();
+		if (m instanceof PSSMapModel) {
+			res = (PSSMapModel) m;
+		}
+		return res;
+	}
+
+	private PSSModel getKeyType() {
+		PSSMapModel m = getMapType();
+		return m == null ? null : m.getKeyType();
+	}
+
+	private PSSModel getValueType() {
+		PSSMapModel m = getMapType();
+		return m == null ? null : m.getValueType();
+	}
+
+	private boolean isKeyTypeCompatible(PSSModel model) {
+		PSSModel m = getKeyType();
+		return m == null || model == null || m.isCompatible(model);
+	}
+
+	private boolean isValueTypeCompatible(PSSModel model) {
+		PSSModel m = getValueType();
+		return m == null || model == null || m.isCompatible(model);
 	}
 
 	/* Map functions in PSS v20 Section 8.8.4.2 */
@@ -43,6 +72,10 @@ public class PSSMapVal extends PSSVal {
 	 * @return the element associated with the specified key
 	 */
 	public PSSVal delete(PSSVal key) {
+		if (!isKeyTypeCompatible(key.getTypeModel()))
+			PSSMessage.Error("", "The key type " + key.getTypeModel().getText() + " of " + key.getText()
+					+ " is incompatible with map " + getText());
+
 		if (m_map.containsKey(key))
 			return m_map.remove(key);
 		else {
@@ -58,7 +91,15 @@ public class PSSMapVal extends PSSVal {
 	 * @param value a value
 	 */
 	public void insert(PSSVal key, PSSVal value) {
-		/* TODO: verify the types of the inputs */
+		if (getTypeModel() == null)
+			setTypeModel(new PSSMapModel(key.getTypeModel(), value.getTypeModel()));
+
+		if (!isKeyTypeCompatible(key.getTypeModel()))
+			PSSMessage.Error("", "The key type " + key.getTypeModel().getText() + " of " + key.getText()
+					+ " is incompatible with map " + getText());
+		if (!isValueTypeCompatible(value.getTypeModel()))
+			PSSMessage.Error("", "The value type " + value.getTypeModel().getText() + " of " + value.getText()
+					+ " is incompatible with map " + getText());
 		m_map.put(key, value);
 	}
 
@@ -68,7 +109,7 @@ public class PSSMapVal extends PSSVal {
 	 * @return a set containing the map keys
 	 */
 	public PSSListVal keys() {
-		PSSListVal keys = new PSSListVal();
+		PSSListVal keys = new PSSListVal(getKeyType());
 		for (PSSVal k : m_map.keySet())
 			keys.add(k);
 		return keys;
@@ -79,9 +120,8 @@ public class PSSMapVal extends PSSVal {
 	 *
 	 * @return a list containing the map element values
 	 */
-	public List<PSSVal> values() {
-		/* TODO: use class like PSSListVal */
-		List<PSSVal> vals = new ArrayList<PSSVal>();
+	public PSSListVal values() {
+		PSSListVal vals = new PSSListVal(getValueType());
 		for (PSSVal v : m_map.values())
 			vals.add(v);
 		return vals;
@@ -96,6 +136,10 @@ public class PSSMapVal extends PSSVal {
 	 * @return the value associated with a specified key
 	 */
 	public PSSVal get(PSSVal key) {
+		if (!isKeyTypeCompatible(key.getTypeModel()))
+			PSSMessage.Error("", "The key type " + key.getTypeModel().getText() + " of " + key.getText()
+					+ " is incompatible with map " + getText());
+
 		if (m_map.containsKey(key))
 			return m_map.get(key);
 		else {

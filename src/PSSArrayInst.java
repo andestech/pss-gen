@@ -101,7 +101,7 @@ public class PSSArrayInst extends PSSInst {
 
     @Override
     public PSSListVal toVal() {
-        PSSListVal res = new PSSListVal();
+        PSSListVal res = new PSSListVal(m_type_model);
         for (PSSInst elem: m_array)
             res.add(elem.toVal());
         return res;

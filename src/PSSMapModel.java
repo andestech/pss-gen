@@ -27,7 +27,25 @@ public class PSSMapModel extends PSSModel {
     @Override
     public PSSMapInst declInst(String id, boolean rand) {
         PSSMessage.Debug("[" + this.getClass().getName() + "] Instantiating MapModel: id = " + id + ", rand = " + rand);
-        return new PSSMapInst(id, m_key_type_model, m_val_type_model);
+        return new PSSMapInst(id, this);
+    }
+
+    /**
+     * Returns the type of keys.
+     *
+     * @return the type of keys
+     */
+    public PSSModel getKeyType() {
+        return m_key_type_model;
+    }
+
+    /**
+     * Returns the type of values.
+     *
+     * @return the type of values
+     */
+    public PSSModel getValueType() {
+        return m_val_type_model;
     }
 
     @Override
@@ -41,8 +59,27 @@ public class PSSMapModel extends PSSModel {
     }
 
     @Override
+    public boolean isCompatible(PSSModel model) {
+        if (model instanceof PSSMapModel) {
+            PSSMapModel m = (PSSMapModel) model;
+            return m_key_type_model.isCompatible(m.m_key_type_model)
+                    && m_val_type_model.isCompatible(m.m_val_type_model);
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         return getText();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof PSSMapModel) {
+            PSSMapModel m = (PSSMapModel) obj;
+            return m_key_type_model.equals(m.m_key_type_model) && m_val_type_model.equals(m.m_val_type_model);
+        }
+        return false;
     }
 
 }

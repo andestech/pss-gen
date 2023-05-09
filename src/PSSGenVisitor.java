@@ -366,13 +366,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitString_type(PSSParser.String_typeContext ctx) {
-		cur_data_type = new PSSStringModel();
+		cur_data_type = PSSStringModel.getInstance();
 		return 0;
 	}
 
 	@Override
 	public Integer visitBool_type(PSSParser.Bool_typeContext ctx) {
-		cur_data_type = new PSSBoolModel();
+		cur_data_type = PSSBoolModel.getInstance();
 		return 0;
 	}
 

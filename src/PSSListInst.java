@@ -11,6 +11,7 @@ public class PSSListInst extends PSSInst {
 		m_list = new ArrayList<PSSInst>();
 	}
 
+	@Override
 	public void assign(PSSVal val) {
         if (!PSSListVal.class.isInstance(val))
             PSSMessage.Fatal("The list type should be assigned as a list_literal.");
@@ -24,15 +25,17 @@ public class PSSListInst extends PSSInst {
         }
 	}
 
+	@Override
     public PSSVal toVal() {
         if (m_list.size() == 0)
             PSSMessage.Error("ListInst", "'" + getHierarchyId() + "' is not initialized");
-        PSSListVal collectedVal = new PSSListVal(); // FIXME: PSSListVal
+        PSSListVal collectedVal = new PSSListVal(m_type_model); // FIXME: PSSListVal
         for (PSSInst elem: m_list)
             collectedVal.add(elem.toVal());
         return (PSSVal) collectedVal;
     }
 
+	@Override
 	public void randomize() {
         // PSS Standard V2.0 - 8.1 Data types General
         // The list collection type is not randomizable.
@@ -44,5 +47,6 @@ public class PSSListInst extends PSSInst {
 		}
 		return m_list.get(index);
 	}
+
 };
 

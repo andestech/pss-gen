@@ -13,19 +13,23 @@ public class PSSOpenRangeListExpression extends PSSExpression {
 		m_list.add(item);
 	}
 
+	@Override
 	public PSSVal eval(PSSInst var) {
-		PSSListVal result = new PSSListVal();
+		PSSListVal result = new PSSListVal(null);
 
 		for (int i=0; i<m_list.size(); i++) {
 			PSSOpenRangeValueExpression item = m_list.get(i);
 
 			PSSVal item_val = item.eval(var);
+			if (result.getTypeModel() == null)
+				result.setTypeModel(item_val.getTypeModel());
 			result.add(item_val);
 		}
 
 		return result;
 	}
 
+	@Override
 	public String getText() {
 		String text = "";
 
@@ -41,4 +45,5 @@ public class PSSOpenRangeListExpression extends PSSExpression {
 		}
 		return "[ " + text + " ]";
 	}
+
 }

@@ -21,8 +21,10 @@ public class PSSFunctionCall extends PSSExpression {
 		}
 		PSSInst inst = var;
 		for (String p : m_path.split("\\.")) {
-			if (p != "")
+			if (p != "") {
+				System.out.println("Find instance: " + p);
 				inst = inst.findInstance(p);
+			}
 		}
 		return inst.evalMethod(m_id, vals);
 	}

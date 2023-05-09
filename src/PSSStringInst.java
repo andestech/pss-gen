@@ -1,4 +1,3 @@
-import java.util.*;
 
 public class PSSStringInst extends PSSInst {
 	public String m_str;

@@ -26,10 +26,12 @@ public class PSSMapExpression extends PSSExpression {
 
 	@Override
 	public PSSMapVal eval(PSSInst var) {
-		PSSMapVal res = new PSSMapVal();
+		PSSMapVal res = new PSSMapVal(null);
 		for (PSSExpression k : map.keySet()) {
 			PSSExpression v = map.get(k);
-			res.insert(k.eval(var), v.eval(var));
+			PSSVal key = k.eval(var);
+			PSSVal val = v.eval(var);
+			res.insert(key, val);
 		}
 		return res;
 	}

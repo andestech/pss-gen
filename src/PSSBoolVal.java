@@ -4,10 +4,12 @@ public class PSSBoolVal extends PSSVal {
 	boolean m_val;
 
 	public PSSBoolVal(String text) {
+		super(PSSBoolModel.getInstance());
 		m_val = Boolean.parseBoolean(text);
 	}
 
 	public PSSBoolVal(boolean val) {
+		super(PSSBoolModel.getInstance());
 		m_val = val;
 	}
 

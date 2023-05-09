@@ -5,11 +5,13 @@ public class PSSStringVal extends PSSVal {
 	boolean m_bound;
 
 	public PSSStringVal(String str) {
+		super(PSSStringModel.getInstance());
 		m_str = str;
 		m_bound = true;
 	}
 
 	public PSSStringVal(String str, boolean bound) {
+		super(PSSStringModel.getInstance());
 		m_str = str;
 		m_bound = bound;
 	}

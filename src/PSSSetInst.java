@@ -101,7 +101,7 @@ public class PSSSetInst extends PSSInst {
 
     @Override
     public PSSSetVal toVal() {
-        PSSSetVal collectedVal = new PSSSetVal();
+        PSSSetVal collectedVal = new PSSSetVal(m_type_model);
         for (PSSVal elem: m_set)
             collectedVal.add(elem);
         return collectedVal;
