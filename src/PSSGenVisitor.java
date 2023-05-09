@@ -628,7 +628,25 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitForeach_constraint_item(PSSParser.Foreach_constraint_itemContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		String iterator_id = null;
+		PSSExpression exp = null;
+		List<PSSConstraint> constraints = new ArrayList<PSSConstraint>();
+		String index_id = null;
+		if (ctx.iterator_identifier() != null)
+			iterator_id = ctx.iterator_identifier().getText();
+		visit(ctx.expression());
+		exp = exp_stack.pop();
+		if (ctx.index_identifier() != null)
+			index_id = ctx.index_identifier().getText();
+		visit(ctx.constraint_set());
+		constraints.addAll(constraint_list);
+		constraint_list.clear();;
+
+		/* try to separate index_identifier due to grammar ambiguity */
+		if (index_id == null)
+			index_id = separate_index(exp);
+
+		constraint_list.add(new PSSForeachConstraint(iterator_id, exp, index_id, constraints));
 		return 0;
 	}
 
