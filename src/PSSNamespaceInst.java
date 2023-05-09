@@ -4,8 +4,8 @@
  */
 public class PSSNamespaceInst extends PSSInst {
 
-	public PSSNamespaceInst() {
-		super("", "", false);
+	public PSSNamespaceInst(String id) {
+		super(id, "", false);
 	}
 
 	@Override

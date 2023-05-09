@@ -22,6 +22,7 @@ component pss_top {
         map<int, string> map3;
         map<string, int> map4;
         map<string, int> map5;
+        string k;
 
         // Test assignment
         exec post_solve {
@@ -34,6 +35,7 @@ component pss_top {
             map1.insert("d", 63);     // map1 = {"b":50, "c":41, "d":63};
             map2["20"] = map3[30];    // map2 = {"x":"xxx", "y":"yyy", "z":"zzz", "20":30 };
             map3[20] = map2["x"];     // map3 = {10:"10", 20:"xxx", 30:"30" };
+            k = "Hello World";
             foreach (v : map1[k])     // map5 = map1 = {"b":50, "c":41, "d":63};
               map5[k] = v;
         }
@@ -54,6 +56,7 @@ component pss_top {
               do print_string with { sss == k; };
               do printf with { val == v; };
             }
+            do print_string with { sss == k; };
         }
     }
 

@@ -35,7 +35,7 @@ public class PSSForeachActivity extends PSSActivity {
                 PSSVal val = entry.getValue();
 
                 /* Create a new namespace to shadow the key and value variables */
-                PSSNamespaceInst foreach_inst = new PSSNamespaceInst();
+                PSSNamespaceInst foreach_inst = new PSSNamespaceInst("");
 				inst.addInst(foreach_inst);
 
                 if (m_index_identifier != null) {
