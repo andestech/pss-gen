@@ -15,6 +15,9 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 		PSSInst leftInst = m_ref.getInst(inst);
 		PSSVal rightVal = m_expression.eval(inst);
 
+		if (leftInst.isReadOnly())
+			PSSMessage.Error("", m_ref.getText() + " is read-only");
+
 		/* Special treatment of empty aggregate literal */
 		if (m_expression instanceof PSSAggregateExpression
 				&& ((PSSAggregateExpression) m_expression).isEmpty()) {

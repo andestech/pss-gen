@@ -1,7 +1,7 @@
+
 import java.util.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-
 
 public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	PSSModel root;
@@ -19,6 +19,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		proc_stmt_list = new ArrayList<PSSProcStmt>();
 		constraint_list = new ArrayList<PSSConstraint>();
 	}
+
 	@Override
 	public Integer visitPackage_declaration(PSSParser.Package_declarationContext ctx) {
 		String id = ctx.package_id_path().getText();
@@ -26,7 +27,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		root.addChild(node);
 		root = node;
 
-		for (int i=0; i<ctx.package_body_item().size(); i++) {
+		for (int i = 0; i < ctx.package_body_item().size(); i++) {
 			visit(ctx.package_body_item(i));
 		}
 
@@ -34,6 +35,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		return 0;
 	}
+
 	@Override
 	public Integer visitImport_stmt(PSSParser.Import_stmtContext ctx) {
 		String type_id = ctx.package_import_pattern().type_identifier().getText();
@@ -59,7 +61,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		root.addChild(node);
 		root = node;
 
-		for (int i=0; i<ctx.component_body_item().size(); i++) {
+		for (int i = 0; i < ctx.component_body_item().size(); i++) {
 			visit(ctx.component_body_item(i));
 		}
 
@@ -67,6 +69,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		return 0;
 	}
+
 	@Override
 	public Integer visitOverride_declaration(PSSParser.Override_declarationContext ctx) {
 		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
@@ -78,6 +81,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
 	};
+
 	@Override
 	public Integer visitComponent_data_declaration(PSSParser.Component_data_declarationContext ctx) {
 
@@ -96,26 +100,26 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		root.addChild(node);
 		root = node;
 
-		for (int i=0; i<ctx.enum_item().size(); i++) {
+		for (int i = 0; i < ctx.enum_item().size(); i++) {
 			visit(ctx.enum_item(i));
 		}
 
 		root = node.m_parent;
 		return 0;
 	}
+
 	@Override
 	public Integer visitEnum_item(PSSParser.Enum_itemContext ctx) {
 		String id = ctx.identifier().getText();
 
-		PSSEnumModel enum_model = (PSSEnumModel)root;
+		PSSEnumModel enum_model = (PSSEnumModel) root;
 
 		if (ctx.constant_expression() != null) {
 			visit(ctx.constant_expression());
 			PSSExpression expression = exp_stack.pop();
 			PSSVal val = expression.eval(null);
 			enum_model.addEnumItem(id, val);
-		}
-		else {
+		} else {
 			enum_model.addEnumItem(id);
 		}
 
@@ -127,6 +131,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
 	}
+
 	@Override
 	public Integer visitCovergroup_declaration(PSSParser.Covergroup_declarationContext ctx) {
 		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
@@ -147,7 +152,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		root.addChild(node);
 		root = node;
 
-		for (int i=0; i<ctx.action_body_item().size(); i++) {
+		for (int i = 0; i < ctx.action_body_item().size(); i++) {
 			visit(ctx.action_body_item(i));
 		}
 
@@ -160,7 +165,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitFlow_ref_field_declaration(PSSParser.Flow_ref_field_declarationContext ctx) {
 		String direction = ctx.input_or_output().getText();
 		String type = ctx.flow_object_type().getText();
-		for (int i=0; i<ctx.object_ref_field().size(); i++) {
+		for (int i = 0; i < ctx.object_ref_field().size(); i++) {
 			String id = ctx.object_ref_field(i).getText();
 			PSSFlowRef node = new PSSFlowRef(id, direction.equals("output"), type);
 			root.addFlowRef(node);
@@ -176,7 +181,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		root.addChild(node);
 		root = node;
 
-		for (int i=0; i<ctx.struct_body_item().size(); i++) {
+		for (int i = 0; i < ctx.struct_body_item().size(); i++) {
 			visit(ctx.struct_body_item(i));
 		}
 
@@ -191,7 +196,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		PSSExecBlock block = new PSSExecBlock(kind);
 
-		for (int i=0; i<ctx.exec_stmt().size(); i++) {
+		for (int i = 0; i < ctx.exec_stmt().size(); i++) {
 			visit(ctx.exec_stmt(i));
 
 			PSSProcStmt stmt = proc_stmt_list.remove(0);
@@ -209,14 +214,14 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		if (ctx.procedural_stmt() != null) {
 			visit(ctx.procedural_stmt());
-		}
-		else {
+		} else {
 			visit(ctx.exec_super_stmt());
 
 		}
 
 		return 0;
 	}
+
 	@Override
 	public Integer visitExec_super_stmt(PSSParser.Exec_super_stmtContext ctx) {
 		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
@@ -243,7 +248,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitProcedural_sequence_block_stmt(PSSParser.Procedural_sequence_block_stmtContext ctx) {
 		PSSSequenceProcStmt sequence_stmt = new PSSSequenceProcStmt();
 
-		for (int i=0; i<ctx.procedural_stmt().size(); i++) {
+		for (int i = 0; i < ctx.procedural_stmt().size(); i++) {
 			visit(ctx.procedural_stmt(i));
 
 			PSSProcStmt stmt = proc_stmt_list.remove(0);
@@ -252,19 +257,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		proc_stmt_list.add(sequence_stmt);
 		return 0;
 	}
+
 	@Override
 	public Integer visitData_type(PSSParser.Data_typeContext ctx) {
 		if (ctx.scalar_data_type() != null) {
 			visit(ctx.scalar_data_type());
-		}
-		else if (ctx.collection_type() != null) {
+		} else if (ctx.collection_type() != null) {
 			visit(ctx.collection_type());
-		}
-		else if (ctx.reference_type() != null) {
+		} else if (ctx.reference_type() != null) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		}
-		else {
-			String  text = ctx.type_identifier().getText();
+		} else {
+			String text = ctx.type_identifier().getText();
 			cur_data_type = new PSSDataTypeModel(text);
 		}
 
@@ -275,20 +278,18 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitScalar_data_type(PSSParser.Scalar_data_typeContext ctx) {
 		if (ctx.chandle_type() != null) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		}
-		else if (ctx.integer_type() != null) {
+		} else if (ctx.integer_type() != null) {
 			visit(ctx.integer_type());
-		}
-		else if (ctx.string_type() != null) {
+		} else if (ctx.string_type() != null) {
 			visit(ctx.string_type());
-		}
-		else if (ctx.enum_type() != null) {
-			String  text = ctx.enum_type().getText();
+		} else if (ctx.enum_type() != null) {
+			String text = ctx.enum_type().getText();
 			cur_data_type = new PSSDataTypeModel(text);
 		}
 
 		return 0;
 	}
+
 	@Override
 	public Integer visitArray_type(PSSParser.Array_typeContext ctx) {
 		visit(ctx.data_type());
@@ -312,27 +313,27 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitMap_type(PSSParser.Map_typeContext ctx) {
-        visit(ctx.data_type(0));
-        PSSModel key_data_type = cur_data_type;
-        visit(ctx.data_type(1));
-        PSSModel val_data_type = cur_data_type;
+		visit(ctx.data_type(0));
+		PSSModel key_data_type = cur_data_type;
+		visit(ctx.data_type(1));
+		PSSModel val_data_type = cur_data_type;
 
-        cur_data_type = new PSSMapModel(key_data_type, val_data_type);
+		cur_data_type = new PSSMapModel(key_data_type, val_data_type);
 		return 0;
 	}
 
 	@Override
 	public Integer visitSet_type(PSSParser.Set_typeContext ctx) {
-        visit(ctx.data_type());
-        PSSModel data_type = cur_data_type;
-        cur_data_type = new PSSSetModel(data_type);
+		visit(ctx.data_type());
+		PSSModel data_type = cur_data_type;
+		cur_data_type = new PSSSetModel(data_type);
 		return 0;
 	}
 
 	@Override
 	public Integer visitInteger_type(PSSParser.Integer_typeContext ctx) {
-		// bit[7]	// [constant_expression]
-		// bit[3:0]	// [constant_expression (':' number)? ]
+		// bit[7] // [constant_expression]
+		// bit[3:0] // [constant_expression (':' number)? ]
 
 		if (ctx.domain_open_range_list() != null) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
@@ -345,16 +346,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		if (ctx.number() != null) {
 			int lsb = Integer.valueOf(ctx.number().getText());
 			int msb = Integer.valueOf(ctx.constant_expression().getText());
-			width = msb-lsb+1;
-		}
-		else if (ctx.constant_expression() != null) {
+			width = msb - lsb + 1;
+		} else if (ctx.constant_expression() != null) {
 			width = Integer.valueOf(ctx.constant_expression().getText());
-		}
-		else {
+		} else {
 			if (sign) {
 				width = PSSIntModel.DEFAULT_INT_SIZE;
-			}
-			else {
+			} else {
 				width = PSSIntModel.DEFAULT_BIT_SIZE;
 			}
 		}
@@ -382,7 +380,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSModel type = cur_data_type;
 
 		PSSDataDeclProcStmt data_decl = new PSSDataDeclProcStmt(type);
-		for (int i=0; i<ctx.procedural_data_instantiation().size(); i++) {
+		for (int i = 0; i < ctx.procedural_data_instantiation().size(); i++) {
 			PSSParser.Procedural_data_instantiationContext ctx_data_inst = ctx.procedural_data_instantiation(i);
 
 			String id = ctx_data_inst.identifier().getText();
@@ -407,7 +405,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSExpression func = exp_stack.pop();
 		if (!(func instanceof PSSFunctionCall))
 			PSSMessage.Fatal("Return type of function_call is not PSSFunctionCall.");
-		PSSVoidFunctionCall stmt = new PSSVoidFunctionCall((PSSFunctionCall)func);
+		PSSVoidFunctionCall stmt = new PSSVoidFunctionCall((PSSFunctionCall) func);
 		proc_stmt_list.add(stmt);
 		return 0;
 	}
@@ -457,11 +455,61 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		return 0;
 	}
 
+	private String separate_index(PSSExpression exp) {
+		if (!(exp instanceof PSSRefPathExpression))
+			return null;
+
+		PSSRefPathExpression e = (PSSRefPathExpression) exp;
+
+		if (e.m_bit_slice_from != null || e.m_bit_slice_to != null)
+			return null;
+
+		PSSMemberPathElemExpression me = null;
+		if (e.m_hierarchical_id == null || e.m_hierarchical_id.m_member_list.size() == 0)
+			me = e.m_static_ref_path;
+		else
+			e.m_hierarchical_id.m_member_list.get(e.m_hierarchical_id.m_member_list.size() - 1);
+		if (me == null)
+			return null;
+
+		String index = null;
+		if (me.m_index != null && me.m_index instanceof PSSRefPathExpression) {
+			PSSRefPathExpression index_exp = (PSSRefPathExpression) me.m_index;
+			if ((index_exp.m_type_identifier_elems == null || index_exp.m_type_identifier_elems.equals(""))
+					&& index_exp.m_bit_slice_from == null
+					&& index_exp.m_bit_slice_to == null
+					&& (index_exp.m_hierarchical_id == null || index_exp.m_hierarchical_id.m_member_list.size() == 0)) {
+				index = index_exp.getText();
+				me.m_index = null;
+			}
+		}
+
+		return index;
+	}
+
 	@Override
 	public Integer visitProcedural_foreach_stmt(PSSParser.Procedural_foreach_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		String iterator_id = null;
+		PSSExpression exp = null;
+		PSSProcStmt stmt = null;
+		String index_id = null;
+		if (ctx.iterator_identifier() != null)
+			iterator_id = ctx.iterator_identifier().getText();
+		visit(ctx.expression());
+		exp = exp_stack.pop();
+		if (ctx.index_identifier() != null)
+			index_id = ctx.index_identifier().getText();
+		visit(ctx.procedural_stmt());
+		stmt = proc_stmt_list.remove(0);
+
+		/* try to separate index_identifier due to grammar ambiguity */
+		if (index_id == null)
+			index_id = separate_index(exp);
+
+		proc_stmt_list.add(new PSSForeachProcStmt(iterator_id, exp, index_id, stmt));
 		return 0;
 	}
+
 	@Override
 	public Integer visitProcedural_if_else_stmt(PSSParser.Procedural_if_else_stmtContext ctx) {
 		visit(ctx.expression());
@@ -506,40 +554,38 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		String code = ctx.string_literal().getText();
 		PSSTargetCode node = new PSSTargetCode(root, exec_kind, language, code);
 
-
-		((PSSAction)root).addTargetCode(node);
+		((PSSAction) root).addTargetCode(node);
 		return 0;
 	}
 
 	@Override
 	public Integer visitActivity_declaration(PSSParser.Activity_declarationContext ctx) {
-		for (int i=0; i<ctx.activity_declaration_body_stmt().size(); i++) {
+		for (int i = 0; i < ctx.activity_declaration_body_stmt().size(); i++) {
 			visit(ctx.activity_declaration_body_stmt(i));
 			PSSActivity stmt = activity_stack.pop();
 			if (stmt != null) {
-				((PSSAction)root).addActivityStmt(stmt);
+				((PSSAction) root).addActivityStmt(stmt);
 			}
 		}
 		return 0;
 	}
+
 	@Override
 	public Integer visitActivity_action_traversal_stmt(PSSParser.Activity_action_traversal_stmtContext ctx) {
 		String handle_id = "";
 		String type_id = "";
 
-		if (ctx.identifier() != null) {	// anonymous
+		if (ctx.identifier() != null) { // anonymous
 			handle_id = ctx.identifier().getText();
-		}
-		else {
+		} else {
 			type_id = ctx.type_identifier().getText();
 		}
-
 
 		PSSTraversalActivity node = new PSSTraversalActivity(handle_id, type_id);
 		if (ctx.inline_constraints_or_empty().constraint_set() != null) {
 			visit(ctx.inline_constraints_or_empty().constraint_set());
 
-			for (int i=0; i<constraint_list.size(); i++) {
+			for (int i = 0; i < constraint_list.size(); i++) {
 				PSSConstraint c = constraint_list.get(i);
 				node.addConstraint(c);
 			}
@@ -547,7 +593,6 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			activity_stack.push(node);
 		}
 		activity_stack.push(node);
-
 
 		return 0;
 	}
@@ -562,7 +607,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		visit(ctx.constraint_set());
 
-		for (int i=0; i<constraint_list.size(); i++) {
+		for (int i = 0; i < constraint_list.size(); i++) {
 			PSSConstraint c = constraint_list.get(i);
 			root.addConstraint(c);
 		}
@@ -592,6 +637,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
 	}
+
 	@Override
 	public Integer visitIf_constraint_item(PSSParser.If_constraint_itemContext ctx) {
 		visit(ctx.expression());
@@ -600,7 +646,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSIfConstraint constraint = new PSSIfConstraint(exp);
 
 		visit(ctx.constraint_set(0));
-		for (int i=0; i<constraint_list.size(); i++) {
+		for (int i = 0; i < constraint_list.size(); i++) {
 			PSSConstraint c = constraint_list.get(i);
 			constraint.addTrueConstraint(c);
 		}
@@ -608,7 +654,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		if (ctx.constraint_set().size() > 1) {
 			visit(ctx.constraint_set(1));
-			for (int i=0; i<constraint_list.size(); i++) {
+			for (int i = 0; i < constraint_list.size(); i++) {
 				PSSConstraint c = constraint_list.get(i);
 				constraint.addFalseConstraint(c);
 			}
@@ -619,18 +665,20 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		return 0;
 	}
+
 	@Override
 	public Integer visitImplication_constraint_item(PSSParser.Implication_constraint_itemContext ctx) {
 		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
 	}
+
 	@Override
 	public Integer visitUnique_constraint_item(PSSParser.Unique_constraint_itemContext ctx) {
 		PSSUniqueConstraint constraint = new PSSUniqueConstraint();
 
-		for (int i=0; i<ctx.hierarchical_id_list().hierarchical_id().size(); i++) {
+		for (int i = 0; i < ctx.hierarchical_id_list().hierarchical_id().size(); i++) {
 			visit(ctx.hierarchical_id_list().hierarchical_id(i));
-			constraint.add((PSSHierarchicalIDExpression)exp_stack.pop());
+			constraint.add((PSSHierarchicalIDExpression) exp_stack.pop());
 		}
 
 		constraint_list.add(constraint);
@@ -646,201 +694,184 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSExpression left = exp_stack.pop();
 			String op = ctx.binary_operator().getText();
 
-
 			switch (op) {
-			case "==":
-				exp_stack.push(new PSSEqualExpression(left, right));
-				break;
-			case "!=":
-				exp_stack.push(new PSSNotEqualExpression(left, right));
-				break;
-			case ">":
-				exp_stack.push(new PSSGreaterThanExpression(left, right));
-				break;
-			case ">=":
-				exp_stack.push(new PSSGreaterEqualExpression(left, right));
-				break;
-			case "<":
-				exp_stack.push(new PSSLessThanExpression(left, right));
-				break;
-			case "<=":
-				exp_stack.push(new PSSLessEqualExpression(left, right));
-				break;
-			case "+":
-				exp_stack.push(new PSSAddExpression(left, right));
-				break;
-			case "-":
-				exp_stack.push(new PSSSubExpression(left, right));
-				break;
-			case "*":
-				exp_stack.push(new PSSMulExpression(left, right));
-				break;
-			case "/":
-				exp_stack.push(new PSSDivExpression(left, right));
-				break;
-			case "%":
-				exp_stack.push(new PSSModExpression(left, right));
-				break;
-			case "<<":
-				exp_stack.push(new PSSLeftShiftExpression(left, right));
-				break;
-			case ">>":
-				exp_stack.push(new PSSRightShiftExpression(left, right));
-				break;
-			case "&&":
-				exp_stack.push(new PSSLogicalAndExpression(left, right));
-				break;
-			case "||":
-				exp_stack.push(new PSSLogicalOrExpression(left, right));
-				break;
-			case "&":
-				exp_stack.push(new PSSBitwiseAndExpression(left, right));
-				break;
-			case "|":
-				exp_stack.push(new PSSBitwiseOrExpression(left, right));
-				break;
-			default:
-				exp_stack.push(new PSSBinaryExpression(left, op, right));
-				break;
+				case "==":
+					exp_stack.push(new PSSEqualExpression(left, right));
+					break;
+				case "!=":
+					exp_stack.push(new PSSNotEqualExpression(left, right));
+					break;
+				case ">":
+					exp_stack.push(new PSSGreaterThanExpression(left, right));
+					break;
+				case ">=":
+					exp_stack.push(new PSSGreaterEqualExpression(left, right));
+					break;
+				case "<":
+					exp_stack.push(new PSSLessThanExpression(left, right));
+					break;
+				case "<=":
+					exp_stack.push(new PSSLessEqualExpression(left, right));
+					break;
+				case "+":
+					exp_stack.push(new PSSAddExpression(left, right));
+					break;
+				case "-":
+					exp_stack.push(new PSSSubExpression(left, right));
+					break;
+				case "*":
+					exp_stack.push(new PSSMulExpression(left, right));
+					break;
+				case "/":
+					exp_stack.push(new PSSDivExpression(left, right));
+					break;
+				case "%":
+					exp_stack.push(new PSSModExpression(left, right));
+					break;
+				case "<<":
+					exp_stack.push(new PSSLeftShiftExpression(left, right));
+					break;
+				case ">>":
+					exp_stack.push(new PSSRightShiftExpression(left, right));
+					break;
+				case "&&":
+					exp_stack.push(new PSSLogicalAndExpression(left, right));
+					break;
+				case "||":
+					exp_stack.push(new PSSLogicalOrExpression(left, right));
+					break;
+				case "&":
+					exp_stack.push(new PSSBitwiseAndExpression(left, right));
+					break;
+				case "|":
+					exp_stack.push(new PSSBitwiseOrExpression(left, right));
+					break;
+				default:
+					exp_stack.push(new PSSBinaryExpression(left, op, right));
+					break;
 			}
 
-		}
-		else if (ctx.unary_operator() != null) {
+		} else if (ctx.unary_operator() != null) {
 			String op = ctx.unary_operator().getText();
 			visit(ctx.primary());
 			PSSExpression exp = exp_stack.pop();
 
 			switch (op) {
-			case "!":
-				exp_stack.push(new PSSLogicalNotExpression(exp));
-				break;
-			case "~":
-				exp_stack.push(new PSSBitwiseNotExpression(exp));
-				break;
-			case "-":
-				exp_stack.push(new PSSUnaryMinusExpression(exp));
-				break;
-			default:
-				PSSMessage.Fatal("unary operator '" + op + "'is not yet supported");
-				break;
+				case "!":
+					exp_stack.push(new PSSLogicalNotExpression(exp));
+					break;
+				case "~":
+					exp_stack.push(new PSSBitwiseNotExpression(exp));
+					break;
+				case "-":
+					exp_stack.push(new PSSUnaryMinusExpression(exp));
+					break;
+				default:
+					PSSMessage.Fatal("unary operator '" + op + "'is not yet supported");
+					break;
 			}
-		}
-		else if (ctx.primary() != null) {
+		} else if (ctx.primary() != null) {
 			visit(ctx.primary());
-		}
-		else if (ctx.open_range_list() != null) {
+		} else if (ctx.open_range_list() != null) {
 			visit(ctx.expression(0));
 			visit(ctx.open_range_list());
 			PSSExpression right = exp_stack.pop();
 			PSSExpression left = exp_stack.pop();
 			exp_stack.push(new PSSInExpression(left, right));
-		}
-        else if (ctx.collection_expression() != null) {
-            visit(ctx.expression(0));
-            visit(ctx.collection_expression());
-            PSSExpression right = exp_stack.pop();
-            PSSExpression left = exp_stack.pop();
-            exp_stack.push(new PSSInExpression(left, right));
-        }
-		else {
+		} else if (ctx.collection_expression() != null) {
+			visit(ctx.expression(0));
+			visit(ctx.collection_expression());
+			PSSExpression right = exp_stack.pop();
+			PSSExpression left = exp_stack.pop();
+			exp_stack.push(new PSSInExpression(left, right));
+		} else {
 			PSSMessage.Error("VISITOR-0001", "visitExpression is not fully implemented yet");
 		}
 		return 0;
 	}
+
 	@Override
 	public Integer visitPrimary(PSSParser.PrimaryContext ctx) {
 
 		if (ctx.string_literal() != null) {
 			String text = ctx.getText().replace("\"", "");
 			exp_stack.push(new PSSPrimaryExpression(new PSSStringVal(text)));
-		}
-		else if (ctx.number() != null) {
+		} else if (ctx.number() != null) {
 			String text = ctx.getText();
 			if (ctx.number().OCT_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newOctNumber(text)));
-			}
-			else if (ctx.number().DEC_NUMBER() != null) {
+			} else if (ctx.number().DEC_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newDecNumber(text)));
-			}
-			else if (ctx.number().HEX_NUMBER() != null) {
+			} else if (ctx.number().HEX_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newHexNumber(text)));
-			}
-			else if (ctx.number().based_bin_number() != null) {
+			} else if (ctx.number().based_bin_number() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBasedBinNumber(text)));
-			}
-			else if (ctx.number().based_oct_number() != null) {
+			} else if (ctx.number().based_oct_number() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBasedOctNumber(text)));
-			}
-			else if (ctx.number().based_dec_number() != null) {
+			} else if (ctx.number().based_dec_number() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBasedDecNumber(text)));
-			}
-			else if (ctx.number().based_hex_number() != null) {
+			} else if (ctx.number().based_hex_number() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBasedHexNumber(text)));
 			}
-		}
-		else if (ctx.bool_literal() != null) {
+		} else if (ctx.bool_literal() != null) {
 			String text = ctx.getText();
 			exp_stack.push(new PSSPrimaryExpression(new PSSBoolVal(text)));
-		}
-		else if (ctx.ref_path() != null) {
-            visit(ctx.ref_path());
-		}
-		else if (ctx.paren_expr() != null) {
+		} else if (ctx.ref_path() != null) {
+			visit(ctx.ref_path());
+		} else if (ctx.paren_expr() != null) {
 			visit(ctx.paren_expr().expression());
-		}
-		else if (ctx.aggregate_literal() != null) {
+		} else if (ctx.aggregate_literal() != null) {
 			visit(ctx.aggregate_literal());
-		}
-		else {
+		} else {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		}
 		return 0;
 	}
 
-    @Override
-    public Integer visitCollection_expression(PSSParser.Collection_expressionContext ctx) {
-        visit(ctx.expression());
-        return 0;
-    }
+	@Override
+	public Integer visitCollection_expression(PSSParser.Collection_expressionContext ctx) {
+		visit(ctx.expression());
+		return 0;
+	}
 
-    @Override
-    public Integer visitMember_path_elem(PSSParser.Member_path_elemContext ctx) {
+	@Override
+	public Integer visitMember_path_elem(PSSParser.Member_path_elemContext ctx) {
 		String id = ctx.identifier().getText();
 		List<PSSExpression> args = null;
 		PSSExpression index = null;
-        if (ctx.function_parameter_list() != null) {
+		if (ctx.function_parameter_list() != null) {
 			args = new ArrayList<PSSExpression>();
-            for (int i=0; i<ctx.function_parameter_list().expression().size(); i++) {
-                visit(ctx.function_parameter_list().expression(i));
+			for (int i = 0; i < ctx.function_parameter_list().expression().size(); i++) {
+				visit(ctx.function_parameter_list().expression(i));
 				args.add(exp_stack.pop());
-            }
-        }
+			}
+		}
 		if (ctx.expression() != null) {
 			visit(ctx.expression());
 			index = exp_stack.pop();
 		}
 
 		PSSMemberPathElemExpression e = new PSSMemberPathElemExpression(id, args, index);
-        exp_stack.push(e);
+		exp_stack.push(e);
 
-        return 0;
-    }
+		return 0;
+	}
 
-    @Override
-    public Integer visitHierarchical_id(PSSParser.Hierarchical_idContext ctx) {
-        PSSHierarchicalIDExpression e = new PSSHierarchicalIDExpression();
-        for (int i=0; i<ctx.member_path_elem().size(); i++) {
-            visit(ctx.member_path_elem(i));
-            e.addMemberElement((PSSMemberPathElemExpression)exp_stack.pop());
-        }
-        exp_stack.push(e);
+	@Override
+	public Integer visitHierarchical_id(PSSParser.Hierarchical_idContext ctx) {
+		PSSHierarchicalIDExpression e = new PSSHierarchicalIDExpression();
+		for (int i = 0; i < ctx.member_path_elem().size(); i++) {
+			visit(ctx.member_path_elem(i));
+			e.addMemberElement((PSSMemberPathElemExpression) exp_stack.pop());
+		}
+		exp_stack.push(e);
 
-        return 0;
-    }
+		return 0;
+	}
 
-    @Override
-    public Integer visitRef_path(PSSParser.Ref_pathContext ctx) {
-        if (ctx.static_ref_path() == null)
+	@Override
+	public Integer visitRef_path(PSSParser.Ref_pathContext ctx) {
+		if (ctx.static_ref_path() == null)
 			PSSMessage.Fatal("super in ref_path is not implemented");
 
 		String type_identifier_elem = null;
@@ -856,10 +887,10 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSMemberPathElemExpression static_ref_path = (PSSMemberPathElemExpression) exp_stack.pop();
 
 		PSSHierarchicalIDExpression hierarchical_id = null;
-        if (ctx.hierarchical_id() != null) {
-            visit(ctx.hierarchical_id());
+		if (ctx.hierarchical_id() != null) {
+			visit(ctx.hierarchical_id());
 			hierarchical_id = (PSSHierarchicalIDExpression) exp_stack.pop();
-        }
+		}
 
 		PSSExpression bit_slice_from = null;
 		PSSExpression bit_slice_to = null;
@@ -870,11 +901,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			bit_slice_to = exp_stack.pop();
 		}
 
-        PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, hierarchical_id, null, null);
-        exp_stack.push(e);
+		PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, hierarchical_id, null,
+				null);
+		exp_stack.push(e);
 
-        return 0;
-    }
+		return 0;
+	}
 
 	@Override
 	public Integer visitAggregate_literal(PSSParser.Aggregate_literalContext ctx) {
@@ -883,25 +915,23 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			res = new PSSAggregateExpression();
 		} else if (ctx.value_list_literal() != null) {
 			PSSAggregateExpression exp = new PSSAggregateExpression();
-			for (int i=0; i<ctx.value_list_literal().expression().size(); i++) {
+			for (int i = 0; i < ctx.value_list_literal().expression().size(); i++) {
 				visit(ctx.value_list_literal().expression(i));
 				PSSExpression item = exp_stack.pop();
 				exp.addExpression(item);
 			}
 			res = exp;
-		}
-        else if (ctx.map_literal() != null) {
+		} else if (ctx.map_literal() != null) {
 			PSSMapExpression exp = new PSSMapExpression();
-            for (int i=0; i<ctx.map_literal().map_literal_item().size(); i++) {
-                visit(ctx.map_literal().map_literal_item(i).expression(0));
-                PSSExpression key = exp_stack.pop();
-                visit(ctx.map_literal().map_literal_item(i).expression(1));
-                PSSExpression val = exp_stack.pop();
+			for (int i = 0; i < ctx.map_literal().map_literal_item().size(); i++) {
+				visit(ctx.map_literal().map_literal_item(i).expression(0));
+				PSSExpression key = exp_stack.pop();
+				visit(ctx.map_literal().map_literal_item(i).expression(1));
+				PSSExpression val = exp_stack.pop();
 				exp.add(key, val);
-            }
+			}
 			res = exp;
-        }
-		else {
+		} else {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		}
 		if (res != null)
@@ -913,7 +943,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitOpen_range_list(PSSParser.Open_range_listContext ctx) {
 		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
 
-		for (int i=0; i<ctx.open_range_value().size(); i++) {
+		for (int i = 0; i < ctx.open_range_value().size(); i++) {
 
 			visit(ctx.open_range_value(i));
 			PSSOpenRangeValueExpression value = (PSSOpenRangeValueExpression) exp_stack.pop();
@@ -936,8 +966,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSExpression begin = exp_stack.pop();
 			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin, end);
 			exp_stack.push(item);
-		}
-		else {
+		} else {
 			visit(ctx.expression(0));
 			PSSExpression begin = exp_stack.pop();
 			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin);
@@ -956,9 +985,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	@Override
 	public Integer visitFunction_ref_path(PSSParser.Function_ref_pathContext ctx) {
 		PSSHierarchicalIDExpression path = new PSSHierarchicalIDExpression();
-		for (int i=0; i<ctx.member_path_elem().size(); i++) {
+		for (int i = 0; i < ctx.member_path_elem().size(); i++) {
 			visit(ctx.member_path_elem(i));
-			path.addMemberElement((PSSMemberPathElemExpression)exp_stack.pop());
+			path.addMemberElement((PSSMemberPathElemExpression) exp_stack.pop());
 		}
 
 		String id = ctx.identifier().getText();
@@ -972,7 +1001,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		PSSFunctionCall func_call = new PSSFunctionCall(path, id, args);
 		exp_stack.push(func_call);
-		//PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		// PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
 	}
 
@@ -986,14 +1015,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		// FIXME
 		// activity_bind_item_or_list
-		// 	: hierarchical_id
-		// 	| '{' hierarchical_id_list '}'
+		// : hierarchical_id
+		// | '{' hierarchical_id_list '}'
 		// ;
 		String item = ctx.activity_bind_item_or_list().getText();
 		node.addBindItem(item);
 
 		return 0;
 	}
+
 	@Override
 	public Integer visitActivity_if_else_stmt(PSSParser.Activity_if_else_stmtContext ctx) {
 		visit(ctx.expression());
@@ -1014,6 +1044,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		activity_stack.push(if_else_stmt);
 		return 0;
 	}
+
 	@Override
 	public Integer visitActivity_repeat_stmt(PSSParser.Activity_repeat_stmtContext ctx) {
 		String index_id = "";
@@ -1032,10 +1063,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		activity_stack.push(repeat_stmt);
 		return 0;
 	}
+
 	@Override
 	public Integer visitActivity_sequence_block_stmt(PSSParser.Activity_sequence_block_stmtContext ctx) {
 		PSSSequenceActivity sequence_stmt = new PSSSequenceActivity();
-		for (int i=0; i<ctx.activity_stmt().size(); i++) {
+		for (int i = 0; i < ctx.activity_stmt().size(); i++) {
 			visit(ctx.activity_stmt(i));
 			PSSActivity stmt = activity_stack.pop();
 			sequence_stmt.addActivity(stmt);
@@ -1054,7 +1086,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	@Override
 	public Integer visitActivity_schedule_stmt(PSSParser.Activity_schedule_stmtContext ctx) {
 		PSSScheduleActivity schedule_stmt = new PSSScheduleActivity();
-		for (int i=0; i<ctx.activity_stmt().size(); i++) {
+		for (int i = 0; i < ctx.activity_stmt().size(); i++) {
 			visit(ctx.activity_stmt(i));
 			PSSActivity stmt = activity_stack.pop();
 			schedule_stmt.addActivity(stmt);
@@ -1065,7 +1097,24 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitActivity_foreach_stmt(PSSParser.Activity_foreach_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		String iterator_id = null;
+		PSSExpression exp = null;
+		PSSActivity stmt = null;
+		String index_id = null;
+		if (ctx.iterator_identifier() != null)
+			iterator_id = ctx.iterator_identifier().getText();
+		visit(ctx.expression());
+		exp = exp_stack.pop();
+		if (ctx.index_identifier() != null)
+			index_id = ctx.index_identifier().getText();
+		visit(ctx.activity_stmt());
+		stmt = activity_stack.pop();
+
+		/* try to separate index_identifier due to grammar ambiguity */
+		if (index_id == null)
+			index_id = separate_index(exp);
+
+		activity_stack.push(new PSSForeachActivity(iterator_id, exp, index_id, stmt));
 		return 0;
 	};
 
@@ -1073,12 +1122,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitActivity_select_stmt(PSSParser.Activity_select_stmtContext ctx) {
 		PSSSelectActivity select_stmt = new PSSSelectActivity();
 
-		for (int i=0; i<ctx.select_branch().size(); i++) {
+		for (int i = 0; i < ctx.select_branch().size(); i++) {
 			visit(ctx.select_branch(i));
 			PSSSelectBranchActivity select_branch = (PSSSelectBranchActivity) activity_stack.pop();
 			select_stmt.addBranch(select_branch);
 		}
-
 
 		activity_stack.push(select_stmt);
 		return 0;
@@ -1138,6 +1186,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		return 0;
 	}
+
 	@Override
 	public Integer visitData_declaration(PSSParser.Data_declarationContext ctx) {
 		visit(ctx.data_type());
@@ -1146,11 +1195,10 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		PSSDataDeclModel data_decl = new PSSDataDeclModel(data_type);
 
-		for (int i=0; i<ctx.data_instantiation().size(); i++) {
+		for (int i = 0; i < ctx.data_instantiation().size(); i++) {
 			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
 
 			String id = data_inst.identifier().getText();
-
 
 			PSSExpression array_dim = null;
 			if (data_inst.array_dim() != null) {
@@ -1174,4 +1222,3 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	}
 
 }
-

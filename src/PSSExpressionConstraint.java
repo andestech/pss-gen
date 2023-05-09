@@ -14,7 +14,14 @@ public class PSSExpressionConstraint extends PSSConstraint {
 		return m_expression.eval(var).toBool();
 	}
 
+	@Override
+	public String getText() {
+		return m_expression.getText();
+	}
+
+	@Override
 	public void dump(String indent) {
 		System.out.println(indent + m_expression.getText());
 	}
+
 }

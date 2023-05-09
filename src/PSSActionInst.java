@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class PSSActionInst extends PSSInst {
-	
+
 	PSSTraversalList		m_sub_list;
 	ArrayList<PSSActionInst>	m_dependency;
 

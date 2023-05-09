@@ -1,17 +1,45 @@
 
-import java.util.Collections;
-import java.util.List;
+import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A {@code PSSMapVal} is an evaluation of a {@link PSSMapExpression}.
  *
  */
-public class PSSMapVal extends PSSVal {
+public class PSSMapVal extends PSSVal implements PSSICollection {
 
 	private Map<PSSVal, PSSVal> m_map = new HashMap<PSSVal, PSSVal>();
+
+	private class MapIterator implements PSSIIterator {
+
+		private Iterator<PSSVal> m_keys;
+
+		private Map<PSSVal, PSSVal> m_map;
+
+		public MapIterator(Map<PSSVal, PSSVal> m) {
+			m_map = m;
+			m_keys = m_map.keySet().iterator();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return m_keys.hasNext();
+		}
+
+		@Override
+		public Entry<PSSVal, PSSVal> next() {
+			PSSVal k = m_keys.next();
+			PSSVal v = m_map.get(k);
+			return new AbstractMap.SimpleEntry<PSSVal, PSSVal>(k, v);
+		}
+
+	}
 
 	public PSSMapVal(PSSModel type) {
 		super(type);
@@ -189,6 +217,16 @@ public class PSSMapVal extends PSSVal {
 			strs.add(k.getText() + ": " + v.getText());
 		}
 		return "{ " + String.join(", ", strs) + " }";
+	}
+
+	@Override
+	public boolean isIndexable() {
+		return true;
+	}
+
+	@Override
+	public PSSIIterator iterator() {
+		return new MapIterator(m_map);
 	}
 
 	@Override

@@ -45,6 +45,9 @@ public class PSSInst {
 	public ArrayList<PSSInst> m_insts;
 	Map<String, NativeMethod> m_native_methods = new HashMap<String, NativeMethod>();
 
+	/** {@code true} if this instance is read-only */
+	boolean m_readonly;
+
 	// buildin type
 	public PSSInst(String id, String type, boolean rand) {
 		m_id = id;
@@ -237,6 +240,24 @@ public class PSSInst {
 
 	public void execute_kind(String kind) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::execute_kind is not impelemented");
+	}
+
+	/**
+	 * Returns {@code true} if this instance is read-only.
+	 *
+	 * @return {@code true} if this instance is read-only
+	 */
+	public boolean isReadOnly() {
+		return m_readonly;
+	}
+
+	/**
+	 * Sets the read-only property of this instance.
+	 *
+	 * @param readonly {@code true} to make this instance read-only
+	 */
+	public void setReadOnly(boolean readonly) {
+		m_readonly = readonly;
 	}
 
 	/**
