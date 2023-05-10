@@ -5,6 +5,7 @@ component pss_top {
         set<int> my_set2;
         set<int> my_set3;
         set<string> my_set4;
+        list<int> my_set2_list;
 
         // Test assignment
         exec post_solve {
@@ -16,6 +17,7 @@ component pss_top {
             my_set3.insert(53);
             my_set3.delete(1);
             my_set4 = {"1", "2", "2"};
+            my_set2_list = my_set2.to_list();
         }
 
         // Test index
@@ -32,6 +34,7 @@ component pss_top {
 			do printf with {val == my_set4.size();};
             if ("3" in my_set4)
 			    do printf with {val == -1;}; // -1 should not be printed
+            do printf with {val == my_set2_list.size();};
         }
     }
 

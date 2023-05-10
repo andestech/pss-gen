@@ -90,13 +90,18 @@ public class PSSSetInst extends PSSInst {
     }
 
     public void insert(PSSVal e) {
-        // TODO: Check type. Should we add getTypeModel() in PSSVal?
+        if (!m_type_model.isCompatible(e.getTypeModel()))
+            PSSMessage.Error("SetInst", "The data type of the inserted " +
+                    "element shall be the same as the set element.");
         m_set.add(e);
     }
 
     public PSSVal to_list() {
-        PSSMessage.Fatal("[" + getClass().getName() + "] To be implement");
-        return null;
+        PSSSetVal set = toVal();
+        PSSListVal list = new PSSListVal(m_type_model);
+        for (PSSVal e: set.getSet())
+            list.add(e);
+        return list;
     }
 
     @Override
