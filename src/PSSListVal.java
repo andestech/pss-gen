@@ -15,16 +15,6 @@ public class PSSListVal extends PSSVal {
         return m_list.size();
     }
 
-    public int sum() {
-        if (!(m_list.get(0) instanceof PSSIntVal))
-            PSSMessage.Fatal("Array.sum() is only used on Int type");
-
-        int sum = 0;
-        for (PSSVal e: m_list)
-            sum += e.toInt();
-        return sum;
-    }
-
     public void add(PSSVal elem) {
         m_list.add(elem);
     }

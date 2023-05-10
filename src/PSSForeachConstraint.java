@@ -1,4 +1,3 @@
-// Copyright (C) 2021, Andes Technology Corp. Confidential Proprietary
 
 import java.util.List;
 import java.util.Map;
