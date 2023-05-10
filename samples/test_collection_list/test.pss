@@ -1,0 +1,54 @@
+component pss_top {
+    action test {
+        // Test declaration
+        list<int> my_list1;
+        list<int> my_list2;
+        list<string> my_list3;
+        set<string> my_list3_set;
+        int pop_front;
+        int set_size;
+
+        // Test assignment
+        exec post_solve {
+            my_list1 = {33, 32, 31};
+            my_list1.delete(1);
+            my_list1.insert(0, 99);
+            pop_front = my_list1.pop_front();
+            my_list1.push_front(999);
+            my_list2.push_back(999);
+            my_list2.push_back(33);
+            my_list2.push_back(31);
+            // set_size = my_list1.to_set().size(); // PSSMemberPathElemExpression.getInst()
+            my_list3 = {"1", "1", "1"};
+            my_list3_set = my_list3.to_set();
+        }
+
+        // Test index
+        activity {
+            do printf with {val == pop_front;};
+            do printf with {val == my_list1[0];};
+            do printf with {val == my_list1[1];};
+            do printf with {val == my_list1[2];};
+            if (999 in my_list1)
+                do printf with {val == 999;};
+            if (my_list1 == my_list2)
+                do printf with {val == 1;};
+            // do printf with {val == set_size;};
+            do printf with {val == my_list3_set.size();};
+        }
+    }
+
+    action printf {
+        rand int val;
+        exec body ASM =
+        """val = {{val}}""";
+    }
+
+    action root_a {
+        activity {
+            do test;
+        }
+    }
+}
+
+/**@}*/
