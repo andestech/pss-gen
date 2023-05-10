@@ -35,6 +35,8 @@ component pss_top {
             if ("3" in my_set4)
 			    do printf with {val == -1;}; // -1 should not be printed
             do printf with {val == my_set2_list.size();};
+            foreach (e: my_set1)
+                do printf with {val == e;};
         }
     }
 

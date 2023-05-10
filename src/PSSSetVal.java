@@ -1,8 +1,38 @@
-import java.util.*;
 
-public class PSSSetVal extends PSSVal {
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Map.Entry;
+
+public class PSSSetVal extends PSSVal implements PSSICollection {
 
     Set<PSSVal> m_set = new HashSet<PSSVal>();
+
+    private class SetIterator implements PSSIIterator {
+
+        private Iterator<PSSVal> m_elements;
+
+        public SetIterator(Iterator<PSSVal> i) {
+            m_elements = i;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return m_elements.hasNext();
+        }
+
+        @Override
+        public Entry<PSSVal, PSSVal> next() {
+            PSSVal k = null;
+            PSSVal v = m_elements.next();
+            return new AbstractMap.SimpleEntry<PSSVal, PSSVal>(k, v);
+        }
+
+    }
 
 	public PSSSetVal(PSSModel type) {
         super(type);
@@ -54,6 +84,16 @@ public class PSSSetVal extends PSSVal {
         for (PSSVal elem: m_set)
             strs.add(elem.getText());
         return "{ " + String.join(", ", strs) + " }";
+    }
+
+    @Override
+    public boolean isIndexable() {
+        return true;
+    }
+
+    @Override
+    public PSSIIterator iterator() {
+        return new SetIterator(m_set.iterator());
     }
 
     @Override

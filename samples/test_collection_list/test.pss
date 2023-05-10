@@ -35,6 +35,8 @@ component pss_top {
                 do printf with {val == 1;};
             // do printf with {val == set_size;};
             do printf with {val == my_list3_set.size();};
+            foreach (element: my_list1)
+                do printf with {val == element;};
         }
     }
 

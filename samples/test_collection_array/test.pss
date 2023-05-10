@@ -1,16 +1,19 @@
 component pss_top {
 	action root_a {
-		array <int, 3> a = {4, 5, 6};
-		array <int, 3> b;
-		array <int, 3> c;
-		array <int, 3> d = {10, 11, 12};
-		array <int, 3> e = {11, 10, 12};
+        array<int, 3> a = {4, 5, 6};
+        array<int, 3> b;
+        array<int, 3> c;
+        array<int, 3> d = {10, 11, 12};
+        array<int, 3> e = {11, 10, 12};
+        array<int, 3> f;
 
 		exec pre_solve {
 			b[0] = 7;
 			b[1] = 8;
 			b[2] = 9;
 			c = {10, 11, 12};
+            foreach (element: d[i])
+                f[i] = element;
 		}
 
 		activity {
@@ -33,6 +36,8 @@ component pss_top {
                 do printf with {val == 1;};
             if (c != e)
                 do printf with {val == 1;};
+            foreach (element: f)
+                do printf with {val == element;}; // f = d = {10, 11, 12}
 		}
 	}
 

@@ -1,11 +1,39 @@
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * A {@code PSSListVal} is a value_list_literal
  */
-public class PSSListVal extends PSSVal {
+public class PSSListVal extends PSSVal implements PSSICollection {
 
     private List<PSSVal> m_list = new ArrayList<PSSVal>();
+
+    private class ListIterator implements PSSIIterator {
+
+        private List<PSSVal> m_list;
+        private Iterator<PSSVal> m_elements;
+
+        public ListIterator(List<PSSVal> l) {
+            m_list = l;
+            m_elements = m_list.iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return m_elements.hasNext();
+        }
+
+        @Override
+        public Entry<PSSVal, PSSVal> next() {
+            PSSVal v = m_elements.next();
+            PSSVal k = new PSSIntVal(m_list.indexOf(v));
+            return new AbstractMap.SimpleEntry<PSSVal, PSSVal>(k, v);
+        }
+
+    }
 
     public PSSListVal(PSSModel type) {
         super(type);
@@ -39,6 +67,16 @@ public class PSSListVal extends PSSVal {
     @Override
     public PSSBoolVal NotEqual(PSSVal v) {
         return this.Equal(v).LogicalNot();
+    }
+
+    @Override
+    public boolean isIndexable() {
+        return true;
+    }
+
+    @Override
+    public PSSIIterator iterator() {
+        return new ListIterator(m_list);
     }
 
     @Override
