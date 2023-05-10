@@ -85,15 +85,16 @@ public class PSSSetInst extends PSSInst {
 
     public void delete(PSSVal elem) {
         if (!m_set.remove(elem))
-            PSSMessage.Error("SetInst", "Deleting \"" + elem.getText() + "\"" +
+            PSSMessage.Error("SetInst", "Deleting \"" + elem.getText() + "\" " +
                     "is illegal because it does not exist in \"" + m_id + "\"");
     }
 
     public void insert(PSSVal e) {
-        if (!m_type_model.isCompatible(e.getTypeModel()))
+        if (m_type_model.isCompatible(e.getTypeModel()))
+            m_set.add(e);
+        else
             PSSMessage.Error("SetInst", "The data type of the inserted " +
                     "element shall be the same as the set element.");
-        m_set.add(e);
     }
 
     public PSSVal to_list() {
