@@ -403,9 +403,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitProcedural_void_function_call_stmt(PSSParser.Procedural_void_function_call_stmtContext ctx) {
 		visit(ctx.function_call());
 		PSSExpression func = exp_stack.pop();
-		if (!(func instanceof PSSFunctionCall))
-			PSSMessage.Fatal("Return type of function_call is not PSSFunctionCall.");
-		PSSVoidFunctionCall stmt = new PSSVoidFunctionCall((PSSFunctionCall) func);
+		if (!(func instanceof PSSFunctionCallExpression))
+			PSSMessage.Fatal("Return type of function_call is not PSSFunctionCallExpression.");
+		PSSVoidFunctionCallProcStmt stmt = new PSSVoidFunctionCallProcStmt((PSSFunctionCallExpression) func);
 		proc_stmt_list.add(stmt);
 		return 0;
 	}
@@ -1017,7 +1017,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			args.add(exp_stack.pop());
 		}
 
-		PSSFunctionCall func_call = new PSSFunctionCall(path, id, args);
+		PSSFunctionCallExpression func_call = new PSSFunctionCallExpression(path, id, args);
 		exp_stack.push(func_call);
 		// PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
