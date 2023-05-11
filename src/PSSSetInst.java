@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 public class PSSSetInst extends PSSInst {
 
@@ -40,7 +42,7 @@ public class PSSSetInst extends PSSInst {
     };
 
     public PSSSetInst(String id, PSSModel type_model) {
-        super(id, "set<"+type_model.m_id+">", false);
+        super(id, "set<" + type_model.m_id + ">", false);
         m_type_model = type_model;
 
         /* register native methods */
@@ -71,7 +73,7 @@ public class PSSSetInst extends PSSInst {
     @Override
     public PSSInst indexOf(PSSVal idx) {
         PSSMessage.Fatal("According to PSS Standard V2.0 - " +
-                "section 8.8.5.1, Set has no index operator");
+                "section 8.8.5.1, Set has no index operator.");
         return null;
     }
 
@@ -86,7 +88,7 @@ public class PSSSetInst extends PSSInst {
     public void delete(PSSVal elem) {
         if (!m_set.remove(elem))
             PSSMessage.Error("SetInst", "Deleting \"" + elem.getText() + "\" " +
-                    "is illegal because it does not exist in \"" + m_id + "\"");
+                    "is illegal because it does not exist in \"" + m_id + "\".");
     }
 
     public void insert(PSSVal e) {

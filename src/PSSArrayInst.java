@@ -33,7 +33,7 @@ public class PSSArrayInst extends PSSInst {
     public PSSArrayInst(String id, PSSModel type_model, int dim, boolean rand) {
         super(id, "array<" + type_model.m_id + ">", rand);
         if (dim <= 0)
-            PSSMessage.Error("ArrayInst", "'"+id+"' is a zero-length array");
+            PSSMessage.Error("ArrayInst", "'" + id + "' is a zero-length array.");
 
         m_type_model = type_model;
         m_dim = dim;
@@ -50,17 +50,17 @@ public class PSSArrayInst extends PSSInst {
 
 	public void assign(PSSVal val) {
         if (!(val instanceof PSSListVal))
-            PSSMessage.Fatal("The array type should be assigned as a PSSArrayVal");
+            PSSMessage.Fatal("The array type should be assigned as a PSSArrayVal.");
         PSSListVal arrayVal = (PSSListVal) val;
 
         if (!m_type_model.isCompatible(arrayVal.getTypeModel()))
-            PSSMessage.Error("ArrayInst", "The element tyep " +
+            PSSMessage.Error("ArrayInst", "The element type " +
                     arrayVal.getTypeModel().getText() + " of " +
                     arrayVal.getText() + " is incompatible with array " + m_id);
 
         if (arrayVal.size() != m_dim)
             PSSMessage.Error("ArrayInst", "The size of the array is " +
-                    "different to the assigned aggregate literal");
+                    "different to the assigned aggregate literal.");
 
         for (int i = 0; i < m_dim; i++) {
             PSSInst elemInst = m_array.get(i);
@@ -81,9 +81,13 @@ public class PSSArrayInst extends PSSInst {
 	public PSSInst indexOf(PSSVal index) {
         if (!(index instanceof PSSIntVal))
             PSSMessage.Error("ArrayInst",
-                    "The index of an array must be a PSSIntVal");
-        PSSIntVal intIndex = (PSSIntVal) index;
-        return m_array.get(intIndex.toInt());
+                    "The index of an array must be a PSSIntVal.");
+
+        int idx = index.toInt();
+        if (idx >= m_dim)
+            PSSMessage.Error("ArrayInst", "'" + getHierarchyId() + "'" +
+                    "index '" + idx + "' is out of range.");
+        return m_array.get(idx);
 	}
 
     public PSSIntVal size() {

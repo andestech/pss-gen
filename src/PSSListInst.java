@@ -120,7 +120,7 @@ public class PSSListInst extends PSSInst {
         int idx = getIndexInteger(index);
         if (idx >= m_list.size())
             PSSMessage.Error("ListInst", "'" + getHierarchyId() + "'" +
-                    "index '" + idx + "' is out of range");
+                    "index '" + idx + "' is out of range.");
         return m_list.get(idx);
     }
 

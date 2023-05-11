@@ -1,6 +1,6 @@
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -11,14 +11,12 @@ public class PSSListVal extends PSSVal implements PSSICollection {
 
     private List<PSSVal> m_list = new ArrayList<PSSVal>();
 
-    private class ListIterator implements PSSIIterator {
+    private class PSSListIterator implements PSSIIterator {
 
-        private List<PSSVal> m_list;
-        private Iterator<PSSVal> m_elements;
+        private ListIterator<PSSVal> m_elements;
 
-        public ListIterator(List<PSSVal> l) {
-            m_list = l;
-            m_elements = m_list.iterator();
+        public PSSListIterator(ListIterator<PSSVal> li) {
+            m_elements = li;
         }
 
         @Override
@@ -28,8 +26,8 @@ public class PSSListVal extends PSSVal implements PSSICollection {
 
         @Override
         public Entry<PSSVal, PSSVal> next() {
+            PSSVal k = new PSSIntVal(m_elements.nextIndex());
             PSSVal v = m_elements.next();
-            PSSVal k = new PSSIntVal(m_list.indexOf(v));
             return new AbstractMap.SimpleEntry<PSSVal, PSSVal>(k, v);
         }
 
@@ -76,7 +74,7 @@ public class PSSListVal extends PSSVal implements PSSICollection {
 
     @Override
     public PSSIIterator iterator() {
-        return new ListIterator(m_list);
+        return new PSSListIterator(m_list.listIterator());
     }
 
     @Override

@@ -6,7 +6,7 @@ public class PSSArrayModel extends PSSModel {
 	PSSExpression m_size_exp;
 
 	public PSSArrayModel (PSSModel type_model, PSSExpression size_exp) {
-		super("array<"+type_model.getText()+size_exp.getText()+">");
+		super("array<" + type_model.getText() + size_exp.getText() + ">");
 		m_type_model = type_model;
 		m_size_exp = size_exp;
 	}
