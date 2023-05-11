@@ -180,7 +180,7 @@ public class PSSMapInst extends PSSInst {
         PSSListVal res = new PSSListVal(m_map_type.getValueType());
         for (PSSInst v : m_map.values())
             res.add(v.toVal());
-        return null;
+        return res;
     }
 
     @Override
