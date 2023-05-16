@@ -23,6 +23,7 @@ component pss_top {
         map<string, int> map4;
         map<string, int> map5;
         string k;
+        string kk;
 
         // Test assignment
         exec post_solve {
@@ -38,6 +39,7 @@ component pss_top {
             k = "Hello World";
             foreach (v : map1[k])     // map5 = map1 = {"b":50, "c":41, "d":63};
               map5[k] = v;
+            kk = k;
         }
 
         // Test index
@@ -57,6 +59,7 @@ component pss_top {
               do printf with { val == v; };
             }
             do print_string with { sss == k; };
+            do print_string with { sss == kk; };
         }
     }
 
