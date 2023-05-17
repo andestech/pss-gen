@@ -468,7 +468,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		if (e.m_hierarchical_id == null || e.m_hierarchical_id.m_member_list.size() == 0)
 			me = e.m_static_ref_path;
 		else
-			e.m_hierarchical_id.m_member_list.get(e.m_hierarchical_id.m_member_list.size() - 1);
+			me = e.m_hierarchical_id.m_member_list.get(e.m_hierarchical_id.m_member_list.size() - 1);
 		if (me == null)
 			return null;
 
