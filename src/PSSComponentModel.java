@@ -30,10 +30,12 @@ public class PSSComponentModel extends PSSModel {
 		}
 	}
 
+	@Override
 	public PSSComponentInst declInst(boolean rand) {
-		return declInst("<"+m_id+">", rand);
+		return (PSSComponentInst) super.declInst(rand);
 	}
 
+	@Override
 	public PSSComponentInst declInst(String id, boolean rand) {
 		PSSComponentInst comp = new PSSComponentInst(id, m_id, this);
 
@@ -61,7 +63,6 @@ public class PSSComponentModel extends PSSModel {
 	}
 
 	public void dump (String indent) {
-		
 		System.out.println(indent + "component " +  m_id + "{");
 
 		m_data_list.dump(indent + "\t");

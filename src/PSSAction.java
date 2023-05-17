@@ -19,8 +19,9 @@ public class PSSAction extends PSSModel {
 		m_target_code = new PSSTargetCodeList();
 	}
 
+	@Override
 	public PSSActionInst declInst(boolean rand) {
-		return declInst("<"+m_id+">", rand);
+		return (PSSActionInst) super.declInst(rand);
 	}
 
 	public PSSActionInst declInst(String id, boolean rand) {
@@ -35,11 +36,9 @@ public class PSSAction extends PSSModel {
 
 			// Declare Reference Inst
 			PSSRefInst flowref = node.declInst(inst, type_model);
-
 		}
 
 		return inst;
-		
 	}
 	public void addActivityStmt (PSSActivity node) {
 		m_activity.add(node);
@@ -96,7 +95,6 @@ public class PSSAction extends PSSModel {
 				block.eval(inst);
 			}
 		}
-		
 	}
 
 	public void evalPostSolve(PSSInst inst) {
@@ -109,7 +107,6 @@ public class PSSAction extends PSSModel {
 	}
 
 	public void evalActivity(PSSInst inst) {
-		
 		for (int i=0; i<m_activity.size(); i++) {
 			PSSActivity item = m_activity.get(i);
 
@@ -206,7 +203,7 @@ public class PSSAction extends PSSModel {
 		}
 	}
 	public void dump (String indent) {
-		
+
 		System.out.println(indent + "action " +  m_id + " {");
 
 		for (int i=0; i<m_flowref.size(); i++) {

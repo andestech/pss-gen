@@ -153,9 +153,16 @@ public class PSSInst {
 			}
 		}
 
-		if (m_parent == null)
-			return null;
-		else
+		if (m_parent == null) {
+			if (m_id.equals(tokens[0])) {
+				if (tokens.length <= 1) {
+					return this;
+				} else {
+					return this.findInstance(tokens[1]);
+				}
+			} else
+				return null;
+		} else
 			return m_parent.findInstance(hierarchy_id);
 	}
 

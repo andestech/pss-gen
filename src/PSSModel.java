@@ -64,34 +64,35 @@ public class PSSModel {
 		return null;
 	}
 
+	/**
+	 * Declares a new instance of this model.
+	 *
+	 * @param id   name of the instance
+	 * @param rand {@code true} if the instance can be randomized
+	 */
 	public PSSInst declInst(String id, boolean rand) {
-		/**
-		 * declare a new instance with the model
-		 *
-		 * @param id   name of the instance
-		 * @param rand the instance can be randomized
-		 */
 		PSSMessage.Fatal(getClass().getSimpleName() + "::declInst is not impelemented");
 		return null;
 	}
 
+	/**
+	 * Declares a new instance of this model. The instance and this model will have
+	 * the same ID. This method simply invokes {@link #declInst(String, boolean)}.
+	 *
+	 * @param rand the instance can be randomized
+	 */
 	public PSSInst declInst(boolean rand) {
-		/**
-		 * declare a new anonymous instance with the model
-		 *
-		 * @param rand the instance can be randomized
-		 */
-		return declInst("<" + m_id + ">", rand);
+		return declInst(m_id, rand);
 	}
 
+	/**
+	 * Declares a new instance of the model in the parent instance.
+	 *
+	 * @param parent_inst the parent instance
+	 * @param id          name of the instance
+	 * @param rand        {@code true} if the instance can be randomized
+	 */
 	public void declInst(PSSInst parent_inst, String id, boolean rand) {
-		/**
-		 * declare a new instance with the model in the parent instance
-		 *
-		 * @param parent_inst the parent instance
-		 * @param id          name of the instance
-		 * @param rand        the instance can be randomized
-		 */
 		PSSInst inst = declInst(id, rand);
 		parent_inst.addInst(inst);
 	}
