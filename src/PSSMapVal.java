@@ -195,6 +195,11 @@ public class PSSMapVal extends PSSVal implements PSSICollection {
 	}
 
 	@Override
+	public PSSVal indexOf(PSSVal index) {
+		return get(index);
+	}
+
+	@Override
 	public PSSBoolVal Equal(PSSVal v) {
 		if (v instanceof PSSMapVal) {
 			PSSMapVal m = (PSSMapVal) v;
