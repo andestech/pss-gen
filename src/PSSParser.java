@@ -229,19 +229,20 @@ public class PSSParser extends Parser {
 			"'header'", "'declaration'", "'run_start'", "'run_end'", "'init_down'", 
 			"'init_up'", "'init'", "'super'", "'='", "'file'", "'pure'", "'function'", 
 			"'void'", "'('", "')'", "'type'", "'ref'", "'inout'", "'...'", "'target'", 
-			"'solv'", "'class'", "'export'", "'return'", "'repeat'", "'while'", "'foreach'", 
-			"'['", "']'", "'if'", "'else'", "'match'", "'default'", "'break'", "'continue'", 
-			"'pool'", "'bind'", "'.'", "'do'", "'with'", "'schedule'", "'join_branch'", 
-			"'join_select'", "'join_none'", "'join_first'", "'select'", "'replicate'", 
-			"'symbol'", "'override'", "'instance'", "'rand'", "'public'", "'protected'", 
-			"'private'", "'<'", "'>'", "'chandle'", "'in'", "'int'", "'bit'", "'..'", 
-			"'string'", "'bool'", "'array'", "'list'", "'map'", "'set'", "'typedef'", 
-			"'dynamic'", "'=='", "'disable'", "'forall'", "'->'", "'unique'", "'covergroup'", 
-			"'option'", "'type_option'", "'coverpoint'", "'iff'", "'bins'", "'illegal_bins'", 
-			"'ignore_bins'", "'cross'", "'compile'", "'has'", "'assert'", "'?'", 
-			"'-'", "'!'", "'~'", "'&'", "'|'", "'^'", "'/'", "'%'", "'+'", "'<<'", 
-			"'>>'", "'!='", "'<='", "'>='", "'||'", "'&&'", "'**'", "'+='", "'-='", 
-			"'<<='", "'>>='", "'|='", "'&='", "'true'", "'false'", "'null'"
+			"'solve'", "'class'", "'export'", "'return'", "'repeat'", "'while'", 
+			"'foreach'", "'['", "']'", "'if'", "'else'", "'match'", "'default'", 
+			"'break'", "'continue'", "'pool'", "'bind'", "'.'", "'do'", "'with'", 
+			"'schedule'", "'join_branch'", "'join_select'", "'join_none'", "'join_first'", 
+			"'select'", "'replicate'", "'symbol'", "'override'", "'instance'", "'rand'", 
+			"'public'", "'protected'", "'private'", "'<'", "'>'", "'chandle'", "'in'", 
+			"'int'", "'bit'", "'..'", "'string'", "'bool'", "'array'", "'list'", 
+			"'map'", "'set'", "'typedef'", "'dynamic'", "'=='", "'disable'", "'forall'", 
+			"'->'", "'unique'", "'covergroup'", "'option'", "'type_option'", "'coverpoint'", 
+			"'iff'", "'bins'", "'illegal_bins'", "'ignore_bins'", "'cross'", "'compile'", 
+			"'has'", "'assert'", "'?'", "'-'", "'!'", "'~'", "'&'", "'|'", "'^'", 
+			"'/'", "'%'", "'+'", "'<<'", "'>>'", "'!='", "'<='", "'>='", "'||'", 
+			"'&&'", "'**'", "'+='", "'-='", "'<<='", "'>>='", "'|='", "'&='", "'true'", 
+			"'false'", "'null'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();

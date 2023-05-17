@@ -12,7 +12,7 @@ import_function
 
 platform_qualifier
 	: 'target'
-	| 'solv'
+	| 'solve'
 ;
 
 target_template_function
