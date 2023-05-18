@@ -1234,11 +1234,71 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitUnary_operator(PSSParser.Unary_operatorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PSSParser#binary_operator}.
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence3}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBinary_operator(PSSParser.Binary_operatorContext ctx);
+	T visitBinary_operator_precedence3(PSSParser.Binary_operator_precedence3Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence4}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence4(PSSParser.Binary_operator_precedence4Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence5}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence5(PSSParser.Binary_operator_precedence5Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence6}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence6(PSSParser.Binary_operator_precedence6Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence7}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence7(PSSParser.Binary_operator_precedence7Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence8}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence8(PSSParser.Binary_operator_precedence8Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence9}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence9(PSSParser.Binary_operator_precedence9Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence10}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence10(PSSParser.Binary_operator_precedence10Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence11}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence11(PSSParser.Binary_operator_precedence11Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence12}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence12(PSSParser.Binary_operator_precedence12Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#binary_operator_precedence13}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_operator_precedence13(PSSParser.Binary_operator_precedence13Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSSParser#assign_op}.
 	 * @param ctx the parse tree

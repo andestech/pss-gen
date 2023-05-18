@@ -703,14 +703,41 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		return 0;
 	}
 
+	private ParserRuleContext getBinaryOperator(PSSParser.ExpressionContext ctx) {
+		if (ctx.binary_operator_precedence3() != null)
+			return ctx.binary_operator_precedence3();
+		if (ctx.binary_operator_precedence4() != null)
+			return ctx.binary_operator_precedence4();
+		if (ctx.binary_operator_precedence5() != null)
+			return ctx.binary_operator_precedence5();
+		if (ctx.binary_operator_precedence6() != null)
+			return ctx.binary_operator_precedence6();
+		if (ctx.binary_operator_precedence7() != null)
+			return ctx.binary_operator_precedence7();
+		if (ctx.binary_operator_precedence8() != null)
+			return ctx.binary_operator_precedence8();
+		if (ctx.binary_operator_precedence9() != null)
+			return ctx.binary_operator_precedence9();
+		if (ctx.binary_operator_precedence10() != null)
+			return ctx.binary_operator_precedence10();
+		if (ctx.binary_operator_precedence11() != null)
+			return ctx.binary_operator_precedence11();
+		if (ctx.binary_operator_precedence12() != null)
+			return ctx.binary_operator_precedence12();
+		if (ctx.binary_operator_precedence13() != null)
+			return ctx.binary_operator_precedence13();
+		return null;
+	}
+
 	@Override
 	public Integer visitExpression(PSSParser.ExpressionContext ctx) {
-		if (ctx.binary_operator() != null) {
+		ParserRuleContext binop = getBinaryOperator(ctx);
+		if (binop != null) {
 			visit(ctx.expression(0));
 			visit(ctx.expression(1));
 			PSSExpression right = exp_stack.pop();
 			PSSExpression left = exp_stack.pop();
-			String op = ctx.binary_operator().getText();
+			String op = binop.getText();
 
 			switch (op) {
 				case "==":

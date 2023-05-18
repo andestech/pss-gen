@@ -10,12 +10,22 @@ constant_expression
 ;
 
 expression
-	: primary 
+	: primary
 	| unary_operator primary
-	| expression binary_operator expression
-	| expression '?' expression ':' expression // conditional_expression
-	| expression 'in' '[' open_range_list ']'	// in_expression
-	| expression 'in' collection_expression 	// in_expression
+	| <assoc=left> expression binary_operator_precedence3 expression
+	| <assoc=left> expression binary_operator_precedence4 expression
+	| <assoc=left> expression binary_operator_precedence5 expression
+	| <assoc=left> expression binary_operator_precedence6 expression
+	| <assoc=left> expression binary_operator_precedence7 expression
+	| <assoc=left> expression 'in' '[' open_range_list ']'	// in_expression
+	| <assoc=left> expression 'in' collection_expression 	// in_expression
+	| <assoc=left> expression binary_operator_precedence8 expression
+	| <assoc=left> expression binary_operator_precedence9 expression
+	| <assoc=left> expression binary_operator_precedence10 expression
+	| <assoc=left> expression binary_operator_precedence11 expression
+	| <assoc=left> expression binary_operator_precedence12 expression
+	| <assoc=left> expression binary_operator_precedence13 expression
+	| <assoc=right> expression '?' expression ':' expression // conditional_expression
 ;
 
 unary_operator
@@ -27,30 +37,60 @@ unary_operator
 	| '^'
 ;
 
-binary_operator
-	: '*'
+binary_operator_precedence3
+    : '**'
+;
+
+binary_operator_precedence4
+    : '*'
 	| '/'
 	| '%'
-	| '+'
+;
+
+binary_operator_precedence5
+    : '+'
 	| '-'
-	| '<<'
+;
+
+binary_operator_precedence6
+    : '<<'
 	| '>>'
-	| '=='
-	| '!='
-	| '<'
+;
+
+binary_operator_precedence7
+    : '<'
 	| '<='
 	| '>'
 	| '>='
-	| '||'
-	| '&&'
-	| '|'
-	| '^'
-	| '&'
-	| '**'
+;
+
+binary_operator_precedence8
+    : '=='
+	| '!='
+;
+
+binary_operator_precedence9
+    : '&'
+;
+
+binary_operator_precedence10
+    : '^'
+;
+
+binary_operator_precedence11
+    : '|'
+;
+
+binary_operator_precedence12
+    : '&&'
+;
+
+binary_operator_precedence13
+    : '||'
 ;
 
 assign_op
-	: '=' 
+	: '='
 	| '+='
 	| '-='
 	| '<<='
