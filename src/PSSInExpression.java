@@ -1,4 +1,3 @@
-import java.util.*;
 
 public class PSSInExpression extends PSSExpression {
 
@@ -10,6 +9,7 @@ public class PSSInExpression extends PSSExpression {
 		m_right = right;
 	}
 
+	@Override
 	public PSSDomainMap deduceDomain(PSSInst var) {
 		PSSDomainMap map = new PSSDomainMap();
 		PSSInst leftInst = m_left.getInst(var);
@@ -22,15 +22,16 @@ public class PSSInExpression extends PSSExpression {
 		return map;
 	}
 
+	@Override
 	public PSSVal eval(PSSInst var) {
-		PSSVal result;
 		PSSVal leftVal = m_left.eval(var);
 		PSSVal rightVal = m_right.eval(var);
-
 		return rightVal.InRange(leftVal);
 	}
 
+	@Override
 	public String getText() {
 		return m_left.getText() + " in " + m_right.getText();
 	}
+
 }

@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
- * A {@code PSSListVal} is a value_list_literal
+ * A {@code PSSListVal} object is a value_list_literal or the evaluation of an
+ * open_range_list. If it is an open_range_list, an element in it may be of type
+ * {@link PSSRangeVal} and the two methods {@link #getValList()} and
+ * {@link #InRange(PSSVal)} will be used.
  */
 public class PSSListVal extends PSSVal implements PSSICollection {
 
@@ -51,8 +54,8 @@ public class PSSListVal extends PSSVal implements PSSICollection {
 
     @Override
     public String getText() {
-		List<String> strs = new ArrayList<String>();
-        for (PSSVal elem: m_list)
+        List<String> strs = new ArrayList<String>();
+        for (PSSVal elem : m_list)
             strs.add(elem.getText());
         return "{ " + String.join(", ", strs) + " }";
     }
@@ -96,14 +99,14 @@ public class PSSListVal extends PSSVal implements PSSICollection {
         return super.compareTo(o);
     }
 
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof PSSListVal) {
-			PSSListVal r = (PSSListVal) o;
-			return m_list.size() == r.m_list.size() && m_list.equals(r.m_list);
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof PSSListVal) {
+            PSSListVal r = (PSSListVal) o;
+            return m_list.size() == r.m_list.size() && m_list.equals(r.m_list);
+        }
+        return false;
+    }
 
     @Override
     public PSSVal randomIn() {
@@ -118,11 +121,15 @@ public class PSSListVal extends PSSVal implements PSSICollection {
 
     @Override
     public PSSBoolVal InRange(PSSVal lhs) {
-        for (int i=0; i<m_list.size(); i++) {
-                PSSVal item = m_list.get(i);
-                if (item.InRange(lhs).toBool()) {
-                        return new PSSBoolVal(true);
-                }
+        for (int i = 0; i < m_list.size(); i++) {
+            PSSVal item = m_list.get(i);
+            PSSBoolVal b = null;
+            if (item instanceof PSSRangeVal)
+                b = ((PSSRangeVal) item).InRange(lhs);
+            else
+                b = item.Equal(lhs);
+            if (b.toBool())
+                return b;
         }
         return new PSSBoolVal(false);
     }
