@@ -1,14 +1,15 @@
-import java.util.*;
 
 public class PSSBoolInst extends PSSInst {
 	public boolean m_val;
 
-	public PSSBoolInst (String id, boolean rand) {
+	public PSSBoolInst(String id, boolean rand) {
 		super(id, "bool", rand);
 	}
+
 	public PSSVal toVal() {
-		return new PSSBoolVal(m_val);
+		return PSSBoolVal.valueOf(m_val);
 	}
+
 	public void randomize() {
 		if (m_rand) {
 			int rand_int = PSSRandom.nextInt(0, 1);
@@ -16,10 +17,11 @@ public class PSSBoolInst extends PSSInst {
 			m_initialized = true;
 		}
 	}
+
 	public void randomizeEqual(PSSVal val) {
 		m_val = val.toBool();
-
 	}
+
 	public void assign(PSSVal val) {
 		m_initialized = true;
 		m_val = val.toBool();

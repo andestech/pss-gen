@@ -60,7 +60,7 @@ public class PSSSetVal extends PSSVal implements PSSICollection {
 
     @Override
     public PSSBoolVal Equal(PSSVal rhs) {
-        return new PSSBoolVal(this.equals(rhs));
+        return PSSBoolVal.valueOf(this.equals(rhs));
     }
 
     @Override
@@ -72,10 +72,10 @@ public class PSSSetVal extends PSSVal implements PSSICollection {
 	public PSSBoolVal InRange(PSSVal lhs) {
         for (PSSVal item: m_set) {
 			if (item.InRange(lhs).toBool()) {
-				return new PSSBoolVal(true);
+				return PSSBoolVal.TRUE;
 			}
 		}
-		return new PSSBoolVal(false);
+		return PSSBoolVal.FALSE;
 	}
 
     @Override

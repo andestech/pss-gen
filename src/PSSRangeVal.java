@@ -112,7 +112,7 @@ public class PSSRangeVal extends PSSVal {
 	@Override
 	public PSSBoolVal InRange(PSSVal val) {
 		BigInteger int_val = val.toBigInteger();
-		return new PSSBoolVal((m_min.compareTo(int_val) <= 0) && (m_max.compareTo(int_val) >= 0));
+		return PSSBoolVal.valueOf((m_min.compareTo(int_val) <= 0) && (m_max.compareTo(int_val) >= 0));
 	}
 
 	@Override

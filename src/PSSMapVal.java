@@ -203,9 +203,9 @@ public class PSSMapVal extends PSSVal implements PSSICollection {
 	public PSSBoolVal Equal(PSSVal v) {
 		if (v instanceof PSSMapVal) {
 			PSSMapVal m = (PSSMapVal) v;
-			return new PSSBoolVal(m_map.equals(m.m_map));
+			return PSSBoolVal.valueOf(m_map.equals(m.m_map));
 		}
-		return new PSSBoolVal(false);
+		return PSSBoolVal.FALSE;
 	}
 
 	@Override

@@ -1,16 +1,44 @@
 
+/**
+ * A {@code PSSBoolVal} can be either {@link #TRUE} or {@link #FALSE}.
+ */
 public class PSSBoolVal extends PSSVal {
 
-	boolean m_val;
+	private boolean m_val;
 
-	public PSSBoolVal(String text) {
-		super(PSSBoolModel.getInstance());
-		m_val = Boolean.parseBoolean(text);
-	}
+	/** the Boolean true */
+	public static final PSSBoolVal TRUE = new PSSBoolVal(true);
 
-	public PSSBoolVal(boolean val) {
+	/** the Boolean false */
+	public static final PSSBoolVal FALSE = new PSSBoolVal(false);
+
+	private PSSBoolVal(boolean val) {
 		super(PSSBoolModel.getInstance());
 		m_val = val;
+	}
+
+	/**
+	 * Returns {@code #True} if the input boolean is {@code true}; otherwise returns
+	 * {@code #False}.
+	 *
+	 * @param val a Boolean value
+	 * @return {@code #True} if the input boolean is {@code true}; otherwise
+	 *         {@code #False}
+	 */
+	public static PSSBoolVal valueOf(boolean val) {
+		return val ? TRUE : FALSE;
+	}
+
+	/**
+	 * Returns {@code #True} if the input string is not null and is equal, ignoring
+	 * case, to the string "true".
+	 *
+	 * @param text a string
+	 * @return {@code #True} if {@code text} is not null and is equal, ignoring
+	 *         case, to the string "true"
+	 */
+	public static PSSBoolVal valueOf(String text) {
+		return Boolean.parseBoolean(text) ? TRUE : FALSE;
 	}
 
 	@Override

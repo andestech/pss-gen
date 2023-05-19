@@ -860,7 +860,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			}
 		} else if (ctx.bool_literal() != null) {
 			String text = ctx.getText();
-			exp_stack.push(new PSSPrimaryExpression(new PSSBoolVal(text)));
+			exp_stack.push(new PSSPrimaryExpression(PSSBoolVal.valueOf(text)));
 		} else if (ctx.ref_path() != null) {
 			visit(ctx.ref_path());
 		} else if (ctx.paren_expr() != null) {

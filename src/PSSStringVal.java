@@ -50,13 +50,13 @@ public class PSSStringVal extends PSSVal {
     @Override
 	public PSSBoolVal Equal(PSSVal rhs) {
 		String rhs_str = rhs.toStr();
-		return new PSSBoolVal(m_str.equals(rhs_str));
+		return PSSBoolVal.valueOf(m_str.equals(rhs_str));
 	}
 
     @Override
 	public PSSBoolVal NotEqual(PSSVal rhs) {
 		String rhs_str = rhs.toStr();
-		return new PSSBoolVal(!m_str.equals(rhs_str));
+		return PSSBoolVal.valueOf(!m_str.equals(rhs_str));
 	}
 
     @Override

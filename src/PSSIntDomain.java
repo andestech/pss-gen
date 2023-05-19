@@ -263,10 +263,10 @@ public class PSSIntDomain extends PSSDomain {
 		for (int i = 0; i < m_list.size(); i++) {
 			PSSVal item = m_list.get(i);
 			if (item.InRange(lhs).toBool()) {
-				return new PSSBoolVal(true);
+				return PSSBoolVal.TRUE;
 			}
 		}
-		return new PSSBoolVal(false);
+		return PSSBoolVal.FALSE;
 	}
 
 	@Override

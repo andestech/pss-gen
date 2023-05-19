@@ -156,7 +156,7 @@ public class PSSStringDomain extends PSSDomain {
 
 	@Override
 	public PSSBoolVal InRange(PSSVal lhs) {
-		return new PSSBoolVal(isInside(lhs));
+		return PSSBoolVal.valueOf(isInside(lhs));
 	}
 
 	private boolean isInside(PSSVal lhs) {

@@ -53,42 +53,42 @@ public class PSSIntVal extends PSSVal {
 	public PSSBoolVal Equal(PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
 		boolean eq = m_val.equals(rhs_int);
-		return new PSSBoolVal(eq);
+		return PSSBoolVal.valueOf(eq);
 	}
 
     @Override
 	public PSSBoolVal NotEqual(PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
 		boolean eq = m_val.equals(rhs_int);
-		return new PSSBoolVal(!eq);
+		return PSSBoolVal.valueOf(!eq);
 	}
 
     @Override
 	public PSSBoolVal GreaterThan(PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
 		boolean result = m_val.compareTo(rhs_int) == 1;
-		return new PSSBoolVal(result);
+		return PSSBoolVal.valueOf(result);
 	}
 
     @Override
 	public PSSBoolVal GreaterEqual(PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
 		boolean result = m_val.compareTo(rhs_int) >= 0;
-		return new PSSBoolVal(result);
+		return PSSBoolVal.valueOf(result);
 	}
 
     @Override
 	public PSSBoolVal LessThan(PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
 		boolean result = m_val.compareTo(rhs_int) < 0;
-		return new PSSBoolVal(result);
+		return PSSBoolVal.valueOf(result);
 	}
 
     @Override
 	public PSSBoolVal LessEqual(PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
 		boolean result = m_val.compareTo(rhs_int) <= 0;
-		return new PSSBoolVal(result);
+		return PSSBoolVal.valueOf(result);
 	}
 
     @Override

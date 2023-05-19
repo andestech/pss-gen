@@ -62,7 +62,7 @@ public class PSSListVal extends PSSVal implements PSSICollection {
 
     @Override
     public PSSBoolVal Equal(PSSVal v) {
-        return new PSSBoolVal(this.equals(v));
+        return PSSBoolVal.valueOf(this.equals(v));
     }
 
     @Override
@@ -131,7 +131,7 @@ public class PSSListVal extends PSSVal implements PSSICollection {
             if (b.toBool())
                 return b;
         }
-        return new PSSBoolVal(false);
+        return PSSBoolVal.FALSE;
     }
 
     @Override
