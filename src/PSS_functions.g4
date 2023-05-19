@@ -30,7 +30,7 @@ function_parameter_list_prototype
 ;
 
 function_parameter
-	: function_parameter_dir? data_type identifier array_dim? ('=' constant_expression)?
+	: function_parameter_dir? data_type identifier ('=' constant_expression)?
 	| 'type' identifier
 	| 'ref' type_category identifier
 	| 'struct' identifier
