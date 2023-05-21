@@ -1,0 +1,12 @@
+component pss_top {
+	action root_a {
+		list <int> list_a;
+
+		exec pre_solve {
+			list_a.push_front(0);
+			list_a.push_back(1);
+		}
+		exec body ASM = """list_a[0]={{list_a[0]}}, list_a[1]={{list_a[1]}}""";
+	}
+}
+
