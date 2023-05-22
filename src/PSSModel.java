@@ -92,9 +92,10 @@ public class PSSModel {
 	 * @param id          name of the instance
 	 * @param rand        {@code true} if the instance can be randomized
 	 */
-	public void declInst(PSSInst parent_inst, String id, boolean rand) {
+	public PSSInst declInst(PSSInst parent_inst, String id, boolean rand) {
 		PSSInst inst = declInst(id, rand);
 		parent_inst.addInst(inst);
+		return inst;
 	}
 
 	public void declEnumItem(PSSInst inst) {
@@ -144,15 +145,13 @@ public class PSSModel {
 		return null;
 	}
 
-	public PSSModel findDeclaration(String hierarchy_id) {
-		/**
-		 * @breif find the declaration of a mode from the current namespace
-		 *
-		 *        Examples:
-		 *        - findDeclaration("action_a")
-		 *        - findDeclaration("component_c::action_a")
-		 *        - findDeclaration("package_p::component_c::action_a")
-		 */
+	/**
+	 * Finds a declaration under this model.
+	 *
+	 * @param hierarchy_id
+	 * @return
+	 */
+	public PSSModel findDeclarationUnder(String hierarchy_id) {
 		String id = hierarchy_id;
 		String child_id = "";
 
@@ -178,8 +177,23 @@ public class PSSModel {
 					return node;
 				}
 			}
-
 		}
+		return null;
+	}
+
+	public PSSModel findDeclaration(String hierarchy_id) {
+		/**
+		 * @breif find the declaration of a mode from the current namespace
+		 *
+		 *        Examples:
+		 *        - findDeclaration("action_a")
+		 *        - findDeclaration("component_c::action_a")
+		 *        - findDeclaration("package_p::component_c::action_a")
+		 */
+		PSSModel res = findDeclarationUnder(hierarchy_id);
+		if (res != null)
+			return res;
+
 		if (m_parent == null)
 			return null;
 		else

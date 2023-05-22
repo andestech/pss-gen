@@ -283,10 +283,10 @@ public class PSSInst {
 	 * @param args the arguments passed to the method
 	 * @return the result of the invocation
 	 */
-	public PSSVal evalMethod(String name, List<PSSVal> args) {
+	public PSSVal evalMethod(String name, List<PSSVal> args) throws NoSuchMethodException {
 		NativeMethod m = m_native_methods.get(name);
 		if (m == null)
-			PSSMessage.Fatal(getClass().getSimpleName() + "::method " + name + " is not impelemented");
+			throw new NoSuchMethodException();
 		return m.eval(args);
 	}
 

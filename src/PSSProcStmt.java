@@ -1,4 +1,3 @@
-import java.util.*;
 
 public class PSSProcStmt extends PSSModel {
 
@@ -6,7 +5,7 @@ public class PSSProcStmt extends PSSModel {
 		super("");
 	}
 
-	public void eval(PSSInst inst) {
+	public void eval(PSSInst inst) throws PSSReturnException {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::eval is not implemented");
 	}
 

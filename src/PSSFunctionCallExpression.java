@@ -31,12 +31,34 @@ public class PSSFunctionCallExpression extends PSSExpression {
 	public PSSVal eval(PSSInst var) {
 		PSSMessage.Debug("[PSSFunctionCall] calling function " + m_id + " of " + m_path);
 		/* Evaluate arguments */
-		List<PSSVal> vals = new ArrayList<PSSVal>();
-		for (PSSExpression arg : m_args) {
-			vals.add(arg.eval(var));
-		}
+		List<PSSVal> actuals = m_args.stream().map(a -> a.eval(var)).toList();
 		PSSInst inst = m_path.getInst(var);
-		return inst.evalMethod(m_id, vals);
+
+		// m_id may refer to a user defined function
+
+		// Find the component instance containing the definition of the function m_id.
+		PSSInst ci = inst.getComponentInst();
+		PSSModel cm = ci.getTypeModel();
+
+		// Find the function definition
+		PSSModel m = cm.findDeclaration(m_id);
+
+		PSSVal res = null;
+		if (m instanceof PSSFunctionModel) {
+			// Invoke the PSS native function
+			PSSFunctionModel fm = (PSSFunctionModel) m;
+			PSSFunctionInst fi = fm.declInst(ci, actuals);
+			res = fi.eval(var);
+		} else {
+			// m_id may refer to a builtin method associated to var
+			try {
+				res = inst.evalMethod(m_id, actuals);
+			} catch (NoSuchMethodException e) {
+				PSSMessage.Error("", "Function " + m_id + " is not defined.");
+			}
+		}
+
+		return res;
 	}
 
 }

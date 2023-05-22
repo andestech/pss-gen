@@ -34,4 +34,13 @@ public class PSSListModel extends PSSModel {
 		System.out.println(indent + getText());
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof PSSListModel) {
+			PSSListModel m = (PSSListModel) obj;
+			return m_type_model.equals(m.m_type_model);
+		}
+		return false;
+	}
+
 }

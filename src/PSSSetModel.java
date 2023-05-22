@@ -35,4 +35,13 @@ public class PSSSetModel extends PSSModel {
         System.out.println(indent + getText());
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof PSSSetModel) {
+            PSSSetModel m = (PSSSetModel) obj;
+            return m_data_type.equals(m.m_data_type);
+        }
+        return false;
+    }
+
 }

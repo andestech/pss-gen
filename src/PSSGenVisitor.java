@@ -12,12 +12,16 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	PSSModel cur_data_type;
 	PSSDataDeclModel cur_data_decl;
 	PSSVal cur_val;
+	PSSFunctionPrototype cur_function_prototype;
+	PSSFunctionReturnType cur_function_return_type;
+	List<PSSFunctionParameter> function_parameter_list;
 
 	PSSGenVisitor() {
 		exp_stack = new Stack<PSSExpression>();
 		activity_stack = new Stack<PSSActivity>();
 		proc_stmt_list = new ArrayList<PSSProcStmt>();
 		constraint_list = new ArrayList<PSSConstraint>();
+		function_parameter_list = new ArrayList<PSSFunctionParameter>();
 	}
 
 	@Override
@@ -127,8 +131,125 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	}
 
 	@Override
+	public Integer visitFunction_return_type(PSSParser.Function_return_typeContext ctx) {
+		PSSFunctionReturnType rt = null;
+		if (ctx.data_type() == null)
+			rt = PSSFunctionReturnType.VOID;
+		else {
+			visit(ctx.data_type());
+			rt = PSSFunctionReturnType.valueOf(cur_data_type);
+		}
+		cur_function_return_type = rt;
+		return 0;
+	}
+
+	@Override
+	public Integer visitFunction_parameter(PSSParser.Function_parameterContext ctx) {
+		if (ctx.data_type() == null)
+			PSSMessage.Fatal("Parameters other than data-type are not implemented");
+
+		PSSFunctionParameterDir dir = null;
+		if (ctx.function_parameter_dir() != null)
+			dir = PSSFunctionParameterDir.valueOf(ctx.function_parameter_dir().getText());
+		visit(ctx.data_type());
+		PSSModel data_type = cur_data_type;
+		String id = ctx.identifier().getText();
+		PSSExpression exp = null;
+		if (ctx.constant_expression() != null) {
+			visit(ctx.constant_expression());
+			exp = exp_stack.pop();
+		}
+		PSSFunctionParameter param = new PSSFunctionParameter(dir, data_type, id, exp);
+		function_parameter_list.add(param);
+		return 0;
+	}
+
+	@Override
+	public Integer visitFunction_parameter_list_prototype(PSSParser.Function_parameter_list_prototypeContext ctx) {
+		if (ctx.varargs_parameter() != null)
+			PSSMessage.Fatal("varargs is not implemented");
+		for (PSSParser.Function_parameterContext c : ctx.function_parameter())
+			visit(c);
+
+		return 0;
+	}
+
+	@Override
+	public Integer visitFunction_prototype(PSSParser.Function_prototypeContext ctx) {
+		visit(ctx.function_return_type());
+		PSSFunctionReturnType rt = cur_function_return_type;
+		String id = ctx.function_identifier().getText();
+		visit(ctx.function_parameter_list_prototype());
+		List<PSSFunctionParameter> params = new ArrayList<PSSFunctionParameter>();
+		while (!function_parameter_list.isEmpty())
+			params.add(function_parameter_list.remove(0));
+		cur_function_prototype = new PSSFunctionPrototype(rt, id, params);
+		return 0;
+	}
+
+	@Override
+	public Integer visitFunction_decl(PSSParser.Function_declContext ctx) {
+		boolean pure = ctx.pure != null;
+		visit(ctx.function_prototype());
+		PSSFunctionPrototype prototype = cur_function_prototype;
+		PSSFunctionModel f = new PSSFunctionModel(pure, prototype);
+
+		// Check 22.2 (shadowed function declaration) and 22.2.3 (c)
+		PSSModel m = root.findDeclaration(prototype.getID());
+		if (m instanceof PSSFunctionModel) {
+			PSSFunctionModel fm = (PSSFunctionModel) m;
+
+			if (root == fm.m_parent)
+				PSSMessage.Error("", "Redeclaring function " + prototype.getID());
+
+			fm.redeclare(f);
+		}
+
+		root.addChild(f);
+		return 0;
+	}
+
+	@Override
 	public Integer visitProcedural_function(PSSParser.Procedural_functionContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		PSSPlatformQualifier qualifier = null;
+		if (ctx.platform_qualifier() != null)
+			qualifier = PSSPlatformQualifier.valueOf(ctx.platform_qualifier().getText());
+		boolean pure = ctx.pure != null;
+		visit(ctx.function_prototype());
+		PSSFunctionPrototype prototype = cur_function_prototype;
+		List<PSSProcStmt> stmts = new ArrayList<PSSProcStmt>();
+		for (PSSParser.Procedural_stmtContext c : ctx.procedural_stmt()) {
+			visit(c);
+			stmts.add(proc_stmt_list.remove(0));
+		}
+		PSSFunctionModel f = new PSSFunctionModel(qualifier, pure, prototype, stmts);
+
+		// Find existing declaration
+		PSSFunctionModel fm = null;
+		PSSModel m = root.findDeclaration(prototype.getID());
+		if (m instanceof PSSFunctionModel) {
+			// Redeclaration of a function
+			fm = (PSSFunctionModel) m;
+		}
+
+		if (fm == null) {
+			// This is the first definition
+			root.addChild(f);
+		} else {
+			if (root == fm.m_parent) {
+				// Both functions are in the same model
+				if (fm.getStatements() == null) {
+					fm.define(stmts);
+				} else {
+					PSSMessage.Error("", "Function " + prototype.getID() + " is already defined.");
+				}
+			} else {
+				// Shadowing function fm
+				fm.redeclare(f);
+				root.addChild(f);
+			}
+		}
+
 		return 0;
 	}
 
@@ -412,7 +533,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitProcedural_return_stmt(PSSParser.Procedural_return_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		PSSExpression exp = null;
+		if (ctx.expression() != null) {
+			visit(ctx.expression());
+			exp = exp_stack.pop();
+		}
+		PSSReturnProcStmt stmt = new PSSReturnProcStmt(exp);
+		proc_stmt_list.add(stmt);
 		return 0;
 	}
 
@@ -640,7 +767,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			index_id = ctx.index_identifier().getText();
 		visit(ctx.constraint_set());
 		constraints.addAll(constraint_list);
-		constraint_list.clear();;
+		constraint_list.clear();
+		;
 
 		/* try to separate index_identifier due to grammar ambiguity */
 		if (index_id == null)

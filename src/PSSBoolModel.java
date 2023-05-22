@@ -38,4 +38,9 @@ public class PSSBoolModel extends PSSModel {
 		return m_model;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof PSSBoolModel;
+	}
+
 }

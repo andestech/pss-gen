@@ -12,19 +12,26 @@ public class PSSIfElseProcStmt extends PSSProcStmt {
 		m_false_stmt = false_stmt;
 	}
 
+	@Override
 	public void eval(PSSInst inst) {
 		PSSVal cond = m_cond.eval(inst);
 
 		if (cond.toBool()) {
 			m_true_stmt.eval(inst);
-		}
-		else {
+		} else {
 			if (m_false_stmt != null) {
 				m_false_stmt.eval(inst);
 			}
 		}
 	}
 
+	@Override
+	public String getText() {
+		return "if (" + m_cond.getText() + ")" + "{ " + m_true_stmt.getText() + " }"
+				+ (m_false_stmt == null ? "" : " else {" + m_false_stmt.getText() + " }");
+	}
+
+	@Override
 	public void dump(String indent) {
 		String str_cond = m_cond.getText();
 
@@ -38,4 +45,5 @@ public class PSSIfElseProcStmt extends PSSProcStmt {
 			System.out.println(indent + "}");
 		}
 	}
+
 }

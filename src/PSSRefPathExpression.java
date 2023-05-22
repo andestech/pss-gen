@@ -64,12 +64,14 @@ public class PSSRefPathExpression extends PSSExpression {
 		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals(""))
 			PSSMessage.Fatal("[" + getClass().getName() + "] type_identifier_elems is not implemented");
 
-		PSSInst inst = m_static_ref_path.getInst(var);
+
 		PSSVal res = null;
 		if (m_hierarchical_id == null)
-			res = inst.toVal();
-		else
+			res = m_static_ref_path.eval(var);
+		else {
+			PSSInst inst = m_static_ref_path.getInst(var);
 			res = m_hierarchical_id.eval(inst);
+		}
 		if (m_bit_slice_from != null && m_bit_slice_to != null)
 			PSSMessage.Fatal("[" + getClass().getName() + "] bit_slice is not implemented");
 
