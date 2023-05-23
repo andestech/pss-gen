@@ -1,0 +1,79 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/19
+@brief          A modified version of Example 23 in Portable Test and Stimulus Standard Version 2.0
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> Section 8.8.4 : Maps <br>
+
+### Test Command
+
+    make test
+
+*/
+
+component pss_top {
+  map<string, bit[15:0]> foo_map1, foo_map2;
+  list<bit[15:0]>        foo_list1;
+  exec init_up {
+    foo_map1 = {"a":1,"b":2,"c":3,"d":4};  // Map initialization with key/value literal
+    foo_map2["a"] = 1;
+    foo_map2["b"] = 4;
+    foo_list1 = foo_map1.values();
+    foreach (foo_map2[i]) foo_list1.push_back(foo_map2[i]);
+  }
+  action A {
+    // modified: print outputs
+    exec body ASM =
+    """A""";
+  }
+  action B {
+    // modified: print outputs
+    exec body ASM =
+    """B""";
+  }
+  action C {
+    // modified: print outputs
+    exec body ASM =
+    """C""";
+  }
+action D {
+  rand string val;
+  exec body ASM =
+  """val = {{val}}""";
+}
+  action traverse_map_a {
+    rand int lower_size;
+    map <string, bit[15:0]> foo_map3;
+    set <string> foo_set1;
+    exec pre_solve {
+      foo_map3 = pss_top.foo_map1; // foo_map3 = {"a":1,"b":2,"c":3,"d":4}
+      foo_map3.insert("z",0); // foo_map3 = {"a":1,"b":2,"c":3,"d":4,"z":0}
+      foo_map3.insert("d",5); // foo_map3 = {"a":1,"b":2,"c":3,"d":5,"z":0}
+      foo_map3.delete("d");   // foo_map3 = {"a":1,"b":2,"c":3,"z":0}
+      foo_set1 = foo_map3.keys();
+    }
+    // modified: comp.foo_map3.size() -> comp.traverse_map_a.foo_map3.size()
+    constraint lower_size < comp.traverse_map_a.foo_map3.size() + comp.foo_list1.size();
+    activity {
+      if (comp.foo_map1 == comp.foo_map2)     // Use of == operator on maps
+        do A;
+      else foreach (foo_map3.values()[i])     // Use of "foreach" on a map converted to a list of values
+        if (comp.foo_map2["a"] > 3)           // Usage of operator[] on a map
+          do A;
+        else if ("b" in comp.foo_map1.keys()) // Check whether a key is in the map
+          do B;
+        else
+          do C;
+    }
+    exec post_solve {
+      // modified: commented out
+      // foo_map3.clear();
+    }
+  }
+}
+
+/**@}*/
