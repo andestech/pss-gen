@@ -5,22 +5,46 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
+/**
+ * A {@code PSSRefPathExpression} is a simple or hierarchical reference.
+ */
 public class PSSRefPathExpression extends PSSExpression {
+
+	/** the optional type identifier */
 	String m_type_identifier_elems;
-	PSSMemberPathElemExpression m_static_ref_path;
-	PSSHierarchicalIDExpression m_hierarchical_id;
+
+	/** the static_ref_path plus an optional hierarchical_id */
+	PSSMemberPathElemExpression m_ref_path;
+
+	/** the optional beginning index of bit slice */
 	PSSExpression m_bit_slice_from = null;
+
+	/** the optional ending index of bit slice */
 	PSSExpression m_bit_slice_to = null;
 
-	public PSSRefPathExpression(String type_identifier_elems, PSSMemberPathElemExpression static_ref_path,
-			PSSHierarchicalIDExpression hierarchical_id, PSSExpression bit_slice_from, PSSExpression bit_slice_to) {
+	/**
+	 * Constructs this reference.
+	 *
+	 * @param type_identifier_elems the optional type identifier
+	 * @param ref_path              the static reference path
+	 * @param bit_slice_from        the optional beginning index of bit slice
+	 * @param bit_slice_to          the optional ending index of bit slice
+	 */
+	public PSSRefPathExpression(String type_identifier_elems, PSSMemberPathElemExpression ref_path,
+			PSSExpression bit_slice_from, PSSExpression bit_slice_to) {
 		m_type_identifier_elems = type_identifier_elems;
-		m_static_ref_path = static_ref_path;
-		m_hierarchical_id = hierarchical_id;
+		m_ref_path = ref_path;
 		m_bit_slice_from = bit_slice_from;
 		m_bit_slice_to = bit_slice_to;
 	}
 
+	/**
+	 * Parses a reference from a string.
+	 *
+	 * @param root the model where the string is evaluated
+	 * @param str  a string to be parsed
+	 * @return the reference denoted by the string
+	 */
 	public static PSSRefPathExpression fromString(PSSModel root, String str) {
 		PSSRefPathExpression res = null;
 
@@ -50,9 +74,7 @@ public class PSSRefPathExpression extends PSSExpression {
 		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals(""))
 			PSSMessage.Fatal("[" + getClass().getName() + "] type_identifier_elems is not implemented");
 
-		PSSInst inst = m_static_ref_path.getInst(var);
-		if (m_hierarchical_id != null)
-			inst = m_hierarchical_id.getInst(inst);
+		PSSInst inst = m_ref_path.getInst(var);
 		if (m_bit_slice_from != null && m_bit_slice_to != null)
 			PSSMessage.Fatal("[" + getClass().getName() + "] bit_slice is not implemented");
 
@@ -64,14 +86,7 @@ public class PSSRefPathExpression extends PSSExpression {
 		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals(""))
 			PSSMessage.Fatal("[" + getClass().getName() + "] type_identifier_elems is not implemented");
 
-
-		PSSVal res = null;
-		if (m_hierarchical_id == null)
-			res = m_static_ref_path.eval(var);
-		else {
-			PSSInst inst = m_static_ref_path.getInst(var);
-			res = m_hierarchical_id.eval(inst);
-		}
+		PSSVal res = m_ref_path.eval(var);
 		if (m_bit_slice_from != null && m_bit_slice_to != null)
 			PSSMessage.Fatal("[" + getClass().getName() + "] bit_slice is not implemented");
 
@@ -80,8 +95,7 @@ public class PSSRefPathExpression extends PSSExpression {
 
 	@Override
 	public String getText() {
-		return (m_type_identifier_elems == null ? "" : m_type_identifier_elems) + m_static_ref_path.getText()
-				+ (m_hierarchical_id == null ? "" : "." + m_hierarchical_id.getText())
+		return (m_type_identifier_elems == null ? "" : m_type_identifier_elems) + m_ref_path.getText()
 				+ (m_bit_slice_from == null || m_bit_slice_to == null ? ""
 						: "[" + m_bit_slice_from.getText() + ":" + m_bit_slice_to.getText());
 	}

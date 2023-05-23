@@ -102,7 +102,7 @@ public class PSSInst {
 		return m_type_decl;
 	}
 
-	private PSSInst findInstanceOne(String id) {
+	private PSSInst findChild(String id) {
 		for (int i = 0; i < m_insts.size(); i++) {
 			PSSInst child = m_insts.get(i);
 			if (child.m_id.equals(id)) {
@@ -121,6 +121,22 @@ public class PSSInst {
 		return null;
 	}
 
+	public PSSInst findInstanceUnder(String hierarchy_id) {
+		String[] tokens = hierarchy_id.split("\\.", 2);
+
+		PSSInst result = findChild(tokens[0]);
+
+		if (result != null) {
+			if (tokens.length <= 1) {
+				return result;
+			} else {
+				return result.findInstanceUnder(tokens[1]);
+			}
+		}
+
+		return null;
+	}
+
 	public PSSInst findInstance(String hierarchy_id) {
 		if (hierarchy_id.matches("comp")) {
 			return getComponentInst();
@@ -129,41 +145,33 @@ public class PSSInst {
 		} else if (hierarchy_id.matches("comp\\..*")) {
 			PSSInst comp = getComponentInst();
 			if (comp != null) {
-				return comp.findInstance(hierarchy_id.substring(5));
+				return comp.findInstanceUnder(hierarchy_id.substring(5));
 			} else {
 				return null;
 			}
 		} else if (hierarchy_id.matches("this\\..*")) {
 			if (m_parent != null) {
-				return m_parent.findInstance(hierarchy_id.substring(5));
+				return m_parent.findInstanceUnder(hierarchy_id.substring(5));
 			} else {
 				return null;
 			}
 		}
 
-		String[] tokens = hierarchy_id.split("\\.", 2);
+		PSSInst res = findInstanceUnder(hierarchy_id);
 
-		PSSInst result = findInstanceOne(tokens[0]);
-
-		if (result != null) {
-			if (tokens.length <= 1) {
-				return result;
-			} else {
-				return result.findInstance(tokens[1]);
-			}
-		}
+		if (res != null)
+			return res;
 
 		if (m_parent == null) {
-			if (m_id.equals(tokens[0])) {
-				if (tokens.length <= 1) {
-					return this;
-				} else {
-					return this.findInstance(tokens[1]);
-				}
-			} else
-				return null;
+			if (hierarchy_id.matches(m_id)) {
+				res = this;
+			} else if (hierarchy_id.matches(m_id + "\\..*")) {
+				res = findInstance(hierarchy_id.substring(m_id.length() + 1));
+			}
 		} else
-			return m_parent.findInstance(hierarchy_id);
+			res = m_parent.findInstance(hierarchy_id);
+
+		return res;
 	}
 
 	public void init_up() {

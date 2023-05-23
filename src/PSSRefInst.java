@@ -19,6 +19,15 @@ public class PSSRefInst extends PSSInst {
 		return m_output;
 	}
 
+	@Override
+	public PSSInst findInstanceUnder(String hierarchy_id) {
+		if (m_var == null) {
+			PSSMessage.Error("REF", "'" + getHierarchyId() + "' is not bound");
+		}
+		return m_var.findInstanceUnder(hierarchy_id);
+	}
+
+	@Override
 	public PSSInst findInstance(String hierarchy_id) {
 		if (m_var == null) {
 			PSSMessage.Error("REF", "'" + getHierarchyId() + "' is not bound");

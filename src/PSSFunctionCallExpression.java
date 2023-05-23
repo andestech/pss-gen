@@ -5,8 +5,8 @@ import java.util.*;
  */
 public class PSSFunctionCallExpression extends PSSExpression {
 
-	/** a path to an instance */
-	PSSHierarchicalIDExpression m_path;
+	/** an optional path to an instance */
+	PSSMemberPathElemExpression m_path;
 
 	/** a method name of the instance */
 	String m_id;
@@ -21,10 +21,20 @@ public class PSSFunctionCallExpression extends PSSExpression {
 	 * @param id   a method name of the instance
 	 * @param args the arguments for the method call
 	 */
-	PSSFunctionCallExpression(PSSHierarchicalIDExpression path, String id, List<PSSExpression> args) {
+	PSSFunctionCallExpression(PSSMemberPathElemExpression path, String id, List<PSSExpression> args) {
 		m_path = path;
 		m_id = id;
 		m_args = args;
+	}
+
+	/**
+	 * Constructs a function call expression.
+	 *
+	 * @param id   a method name
+	 * @param args the arguments for the method call
+	 */
+	PSSFunctionCallExpression(String id, List<PSSExpression> args) {
+		this(null, id, args);
 	}
 
 	@Override
@@ -32,7 +42,7 @@ public class PSSFunctionCallExpression extends PSSExpression {
 		PSSMessage.Debug("[PSSFunctionCall] calling function " + m_id + " of " + m_path);
 		/* Evaluate arguments */
 		List<PSSVal> actuals = m_args.stream().map(a -> a.eval(var)).toList();
-		PSSInst inst = m_path.getInst(var);
+		PSSInst inst = m_path == null ? var : m_path.getInst(var);
 
 		// m_id may refer to a user defined function
 
@@ -59,6 +69,17 @@ public class PSSFunctionCallExpression extends PSSExpression {
 		}
 
 		return res;
+	}
+
+	@Override
+	public String getText() {
+		return (m_path == null ? "" : m_path.getText() + ".") + m_id
+				+ (m_args == null ? "" : "(" + String.join(", ", m_args.stream().map(a -> a.getText()).toList()) + ")");
+	}
+
+	@Override
+	public String toString() {
+		return getText();
 	}
 
 }

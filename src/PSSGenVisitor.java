@@ -591,13 +591,10 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		if (e.m_bit_slice_from != null || e.m_bit_slice_to != null)
 			return null;
 
-		PSSMemberPathElemExpression me = null;
-		if (e.m_hierarchical_id == null || e.m_hierarchical_id.m_member_list.size() == 0)
-			me = e.m_static_ref_path;
-		else
-			me = e.m_hierarchical_id.m_member_list.get(e.m_hierarchical_id.m_member_list.size() - 1);
-		if (me == null)
-			return null;
+		// Find the last member path element
+		PSSMemberPathElemExpression me = e.m_ref_path;
+		while (me.getChild() != null)
+			me = me.getChild();
 
 		String index = null;
 		if (me.m_index != null && me.m_index instanceof PSSRefPathExpression) {
@@ -605,7 +602,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			if ((index_exp.m_type_identifier_elems == null || index_exp.m_type_identifier_elems.equals(""))
 					&& index_exp.m_bit_slice_from == null
 					&& index_exp.m_bit_slice_to == null
-					&& (index_exp.m_hierarchical_id == null || index_exp.m_hierarchical_id.m_member_list.size() == 0)) {
+					&& index_exp.m_ref_path.getChild() == null) {
 				index = index_exp.getText();
 				me.m_index = null;
 			}
@@ -824,7 +821,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		for (int i = 0; i < ctx.hierarchical_id_list().hierarchical_id().size(); i++) {
 			visit(ctx.hierarchical_id_list().hierarchical_id(i));
-			constraint.add((PSSHierarchicalIDExpression) exp_stack.pop());
+			constraint.add((PSSMemberPathElemExpression) exp_stack.pop());
 		}
 
 		constraint_list.add(constraint);
@@ -1032,12 +1029,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitHierarchical_id(PSSParser.Hierarchical_idContext ctx) {
-		PSSHierarchicalIDExpression e = new PSSHierarchicalIDExpression();
+		PSSMemberPathElemExpression r = null;
+		PSSMemberPathElemExpression p = null;
 		for (int i = 0; i < ctx.member_path_elem().size(); i++) {
 			visit(ctx.member_path_elem(i));
-			e.addMemberElement((PSSMemberPathElemExpression) exp_stack.pop());
+			PSSMemberPathElemExpression e = (PSSMemberPathElemExpression) exp_stack.pop();
+			if (r == null)
+				r = e;
+			e.setParent(p);
+			p = e;
 		}
-		exp_stack.push(e);
+		exp_stack.push(r);
 
 		return 0;
 	}
@@ -1059,10 +1061,10 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		visit(ctx.static_ref_path().member_path_elem());
 		PSSMemberPathElemExpression static_ref_path = (PSSMemberPathElemExpression) exp_stack.pop();
 
-		PSSHierarchicalIDExpression hierarchical_id = null;
 		if (ctx.hierarchical_id() != null) {
 			visit(ctx.hierarchical_id());
-			hierarchical_id = (PSSHierarchicalIDExpression) exp_stack.pop();
+			PSSMemberPathElemExpression hierarchical_id = (PSSMemberPathElemExpression) exp_stack.pop();
+			hierarchical_id.setParent(static_ref_path);
 		}
 
 		PSSExpression bit_slice_from = null;
@@ -1074,7 +1076,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			bit_slice_to = exp_stack.pop();
 		}
 
-		PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, hierarchical_id, null,
+		PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, null,
 				null);
 		exp_stack.push(e);
 
@@ -1157,10 +1159,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitFunction_ref_path(PSSParser.Function_ref_pathContext ctx) {
-		PSSHierarchicalIDExpression path = new PSSHierarchicalIDExpression();
+		PSSMemberPathElemExpression path = null;
+		PSSMemberPathElemExpression parent = null;
 		for (int i = 0; i < ctx.member_path_elem().size(); i++) {
 			visit(ctx.member_path_elem(i));
-			path.addMemberElement((PSSMemberPathElemExpression) exp_stack.pop());
+			PSSMemberPathElemExpression e = (PSSMemberPathElemExpression) exp_stack.pop();
+			if (path == null)
+				path = e;
+			e.setParent(parent);
+			parent = e;
 		}
 
 		String id = ctx.identifier().getText();
