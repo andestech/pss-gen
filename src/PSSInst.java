@@ -138,40 +138,36 @@ public class PSSInst {
 	}
 
 	public PSSInst findInstance(String hierarchy_id) {
-		if (hierarchy_id.matches("comp")) {
-			return getComponentInst();
-		} else if (hierarchy_id.matches("this")) {
-			return m_parent;
-		} else if (hierarchy_id.matches("comp\\..*")) {
-			PSSInst comp = getComponentInst();
-			if (comp != null) {
-				return comp.findInstanceUnder(hierarchy_id.substring(5));
-			} else {
-				return null;
-			}
-		} else if (hierarchy_id.matches("this\\..*")) {
-			if (m_parent != null) {
-				return m_parent.findInstanceUnder(hierarchy_id.substring(5));
-			} else {
-				return null;
+		String[] tokens = hierarchy_id.split("\\.", 2);
+
+		/* Find the first token */
+		PSSInst inst = null;
+		if ("comp".equals(tokens[0]))
+			inst = getComponentInst();
+		else if ("this".equals(tokens[0]))
+			inst = m_parent;
+		else if ("pss_top".equals(tokens[0])) {
+			PSSInst top = this;
+			while (top != null && !top.m_id.equals("pss_top"))
+				top = top.m_parent;
+			if (top != null)
+				inst = top;
+		} else {
+			PSSInst base = this;
+			while (inst == null) {
+				if (base == null)
+					break;
+				inst = base.findInstanceUnder(tokens[0]);
+				if (base instanceof PSSComponentInst)
+					break;
+				base = base.m_parent;
 			}
 		}
 
-		PSSInst res = findInstanceUnder(hierarchy_id);
+		if (inst != null && tokens.length > 1)
+			inst = inst.findInstanceUnder(tokens[1]);
 
-		if (res != null)
-			return res;
-
-		if (m_parent == null) {
-			if (hierarchy_id.matches(m_id)) {
-				res = this;
-			} else if (hierarchy_id.matches(m_id + "\\..*")) {
-				res = findInstance(hierarchy_id.substring(m_id.length() + 1));
-			}
-		} else
-			res = m_parent.findInstance(hierarchy_id);
-
-		return res;
+		return inst;
 	}
 
 	public void init_up() {
