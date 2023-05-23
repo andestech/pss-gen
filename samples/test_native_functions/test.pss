@@ -1,0 +1,70 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/23
+@brief          Test function declaration, definition, and invocation.
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> Section 22.3 : Native PSS functions <br>
+
+### Test Command
+
+    make test
+
+*/
+component pss_top {
+  bit[32] x;
+  bit[32] y;
+  bit[32] a;
+  bit[32] b;
+  bit[32] c;
+  bit[32] d;
+
+  function int factorial(bit[32] x);
+
+  function int factorial(bit[32] x) {
+    if (x <= 0) return 1;
+    else return x * factorial(x - 1);
+  }
+
+  function int addy(bit[32] x) {
+    return x + y;
+  }
+
+  function int addx(bit[32] x = 0) {
+    return x + pss_top.x;
+  }
+
+  function void incrx() {
+    x = x + 1;
+  }
+
+  exec init_up {
+    x = 13;
+    y = 17;
+    a = factorial(5); // a = 120
+    b = addy(32);     // b = 49
+    c = addx(11);     // c = 24
+    incrx();          // x = 14
+    incrx();          // x = 15
+    d = addx();       // d = 15
+  }
+
+  action A {
+    rand bit[32] val;
+    exec body ASM =
+    """val = {{val}}""";
+  }
+
+  action root_a {
+    activity {
+      do A with { val == a; };    // 120
+      do A with { val == b; };    // 49
+      do A with { val == c; };    // 24
+      do A with { val == d; };    // 15
+    }
+  }
+
+}
