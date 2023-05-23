@@ -1,0 +1,42 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/23
+@brief          Test resolution of reference paths
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> <br>
+
+### Test Command
+
+    make test
+
+*/
+
+component pss_top {
+
+  map<int, int> m;  
+
+  exec init_up {
+    m = {1: 2, 2: 4, 3: 6, 4: 8}; 
+  }
+
+  action A {
+    rand int val;
+    exec body ASM =
+    """val = {{val}}""";
+  }
+
+  action root_a {
+    activity {
+      foreach (m.values()[i]) {
+        do A with { val == m.values()[i]; }; // 2, 4, 6, 8
+      }
+    }
+  }
+
+}
+
+/**@}*/

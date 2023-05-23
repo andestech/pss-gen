@@ -99,9 +99,10 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         return m_child == null ? m_id : (m_id + "." + m_child.getLowerHierarchicalID());
     }
 
-    private PSSVal evalMethod(PSSInst var, String name, List<PSSExpression> args) throws NoSuchMethodException {
+    private PSSVal evalMethod(PSSInst ctx, PSSInst var, String name, List<PSSExpression> args)
+            throws NoSuchMethodException {
         /* Evaluate arguments */
-        List<PSSVal> vals = args.stream().map(a -> a.eval(var)).toList();
+        List<PSSVal> vals = args.stream().map(a -> a.eval(ctx)).toList();
 
         /* Invoke method */
         PSSVal res = var.evalMethod(name, vals);
@@ -109,17 +110,26 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         return res;
     }
 
-    private PSSInst getInstOne(PSSInst var) {
+    /**
+     * Resolve m_id.
+     *
+     * @param ctx    the context of the whole hierarchical reference path
+     * @param parent the resolved instance of the partial hierarchical reference
+     *               path down to the parent of this element
+     * @return the resolved instance of the partial hierarchical reference path down
+     *         to this element
+     */
+    private PSSInst getInstOne(PSSInst ctx, PSSInst parent) {
         PSSInst inst = null;
         if (m_function_parameter_list == null) {
-            inst = m_parent == null ? var.findInstance(m_id) : var.findInstanceUnder(m_id);
+            inst = m_parent == null ? parent.findInstance(m_id) : parent.findInstanceUnder(m_id);
             if (inst == null)
                 PSSMessage.Error("", getUpperHierarchicalID() + " is not defined.");
         } else {
             // m_id may refer to a user defined function
 
             // Find the component instance containing the definition of the function m_id.
-            PSSInst ci = var.getComponentInst();
+            PSSInst ci = parent.getComponentInst();
             PSSModel cm = ci.getTypeModel();
 
             // Find the function definition
@@ -129,11 +139,11 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             if (m instanceof PSSFunctionModel) {
                 // Invoke the function
                 PSSFunctionModel fm = (PSSFunctionModel) m;
-                PSSFunctionInst fi = fm.declInst(ci, m_function_parameter_list.stream().map(p -> p.eval(var)).toList());
-                res = fi.eval(var);
+                PSSFunctionInst fi = fm.declInst(ci, m_function_parameter_list.stream().map(p -> p.eval(ctx)).toList());
+                res = fi.eval(parent);
             } else {
                 try {
-                    res = evalMethod(var, m_id, m_function_parameter_list);
+                    res = evalMethod(ctx, parent, m_id, m_function_parameter_list);
                 } catch (NoSuchMethodException e) {
                     PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
                 }
@@ -141,27 +151,54 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             if (res instanceof PSSRefVal)
                 inst = ((PSSRefVal) res).getInst();
         }
+
         if (m_index != null && inst != null)
-            inst = inst.indexOf(m_index.eval(var));
+            inst = inst.indexOf(m_index.eval(ctx));
+
+        return inst;
+    }
+
+    /**
+     * Resolve the whole hierarchical reference path.
+     *
+     * @param ctx    the context of the whole hierarchical reference path
+     * @param parent the resolved instance of the partial hierarchical reference
+     *               path down to the parent of this element
+     * @return the resolved instance of the whole hierarchical reference path
+     */
+    private PSSInst getInst(PSSInst ctx, PSSInst parent) {
+        // resolve m_id
+        PSSInst inst = getInstOne(ctx, parent);
+
+        // resolve descendants
+        if (m_child != null)
+            inst = m_child.getInst(ctx, inst);
 
         return inst;
     }
 
     @Override
     public PSSInst getInst(PSSInst var) {
-        PSSInst inst = getInstOne(var);
-
-        if (m_child != null)
-            inst = m_child.getInst(inst);
-
-        return inst;
+        if (m_parent != null)
+            PSSMessage.Fatal(getClass().getName()
+                    + "::Cannot get the instance of a partial member path reference using getInst(PSSInst).");
+        return getInst(var, var);
     }
 
-    private PSSVal evalLast(PSSInst var) {
+    /**
+     * Do the final evaluation to PSSVal. Assuming this element is the last one
+     * of the whole hierarchical reference path.
+     *
+     * @param ctx    the context of the whole hierarchical reference path
+     * @param parent the resolved instance of the partial hierarchical path down to
+     *               the parent of this element
+     * @return the evaluation result
+     */
+    private PSSVal evalLast(PSSInst ctx, PSSInst parent) {
         PSSVal res = null;
 
         if (m_function_parameter_list == null) {
-            PSSInst inst = m_parent == null ? var.findInstance(m_id) : var.findInstanceUnder(m_id);
+            PSSInst inst = m_parent == null ? parent.findInstance(m_id) : parent.findInstanceUnder(m_id);
             if (inst == null)
                 PSSMessage.Error("", getUpperHierarchicalID() + " is not defined.");
             res = inst.toVal();
@@ -169,7 +206,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             // m_id may refer to a user defined function
 
             // Find the component instance containing the definition of the function m_id.
-            PSSInst ci = var.getComponentInst();
+            PSSInst ci = parent.getComponentInst();
             PSSModel cm = ci.getTypeModel();
 
             // Find the function definition
@@ -178,12 +215,12 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             if (m instanceof PSSFunctionModel) {
                 // Invoke the function
                 PSSFunctionModel fm = (PSSFunctionModel) m;
-                PSSFunctionInst fi = fm.declInst(ci, m_function_parameter_list.stream().map(p -> p.eval(var)).toList());
-                res = fi.eval(var);
+                PSSFunctionInst fi = fm.declInst(ci, m_function_parameter_list.stream().map(p -> p.eval(ctx)).toList());
+                res = fi.eval(parent);
             } else {
                 // m_id may refer to a builtin method associated to var
                 try {
-                    res = evalMethod(var, m_id, m_function_parameter_list);
+                    res = evalMethod(ctx, parent, m_id, m_function_parameter_list);
                 } catch (NoSuchMethodException e) {
                     PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
                 }
@@ -191,22 +228,36 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         }
 
         if (m_index != null && res != null)
-            res = res.indexOf(m_index.eval(var));
+            res = res.indexOf(m_index.eval(ctx));
+
+        return res;
+    }
+
+    /**
+     * Evaluate the whole hierarchical reference path.
+     *
+     * @param ctx    the context of the whole hierarchical reference path
+     * @param parent the resolved instance of the partial hierarchical path down to
+     *               the parent of this element
+     * @return the evaluation result
+     */
+    private PSSVal eval(PSSInst ctx, PSSInst parent) {
+        PSSVal res = null;
+
+        if (m_child != null) {
+            PSSInst inst = getInstOne(ctx, parent);
+            res = m_child.eval(ctx, inst);
+        } else
+            res = evalLast(ctx, parent);
 
         return res;
     }
 
     @Override
     public PSSVal eval(PSSInst var) {
-        PSSVal res = null;
-
-        if (m_child != null) {
-            PSSInst inst = getInstOne(var);
-            res = m_child.eval(inst);
-        } else
-            res = evalLast(var);
-
-        return res;
+        if (m_parent != null)
+            PSSMessage.Error("", "Cannot evaluate a partial member path reference: " + getLowerHierarchicalID());
+        return eval(var, var);
     }
 
     @Override
