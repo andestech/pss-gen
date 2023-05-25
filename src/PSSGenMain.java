@@ -23,17 +23,17 @@ public class PSSGenMain {
 			PSSMessage.Info("parse file '" + file + "'");
 
 			InputStream is = new FileInputStream(file);
-	
+
 			CharStream input = CharStreams.fromStream(is);
 			PSSLexer lexer = new PSSLexer(input);
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			PSSParser parser = new PSSParser (tokens);
-	
+
 			parser.removeErrorListeners();
 			parser.addErrorListener(new VerboseListener());
-	
+
 			ParseTree tree = parser.model();
-	
+
 			tree_list.add(tree);
 		}
 		return tree_list;
@@ -58,7 +58,7 @@ public class PSSGenMain {
 
 	public static PSSActionInst traverseRootAction(PSSModel model, String root_action) {
 
-		PSSAction action_model = (PSSAction) model.findObject(root_action);
+		PSSActionModel action_model = (PSSActionModel) model.findObject(root_action);
 		if (action_model == null) {
 			PSSMessage.Error("MAIN-0001", "Cannot find root action '" + root_action + "'");
 		}
@@ -86,7 +86,7 @@ public class PSSGenMain {
 	public static void main(String[] args) throws Exception {
 		PSSGenOpt opt = new PSSGenOpt(args);
 
-		
+
 		ArrayList<ParseTree> tree_list = parseFiles(opt.input_flist());
 
 		PSSModel model = createModel(tree_list);

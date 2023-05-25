@@ -31,8 +31,8 @@ component pss_top {
 
   action root_a {
     activity {
-      foreach (m.values()[i]) {
-        do A with { val == m.values()[i]; }; // 2, 4, 6, 8
+      foreach (comp.m.values()[i]) {
+        do A with { val == comp.m.values()[i]; }; // 2, 4, 6, 8
       }
     }
   }

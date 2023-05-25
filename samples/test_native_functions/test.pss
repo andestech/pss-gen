@@ -60,10 +60,10 @@ component pss_top {
 
   action root_a {
     activity {
-      do A with { val == a; };    // 120
-      do A with { val == b; };    // 49
-      do A with { val == c; };    // 24
-      do A with { val == d; };    // 15
+      do A with { val == comp.a; };    // 120
+      do A with { val == comp.b; };    // 49
+      do A with { val == comp.c; };    // 24
+      do A with { val == comp.d; };    // 15
     }
   }
 

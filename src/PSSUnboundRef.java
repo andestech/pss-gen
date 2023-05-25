@@ -1,9 +1,9 @@
 import java.util.*;
 
 public class PSSUnboundRef {
-	PSSRefInst	m_ref;		
+	PSSFlowRefInst	m_ref;
 
-	PSSUnboundRef(PSSRefInst ref) {
+	PSSUnboundRef(PSSFlowRefInst ref) {
 		m_ref = ref;
 	}
 

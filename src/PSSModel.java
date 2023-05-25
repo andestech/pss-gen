@@ -1,6 +1,4 @@
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 public class PSSModel {
 
@@ -9,10 +7,13 @@ public class PSSModel {
 	public String m_id;
 	public String m_hierarchy_id;
 
+	List<PSSInst> m_static_insts;
+
 	public PSSModel(String id) {
 		m_id = id;
 		m_hierarchy_id = "";
 		children = new ArrayList<PSSModel>();
+		m_static_insts = new ArrayList<PSSInst>();
 	}
 
 	/**
@@ -38,11 +39,33 @@ public class PSSModel {
 		return node;
 	}
 
+	public void addStaticInst(PSSInst inst) {
+		m_static_insts.add(inst);
+	}
+
+	public PSSInst findStaticInst(String id) {
+		// static instances in this model
+		for (PSSInst inst : m_static_insts) {
+			if (inst.m_id.equals(id))
+				return inst;
+		}
+		// enum items in this model
+		for (PSSModel c : children) {
+			if (c instanceof PSSEnumModel) {
+				PSSEnumModel m = (PSSEnumModel) c;
+				PSSInst inst = m.findStaticInst(id);
+				if (inst != null)
+					return inst;
+			}
+		}
+		return null;
+	}
+
 	public void addComponentDataDecl(PSSComponentDataDeclModel data_decl) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::addComponentDataDecl is not impelemented");
 	}
 
-	public PSSFlowRef addFlowRef(PSSFlowRef node) {
+	public PSSFlowRefModel addFlowRef(PSSFlowRefModel node) {
 		return null;
 	}
 
@@ -108,9 +131,9 @@ public class PSSModel {
 
 			child.declEnumItem(inst);
 		}
-		if (m_parent != null) {
-			m_parent.declEnumInst(inst);
-		}
+		// if (m_parent != null) {
+		// 	m_parent.declEnumInst(inst);
+		// }
 	}
 
 	public void init_up(PSSInst inst) {
@@ -204,10 +227,10 @@ public class PSSModel {
 		PSSInferredActionList list = new PSSInferredActionList();
 		for (int i = 0; i < children.size(); i++) {
 			PSSModel child = children.get(i);
-			PSSFlowRef ref = child.getFlowRef(output, flow_data_type);
+			PSSFlowRefModel ref = child.getFlowRef(output, flow_data_type);
 
 			if (ref != null) {
-				PSSInferredAction infa = new PSSInferredAction((PSSAction) child, ref);
+				PSSInferredAction infa = new PSSInferredAction((PSSActionModel) child, ref);
 				list.add(infa);
 			}
 		}
@@ -242,7 +265,7 @@ public class PSSModel {
 			return m_parent.findPackageDeclaration(id);
 	}
 
-	public PSSFlowRef getFlowRef(boolean output, String flow_data_type) {
+	public PSSFlowRefModel getFlowRef(boolean output, String flow_data_type) {
 		return null;
 	}
 

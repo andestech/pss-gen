@@ -12,7 +12,7 @@ public class PSSTraversalList {
 	}
 
 	void addSequence(PSSActionInst inst) {
-		PSSTraversal t = new PSSTraversal(inst);	
+		PSSTraversal t = new PSSTraversal(inst);
 		if (m_list.size() != 0) {
 			PSSTraversal last = m_list.get(m_list.size() - 1);
 			t.addDependency(last);
@@ -68,7 +68,7 @@ public class PSSTraversalList {
 
 		}
 		m_list = sched_list;
-		
+
 	}
 
 	void traverse() {
@@ -76,7 +76,7 @@ public class PSSTraversalList {
 		for (int i=0; i<m_list.size(); i++) {
 			PSSTraversal t = m_list.get(i);
 			PSSActionInst sub = t.getInst();
-			PSSAction sub_action_decl = (PSSAction) sub.m_type_decl;
+			PSSActionModel sub_action_decl = (PSSActionModel) sub.m_type_decl;
 			sub_action_decl.traverse(sub);
 		}
 	}
@@ -100,13 +100,13 @@ public class PSSTraversalList {
 		PSSUnboundRef uref,
 		PSSInferredAction item
 	) {
-		PSSAction action_model = item.getAction();
+		PSSActionModel action_model = item.getAction();
 		PSSMessage.Info("Infer action: " + action_model.getId());
 
 		PSSModel type_model = uref.getTypeModel();
 
 		PSSInst flowobj = type_model.declInst("", true);
-	
+
 		parent_inst.addInst(flowobj);
 
 		uref.bind(flowobj);
@@ -115,7 +115,7 @@ public class PSSTraversalList {
 		PSSTraversal inferred_t = new PSSTraversal(inferred_inst);
 		m_list.add(inferred_t);
 
-		PSSRefInst uref2 = (PSSRefInst) inferred_inst.findInstance(item.getRefId());
+		PSSFlowRefInst uref2 = (PSSFlowRefInst) inferred_inst.findInstance(item.getRefId());
 		uref2.bind(flowobj);
 
 		if (uref.isOutput()) {

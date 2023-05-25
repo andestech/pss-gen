@@ -25,7 +25,7 @@ component pss_top {
 	}
 
 	action root_a {
-		exec body ASM = """v0={{comp1.v0}}, v1={{comp1.v1}}, v2={{comp1.v2}}, v3={{v3}}""";
+		exec body ASM = """v0={{comp.comp1.v0}}, v1={{comp.comp1.v1}}, v2={{comp.comp1.v2}}, v3={{comp.v3}}""";
 	}
 }
 

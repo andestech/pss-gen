@@ -1,18 +1,18 @@
 import java.util.*;
 
-public class PSSFlowRef extends PSSModel {
+public class PSSFlowRefModel extends PSSModel {
 
 	public boolean m_output;	// input, output
 	public String m_type;
 
-	public PSSFlowRef(String id, boolean output, String type) {
+	public PSSFlowRefModel(String id, boolean output, String type) {
 		super(id);
 		m_output = output;
 		m_type = type;
 	}
 
-	public PSSRefInst declInst(PSSInst parent_inst, PSSModel type_model) {
-		PSSRefInst flowref = new PSSRefInst(m_id, m_type, type_model, m_output);
+	public PSSFlowRefInst declInst(PSSInst parent_inst, PSSModel type_model) {
+		PSSFlowRefInst flowref = new PSSFlowRefInst(m_id, m_type, type_model, m_output);
 		parent_inst.addInst(flowref);
 		return flowref;
 	}

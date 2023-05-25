@@ -269,7 +269,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitAction_declaration(PSSParser.Action_declarationContext ctx) {
 		String id = ctx.action_identifier().getText();
 
-		PSSAction node = new PSSAction(id);
+		PSSActionModel node = new PSSActionModel(id);
 		root.addChild(node);
 		root = node;
 
@@ -288,7 +288,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		String type = ctx.flow_object_type().getText();
 		for (int i = 0; i < ctx.object_ref_field().size(); i++) {
 			String id = ctx.object_ref_field(i).getText();
-			PSSFlowRef node = new PSSFlowRef(id, direction.equals("output"), type);
+			PSSFlowRefModel node = new PSSFlowRefModel(id, direction.equals("output"), type);
 			root.addFlowRef(node);
 		}
 		return 0;
@@ -678,7 +678,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		String code = ctx.string_literal().getText();
 		PSSTargetCode node = new PSSTargetCode(root, exec_kind, language, code);
 
-		((PSSAction) root).addTargetCode(node);
+		((PSSActionModel) root).addTargetCode(node);
 		return 0;
 	}
 
@@ -688,7 +688,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			visit(ctx.activity_declaration_body_stmt(i));
 			PSSActivity stmt = activity_stack.pop();
 			if (stmt != null) {
-				((PSSAction) root).addActivityStmt(stmt);
+				((PSSActionModel) root).addActivityStmt(stmt);
 			}
 		}
 		return 0;

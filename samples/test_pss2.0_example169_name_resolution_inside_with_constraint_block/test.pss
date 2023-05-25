@@ -1,0 +1,74 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/25
+@brief          A modified version of Example 169 in Portable Test and Stimulus Standard Version 2.0
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> 17.1.3 Action traversal in-line constraints <br>
+
+### Test Command
+
+    make test
+
+*/
+
+component suba {
+  int x;
+
+  exec init_up {
+    x = 11;
+  }
+}
+
+component subc {
+  int x;
+
+  exec init_up {
+    x = 22;
+  }
+
+  action A {
+    rand int f;
+    rand int g;
+
+    exec body ASM =
+    """f = {{f}}
+g = {{g}}
+comp.x = {{comp.x}}""";
+  }
+}
+
+component pss_top {
+  int x;
+  subc sub1, sub2;
+  suba sub3;
+
+  exec init_up {
+    x = 33;
+  }
+
+  action root_a {
+    int f = 30;
+    int h = 20;
+
+    subc::A a;
+    subc::A b;
+    activity {
+      a with {
+        f == h;       // sub-action's f and containing action's h, f = 20
+        g == this.f;  // sub-action's g and containing action's f, g = 30
+        comp == this.comp.sub1;
+                      // sub-action's component is sub-component
+                      // 'sub1' of the parent action's component, comp.x = 22
+      };
+      b with {
+        f == this.comp.x;           // f = 33
+        g == pss_top.root_a.h;      // g = 20
+        comp == this.comp.sub3;     // comp.x = 11
+      };
+    }
+  }
+}

@@ -90,6 +90,32 @@ public class PSSInst {
 		m_traversed = true;
 	}
 
+	/**
+	 * Returns the root instance of this one.
+	 *
+	 * @return the root instance of this one
+	 */
+	public PSSInst getRoot() {
+		PSSInst root = this;
+		while (root.m_parent != null)
+			root = root.m_parent;
+		return root;
+	}
+
+	/**
+	 * Returns the descendants of this instance.
+	 *
+	 * @return the descendants of this instance
+	 */
+	public Set<PSSInst> getDescendants() {
+		Set<PSSInst> res = new HashSet<PSSInst>();
+		res.addAll(m_insts);
+		for (PSSInst child : m_insts) {
+			res.addAll(child.getDescendants());
+		}
+		return res;
+	}
+
 	public String getHierarchyId() {
 		if (m_parent != null) {
 			return m_parent.getHierarchyId() + "." + m_id;
@@ -102,7 +128,7 @@ public class PSSInst {
 		return m_type_decl;
 	}
 
-	private PSSInst findChild(String id) {
+	protected PSSInst findChild(String id) {
 		for (int i = 0; i < m_insts.size(); i++) {
 			PSSInst child = m_insts.get(i);
 			if (child.m_id.equals(id)) {
@@ -113,7 +139,7 @@ public class PSSInst {
 	}
 
 	public PSSInst getComponentInst() {
-		if (getClass().getSimpleName().equals("PSSComponentInst")) {
+		if (this instanceof PSSComponentInst) {
 			return this;
 		} else if (m_parent != null) {
 			return m_parent.getComponentInst();
@@ -137,16 +163,57 @@ public class PSSInst {
 		return null;
 	}
 
+	public PSSInst findStaticInst(String hierarchiy_id) {
+		// Currently, find enum items only.
+		PSSModel m = getTypeModel();
+		while (!(m instanceof PSSComponentModel) && m != null)
+			m = m.m_parent;
+		if (m != null) {
+			return m.findStaticInst(hierarchiy_id);
+		}
+		return null;
+	}
+
 	public PSSInst findInstance(String hierarchy_id) {
+		/* The current resolution order may not follow PSS 2.0. */
+
 		String[] tokens = hierarchy_id.split("\\.", 2);
 
 		/* Find the first token */
 		PSSInst inst = null;
-		if ("comp".equals(tokens[0]))
-			inst = getComponentInst();
-		else if ("this".equals(tokens[0]))
-			inst = m_parent;
-		else if ("pss_top".equals(tokens[0])) {
+		if ("this".equals(tokens[0])) {
+			/* PSS 2.0 Section 17.1.3 */
+			/*
+			 * In cases where the containing-action fields are shadowed (masked) by fields
+			 * of the traversed sub-action, they can be explicitly accessed using the
+			 * built-in variable this.
+			 */
+			PSSInst action_inner = this;
+			PSSInst action_outer = null;
+			while (!(action_inner instanceof PSSActionInst) && action_inner != null)
+				action_inner = action_inner.m_parent;
+			if (action_inner != null) {
+				action_outer = action_inner.m_parent;
+				while (!(action_outer instanceof PSSActionInst) && action_outer != null)
+					action_outer = action_outer.m_parent;
+			}
+			if (action_outer != null) {
+				// Return the containing action of the sub-action
+				inst = action_outer;
+			} else if (action_inner != null) {
+				// There is no containing action.
+				inst = action_inner;
+			} else {
+				PSSMessage.Error("", "The reference \"this\" should be used in an action.");
+			}
+		} else if ("comp".equals(tokens[0])) {
+			PSSInst action = this;
+			while (!(action instanceof PSSActionInst) && action != null)
+				action = action.m_parent;
+			if (action == null)
+				PSSMessage.Error("", "The reference \"comp\" should be used in an action.");
+			inst = action.findChild("comp");
+		} else if ("pss_top".equals(tokens[0])) {
 			PSSInst top = this;
 			while (top != null && !top.m_id.equals("pss_top"))
 				top = top.m_parent;
@@ -154,18 +221,46 @@ public class PSSInst {
 				inst = top;
 		} else {
 			PSSInst base = this;
-			while (inst == null) {
-				if (base == null)
-					break;
+			while (inst == null && base != null) {
 				inst = base.findInstanceUnder(tokens[0]);
-				if (base instanceof PSSComponentInst)
-					break;
+
+				/*
+				 * An expression in a nested component instance may be evaluated. In this case,
+				 * the expression is in the definition of a component instance while the
+				 * component instance is declared inside another component instance.
+				 */
+				if (base instanceof PSSComponentInst) {
+					PSSInst tmp = base;
+					while (tmp != null) {
+						tmp = tmp.m_parent;
+						if (tmp instanceof PSSComponentInst)
+							base = tmp;
+					}
+				}
+
+				/*
+				 * Component data should be accessed by "comp.", "this.", or "pss_top." in an
+				 * action.
+				 */
+				if (base instanceof PSSActionInst) {
+					// Check if base is a sub-action
+					PSSInst a = base.m_parent;
+					while (!(a instanceof PSSActionInst) && a != null)
+						a = a.m_parent;
+					if (a == null)
+						break;
+				}
+
 				base = base.m_parent;
 			}
 		}
 
 		if (inst != null && tokens.length > 1)
 			inst = inst.findInstanceUnder(tokens[1]);
+
+		if (inst == null) {
+			inst = findStaticInst(hierarchy_id);
+		}
 
 		return inst;
 	}
@@ -254,7 +349,8 @@ public class PSSInst {
 	}
 
 	/**
-	 * Returns {@code true} if this instance is read-only.
+	 * Returns {@code true} if this instance is read-only. If an instance is
+	 * read-only, it cannot be updated by assignment statements.
 	 *
 	 * @return {@code true} if this instance is read-only
 	 */
@@ -263,7 +359,8 @@ public class PSSInst {
 	}
 
 	/**
-	 * Sets the read-only property of this instance.
+	 * Sets the read-only property of this instance. If an instance is read-only, it
+	 * cannot be updated by assignment statements.
 	 *
 	 * @param readonly {@code true} to make this instance read-only
 	 */

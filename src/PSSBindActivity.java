@@ -16,7 +16,7 @@ public class PSSBindActivity extends PSSActivity {
 	}
 
 	public void evalActivity(PSSInst action_inst) {
-		PSSRefInst src_inst = (PSSRefInst) action_inst.findInstance(m_bind_id);
+		PSSFlowRefInst src_inst = (PSSFlowRefInst) action_inst.findInstance(m_bind_id);
 
 		if (src_inst == null) {
 			PSSMessage.Error("BIND-0001", "Cannot find source instance'" + m_bind_id + "'");
@@ -31,7 +31,7 @@ public class PSSBindActivity extends PSSActivity {
 
 		for (int i=0; i<m_items.size(); i++) {
 			String dst_id = m_items.get(i);
-			PSSRefInst dst_inst = (PSSRefInst) action_inst.findInstance(dst_id);
+			PSSFlowRefInst dst_inst = (PSSFlowRefInst) action_inst.findInstance(dst_id);
 			if (dst_inst == null) {
 				PSSMessage.Error("BIND-0002", "Cannot find destination instance'" + dst_id + "'");
 			}

@@ -21,13 +21,13 @@ component pss_top {
 
 	action root_a {
 		exec post_solve {
-			region1.label = comp.label_global;
-			region1.align = comp.align_global;
-			region1.size = comp.size_global;
+			comp.region1.label = comp.label_global;
+			comp.region1.align = comp.align_global;
+			comp.region1.size = comp.size_global;
 		}
-		exec body ASM = """#region1.label = {{region1.label}}"""; 
-		exec body ASM = """#region1.align = {{region1.align}}"""; 
-		exec body ASM = """#region1.size  = {{region1.size}}"""; 
+		exec body ASM = """#region1.label = {{comp.region1.label}}"""; 
+		exec body ASM = """#region1.align = {{comp.region1.align}}"""; 
+		exec body ASM = """#region1.size  = {{comp.region1.size}}"""; 
 	}
 
 }

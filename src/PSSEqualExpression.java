@@ -1,4 +1,3 @@
-import java.util.*;
 
 public class PSSEqualExpression extends PSSExpression {
 
@@ -11,7 +10,6 @@ public class PSSEqualExpression extends PSSExpression {
 	}
 
 	public PSSVal eval(PSSInst var) {
-		PSSVal result;
 		PSSVal leftVal = m_left.eval(var);
 		PSSVal rightVal = m_right.eval(var);
 

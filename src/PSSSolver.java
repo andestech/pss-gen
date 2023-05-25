@@ -13,26 +13,25 @@ public class PSSSolver {
 		if (m_inst_list.containsKey(inst)) {
 			PSSConstraintList c_list = m_inst_list.get(inst);
 			c_list.add(constraint);
-		}
-		else {
+		} else {
 			PSSConstraintList c_list = new PSSConstraintList();
 			c_list.add(constraint);
 			m_inst_list.put(inst, c_list);
 		}
 	}
+
 	void add(PSSInst inst, PSSConstraintList list) {
-		for (int i=0; i<list.size(); i++) {
+		for (int i = 0; i < list.size(); i++) {
 			PSSConstraint c = list.get(i);
 			add(inst, c);
 		}
 	}
+
 	void add(PSSInst inst) {
-		String ClassName = inst.getClass().getSimpleName();
-		if (ClassName.equals("PSSStructInst")) {
+		if (inst instanceof PSSStructInst) {
 			PSSConstraintList c_list = inst.getTypeModel().getConstraintList();
 			add(inst, c_list);
-		}
-		else if (ClassName.equals("PSSRefInst")) {
+		} else if (inst instanceof PSSFlowRefInst) {
 			PSSConstraintList c_list = inst.getTypeModel().getConstraintList();
 			add(inst, c_list);
 		}
@@ -42,10 +41,10 @@ public class PSSSolver {
 	void reduceDomain() {
 		PSSDomainMap result = new PSSDomainMap();
 
-		for (PSSInst inst: m_inst_list.keySet()) {
+		for (PSSInst inst : m_inst_list.keySet()) {
 			PSSConstraintList c_list = m_inst_list.get(inst);
 
-			for (int i=0; i<c_list.size(); i++) {
+			for (int i = 0; i < c_list.size(); i++) {
 				PSSConstraint c = c_list.get(i);
 				PSSDomainMap d_map = c.deduceDomain(inst);
 				if (d_map != null) {
@@ -54,9 +53,9 @@ public class PSSSolver {
 			}
 
 		}
-		
+
 		HashMap<PSSInst, PSSDomain> map = result.getMap();
-		for (PSSInst var: map.keySet()) {
+		for (PSSInst var : map.keySet()) {
 			PSSDomain domain = map.get(var);
 			var.assignDomain(domain);
 			PSSMessage.Info(var.m_id + " domain: " + domain.getText());
@@ -64,7 +63,7 @@ public class PSSSolver {
 	}
 
 	public boolean validate() {
-		for (PSSInst inst: m_inst_list.keySet()) {
+		for (PSSInst inst : m_inst_list.keySet()) {
 			PSSConstraintList c_list = m_inst_list.get(inst);
 			if (c_list.validate(inst) == false) {
 				return false;
@@ -83,11 +82,12 @@ public class PSSSolver {
 		// randomize kernel
 		while (validated == false) {
 			PSSRandom.limitRetry(retry);
+
 			m_inst.randomize();
 
 			validated = validate();
 			retry++;
 		}
 	}
-}
 
+}

@@ -1,7 +1,9 @@
 import java.util.*;
 
 public class PSSEnumModel extends PSSModel {
+
 	private HashMap<String, Integer> m_items;
+
 	private Integer m_default_val;
 
 	public PSSEnumModel(String id) {
@@ -31,7 +33,11 @@ public class PSSEnumModel extends PSSModel {
 			PSSIntInst item = new PSSIntInst(key, false, PSSIntModel.DEFAULT_INT_SIZE, true);
 			PSSIntVal val = new PSSIntVal(v);
 			item.assign(val);
-			inst.addInst(item);
+
+			// Enum items can be declared in a package or a component. Enum items are
+			// considered static constant members of the enumeration type in which they are
+			// declared (PSS 2.0 Section 8.4.1).
+			addStaticInst(item);
 		});
 	}
 

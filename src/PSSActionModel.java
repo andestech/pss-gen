@@ -1,18 +1,18 @@
 import java.util.*;
 
-public class PSSAction extends PSSModel {
+public class PSSActionModel extends PSSModel {
 
-	public ArrayList<PSSFlowRef> m_flowref;
+	public ArrayList<PSSFlowRefModel> m_flowref;
 	public ArrayList<PSSAttrField> m_attrfield;
 	public ArrayList<PSSActivity> m_activity;
 	public PSSConstraintList m_constraint;
 	public ArrayList<PSSExecBlock> m_exec_list;
 	public PSSTargetCodeList m_target_code;
 
-	public PSSAction(String id) {
+	public PSSActionModel(String id) {
 		super(id);
 		m_activity  = new ArrayList<PSSActivity>();
-		m_flowref   = new ArrayList<PSSFlowRef>();
+		m_flowref   = new ArrayList<PSSFlowRefModel>();
 		m_attrfield = new ArrayList<PSSAttrField>();
 		m_constraint = new PSSConstraintList();
 		m_exec_list = new ArrayList<PSSExecBlock>();
@@ -27,7 +27,7 @@ public class PSSAction extends PSSModel {
 	public PSSActionInst declInst(String id, boolean rand) {
 		PSSActionInst inst = new PSSActionInst(id, m_id, this);
 		for (int i=0; i<m_flowref.size(); i++) {
-			PSSFlowRef node = m_flowref.get(i);
+			PSSFlowRefModel node = m_flowref.get(i);
 
 			PSSModel type_model = findDeclaration(node.m_type);
 			if (type_model == null) {
@@ -35,7 +35,7 @@ public class PSSAction extends PSSModel {
 			}
 
 			// Declare Reference Inst
-			PSSRefInst flowref = node.declInst(inst, type_model);
+			PSSFlowRefInst flowref = node.declInst(inst, type_model);
 		}
 
 		return inst;
@@ -44,7 +44,7 @@ public class PSSAction extends PSSModel {
 		m_activity.add(node);
 		node.m_parent = this;
 	}
-	public PSSFlowRef addFlowRef (PSSFlowRef node) {
+	public PSSFlowRefModel addFlowRef (PSSFlowRefModel node) {
 		m_flowref.add(node);
 		node.m_parent = this;
 		return node;
@@ -169,9 +169,9 @@ public class PSSAction extends PSSModel {
 		m_target_code.execute_kind(inst, exec_kind);
 	}
 
-	public PSSFlowRef getFlowRef(boolean output, String flow_data_type) {
+	public PSSFlowRefModel getFlowRef(boolean output, String flow_data_type) {
 		for (int i=0; i<m_flowref.size(); i++) {
-			PSSFlowRef node = m_flowref.get(i);
+			PSSFlowRefModel node = m_flowref.get(i);
 			if (node.hasFlowRef(output, flow_data_type)) {
 				return node;
 			}

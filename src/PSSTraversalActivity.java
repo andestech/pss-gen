@@ -28,7 +28,7 @@ public class PSSTraversalActivity extends PSSActivity {
 		}
 	}
 	public void evalAnonymousActivity(PSSInst inst) {
-		PSSAction sub_action_decl = (PSSAction) findDeclaration(m_type_id);
+		PSSActionModel sub_action_decl = (PSSActionModel) findDeclaration(m_type_id);
 		if (sub_action_decl == null) {
 			PSSMessage.Error("TRAVERSAL", "Cannot find type declaration '" + m_type_id + "'");
 		}

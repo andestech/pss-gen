@@ -148,8 +148,9 @@ public class PSSMemberPathElemExpression extends PSSExpression {
                     PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
                 }
             }
-            if (res instanceof PSSRefVal)
+            if (res instanceof PSSRefVal) {
                 inst = ((PSSRefVal) res).getInst();
+            }
         }
 
         if (m_index != null && inst != null)
@@ -202,8 +203,8 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             if (inst == null)
                 PSSMessage.Error("", getUpperHierarchicalID() + " is not defined.");
             res = inst.toVal();
-        } else {
-            // m_id may refer to a user defined function
+        } else if (m_parent == null || parent instanceof PSSComponentInst) {
+            // m_id may refer to a user defined function under a component or a package
 
             // Find the component instance containing the definition of the function m_id.
             PSSInst ci = parent.getComponentInst();
@@ -218,12 +219,14 @@ public class PSSMemberPathElemExpression extends PSSExpression {
                 PSSFunctionInst fi = fm.declInst(ci, m_function_parameter_list.stream().map(p -> p.eval(ctx)).toList());
                 res = fi.eval(parent);
             } else {
-                // m_id may refer to a builtin method associated to var
-                try {
-                    res = evalMethod(ctx, parent, m_id, m_function_parameter_list);
-                } catch (NoSuchMethodException e) {
-                    PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
-                }
+                PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
+            }
+        } else {
+            // m_id may refer to a builtin method associated to var
+            try {
+                res = evalMethod(ctx, parent, m_id, m_function_parameter_list);
+            } catch (NoSuchMethodException e) {
+                PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
             }
         }
 
