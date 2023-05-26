@@ -20,7 +20,7 @@ public class PSSDataInstModel extends PSSModel {
 		}
 		else {
 			PSSVal dim_val = m_dim_exp.eval(parent_inst);
-			inst = new PSSArrayInst(m_id, type, dim_val.toInt(), rand);
+			inst = PSSArrayInst.ofElementDataType(m_id, type, dim_val.toInt(), rand);
 		}
 		parent_inst.addInst(inst);
 
@@ -31,7 +31,7 @@ public class PSSDataInstModel extends PSSModel {
 	}
 
 	public String getText() {
-		String result = m_id; 
+		String result = m_id;
 		if (m_dim_exp != null) {
 			result = result.concat("[" + m_dim_exp.getText() + "]");
 		}

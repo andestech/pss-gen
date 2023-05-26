@@ -1,6 +1,6 @@
 import java.math.*;
 
-public class PSSIntInst extends PSSInst {
+public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
 	/** the default value of bit and int types */
 	public static final PSSIntVal DEFAULT_VALUE = new PSSIntVal(0);

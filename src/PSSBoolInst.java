@@ -1,5 +1,5 @@
 
-public class PSSBoolInst extends PSSInst {
+public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
 	public boolean m_val;
 
 	public PSSBoolInst(String id, boolean rand) {

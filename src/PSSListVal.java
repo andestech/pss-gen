@@ -36,18 +36,82 @@ public class PSSListVal extends PSSVal implements PSSICollection {
 
     }
 
-    public PSSListVal(PSSModel type) {
+    /**
+     * Constructs an empty list of a specified list data type.
+     *
+     * @param type the data type of this list
+     */
+    public PSSListVal(PSSListModel type) {
         super(type);
     }
 
+    /**
+     * Constructs an empty list. The list data type is determined when the first
+     * element with a determined data type is inserted.
+     */
+    public PSSListVal() {
+        this(null);
+    }
+
+    /**
+     * Returns an empty list with elements of a specified type.
+     *
+     * @param elem_data_type the data type of list elements
+     * @return
+     */
+    public static PSSListVal ofElementDataType(PSSModel elem_data_type) {
+        return new PSSListVal(new PSSListModel(elem_data_type));
+    }
+
+    @Override
+    public PSSListModel getTypeModel() {
+        return (PSSListModel) super.getTypeModel();
+    }
+
+    /**
+     * Returns the type of list elements.
+     *
+     * @return the type of list elements
+     */
+    public PSSModel getElementTypeModel() {
+        PSSListModel m = getTypeModel();
+        return m == null ? null : m.getElementTypeModel();
+    }
+
+    /**
+     * Returns the size of this list.
+     *
+     * @return the size of this list
+     */
     public int size() {
         return m_list.size();
     }
 
+    /**
+     * Returns {@code true} if this list is empty.
+     *
+     * @return {@code true} if this list is empty
+     */
+    public boolean isEmpty() {
+        return m_list.isEmpty();
+    }
+
+    /**
+     * Adds an element to this list.
+     *
+     * @param elem an element to be added.
+     */
     public void add(PSSVal elem) {
+        if (getTypeModel() == null && elem.getTypeModel() != null)
+            setTypeModel(new PSSListModel(elem.getTypeModel()));
         m_list.add(elem);
     }
 
+    /**
+     * Returns the list elements.
+     *
+     * @return the list elements
+     */
     public List<PSSVal> getValList() {
         return m_list;
     }

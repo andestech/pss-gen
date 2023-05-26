@@ -21,6 +21,7 @@ public class PSSAggregateExpression extends PSSExpression {
 		return m_list.isEmpty();
 	}
 
+	@Override
 	public PSSVal eval(PSSInst var) {
 		PSSListVal result = new PSSListVal(null);
 
@@ -28,14 +29,13 @@ public class PSSAggregateExpression extends PSSExpression {
 			PSSExpression item = m_list.get(i);
 
 			PSSVal item_val = item.eval(var);
-			if (result.getTypeModel() == null)
-				result.setTypeModel(item_val.getTypeModel());
 			result.add(item_val);
 		}
 
 		return result;
 	}
 
+	@Override
 	public String getText() {
 		String text = "";
 
@@ -50,4 +50,5 @@ public class PSSAggregateExpression extends PSSExpression {
 		}
 		return "{ " + text + " }";
 	}
+
 }

@@ -85,7 +85,7 @@ public class PSSRefInst extends PSSInst {
     }
 
     @Override
-    public PSSVal evalMethod(String name, List<PSSVal> args) throws NoSuchMethodException {
+    public PSSInst evalMethod(String name, List<PSSVal> args) throws NoSuchMethodException {
         return getReference().evalMethod(name, args);
     }
 

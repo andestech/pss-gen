@@ -65,6 +65,19 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     }
 
     /**
+     * Appends an expression as the leaf of the hierarchical reference path
+     * represented by this expressio.
+     *
+     * @param l an expression to be the leaf
+     */
+    public void appendLeaf(PSSMemberPathElemExpression l) {
+        PSSMemberPathElemExpression e = this;
+        while (e.getChild() != null)
+            e = e.getChild();
+        l.setParent(e);
+    }
+
+    /**
      * Returns the child of this expression.
      *
      * @return the child of this expression
@@ -73,6 +86,12 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         return m_child;
     }
 
+    /**
+     * DO NOT USE THIS FUNCTION. Use {@link #setParent(PSSMemberPathElemExpression)}
+     * instead.
+     *
+     * @param c an expression to be the child of this expression
+     */
     private void setChild(PSSMemberPathElemExpression c) {
         m_child = c;
     }
@@ -99,13 +118,13 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         return m_child == null ? m_id : (m_id + "." + m_child.getLowerHierarchicalID());
     }
 
-    private PSSVal evalMethod(PSSInst ctx, PSSInst var, String name, List<PSSExpression> args)
+    private PSSInst evalMethod(PSSInst ctx, PSSInst var, String name, List<PSSExpression> args)
             throws NoSuchMethodException {
         /* Evaluate arguments */
         List<PSSVal> vals = args.stream().map(a -> a.eval(ctx)).toList();
 
         /* Invoke method */
-        PSSVal res = var.evalMethod(name, vals);
+        PSSInst res = var.evalMethod(name, vals);
 
         return res;
     }
@@ -121,12 +140,13 @@ public class PSSMemberPathElemExpression extends PSSExpression {
      */
     private PSSInst getInstOne(PSSInst ctx, PSSInst parent) {
         PSSInst inst = null;
+
         if (m_function_parameter_list == null) {
-            inst = m_parent == null ? parent.findInstance(m_id) : parent.findInstanceUnder(m_id);
+            inst = m_parent == null ? ctx.findInstance(m_id) : parent.findInstanceUnder(m_id);
             if (inst == null)
                 PSSMessage.Error("", getUpperHierarchicalID() + " is not defined.");
-        } else {
-            // m_id may refer to a user defined function
+        } else if (m_parent == null || parent instanceof PSSComponentInst) {
+            // m_id may refer to a user defined function under a component or a package
 
             // Find the component instance containing the definition of the function m_id.
             PSSInst ci = parent.getComponentInst();
@@ -135,26 +155,26 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             // Find the function definition
             PSSModel m = cm.findDeclaration(m_id);
 
-            PSSVal res = null;
             if (m instanceof PSSFunctionModel) {
                 // Invoke the function
                 PSSFunctionModel fm = (PSSFunctionModel) m;
                 PSSFunctionInst fi = fm.declInst(ci, m_function_parameter_list.stream().map(p -> p.eval(ctx)).toList());
-                res = fi.eval(parent);
+                inst = fi.eval(parent);
             } else {
-                try {
-                    res = evalMethod(ctx, parent, m_id, m_function_parameter_list);
-                } catch (NoSuchMethodException e) {
-                    PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
-                }
+                PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
             }
-            if (res instanceof PSSRefVal) {
-                inst = ((PSSRefVal) res).getInst();
+        } else {
+            // m_id may refer to a builtin method associated to var
+            try {
+                inst = evalMethod(ctx, parent, m_id, m_function_parameter_list);
+            } catch (NoSuchMethodException e) {
+                PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
             }
         }
 
-        if (m_index != null && inst != null)
+        if (m_index != null && inst != null) {
             inst = inst.indexOf(m_index.eval(ctx));
+        }
 
         return inst;
     }
@@ -186,81 +206,14 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         return getInst(var, var);
     }
 
-    /**
-     * Do the final evaluation to PSSVal. Assuming this element is the last one
-     * of the whole hierarchical reference path.
-     *
-     * @param ctx    the context of the whole hierarchical reference path
-     * @param parent the resolved instance of the partial hierarchical path down to
-     *               the parent of this element
-     * @return the evaluation result
-     */
-    private PSSVal evalLast(PSSInst ctx, PSSInst parent) {
-        PSSVal res = null;
-
-        if (m_function_parameter_list == null) {
-            PSSInst inst = m_parent == null ? parent.findInstance(m_id) : parent.findInstanceUnder(m_id);
-            if (inst == null)
-                PSSMessage.Error("", getUpperHierarchicalID() + " is not defined.");
-            res = inst.toVal();
-        } else if (m_parent == null || parent instanceof PSSComponentInst) {
-            // m_id may refer to a user defined function under a component or a package
-
-            // Find the component instance containing the definition of the function m_id.
-            PSSInst ci = parent.getComponentInst();
-            PSSModel cm = ci.getTypeModel();
-
-            // Find the function definition
-            PSSModel m = cm.findDeclaration(m_id);
-
-            if (m instanceof PSSFunctionModel) {
-                // Invoke the function
-                PSSFunctionModel fm = (PSSFunctionModel) m;
-                PSSFunctionInst fi = fm.declInst(ci, m_function_parameter_list.stream().map(p -> p.eval(ctx)).toList());
-                res = fi.eval(parent);
-            } else {
-                PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
-            }
-        } else {
-            // m_id may refer to a builtin method associated to var
-            try {
-                res = evalMethod(ctx, parent, m_id, m_function_parameter_list);
-            } catch (NoSuchMethodException e) {
-                PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
-            }
-        }
-
-        if (m_index != null && res != null)
-            res = res.indexOf(m_index.eval(ctx));
-
-        return res;
-    }
-
-    /**
-     * Evaluate the whole hierarchical reference path.
-     *
-     * @param ctx    the context of the whole hierarchical reference path
-     * @param parent the resolved instance of the partial hierarchical path down to
-     *               the parent of this element
-     * @return the evaluation result
-     */
-    private PSSVal eval(PSSInst ctx, PSSInst parent) {
-        PSSVal res = null;
-
-        if (m_child != null) {
-            PSSInst inst = getInstOne(ctx, parent);
-            res = m_child.eval(ctx, inst);
-        } else
-            res = evalLast(ctx, parent);
-
-        return res;
-    }
-
     @Override
     public PSSVal eval(PSSInst var) {
         if (m_parent != null)
             PSSMessage.Error("", "Cannot evaluate a partial member path reference: " + getLowerHierarchicalID());
-        return eval(var, var);
+
+        PSSInst inst = getInst(var);
+
+        return inst == null ? null : inst.toVal();
     }
 
     @Override

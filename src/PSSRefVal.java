@@ -56,6 +56,11 @@ public class PSSRefVal extends PSSVal {
 	}
 
 	@Override
+	public PSSVal indexOf(PSSVal index) {
+		return m_inst == null ? null : new PSSRefVal(null, m_inst.indexOf(index));
+	}
+
+	@Override
 	public PSSBoolVal Equal(PSSVal rhs) {
 		if (rhs instanceof PSSRefVal) {
 			PSSRefVal r = (PSSRefVal) rhs;

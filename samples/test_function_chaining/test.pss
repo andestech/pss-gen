@@ -1,0 +1,71 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/26
+@brief          Test function chaining
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+>  <br>
+
+### Test Command
+
+    make test
+
+*/
+
+component pss_top {
+  map< int, list<int> > m = { 0: {1, 2} };
+  map<int,int> mi;
+  map<int, array<int, 2> > ma;
+  array<int, 2> a;
+
+  function map<int,int> foo() {
+    return { 1:1, 2:3, 3: 5 };
+  }
+
+  exec init_up {
+    mi = { 1:1, 2:4, 3:6, 4:8 };  // mi = { 1:1, 2:4, 3:6, 4:8 }
+    ma[0] = {0, 1};               // ma = { 0: {0, 1} }
+    ma[1] = {2, 3};               // ma = { 0: {0, 1}, 1: {2, 3} }
+    mi.values()[0] = 100;         // mi = { 1:1, 2:4, 3:6, 4:8 }
+    ma.values()[0] = {4, 5};      // ma = { 0: {4, 5}, 1: {2, 3} }
+    a = ma[0];                    // a = { 4, 5 } (assigns a copy)
+    ma.values()[0] = {6, 7};      // ma = { 0: {6, 7}, 1: {2, 3} }, a unchanged
+    a[0] = 9;                     // a = { 9, 5 }, ma unchanged
+    m.values()[0].push_back(100); // m = { 0: {1, 2, 100} }
+  }
+
+  action A {
+    rand int x;
+    exec body ASM =
+    """x = {{x}}""";
+  }
+
+  action root_a {
+    activity {
+      do A with { x == pss_top.mi.values().size(); }; // 4
+      do A with { x == pss_top.foo().size(); };       // 3
+      do A with { x == comp.a[0]; };                  // 9
+      foreach (v : pss_top.mi) {
+        do A with { x == v; };                        // 1, 4, 6, 8
+      }
+
+      foreach (v : pss_top.ma.values()) {
+        do A with { x == v[0]; };                     // 6, 2
+      }
+
+      foreach (v : pss_top.m.values()) {
+        foreach (vv : v) {
+          do A with { x == vv; };                     // 1, 2, 100
+        }
+      }
+
+      foreach (v : pss_top.foo().values()) {          // 1, 3, 5
+        do A with { x == v; };
+      }
+    }                 
+  }
+  
+}

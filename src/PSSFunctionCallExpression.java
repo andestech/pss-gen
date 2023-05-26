@@ -1,18 +1,12 @@
-import java.util.*;
+import java.util.List;
 
 /**
  * This class models function call expressions.
  */
 public class PSSFunctionCallExpression extends PSSExpression {
 
-	/** an optional path to an instance */
+	/** a function call expression */
 	PSSMemberPathElemExpression m_path;
-
-	/** a method name of the instance */
-	String m_id;
-
-	/** the arguments for the method call */
-	List<PSSExpression> m_args = null;
 
 	/**
 	 * Constructs a function call expression.
@@ -22,9 +16,11 @@ public class PSSFunctionCallExpression extends PSSExpression {
 	 * @param args the arguments for the method call
 	 */
 	PSSFunctionCallExpression(PSSMemberPathElemExpression path, String id, List<PSSExpression> args) {
-		m_path = path;
-		m_id = id;
-		m_args = args;
+		m_path = new PSSMemberPathElemExpression(id, args, null);
+		if (path != null) {
+			path.appendLeaf(m_path);
+			m_path = path;
+		}
 	}
 
 	/**
@@ -39,42 +35,12 @@ public class PSSFunctionCallExpression extends PSSExpression {
 
 	@Override
 	public PSSVal eval(PSSInst var) {
-		PSSMessage.Debug("[PSSFunctionCall] calling function " + m_id + " of " + m_path);
-		/* Evaluate arguments */
-		List<PSSVal> actuals = m_args.stream().map(a -> a.eval(var)).toList();
-		PSSInst inst = m_path == null ? var : m_path.getInst(var);
-
-		// m_id may refer to a user defined function
-
-		// Find the component instance containing the definition of the function m_id.
-		PSSInst ci = inst.getComponentInst();
-		PSSModel cm = ci.getTypeModel();
-
-		// Find the function definition
-		PSSModel m = cm.findDeclaration(m_id);
-
-		PSSVal res = null;
-		if (m instanceof PSSFunctionModel) {
-			// Invoke the PSS native function
-			PSSFunctionModel fm = (PSSFunctionModel) m;
-			PSSFunctionInst fi = fm.declInst(ci, actuals);
-			res = fi.eval(var);
-		} else {
-			// m_id may refer to a builtin method associated to var
-			try {
-				res = inst.evalMethod(m_id, actuals);
-			} catch (NoSuchMethodException e) {
-				PSSMessage.Error("", "Function " + m_id + " is not defined.");
-			}
-		}
-
-		return res;
+		return m_path.eval(var);
 	}
 
 	@Override
 	public String getText() {
-		return (m_path == null ? "" : m_path.getText() + ".") + m_id
-				+ (m_args == null ? "" : "(" + String.join(", ", m_args.stream().map(a -> a.getText()).toList()) + ")");
+		return m_path.getText();
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 
-public class PSSStringInst extends PSSInst {
+public class PSSStringInst extends PSSInst implements PSSIScalarInst {
 	public String m_str;
 
 	PSSStringDomain m_domain;

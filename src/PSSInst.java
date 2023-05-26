@@ -19,9 +19,9 @@ public class PSSInst {
 			m_nargs = nargs;
 		}
 
-		protected abstract PSSVal doEval(List<PSSVal> args);
+		protected abstract PSSInst doEval(List<PSSVal> args);
 
-		public PSSVal eval(List<PSSVal> args) {
+		public PSSInst eval(List<PSSVal> args) {
 			if (m_nargs >= 0 && args.size() != m_nargs) {
 				PSSMessage.Fatal(
 						"Mismatched number of parameters to " + m_id + "." + m_name + " (expected = " + m_nargs
@@ -124,6 +124,11 @@ public class PSSInst {
 		}
 	}
 
+	/**
+	 * Returns the type model of this instance.
+	 *
+	 * @return the type model of this instance
+	 */
 	public PSSModel getTypeModel() {
 		return m_type_decl;
 	}
@@ -350,7 +355,8 @@ public class PSSInst {
 
 	/**
 	 * Returns {@code true} if this instance is read-only. If an instance is
-	 * read-only, it cannot be updated by assignment statements.
+	 * read-only, it cannot be updated by assignment statements but still can be
+	 * updated via {@link #assign(PSSVal)}.
 	 *
 	 * @return {@code true} if this instance is read-only
 	 */
@@ -360,7 +366,8 @@ public class PSSInst {
 
 	/**
 	 * Sets the read-only property of this instance. If an instance is read-only, it
-	 * cannot be updated by assignment statements.
+	 * cannot be updated by assignment statements but still can be updated via
+	 * {@link #assign(PSSVal)}.
 	 *
 	 * @param readonly {@code true} to make this instance read-only
 	 */
@@ -384,7 +391,7 @@ public class PSSInst {
 	 * @param args the arguments passed to the method
 	 * @return the result of the invocation
 	 */
-	public PSSVal evalMethod(String name, List<PSSVal> args) throws NoSuchMethodException {
+	public PSSInst evalMethod(String name, List<PSSVal> args) throws NoSuchMethodException {
 		NativeMethod m = m_native_methods.get(name);
 		if (m == null)
 			throw new NoSuchMethodException();

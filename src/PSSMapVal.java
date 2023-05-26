@@ -14,6 +14,7 @@ import java.util.Map.Entry;
  */
 public class PSSMapVal extends PSSVal implements PSSICollection {
 
+	/** map elements */
 	private Map<PSSVal, PSSVal> m_map = new HashMap<PSSVal, PSSVal>();
 
 	private class MapIterator implements PSSIIterator {
@@ -41,36 +42,58 @@ public class PSSMapVal extends PSSVal implements PSSICollection {
 
 	}
 
-	public PSSMapVal(PSSModel type) {
+	/**
+	 * Constructs an empty map.
+	 *
+	 * @param type the type of this map
+	 */
+	public PSSMapVal(PSSMapModel type) {
 		super(type);
 	}
 
-	private PSSMapModel getMapType() {
-		PSSMapModel res = null;
-		PSSModel m = getTypeModel();
-		if (m instanceof PSSMapModel) {
-			res = (PSSMapModel) m;
-		}
-		return res;
+	/**
+	 * Returns an empty map with a specified key type and a specified value type.
+	 *
+	 * @param key_type   the key type
+	 * @param value_type the value type
+	 * @return an empty map
+	 */
+	public PSSMapVal ofElementDataType(PSSModel key_type, PSSModel value_type) {
+		return new PSSMapVal(new PSSMapModel(key_type, value_type));
 	}
 
-	private PSSModel getKeyType() {
-		PSSMapModel m = getMapType();
+	@Override
+	public PSSMapModel getTypeModel() {
+		return (PSSMapModel) super.getTypeModel();
+	}
+
+	/**
+	 * Returns the key type of this map.
+	 *
+	 * @return the key type of this map
+	 */
+	public PSSModel getKeyTypeModel() {
+		PSSMapModel m = getTypeModel();
 		return m == null ? null : m.getKeyType();
 	}
 
-	private PSSModel getValueType() {
-		PSSMapModel m = getMapType();
+	/**
+	 * Returns the value type of this map.
+	 *
+	 * @return the value type of this map
+	 */
+	public PSSModel getValueTypeModel() {
+		PSSMapModel m = getTypeModel();
 		return m == null ? null : m.getValueType();
 	}
 
 	private boolean isKeyTypeCompatible(PSSModel model) {
-		PSSModel m = getKeyType();
+		PSSModel m = getKeyTypeModel();
 		return m == null || model == null || m.isCompatible(model);
 	}
 
 	private boolean isValueTypeCompatible(PSSModel model) {
-		PSSModel m = getValueType();
+		PSSModel m = getValueTypeModel();
 		return m == null || model == null || m.isCompatible(model);
 	}
 
@@ -119,7 +142,7 @@ public class PSSMapVal extends PSSVal implements PSSICollection {
 	 * @param value a value
 	 */
 	public void insert(PSSVal key, PSSVal value) {
-		if (getTypeModel() == null)
+		if (getTypeModel() == null && key.getTypeModel() != null && value.getTypeModel() != null)
 			setTypeModel(new PSSMapModel(key.getTypeModel(), value.getTypeModel()));
 
 		if (!isKeyTypeCompatible(key.getTypeModel()))
@@ -137,7 +160,7 @@ public class PSSMapVal extends PSSVal implements PSSICollection {
 	 * @return a set containing the map keys
 	 */
 	public PSSListVal keys() {
-		PSSListVal keys = new PSSListVal(getKeyType());
+		PSSListVal keys = PSSListVal.ofElementDataType(getKeyTypeModel());
 		for (PSSVal k : m_map.keySet())
 			keys.add(k);
 		return keys;
@@ -149,7 +172,7 @@ public class PSSMapVal extends PSSVal implements PSSICollection {
 	 * @return a list containing the map element values
 	 */
 	public PSSListVal values() {
-		PSSListVal vals = new PSSListVal(getValueType());
+		PSSListVal vals = PSSListVal.ofElementDataType(getValueTypeModel());
 		for (PSSVal v : m_map.values())
 			vals.add(v);
 		return vals;
@@ -201,7 +224,9 @@ public class PSSMapVal extends PSSVal implements PSSICollection {
 
 	@Override
 	public PSSBoolVal Equal(PSSVal v) {
-		if (v instanceof PSSMapVal) {
+		if (v instanceof PSSListVal) {
+			return PSSBoolVal.valueOf(isEmpty() && ((PSSListVal) v).isEmpty());
+		} else if (v instanceof PSSMapVal) {
 			PSSMapVal m = (PSSMapVal) v;
 			return PSSBoolVal.valueOf(m_map.equals(m.m_map));
 		}

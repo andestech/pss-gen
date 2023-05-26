@@ -1,16 +1,34 @@
 
+/**
+ * A {@code PSSSetModel} denotes the type of a set.
+ */
 public class PSSSetModel extends PSSModel {
 
-    PSSModel m_data_type;
+    /** the data type of set elements */
+    PSSModel m_elem_data_type;
 
+    /**
+     * Constructs this model.
+     *
+     * @param data_type the type of set elements
+     */
     public PSSSetModel(PSSModel data_type) {
         super("set<" + data_type.m_id + ">");
-        m_data_type = data_type;
+        m_elem_data_type = data_type;
+    }
+
+    /**
+     * Returns the data type of set elements.
+     *
+     * @return the data type of set elements
+     */
+    public PSSModel getElementTypeModel() {
+        return m_elem_data_type;
     }
 
     @Override
     public PSSSetInst declInst(String id, boolean rand) {
-        return new PSSSetInst(id, m_data_type);
+        return new PSSSetInst(id, this);
     }
 
     @Override
@@ -22,10 +40,7 @@ public class PSSSetModel extends PSSModel {
     public boolean isCompatible(PSSModel model) {
         if (model instanceof PSSSetModel) {
             PSSSetModel m = (PSSSetModel) model;
-            if (m_data_type == null || m.m_data_type == null)
-                return true;
-            else
-                return m_data_type.isCompatible(m.m_data_type);
+            return m_elem_data_type.isCompatible(m.m_elem_data_type);
         }
         return false;
     }
@@ -39,7 +54,7 @@ public class PSSSetModel extends PSSModel {
     public boolean equals(Object obj) {
         if (obj instanceof PSSSetModel) {
             PSSSetModel m = (PSSSetModel) obj;
-            return m_data_type.equals(m.m_data_type);
+            return m_elem_data_type.equals(m.m_elem_data_type);
         }
         return false;
     }

@@ -21,8 +21,6 @@ public class PSSOpenRangeListExpression extends PSSExpression {
 			PSSOpenRangeValueExpression item = m_list.get(i);
 
 			PSSVal item_val = item.eval(var);
-			if (result.getTypeModel() == null)
-				result.setTypeModel(item_val.getTypeModel());
 			result.add(item_val);
 		}
 

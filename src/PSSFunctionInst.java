@@ -42,7 +42,7 @@ public class PSSFunctionInst extends PSSInst {
      * @param var the instance where this function invocation occurs
      * @return the returned value
      */
-    public PSSVal eval(PSSInst var) {
+    public PSSInst eval(PSSInst var) {
         PSSFunctionModel m = (PSSFunctionModel) super.getTypeModel();
         List<PSSFunctionParameter> params = m.getPrototype().getParameters();
         List<PSSProcStmt> stmts = m.getStatements();
@@ -77,7 +77,7 @@ public class PSSFunctionInst extends PSSInst {
                 res.assign(e.getReturnValue());
         }
 
-        return res == null ? null : res.toVal();
+        return res;
     }
 
     @Override
