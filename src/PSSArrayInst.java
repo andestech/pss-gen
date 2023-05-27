@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * A {@code PSSArrayInst} is an instance of an array.
  */
-public class PSSArrayInst extends PSSInst {
+public class PSSArrayInst extends PSSInst implements PSSIAggregate {
 
     /** the data type of array elements */
     PSSModel m_elem_type_model;
@@ -95,6 +95,14 @@ public class PSSArrayInst extends PSSInst {
 
     @Override
     public void assign(PSSVal val) {
+        // PSS 2.0 Section 22.3.3
+        // Parameters of aggregate data types are passed as a handle.
+        // Assigning a reference to an aggregate variable is possible in a function.
+        if (val instanceof PSSRefVal) {
+            PSSRefVal r = (PSSRefVal) val;
+            val = r.getInst().toVal();
+        }
+
         if (!(val instanceof PSSListVal))
             PSSMessage.Fatal("The array type should be assigned as a PSSArrayVal.");
 

@@ -34,7 +34,7 @@ public class PSSComponentInst extends PSSInst {
 	@Override
 	public PSSVal toVal() {
 		// A component instance may be evaluated in an expression as a constraint.
-		return new PSSRefVal(getTypeModel(), this);
+		return new PSSRefVal(new PSSRefModel(getTypeModel()), this);
 	}
 
 }

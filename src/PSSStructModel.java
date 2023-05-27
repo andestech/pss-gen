@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class PSSStructModel extends PSSModel {
+public class PSSStructModel extends PSSModel implements PSSIAggregate {
 	public ArrayList<PSSAttrField> m_attrfield;
 	public PSSConstraintList m_constraint;
 
@@ -32,7 +32,7 @@ public class PSSStructModel extends PSSModel {
 	}
 
 	public void dump (String indent) {
-		
+
 		System.out.println(indent + "struct " +  m_id + " {");
 
 		for (int i=0; i<m_attrfield.size(); i++) {

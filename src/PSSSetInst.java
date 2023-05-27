@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * A {@code PSSSetInst} is an instance of a set.
  */
-public class PSSSetInst extends PSSInst {
+public class PSSSetInst extends PSSInst implements PSSIAggregate {
 
     /** the data type of set elements */
     PSSModel m_elem_type_model;
@@ -93,6 +93,14 @@ public class PSSSetInst extends PSSInst {
     @Override
     public void assign(PSSVal val) {
         m_set.clear();
+
+        // PSS 2.0 Section 22.3.3
+        // Parameters of aggregate data types are passed as a handle.
+        // Assigning a reference to an aggregate variable is possible in a function.
+        if (val instanceof PSSRefVal) {
+            PSSRefVal r = (PSSRefVal) val;
+            val = r.getInst().toVal();
+        }
 
         if (val instanceof PSSListVal) {
             PSSListVal s = (PSSListVal) val;

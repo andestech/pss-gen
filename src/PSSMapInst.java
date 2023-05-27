@@ -6,7 +6,7 @@ import java.util.HashMap;
 /**
  * A {PSSMapInst} is an instance of {@link PSSMapModel}.
  */
-public class PSSMapInst extends PSSInst {
+public class PSSMapInst extends PSSInst implements PSSIAggregate {
 
     /** A map for keys */
     Map<PSSVal, PSSInst> m_keys = new HashMap<PSSVal, PSSInst>();
@@ -100,6 +100,14 @@ public class PSSMapInst extends PSSInst {
     public void assign(PSSVal val) {
         m_keys.clear();
         m_values.clear();
+
+        // PSS 2.0 Section 22.3.3
+        // Parameters of aggregate data types are passed as a handle.
+        // Assigning a reference to an aggregate variable is possible in a function.
+        if (val instanceof PSSRefVal) {
+            PSSRefVal r = (PSSRefVal) val;
+            val = r.getInst().toVal();
+        }
 
         if (val instanceof PSSListVal) {
             PSSListVal v = (PSSListVal) val;

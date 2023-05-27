@@ -2,7 +2,7 @@
 import java.util.List;
 
 /**
- * A @{code PSSRefInst} is a reference to another instance.
+ * A @{code PSSRefInst} is a reference to a target instance.
  */
 public class PSSRefInst extends PSSInst {
 
@@ -13,12 +13,27 @@ public class PSSRefInst extends PSSInst {
      * Constructs this reference.
      *
      * @param id        the name of this reference
-     * @param type      the type of this reference
      * @param type_decl the model of this reference
      */
-    public PSSRefInst(String id, String type, PSSModel type_decl) {
-        super(id, type, type_decl, false);
+    public PSSRefInst(String id, PSSRefModel type_decl) {
+        super(id, type_decl.m_id, type_decl, false);
         m_ref = null;
+    }
+
+    @Override
+    public PSSRefModel getTypeModel() {
+        return (PSSRefModel) super.getTypeModel();
+    }
+
+    /**
+     * Returns the type of the target.
+     *
+     *
+     * @returns the type of the target
+     */
+    public PSSModel getTargetTypeModel() {
+        PSSRefModel m = getTypeModel();
+        return m == null ? null : m.getTargetTypeModel();
     }
 
     /**
@@ -37,7 +52,7 @@ public class PSSRefInst extends PSSInst {
      * @param inst an instance
      */
     public void setReference(PSSInst inst) {
-        m_ref = new PSSRefVal(super.getTypeModel(), inst);
+        m_ref = new PSSRefVal(getTypeModel(), inst);
     }
 
     /**
@@ -97,7 +112,12 @@ public class PSSRefInst extends PSSInst {
     @Override
     public void assign(PSSVal val) {
         if (val instanceof PSSRefVal) {
-            m_ref = (PSSRefVal) val;
+            PSSRefVal r = (PSSRefVal) val;
+            if (!getTargetTypeModel().isCompatible(r.getTargetTypeModel()))
+                PSSMessage.Error("PSSRefInst",
+                        "The types of " + m_id + " (" + getTypeModel().m_id + ") and the type of " + val.getText()
+                                + " (" + val.getTypeModel().m_id + ") are incompatible.");
+            m_ref = r;
         } else
             PSSMessage.Error("", "Cannot assign a non-reference type value to a reference.");
     }

@@ -9,12 +9,27 @@ public class PSSRefVal extends PSSVal {
 	/**
 	 * Constructs this reference value.
 	 *
-	 * @param model the data type
+	 * @param model the data type of this reference
 	 * @param inst  the instance
 	 */
-	public PSSRefVal(PSSModel model, PSSInst inst) {
+	public PSSRefVal(PSSRefModel model, PSSInst inst) {
 		super(model);
 		m_inst = inst;
+	}
+
+	@Override
+	public PSSRefModel getTypeModel() {
+		return (PSSRefModel) super.getTypeModel();
+	}
+
+	/**
+	 * Returns the type of the target.
+	 *
+	 * @return the type of the target
+	 */
+	public PSSModel getTargetTypeModel() {
+		PSSRefModel m = getTypeModel();
+		return m == null ? null : m.getTargetTypeModel();
 	}
 
 	/**

@@ -16,7 +16,7 @@ public class PSSActionInst extends PSSInst {
 		// Declare the built-in field "comp" associated with an action. The field comp
 		// cannot be assigned by the user. The target of comp shall be decided when this
 		// action is randomized.
-		PSSComponentRefInst comp = new PSSComponentRefInst("comp", "");
+		PSSComponentRefInst comp = new PSSComponentRefInst("comp", new PSSRefModel(type_decl));
 		comp.setReadOnly(true);
 		addInst(comp);
 	}

@@ -2,7 +2,7 @@
 /**
  * {@code PSSMapModel} represents the type of maps. Maps are non-randomizable.
  */
-public class PSSMapModel extends PSSModel {
+public class PSSMapModel extends PSSModel implements PSSIAggregate {
 
     /** The key type */
     PSSModel m_key_type_model;

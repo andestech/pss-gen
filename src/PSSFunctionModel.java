@@ -199,6 +199,11 @@ public class PSSFunctionModel extends PSSModel {
     }
 
     @Override
+    public String getText() {
+        return toString();
+    }
+
+    @Override
     public String toString() {
         return (m_pure ? "pure " : "") + "function " + m_prototype.toString() + " {"
                 + String.join(";\n", m_stmts.stream().map(stmt -> stmt.getText()).toList()) + "}";

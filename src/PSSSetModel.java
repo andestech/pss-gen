@@ -2,7 +2,7 @@
 /**
  * A {@code PSSSetModel} denotes the type of a set.
  */
-public class PSSSetModel extends PSSModel {
+public class PSSSetModel extends PSSModel implements PSSIAggregate {
 
     /** the data type of set elements */
     PSSModel m_elem_data_type;

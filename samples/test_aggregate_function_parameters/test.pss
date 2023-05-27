@@ -1,0 +1,103 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/26
+@brief          Parameters of aggregate data types are passed as a handle to the instance in the caller
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> 22.3.3 Parameter passing semantics <br>
+
+### Test Command
+
+    make test
+
+*/
+
+component pss_top {
+
+  list<int> l1 = { 7, 6, 9 };
+  list<int> l2 = { 1, 8, 3 };
+  list<int> l3 = { 5, 2, 4 };
+
+  function void append(list<int> l1, list<int> l2) {
+    foreach (v : l2)
+      l1.push_back(v);
+  }
+
+  function void reverse(list<int> l) {
+    list<int> tmp = l;
+    l.clear();
+    while (tmp.size() > 0)
+      l.push_back(tmp.pop_back());
+  }
+
+  function list<int> mergeSorted(list<int> l1, list<int> l2) {
+    list<int> res = {};
+    int i1 = 0;
+    int i2 = 0;
+
+    while (i1 < l1.size() || i2 < l2.size()) {
+      if (i1 >= l1.size()) {
+        res.push_back(l2[i2]);
+        i2 = i2 + 1;
+      } else if (i2 >= l2.size()) {
+        res.push_back(l1[i1]);
+        i1 = i1 + 1;
+      } else if (l1[i1] <= l2[i2]) {
+        res.push_back(l1[i1]);
+        i1 = i1 + 1;
+      } else {
+        res.push_back(l2[i2]);
+        i2 = i2 + 1;
+      }
+    }
+    return res;
+  }
+
+  function list<int> mergeSort(list<int> l) {
+    list<int> left = {};
+    list<int> right = {};
+    int mid, cur = 0;
+
+    if (l.size() <= 1) return l;
+    else {
+      mid = l.size() / 2;
+      while (cur < mid) {
+        left.push_back(l[cur]);
+        cur = cur + 1;
+      }
+      while (cur < l.size()) {
+        right.push_back(l[cur]);
+        cur = cur + 1;
+      }
+      return mergeSorted(mergeSort(left), mergeSort(right));
+    }
+  }
+
+  exec init_up {
+    append(l1, l2);
+    append(l1, l3);
+    l1 = mergeSort(l1);
+    reverse(l2);
+  }
+
+  action A {
+    rand int x;
+    exec body ASM =
+    """x = {{x}}""";
+  }
+
+  action root_a {
+    activity {
+      foreach (v : comp.l1) {
+        do A with { x == v; };
+      }
+      foreach (v : comp.l2) {
+        do A with { x == v; };
+      }
+    }                 
+  }
+  
+}

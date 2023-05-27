@@ -12,11 +12,10 @@ public class PSSComponentRefInst extends PSSRefInst {
      * Constructs this reference.
      *
      * @param id        the identify of this reference
-     * @param type      the type of this reference
      * @param type_decl the model of this reference
      */
-    public PSSComponentRefInst(String id, String type, PSSModel type_decl) {
-        super(id, type, type_decl);
+    public PSSComponentRefInst(String id, PSSRefModel type_decl) {
+        super(id, type_decl);
         m_domain = null;
     }
 
@@ -26,8 +25,8 @@ public class PSSComponentRefInst extends PSSRefInst {
      * @param id   the identify of this reference
      * @param type the type of this reference
      */
-    public PSSComponentRefInst(String id, String type) {
-        this(id, type, null);
+    public PSSComponentRefInst(String id) {
+        this(id, null);
     }
 
     private PSSInst findComponentInst() {

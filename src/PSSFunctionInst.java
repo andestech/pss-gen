@@ -27,7 +27,16 @@ public class PSSFunctionInst extends PSSInst {
         m_actuals = actuals;
         m_formals = new ArrayList<PSSInst>();
         for (PSSFunctionParameter param : m.getPrototype().getParameters()) {
-            m_formals.add(param.getDataType().declInst(this, param.getID(), false));
+            // PSS 2.0 Section 22.3.3
+            // Parameters of aggregate data types are passed as a handle to the instance in
+            // the caller. Updates to these parameters in the callee will modify the
+            // instances in the caller.
+            if (param.getDataType() instanceof PSSIAggregate) {
+                PSSInst pi = new PSSRefModel(param.getDataType()).declInst(this, param.getID(), false);
+                m_formals.add(pi);
+            } else {
+                m_formals.add(param.getDataType().declInst(this, param.getID(), false));
+            }
         }
         PSSFunctionReturnType rt = m.getPrototype().getReturnType();
         if (rt.isVoid())
@@ -58,8 +67,10 @@ public class PSSFunctionInst extends PSSInst {
             PSSMessage.Error("", "Too many actual parameters passed to function " + m.getPrototype().getID());
 
         // Assign actual parameters
-        for (int i = 0; i < m_actuals.size(); i++)
+        for (int i = 0; i < m_actuals.size(); i++) {
             m_formals.get(i).assign(m_actuals.get(i));
+        }
+
         for (int i = m_actuals.size(); i < m_formals.size(); i++) {
             PSSExpression def = params.get(i).getDefaultValue();
             if (def == null)

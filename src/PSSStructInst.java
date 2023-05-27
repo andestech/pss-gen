@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class PSSStructInst extends PSSInst {
+public class PSSStructInst extends PSSInst implements PSSIAggregate {
 
 
 	public PSSStructInst(String id, String type, PSSModel type_decl, boolean rand) {

@@ -158,7 +158,20 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             if (m instanceof PSSFunctionModel) {
                 // Invoke the function
                 PSSFunctionModel fm = (PSSFunctionModel) m;
-                PSSFunctionInst fi = fm.declInst(ci, m_function_parameter_list.stream().map(p -> p.eval(ctx)).toList());
+                List<PSSVal> actuals = new ArrayList<PSSVal>();
+                for (PSSExpression arg : m_function_parameter_list) {
+                    PSSInst arg_inst = arg.getInst(ctx);
+                    // PSS 2.0 Section 22.3.3
+                    // Parameters of aggregate data types are passed as a handle to the instance in
+                    // the caller. Updates to these parameters in the callee will modify the
+                    // instances in the caller.
+                    if (arg_inst instanceof PSSIAggregate) {
+                        actuals.add(new PSSRefVal(new PSSRefModel(arg_inst.getTypeModel()), arg_inst));
+                    } else {
+                        actuals.add(arg.eval(ctx));
+                    }
+                }
+                PSSFunctionInst fi = fm.declInst(ci, actuals);
                 inst = fi.eval(parent);
             } else {
                 PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
@@ -174,6 +187,11 @@ public class PSSMemberPathElemExpression extends PSSExpression {
 
         if (m_index != null && inst != null) {
             inst = inst.indexOf(m_index.eval(ctx));
+        }
+
+        // For a PSSComponentInst, its value is a reference to itself.
+        if (inst instanceof PSSRefInst && !(inst instanceof PSSComponentRefInst)) {
+            inst = ((PSSRefInst) inst).toVal().getInst();
         }
 
         return inst;
@@ -212,8 +230,13 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             PSSMessage.Error("", "Cannot evaluate a partial member path reference: " + getLowerHierarchicalID());
 
         PSSInst inst = getInst(var);
+        PSSVal res = inst == null ? null : inst.toVal();
 
-        return inst == null ? null : inst.toVal();
+        if (!(inst instanceof PSSComponentRefInst || inst instanceof PSSComponentInst) && res instanceof PSSRefVal) {
+            res = ((PSSRefVal) res).getInst().toVal();
+        }
+
+        return res;
     }
 
     @Override

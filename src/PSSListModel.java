@@ -2,7 +2,7 @@
 /**
  * A {@code PSSListModel} denotes a list data type.
  */
-public class PSSListModel extends PSSModel {
+public class PSSListModel extends PSSModel implements PSSIAggregate {
 
 	/** the data type of list elements */
 	PSSModel m_elem_type_model;

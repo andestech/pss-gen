@@ -2,7 +2,7 @@
 /**
  * A {@code PSSArrayModel} is an array data type.
  */
-public class PSSArrayModel extends PSSModel {
+public class PSSArrayModel extends PSSModel implements PSSIAggregate {
 
 	/** the data type of array elements */
 	PSSModel m_elem_type_model;
