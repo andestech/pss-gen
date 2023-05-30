@@ -64,16 +64,16 @@ public class PSSActionModel extends PSSModel {
 		return node;
 	}
 	public void addExecBlock (PSSExecBlock block) {
-		String kind = block.getKind();
-		if (kind.equals("header") || kind.equals("declaration") || kind.equals("body")) {
+		PSSExecKind kind = block.getKind();
+		if (kind.equals(PSSExecKind.header) || kind.equals(PSSExecKind.declaration) || kind.equals(PSSExecKind.body)) {
 		}
-		else if (kind.equals("pre_solve") || kind.equals("post_solve")) {
+		else if (kind.equals(PSSExecKind.pre_solve) || kind.equals(PSSExecKind.post_solve)) {
 			;
 		}
-		else if (kind.equals("init_up") || kind.equals("init_up")) {
+		else if (kind.equals(PSSExecKind.init_up) || kind.equals(PSSExecKind.init_down) || kind.equals(PSSExecKind.init)) {
 			PSSMessage.Error("ACTION", kind + " is only valid in component");
 		}
-		else if (kind.equals("run_start") || kind.equals("run_end")) {
+		else if (kind.equals(PSSExecKind.run_start) || kind.equals(PSSExecKind.run_end)) {
 			PSSMessage.Error("ACTION", kind + " is not yet supported");
 		}
 		m_exec_list.add(block);
@@ -91,7 +91,7 @@ public class PSSActionModel extends PSSModel {
 	public void evalPreSolve(PSSInst inst) {
 		for (int i=0; i<m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
-			if (block.m_kind.equals("pre_solve")) {
+			if (block.getKind().equals(PSSExecKind.pre_solve)) {
 				block.eval(inst);
 			}
 		}
@@ -100,7 +100,7 @@ public class PSSActionModel extends PSSModel {
 	public void evalPostSolve(PSSInst inst) {
 		for (int i=0; i<m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
-			if (block.m_kind.equals("post_solve")) {
+			if (block.getKind().equals(PSSExecKind.post_solve)) {
 				block.eval(inst);
 			}
 		}
@@ -165,7 +165,7 @@ public class PSSActionModel extends PSSModel {
 		return 0;
 	}
 
-	public void getTargetCode(PSSInst inst, String exec_kind) {
+	public void getTargetCode(PSSInst inst, PSSExecKind exec_kind) {
 		m_target_code.execute_kind(inst, exec_kind);
 	}
 

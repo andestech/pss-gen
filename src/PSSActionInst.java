@@ -78,15 +78,17 @@ public class PSSActionInst extends PSSInst {
 		return m_c_list;
 	}
 
-	public void execute_kind(String kind) {
+	@Override
+	public void execute_kind(PSSExecKind kind) {
 		m_type_decl.getTargetCode(this, kind);
 		m_sub_list.execute_kind(kind);
 	}
 
+	@Override
 	public void execute() {
-		execute_kind("header");
-		execute_kind("declaration");
-		execute_kind("body");
+		execute_kind(PSSExecKind.header);
+		execute_kind(PSSExecKind.declaration);
+		execute_kind(PSSExecKind.body);
 	}
 
 	public void randomize() {

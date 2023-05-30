@@ -313,7 +313,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitExec_block(PSSParser.Exec_blockContext ctx) {
-		String kind = ctx.exec_kind().getText();
+		PSSExecKind kind = PSSExecKind.valueOf(ctx.exec_kind().getText());
 
 		PSSExecBlock block = new PSSExecBlock(kind);
 
@@ -674,7 +674,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	@Override
 	public Integer visitTarget_code_exec_block(PSSParser.Target_code_exec_blockContext ctx) {
 		String language = ctx.language_identifier().getText();
-		String exec_kind = ctx.exec_kind().getText();
+		PSSExecKind exec_kind = PSSExecKind.valueOf(ctx.exec_kind().getText());
 		String code = ctx.string_literal().getText();
 		PSSTargetCode node = new PSSTargetCode(root, exec_kind, language, code);
 

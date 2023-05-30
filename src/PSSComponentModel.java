@@ -14,19 +14,23 @@ public class PSSComponentModel extends PSSModel {
 		m_data_list.add(data_decl);
 	}
 	public void addExecBlock (PSSExecBlock block) {
-		String kind = block.getKind();
-		if (kind.equals("init_up") || kind.equals("init_down")) {
+		PSSExecKind kind = block.getKind();
+		if (kind.equals(PSSExecKind.init_up) || kind.equals(PSSExecKind.init_down)) {
 			m_exec_list.add(block);
 			block.m_parent = this;
 		}
-		else if (kind.equals("header") || kind.equals("declaration") || kind.equals("body")) {
+		else if (kind.equals(PSSExecKind.header) || kind.equals(PSSExecKind.declaration) || kind.equals(PSSExecKind.body)) {
 			PSSMessage.Error("ACTION", kind + " is only valid in action");
 		}
-		else if (kind.equals("pre_solve") || kind.equals("post_solve")) {
+		else if (kind.equals(PSSExecKind.pre_solve) || kind.equals(PSSExecKind.post_solve)) {
 			PSSMessage.Error("ACTION", kind + " is only valid in action");
 		}
-		else if (kind.equals("run_start") || kind.equals("run_end")) {
+		else if (kind.equals(PSSExecKind.run_start) || kind.equals(PSSExecKind.run_end)) {
 			PSSMessage.Error("ACTION", kind + " is only valid in action");
+		} else if (kind.equals(PSSExecKind.init)) {
+			PSSMessage.Warning("The exec kind " + kind + " is deprecated. Use " + PSSExecKind.init_up + " instead.");
+			m_exec_list.add(block);
+			block.m_parent = this;
 		}
 	}
 
@@ -48,7 +52,7 @@ public class PSSComponentModel extends PSSModel {
 	public void init_up(PSSInst inst) {
 		for (int i=0; i<m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
-			if (block.m_kind.equals("init_up")) {
+			if (block.getKind().equals(PSSExecKind.init_up)) {
 				block.eval(inst);
 			}
 		}
@@ -56,7 +60,7 @@ public class PSSComponentModel extends PSSModel {
 	public void init_down(PSSInst inst) {
 		for (int i=0; i<m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
-			if (block.m_kind.equals("init_down")) {
+			if (block.getKind().equals(PSSExecKind.init_down)) {
 				block.eval(inst);
 			}
 		}

@@ -349,7 +349,7 @@ public class PSSInst {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::execute is not impelemented");
 	}
 
-	public void execute_kind(String kind) {
+	public void execute_kind(PSSExecKind kind) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::execute_kind is not impelemented");
 	}
 

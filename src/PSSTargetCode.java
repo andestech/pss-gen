@@ -5,11 +5,11 @@ import java.util.regex.Matcher;
 public class PSSTargetCode extends PSSModel {
 
 	PSSModel m_root;
-	String m_exec_kind;
+	PSSExecKind m_exec_kind;
 	String m_language;
 	String m_code;
 
-	public PSSTargetCode (PSSModel root, String exec_kind, String language, String code) {
+	public PSSTargetCode (PSSModel root, PSSExecKind exec_kind, String language, String code) {
 		super("");
 		m_root = root;
 		m_exec_kind = exec_kind;
@@ -17,7 +17,7 @@ public class PSSTargetCode extends PSSModel {
 		m_code = code.replace("\"\"\"", "");
 	}
 
-	public void execute_kind (PSSInst inst, String exec_kind) {
+	public void execute_kind (PSSInst inst, PSSExecKind exec_kind) {
 		if (exec_kind.equals(m_exec_kind)) {
 			execute(inst);
 		}

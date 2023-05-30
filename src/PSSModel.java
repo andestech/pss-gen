@@ -148,7 +148,7 @@ public class PSSModel {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::evalActivity is not impelemented");
 	}
 
-	public void getTargetCode(PSSInst inst, String exec_kind) {
+	public void getTargetCode(PSSInst inst, PSSExecKind exec_kind) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::getTargetCode is not impelemented");
 	}
 

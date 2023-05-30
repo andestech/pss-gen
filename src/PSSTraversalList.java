@@ -139,7 +139,7 @@ public class PSSTraversalList {
 	}
 
 
-	public void execute_kind(String kind) {
+	public void execute_kind(PSSExecKind kind) {
 		for (int i=0; i<m_list.size(); i++) {
 			PSSTraversal t = m_list.get(i);
 			PSSActionInst sub_ah = t.getInst();

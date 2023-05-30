@@ -2,13 +2,18 @@ import java.util.*;
 
 public class PSSExecBlock extends PSSModel {
 
-	ArrayList<PSSProcStmt> m_list;
-	String m_kind;
+	List<PSSProcStmt> m_list;
 
-	public PSSExecBlock(String kind) {
+	PSSExecKind m_kind;
+
+	public PSSExecBlock(PSSExecKind kind, List<PSSProcStmt> stmts) {
 		super("");
 		m_kind = kind;
-		m_list = new ArrayList<PSSProcStmt>();
+		m_list = stmts;
+	}
+
+	public PSSExecBlock(PSSExecKind kind) {
+		this(kind, new ArrayList<PSSProcStmt>());
 	}
 
 	public void addStmt(PSSProcStmt stmt) {
@@ -16,7 +21,7 @@ public class PSSExecBlock extends PSSModel {
 		stmt.m_parent = this;
 	}
 
-	public String getKind() {
+	public PSSExecKind getKind() {
 		return m_kind;
 	}
 
