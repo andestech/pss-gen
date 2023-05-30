@@ -37,6 +37,7 @@ public class PSSForeachProcStmt extends PSSProcStmt {
         /* Create a new namespace to shadow the key and value variables */
         PSSNamespaceInst foreach_inst = new PSSNamespaceInst("");
         inst.addInst(foreach_inst);
+        try {
         while (it.hasNext()) {
             Map.Entry<PSSVal, PSSVal> entry = it.next();
             PSSVal key = entry.getKey();
@@ -62,7 +63,14 @@ public class PSSForeachProcStmt extends PSSProcStmt {
                 }
                 val_inst.assign(val);
             }
-            m_proc_stmt.eval(foreach_inst);
+            try {
+                m_proc_stmt.eval(foreach_inst);
+            } catch (PSSContinueException dontcare) {
+                // continue
+            }
+        }
+        } catch (PSSBreakException dontcare) {
+            // break
         }
     }
 

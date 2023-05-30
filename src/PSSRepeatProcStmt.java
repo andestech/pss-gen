@@ -13,9 +13,17 @@ public class PSSRepeatProcStmt extends PSSProcStmt {
 	public void eval(PSSInst inst) {
 		int count = m_count.eval(inst).toInt();
 
+                try {
 		for (int i=0; i<count; i++) {
+                    try {
 			m_stmt.eval(inst);
+                    } catch (PSSContinueException e) {
+                        // continue
+                    }
 		}
+                } catch (PSSBreakException e) {
+                    // break
+                }
 	}
 
 	public void dump(String indent) {
