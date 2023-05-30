@@ -26,17 +26,6 @@ public class PSSRefInst extends PSSInst {
     }
 
     /**
-     * Returns the type of the target.
-     *
-     *
-     * @returns the type of the target
-     */
-    public PSSModel getTargetTypeModel() {
-        PSSRefModel m = getTypeModel();
-        return m == null ? null : m.getTargetTypeModel();
-    }
-
-    /**
      * Constructs this reference.
      *
      * @param id   the name of this reference
@@ -113,9 +102,10 @@ public class PSSRefInst extends PSSInst {
     public void assign(PSSVal val) {
         if (val instanceof PSSRefVal) {
             PSSRefVal r = (PSSRefVal) val;
-            if (!getTargetTypeModel().isCompatible(r.getTargetTypeModel()))
+            PSSRefModel m = getTypeModel();
+            if (!m.isCompatible(r.getTypeModel()))
                 PSSMessage.Error("PSSRefInst",
-                        "The types of " + m_id + " (" + getTypeModel().m_id + ") and the type of " + val.getText()
+                        "The types of " + m_id + " (" + m.m_id + ") and the type of " + val.getText()
                                 + " (" + val.getTypeModel().m_id + ") are incompatible.");
             m_ref = r;
         } else

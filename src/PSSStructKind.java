@@ -46,12 +46,37 @@ public class PSSStructKind {
         return m_object_kind != null;
     }
 
+    /**
+     * Returns all struct kinds.
+     *
+     * @return all struct kinds
+     */
+    public static PSSStructKind[] values() {
+        return new PSSStructKind[] {
+                STRUCT, BUFFER, STREAM, STATE, RESOURCE
+        };
+    }
+
+    /**
+     * Returns the struct kind represented as a specified string.
+     *
+     * @param str a string representation of a struct kind
+     * @return the struct kind represented as {@code str}
+     */
+    public static PSSStructKind valueOf(String str) {
+        for (PSSStructKind k : values()) {
+            if (k.toString().equals(str))
+                return k;
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof PSSStructKind) {
             PSSStructKind k = (PSSStructKind) obj;
             if (m_object_kind == null && k.m_object_kind == null)
-                return false;
+                return true;
             else if (m_object_kind == null || k.m_object_kind == null)
                 return false;
             else

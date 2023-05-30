@@ -128,7 +128,7 @@ public class PSSActionModel extends PSSModel {
 	}
 
 
-	public Integer traverse(PSSInst inst) {
+	public Integer traverse(PSSActionInst inst) {
 		if (inst.isTraversed()) {
 			return 0;
 		}

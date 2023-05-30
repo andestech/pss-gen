@@ -14,19 +14,9 @@ public class PSSComponentRefInst extends PSSRefInst {
      * @param id        the identify of this reference
      * @param type_decl the model of this reference
      */
-    public PSSComponentRefInst(String id, PSSRefModel type_decl) {
-        super(id, type_decl);
-        m_domain = null;
-    }
-
-    /**
-     * Constructs this reference.
-     *
-     * @param id   the identify of this reference
-     * @param type the type of this reference
-     */
     public PSSComponentRefInst(String id) {
-        this(id, null);
+        super(id, new PSSRefModel(PSSTypeCategory.COMPONENT));
+        m_domain = null;
     }
 
     private PSSInst findComponentInst() {

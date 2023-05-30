@@ -14,7 +14,7 @@ public class PSSFunctionInst extends PSSInst {
     List<PSSInst> m_formals;
 
     /** the returned value */
-    PSSInst res;
+    PSSInst m_res;
 
     /**
      * Constructs a function invocation.
@@ -24,25 +24,47 @@ public class PSSFunctionInst extends PSSInst {
      */
     public PSSFunctionInst(PSSFunctionModel m, List<PSSVal> actuals) {
         super(m.getPrototype().getID(), m.getPrototype().toString(), m, false);
+        List<PSSFunctionParameter> params = m.getPrototype().getParameters();
         m_actuals = actuals;
         m_formals = new ArrayList<PSSInst>();
-        for (PSSFunctionParameter param : m.getPrototype().getParameters()) {
+        for (int i = 0; i < params.size(); i++) {
+            PSSFunctionParameter param = params.get(i);
+            PSSVal actual = i < m_actuals.size() ? m_actuals.get(i) : null;
+
             // PSS 2.0 Section 22.3.3
             // Parameters of aggregate data types are passed as a handle to the instance in
             // the caller. Updates to these parameters in the callee will modify the
             // instances in the caller.
-            if (param.getDataType() instanceof PSSIAggregate) {
-                PSSInst pi = new PSSRefModel(param.getDataType()).declInst(this, param.getID(), false);
+            if (param.isPlainDataType()) {
+                if (param.getDataType() instanceof PSSIAggregate) {
+                    PSSInst pi = new PSSRefModel(param.getDataType()).declInst(this, param.getID(), false);
+                    m_formals.add(pi);
+                } else {
+                    m_formals.add(param.getDataType().declInst(this, param.getID(), false));
+                }
+            } else if (param.isRef()) {
+                PSSTypeCategory t = param.getTypeCategory();
+                PSSInst pi = new PSSRefModel(t).declInst(this, param.getID(), false);
+                m_formals.add(pi);
+            } else if (param.isType()) {
+                if (actual == null)
+                    PSSMessage.Error("PSSFunctionInst", "A value is required for the parameter " + param.getID());
+                PSSInst pi = actual.getTypeModel().declInst(this, param.getID(), false);
+                m_formals.add(pi);
+            } else if (param.isStruct()) {
+                if (actual == null)
+                    PSSMessage.Error("PSSFunctionInst", "A value is required for the parameter " + param.getID());
+                PSSInst pi = new PSSRefModel(PSSTypeCategory.STRUCT).declInst(this, param.getID(), false);
                 m_formals.add(pi);
             } else {
-                m_formals.add(param.getDataType().declInst(this, param.getID(), false));
+                PSSMessage.Fatal("Unsupported type of function parameter: " + param.toString());
             }
         }
         PSSFunctionReturnType rt = m.getPrototype().getReturnType();
         if (rt.isVoid())
-            res = null;
+            m_res = null;
         else
-            res = rt.getDataType().declInst("<" + m.getPrototype().getID() + ":return>", false);
+            m_res = rt.getDataType().declInst("<" + m.getPrototype().getID() + ":return>", false);
     }
 
     /**
@@ -63,7 +85,7 @@ public class PSSFunctionInst extends PSSInst {
             PSSMessage.Error("PSS 2.0 Section 22.2.4",
                     "PSS does not provide a native mechanism to operate on an unspecified number of parameters or on parameters with no declared type, nor does PSS define mapping of functions with generic/varargs parameters to foreign languages.");
 
-        if (m_actuals.size() > m_formals.size())
+        if (m_actuals.size() > params.size())
             PSSMessage.Error("", "Too many actual parameters passed to function " + m.getPrototype().getID());
 
         // Assign actual parameters
@@ -84,11 +106,11 @@ public class PSSFunctionInst extends PSSInst {
                 stmt.eval(this);
             }
         } catch (PSSReturnException e) {
-            if (res != null)
-                res.assign(e.getReturnValue());
+            if (m_res != null)
+                m_res.assign(e.getReturnValue());
         }
 
-        return res;
+        return m_res;
     }
 
     @Override

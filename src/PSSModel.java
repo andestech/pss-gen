@@ -144,7 +144,7 @@ public class PSSModel {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::init_down is not impelemented");
 	}
 
-	public void evalActivity(PSSActionInst inst) {
+	public void evalActivity(PSSInst inst) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::evalActivity is not impelemented");
 	}
 

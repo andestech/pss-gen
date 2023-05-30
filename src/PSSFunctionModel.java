@@ -1,6 +1,5 @@
 
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * A {@code PSSFunctionModel} is a definition of a PSS native function.

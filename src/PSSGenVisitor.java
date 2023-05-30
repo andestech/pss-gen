@@ -14,6 +14,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	PSSVal cur_val;
 	PSSFunctionPrototype cur_function_prototype;
 	PSSFunctionReturnType cur_function_return_type;
+	PSSObjectKind cur_object_kind;
+	PSSStructKind cur_struct_kind;
+	PSSTypeCategory cur_type_category;
 	List<PSSFunctionParameter> function_parameter_list;
 
 	PSSGenVisitor() {
@@ -144,22 +147,67 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	}
 
 	@Override
-	public Integer visitFunction_parameter(PSSParser.Function_parameterContext ctx) {
-		if (ctx.data_type() == null)
-			PSSMessage.Fatal("Parameters other than data-type are not implemented");
+	public Integer visitObject_kind(PSSParser.Object_kindContext ctx) {
+		cur_object_kind = PSSObjectKind.valueOf(ctx.getText());
+		return 0;
+	}
 
-		PSSFunctionParameterDir dir = null;
-		if (ctx.function_parameter_dir() != null)
-			dir = PSSFunctionParameterDir.valueOf(ctx.function_parameter_dir().getText());
-		visit(ctx.data_type());
-		PSSModel data_type = cur_data_type;
+	@Override
+	public Integer visitStruct_kind(PSSParser.Struct_kindContext ctx) {
+		cur_struct_kind = PSSStructKind.valueOf(ctx.getText());
+		return 0;
+	}
+
+	@Override
+	public Integer visitType_category(PSSParser.Type_categoryContext ctx) {
+		cur_type_category = PSSTypeCategory.valueOf(ctx.getText());
+		return 0;
+	}
+
+	@Override
+	public Integer visitFunction_parameter(PSSParser.Function_parameterContext ctx) {
+		PSSFunctionParameter param = null;
 		String id = ctx.identifier().getText();
-		PSSExpression exp = null;
-		if (ctx.constant_expression() != null) {
-			visit(ctx.constant_expression());
-			exp = exp_stack.pop();
+		if (ctx.type != null) {
+			param = PSSFunctionParameter.newTypeParameter(id);
+		} else if (ctx.ref != null) {
+			visit(ctx.type_category());
+			param = PSSFunctionParameter.newRefParameter(cur_type_category, id);
+		} else if (ctx.struct != null) {
+			param = PSSFunctionParameter.newStructParameter(id);
+		} else {
+			PSSFunctionParameterDir dir = null;
+			if (ctx.function_parameter_dir() != null)
+				dir = PSSFunctionParameterDir.valueOf(ctx.function_parameter_dir().getText());
+			visit(ctx.data_type());
+			PSSModel data_type = cur_data_type;
+			PSSExpression exp = null;
+			if (ctx.constant_expression() != null) {
+				visit(ctx.constant_expression());
+				exp = exp_stack.pop();
+			}
+			param = PSSFunctionParameter.newPlainDataTypeParameter(dir, data_type, id, exp);
 		}
-		PSSFunctionParameter param = new PSSFunctionParameter(dir, data_type, id, exp);
+		function_parameter_list.add(param);
+		return 0;
+	}
+
+	@Override
+	public Integer visitVarargs_parameter(PSSParser.Varargs_parameterContext ctx) {
+		PSSFunctionParameter param = null;
+		String id = ctx.identifier().getText();
+		if (ctx.type != null) {
+			param = PSSFunctionParameter.newVariadicTypeParameter(id);
+		} else if (ctx.ref != null) {
+			visit(ctx.type_category());
+			param = PSSFunctionParameter.newVariadicRefParameter(cur_type_category, id);
+		} else if (ctx.struct != null) {
+			param = PSSFunctionParameter.newVariadicStructParameter(id);
+		} else {
+			visit(ctx.data_type());
+			PSSModel data_type = cur_data_type;
+			param = PSSFunctionParameter.newVariadicDataTypeParameter(data_type, id);
+		}
 		function_parameter_list.add(param);
 		return 0;
 	}
@@ -296,9 +344,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitStruct_declaration(PSSParser.Struct_declarationContext ctx) {
+		visit(ctx.struct_kind());
+		PSSStructKind kind = cur_struct_kind;
 		String id = ctx.struct_identifier().getText();
 
-		PSSStructModel node = new PSSStructModel(id);
+		PSSStructModel node = new PSSStructModel(kind, id);
 		root.addChild(node);
 		root = node;
 

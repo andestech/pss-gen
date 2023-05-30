@@ -3555,6 +3555,9 @@ public class PSSParser extends Parser {
 	}
 
 	public static class Function_parameterContext extends ParserRuleContext {
+		public Token type;
+		public Token ref;
+		public Token struct;
 		public Data_typeContext data_type() {
 			return getRuleContext(Data_typeContext.class,0);
 		}
@@ -3624,7 +3627,7 @@ public class PSSParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(968);
-				match(T__49);
+				((Function_parameterContext)_localctx).type = match(T__49);
 				setState(969);
 				identifier();
 				}
@@ -3633,7 +3636,7 @@ public class PSSParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(970);
-				match(T__50);
+				((Function_parameterContext)_localctx).ref = match(T__50);
 				setState(971);
 				type_category();
 				setState(972);
@@ -3644,7 +3647,7 @@ public class PSSParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(974);
-				match(T__25);
+				((Function_parameterContext)_localctx).struct = match(T__25);
 				setState(975);
 				identifier();
 				}
@@ -3705,6 +3708,9 @@ public class PSSParser extends Parser {
 	}
 
 	public static class Varargs_parameterContext extends ParserRuleContext {
+		public Token type;
+		public Token ref;
+		public Token struct;
 		public Data_typeContext data_type() {
 			return getRuleContext(Data_typeContext.class,0);
 		}
@@ -3747,7 +3753,7 @@ public class PSSParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(984);
-				match(T__49);
+				((Varargs_parameterContext)_localctx).type = match(T__49);
 				setState(985);
 				match(T__52);
 				setState(986);
@@ -3758,7 +3764,7 @@ public class PSSParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(987);
-				match(T__50);
+				((Varargs_parameterContext)_localctx).ref = match(T__50);
 				setState(988);
 				type_category();
 				setState(989);
@@ -3771,7 +3777,7 @@ public class PSSParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(992);
-				match(T__25);
+				((Varargs_parameterContext)_localctx).struct = match(T__25);
 				setState(993);
 				match(T__52);
 				setState(994);
