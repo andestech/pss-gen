@@ -136,7 +136,7 @@ public class PSSFunctionModel extends PSSModel {
      * @return {@code true} if this function is native
      */
     public boolean isNative() {
-        PSSMessage.Warning(getClass().getSimpleName() + "::isNative is to be implemented");
+        // Currently, this class only models native PSS functions
         return true;
     }
 
@@ -146,7 +146,7 @@ public class PSSFunctionModel extends PSSModel {
      * @return {@code true} if this function is a target template
      */
     public boolean isTargetTemplate() {
-        PSSMessage.Warning(getClass().getSimpleName() + "::isTargetTemplate is to be implemented");
+        // Currently, this class only models native PSS functions
         return false;
     }
 
@@ -204,8 +204,15 @@ public class PSSFunctionModel extends PSSModel {
 
     @Override
     public String toString() {
-        return (m_pure ? "pure " : "") + "function " + m_prototype.toString() + " {"
-                + String.join(";\n", m_stmts.stream().map(stmt -> stmt.getText()).toList()) + "}";
+        StringBuffer sb = new StringBuffer();
+        sb.append(m_pure ? "pure " : "");
+        sb.append("function " + m_prototype.toString());
+        if (m_stmts != null) {
+            sb.append("{\n");
+            sb.append(String.join("", m_stmts.stream().map(stmt -> stmt.getText() + ";\n").toList()));
+            sb.append("}");
+        }
+        return sb.toString();
     }
 
 }

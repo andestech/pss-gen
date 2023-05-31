@@ -87,7 +87,7 @@ public class PSSFunctionInst extends PSSInst {
         List<PSSFunctionParameter> params = m.getPrototype().getParameters();
         List<PSSProcStmt> stmts = m.getStatements();
 
-        if (m.getStatements() == null)
+        if (stmts == null)
             PSSMessage.Fatal("Invocation of an external function is not implemented yet");
 
         if (params.size() > 0 && params.get(params.size() - 1).isVarargs())
@@ -124,7 +124,8 @@ public class PSSFunctionInst extends PSSInst {
 
     @Override
     public String toString() {
-        return super.getTypeModel().getText();
+        return ((PSSFunctionModel) super.getTypeModel()).getPrototype().getID() + "("
+                + String.join(", ", m_actuals.stream().map(a -> a.getText()).toList()) + ")";
     }
 
 }

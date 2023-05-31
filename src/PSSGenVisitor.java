@@ -214,10 +214,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitFunction_parameter_list_prototype(PSSParser.Function_parameter_list_prototypeContext ctx) {
-		if (ctx.varargs_parameter() != null)
-			PSSMessage.Fatal("varargs is not implemented");
-		for (PSSParser.Function_parameterContext c : ctx.function_parameter())
-			visit(c);
+		if (ctx.varargs_parameter() == null) {
+			for (PSSParser.Function_parameterContext c : ctx.function_parameter())
+				visit(c);
+		} else {
+			visit(ctx.varargs_parameter());
+		}
 
 		return 0;
 	}
