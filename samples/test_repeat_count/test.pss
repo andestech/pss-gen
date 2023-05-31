@@ -17,10 +17,10 @@ component pss_top {
 
         exec post_solve {
             repeat(3) {
-                repeat_sum = repeat_sum + 1; // repeat_sum += 3
+                repeat_sum += 1; // repeat_sum += 3
             }
             repeat(i: 4) {
-                repeat_sum = repeat_sum + i; // repeat_sum += 6
+                repeat_sum += i; // repeat_sum += 6
             }
         }
 
