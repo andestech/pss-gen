@@ -11,7 +11,7 @@ public class PSSModel {
 
 	public PSSModel(String id) {
 		m_id = id;
-		m_hierarchy_id = "";
+		m_hierarchy_id = m_id;
 		children = new ArrayList<PSSModel>();
 		m_static_insts = new ArrayList<PSSInst>();
 	}
