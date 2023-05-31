@@ -597,13 +597,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitProcedural_repeat_stmt(PSSParser.Procedural_repeat_stmtContext ctx) {
+        String index_id = null;
+        if (ctx.index_identifier() != null)
+            index_id = ctx.index_identifier().getText();
+
 		visit(ctx.expression());
 		PSSExpression cond = exp_stack.pop();
 
 		visit(ctx.procedural_stmt());
 		PSSProcStmt stmt = proc_stmt_list.remove(0);
 
-		PSSRepeatProcStmt repeat_stmt = new PSSRepeatProcStmt(cond, stmt);
+		PSSRepeatProcStmt repeat_stmt = new PSSRepeatProcStmt(index_id, cond, stmt);
 		proc_stmt_list.add(repeat_stmt);
 		return 0;
 	}

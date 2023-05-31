@@ -1,22 +1,39 @@
 component pss_top {
 
-	action bit_a {
-		rand bit [2:0] bit_val;
-		
-		exec body ASM  =
-		"""bit_val = {{bit_val}}
-		""";
-	}
-	action root_a {
-		activity {
-			repeat (3) {
-                                do bit_a with {bit_val == 7;};
-                        }
-                        repeat (i : 6) {
-                                do bit_a with {bit_val == i;};
-                        }
-		}
-	}
+    action bit_a {
+        rand bit [2:0] bit_val;
+        exec body ASM  =
+        """bit_val = {{bit_val}}""";
+    }
+
+    action int_print {
+        rand int val;
+        exec body ASM =
+            """val = {{val}}""";
+    }
+
+    action root_a {
+        int repeat_sum = 0;
+
+        exec post_solve {
+            repeat(3) {
+                repeat_sum += 1; // repeat_sum += 3
+            }
+            repeat(i: 4) {
+                repeat_sum += i; // repeat_sum += 6
+            }
+        }
+
+        activity {
+            repeat(3) {
+                do bit_a with {bit_val == 7;};
+            }
+            repeat(i : 6) {
+                do bit_a with {bit_val == i;};
+            }
+            do int_print with {val == repeat_sum;};
+        }
+    }
 
 }
 
