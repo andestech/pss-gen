@@ -661,14 +661,14 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitProcedural_break_stmt(PSSParser.Procedural_break_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		return 0;
+            proc_stmt_list.add(new PSSBreakProcStmt());
+            return 0;
 	}
 
 	@Override
 	public Integer visitProcedural_continue_stmt(PSSParser.Procedural_continue_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		return 0;
+            proc_stmt_list.add(new PSSContinueProcStmt());
+            return 0;
 	}
 
 	@Override

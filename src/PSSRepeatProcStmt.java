@@ -17,11 +17,11 @@ public class PSSRepeatProcStmt extends PSSProcStmt {
 		for (int i=0; i<count; i++) {
                     try {
 			m_stmt.eval(inst);
-                    } catch (PSSContinueException e) {
+                    } catch (PSSContinueException dontcare) {
                         // continue
                     }
 		}
-                } catch (PSSBreakException e) {
+                } catch (PSSBreakException dontcare) {
                     // break
                 }
 	}

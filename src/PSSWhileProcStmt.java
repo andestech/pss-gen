@@ -15,11 +15,11 @@ public class PSSWhileProcStmt extends PSSProcStmt {
 		while (m_cond.eval(inst).toBool()) {
                     try {
 			m_stmt.eval(inst);
-                    } catch (PSSContinueException e) {
+                    } catch (PSSContinueException dontcare) {
                         // continue
                     }
 		}
-            } catch (PSSBreakException e) {
+            } catch (PSSBreakException dontcare) {
                 // break
             }
 	}
