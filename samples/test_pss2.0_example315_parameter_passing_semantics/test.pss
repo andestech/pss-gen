@@ -1,0 +1,68 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/31
+@brief          A modified version of Example 315 in Portable Test and Stimulus Standard Version 2.0
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> 22.3.3 Parameter passing semantics <br>
+
+### Test Command
+
+    make test
+
+*/
+
+struct params_s {
+  int x;
+};
+
+// Prototypes
+function void set_val0(params_s p, int a);
+function void set_val1(params_s p_dst, params_s p_src);
+function params_s zero_attributes();
+
+// Definitions
+function void set_val0(params_s p, int a) {
+  p.x = a;
+  a = 0;
+}
+
+function void set_val1(params_s p_dst, params_s p_src) {
+  p_dst.x = p_src.x;
+}
+
+function params_s zero_attributes() {
+  params_s s;
+  s.x = 0;
+  return s;
+}
+
+component pss_top {
+  params_s p;
+  int a;
+
+  exec init_up {
+    a = 10;
+    p.x = 20;
+    set_val0(p, a);
+    // p.x is set to 10 at this point and a is unchanged
+    set_val1(p, zero_attributes());
+    // p.x is set to 0 at this point
+  }
+
+  action A {
+    rand int x;
+    exec body ASM =
+    """x = {{x}}""";
+  }
+
+  action root_a {
+    activity {
+      do A with { x == this.comp.p.x; };     // 0
+    }
+  }
+
+};

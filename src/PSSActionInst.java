@@ -16,7 +16,7 @@ public class PSSActionInst extends PSSInst {
 		// Declare the built-in field "comp" associated with an action. The field comp
 		// cannot be assigned by the user. The target of comp shall be decided when this
 		// action is randomized.
-		PSSComponentRefInst comp = new PSSComponentRefInst("comp", new PSSRefModel(type_decl));
+		PSSComponentRefInst comp = new PSSComponentRefInst("comp");
 		comp.setReadOnly(true);
 		addInst(comp);
 	}
@@ -25,14 +25,17 @@ public class PSSActionInst extends PSSInst {
 		m_sub_list.add(t);
 	}
 
+	@Override
 	public void addSequentialTraversal(PSSActionInst inst) {
 		m_sub_list.addSequence(inst);
 	}
 
+	@Override
 	public void traverseSubAction() {
 		m_sub_list.traverse();
 	}
 
+	@Override
 	public void inferSubAction() {
 		m_sub_list.inferSubAction(this);
 
@@ -59,6 +62,7 @@ public class PSSActionInst extends PSSInst {
 		return list;
 	}
 
+	@Override
 	public void collectConstraint(PSSSolver solver) {
 		// Child
 		for (int i = 0; i < m_insts.size(); i++) {
@@ -74,6 +78,7 @@ public class PSSActionInst extends PSSInst {
 		}
 	}
 
+	@Override
 	public PSSConstraintList getConstraintList() {
 		return m_c_list;
 	}
@@ -91,6 +96,7 @@ public class PSSActionInst extends PSSInst {
 		execute_kind(PSSExecKind.body);
 	}
 
+	@Override
 	public void randomize() {
 		for (int i = 0; i < m_insts.size(); i++) {
 			PSSInst var = m_insts.get(i);
@@ -101,6 +107,11 @@ public class PSSActionInst extends PSSInst {
 				var.randomize();
 			}
 		}
+	}
+
+	@Override
+	public PSSRefVal toVal() {
+		return new PSSRefVal(new PSSRefModel(PSSTypeCategory.ACTION), this);
 	}
 
 }

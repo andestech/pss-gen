@@ -11,6 +11,15 @@ public class PSSDataDeclModel extends PSSModel {
 		m_inst_list = new PSSDataInstListModel();
 	}
 
+	@Override
+	public boolean isCompatible(PSSModel model) {
+		if (model instanceof PSSDataDeclModel) {
+			PSSDataDeclModel m = (PSSDataDeclModel) model;
+			return m_type.isCompatible(m.m_type);
+		}
+		return false;
+	}
+
 	public void addDataInst(PSSDataInstModel data_inst) {
 		m_inst_list.add(data_inst);
 	}

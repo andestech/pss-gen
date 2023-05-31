@@ -11,7 +11,7 @@ public class PSSModel {
 
 	public PSSModel(String id) {
 		m_id = id;
-		m_hierarchy_id = "";
+		m_hierarchy_id = m_id;
 		children = new ArrayList<PSSModel>();
 		m_static_insts = new ArrayList<PSSInst>();
 	}
@@ -132,7 +132,7 @@ public class PSSModel {
 			child.declEnumItem(inst);
 		}
 		// if (m_parent != null) {
-		// 	m_parent.declEnumInst(inst);
+		// m_parent.declEnumInst(inst);
 		// }
 	}
 
@@ -144,7 +144,7 @@ public class PSSModel {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::init_down is not impelemented");
 	}
 
-	public void evalActivity(PSSActionInst inst) {
+	public void evalActivity(PSSInst inst) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::evalActivity is not impelemented");
 	}
 
@@ -214,12 +214,19 @@ public class PSSModel {
 		 *        - findDeclaration("package_p::component_c::action_a")
 		 */
 		PSSModel res = findDeclarationUnder(hierarchy_id);
+
 		if (res != null)
 			return res;
 
-		if (m_parent == null)
+		if (m_parent == null) {
+			String[] tokens = hierarchy_id.split("\\::", 2);
+			if (m_id.equals(tokens[0]))
+				if (tokens.length <= 1)
+					return this;
+				else
+					return findDeclarationUnder(tokens[1]);
 			return null;
-		else
+		} else
 			return m_parent.findDeclaration(hierarchy_id);
 	}
 
