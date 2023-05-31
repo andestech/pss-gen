@@ -132,28 +132,36 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     /**
      * Resolve m_id.
      *
+     * @param pkg    an optional package containing m_id (m_parent != null implies
+     *               pkg == null)
      * @param ctx    the context of the whole hierarchical reference path
      * @param parent the resolved instance of the partial hierarchical reference
      *               path down to the parent of this element
      * @return the resolved instance of the partial hierarchical reference path down
      *         to this element
      */
-    private PSSInst getInstOne(PSSInst ctx, PSSInst parent) {
+    private PSSInst getInstOne(PSSModel pkg, PSSInst ctx, PSSInst parent) {
         PSSInst inst = null;
 
         if (m_function_parameter_list == null) {
             inst = m_parent == null ? ctx.findInstance(m_id) : parent.findInstanceUnder(m_id);
             if (inst == null)
-                PSSMessage.Error("", getUpperHierarchicalID() + " is not defined.");
+                PSSMessage.Error("PSSMemberPathElemExpression", getUpperHierarchicalID() + " is not defined.");
         } else if (m_parent == null || parent instanceof PSSComponentInst) {
             // m_id may refer to a user defined function under a component or a package
 
-            // Find the component instance containing the definition of the function m_id.
-            PSSInst ci = parent.getComponentInst();
-            PSSModel cm = ci.getTypeModel();
-
             // Find the function definition
-            PSSModel m = cm.findDeclaration(m_id);
+            PSSInst ci = null;
+            PSSModel m = null;
+            if (pkg == null) {
+                // Find in parent
+                ci = parent.getComponentInst();
+                m = ci.getTypeModel().findDeclaration(m_id);
+            } else {
+                // Find in package
+                ci = null;
+                m = pkg.findDeclaration(m_id);
+            }
 
             if (m instanceof PSSFunctionModel) {
                 // Invoke the function
@@ -200,18 +208,20 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     /**
      * Resolve the whole hierarchical reference path.
      *
+     * @param pkg    an optional package containing m_id (m_parent != null implies
+     *               pkg == null)
      * @param ctx    the context of the whole hierarchical reference path
      * @param parent the resolved instance of the partial hierarchical reference
      *               path down to the parent of this element
      * @return the resolved instance of the whole hierarchical reference path
      */
-    private PSSInst getInst(PSSInst ctx, PSSInst parent) {
+    private PSSInst getInst(PSSModel pkg, PSSInst ctx, PSSInst parent) {
         // resolve m_id
-        PSSInst inst = getInstOne(ctx, parent);
+        PSSInst inst = getInstOne(pkg, ctx, parent);
 
         // resolve descendants
         if (m_child != null)
-            inst = m_child.getInst(ctx, inst);
+            inst = m_child.getInst(null, ctx, inst);
 
         return inst;
     }
@@ -221,15 +231,23 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         if (m_parent != null)
             PSSMessage.Fatal(getClass().getName()
                     + "::Cannot get the instance of a partial member path reference using getInst(PSSInst).");
-        return getInst(var, var);
+        return getInst(null, var, var);
     }
 
-    @Override
-    public PSSVal eval(PSSInst var) {
+    /**
+     * Evaluates the whole reference path starting with this expression.
+     *
+     * @param pkg an optional package containing the first element in the reference
+     *            path
+     * @param var the parent of this expression
+     * @return the evaluation result
+     */
+    public PSSVal eval(PSSModel pkg, PSSInst var) {
         if (m_parent != null)
-            PSSMessage.Error("", "Cannot evaluate a partial member path reference: " + getLowerHierarchicalID());
+            PSSMessage.Error("PSSMemberPathElemExpression",
+                    "Cannot evaluate a partial member path reference: " + getLowerHierarchicalID());
 
-        PSSInst inst = getInst(var);
+        PSSInst inst = getInst(pkg, var, var);
         PSSVal res = inst == null ? null : inst.toVal();
 
         if (!(inst instanceof PSSComponentRefInst || inst instanceof PSSComponentInst) && res instanceof PSSRefVal) {
@@ -237,6 +255,11 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         }
 
         return res;
+    }
+
+    @Override
+    public PSSVal eval(PSSInst var) {
+       return eval(null, var);
     }
 
     @Override

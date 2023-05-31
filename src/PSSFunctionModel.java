@@ -117,7 +117,11 @@ public class PSSFunctionModel extends PSSModel {
      */
     public PSSFunctionInst declInst(PSSInst parent, List<PSSVal> actuals) {
         PSSFunctionInst fi = new PSSFunctionInst(this, actuals);
-        parent.addInst(fi);
+
+        // a static function defined in a package may have no parent
+        if (parent != null)
+            parent.addInst(fi);
+
         return fi;
     }
 
