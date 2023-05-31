@@ -101,6 +101,7 @@ public class PSSRefInst extends PSSInst {
     @Override
     public void assign(PSSVal val) {
         if (val instanceof PSSRefVal) {
+            // Pass the input reference
             PSSRefVal r = (PSSRefVal) val;
             PSSRefModel m = getTypeModel();
             if (!m.isCompatible(r.getTypeModel()))
@@ -108,8 +109,13 @@ public class PSSRefInst extends PSSInst {
                         "The types of " + m_id + " (" + m.m_id + ") and the type of " + val.getText()
                                 + " (" + val.getTypeModel().m_id + ") are incompatible.");
             m_ref = r;
-        } else
-            PSSMessage.Error("", "Cannot assign a non-reference type value to a reference.");
+        } else {
+            // Create a new reference
+            PSSModel m = val.getTypeModel();
+            PSSInst inst = m.declInst("", false);
+            inst.assign(val);
+            m_ref = new PSSRefVal(new PSSRefModel(m), inst);
+        }
     }
 
 }

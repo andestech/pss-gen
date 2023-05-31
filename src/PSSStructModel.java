@@ -13,6 +13,14 @@ public class PSSStructModel extends PSSModel implements PSSIAggregate {
 		m_constraint = new PSSConstraintList();
 	}
 
+	@Override
+	public boolean isCompatible(PSSModel model) {
+		if (model instanceof PSSDataTypeModel)
+			model = ((PSSDataTypeModel) model).resolve();
+
+		return m_hierarchy_id == model.m_hierarchy_id;
+	}
+
 	/**
 	 * Returns the struct kind of this struct.
 	 *
@@ -47,8 +55,14 @@ public class PSSStructModel extends PSSModel implements PSSIAggregate {
 		return struct_var;
 	}
 
-	public void dump(String indent) {
+	@Override
+	public String getText() {
+		return m_struct_kind.toString() + " " + m_id + " { "
+				+ String.join(" ", m_attrfield.stream().map(a -> a.getText()).toList()) + " }";
+	}
 
+	@Override
+	public void dump(String indent) {
 		System.out.println(indent + m_struct_kind.toString() + " " + m_id + " {");
 
 		for (int i = 0; i < m_attrfield.size(); i++) {
@@ -57,4 +71,5 @@ public class PSSStructModel extends PSSModel implements PSSIAggregate {
 		}
 		System.out.println(indent + "}");
 	}
+
 }

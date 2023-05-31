@@ -16,6 +16,17 @@ public class PSSFunctionInst extends PSSInst {
     /** the returned value */
     PSSInst m_res;
 
+    private static PSSModel resolve(PSSModel m) {
+        // A struct or an enum may be a PSSDataTypeModel
+        if (m instanceof PSSDataTypeModel)
+            m = ((PSSDataTypeModel) m).resolve();
+
+        if (m instanceof PSSIAggregate)
+            m = new PSSRefModel(m);
+
+        return m;
+    }
+
     /**
      * Constructs a function invocation.
      *
@@ -36,12 +47,8 @@ public class PSSFunctionInst extends PSSInst {
             // the caller. Updates to these parameters in the callee will modify the
             // instances in the caller.
             if (param.isPlainDataType()) {
-                if (param.getDataType() instanceof PSSIAggregate) {
-                    PSSInst pi = new PSSRefModel(param.getDataType()).declInst(this, param.getID(), false);
-                    m_formals.add(pi);
-                } else {
-                    m_formals.add(param.getDataType().declInst(this, param.getID(), false));
-                }
+                PSSModel dt = resolve(param.getDataType());
+                m_formals.add(dt.declInst(this, param.getID(), false));
             } else if (param.isRef()) {
                 PSSTypeCategory t = param.getTypeCategory();
                 PSSInst pi = new PSSRefModel(t).declInst(this, param.getID(), false);
@@ -63,8 +70,10 @@ public class PSSFunctionInst extends PSSInst {
         PSSFunctionReturnType rt = m.getPrototype().getReturnType();
         if (rt.isVoid())
             m_res = null;
-        else
-            m_res = rt.getDataType().declInst("<" + m.getPrototype().getID() + ":return>", false);
+        else {
+            PSSModel dr = resolve(rt.getDataType());
+            m_res = dr.declInst("<" + m.getPrototype().getID() + ":return>", false);
+        }
     }
 
     /**

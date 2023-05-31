@@ -439,7 +439,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		} else {
 			String text = ctx.type_identifier().getText();
-			cur_data_type = new PSSDataTypeModel(text);
+			cur_data_type = new PSSDataTypeModel(root, text);
 		}
 
 		return 0;
@@ -455,7 +455,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			visit(ctx.string_type());
 		} else if (ctx.enum_type() != null) {
 			String text = ctx.enum_type().getText();
-			cur_data_type = new PSSDataTypeModel(text);
+			cur_data_type = new PSSDataTypeModel(root, text);
 		}
 
 		return 0;
@@ -1429,7 +1429,6 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
 
 			String id = data_inst.identifier().getText();
-
 			PSSExpression array_dim = null;
 			if (data_inst.array_dim() != null) {
 				visit(data_inst.array_dim());
