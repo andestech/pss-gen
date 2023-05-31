@@ -1,0 +1,33 @@
+component pss_top {
+    list<int> l;
+    int i = 0;
+    exec init_up {
+        repeat (10) {
+           i = i + 1;
+           if (i % 2 == 0) break;
+           l.push_back(i);
+        }
+        while (i < 10) {
+           i = i + 1;
+           if (i % 2 == 0) break;
+           l.push_back(i);
+        }
+        repeat {
+           i = i + 1;
+           if (i % 2 == 0) break;
+           l.push_back(i);
+        } while (i < 10);
+    }
+    action print {
+        rand int out;
+        exec body ASM = """out = {{out}}""";
+    }
+    action root_a {
+        activity {
+            foreach (v : pss_top.l) {
+                do print with { out == v; };
+            }
+        }
+    }
+}
+
