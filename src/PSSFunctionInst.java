@@ -16,6 +16,12 @@ public class PSSFunctionInst extends PSSInst {
     /** the returned value */
     PSSInst m_res;
 
+    /**
+     * the optional exec kind of the block containing the invocation of this
+     * function
+     */
+    PSSExecKind m_kind;
+
     private static PSSModel resolve(PSSModel m) {
         // A struct or an enum may be a PSSDataTypeModel
         if (m instanceof PSSDataTypeModel)
@@ -74,6 +80,24 @@ public class PSSFunctionInst extends PSSInst {
             PSSModel dr = resolve(rt.getDataType());
             m_res = dr.declInst("<" + m.getPrototype().getID() + ":return>", false);
         }
+    }
+
+    /**
+     * Sets the exec kind of this function invocation.
+     *
+     * @param kind an exec kind
+     */
+    public void setExecKind(PSSExecKind kind) {
+        m_kind = kind;
+    }
+
+    /**
+     * Returns the exec kind of this function invocation.
+     *
+     * @return the exec kind of this function invocation
+     */
+    public PSSExecKind getExecKind() {
+        return m_kind;
     }
 
     /**

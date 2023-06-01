@@ -129,6 +129,20 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         return res;
     }
 
+    private PSSExecKind getContextExecKind(PSSInst inst) {
+        while (inst != null) {
+            PSSModel m = inst.getTypeModel();
+            if (m instanceof PSSExecBlock) {
+                return ((PSSExecBlock) m).getKind();
+            }
+            if (inst instanceof PSSFunctionInst) {
+                return ((PSSFunctionInst) inst).getExecKind();
+            }
+            inst = inst.m_parent;
+        }
+        return null;
+    }
+
     /**
      * Resolve m_id.
      *
@@ -164,8 +178,21 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             }
 
             if (m instanceof PSSFunctionModel) {
-                // Invoke the function
                 PSSFunctionModel fm = (PSSFunctionModel) m;
+
+                // Check function availability
+                PSSPlatformQualifier pq = fm.getPlatformQualifier();
+                PSSExecKind k = getContextExecKind(ctx);
+                if (pq != null && k != null && !pq.isAvailable(k)) {
+                    PSSMessage.Error("PSS 2.0 Section 22.4.1.3",
+                            "The function call " + getUpperHierarchicalID() + "("
+                                    + String.join(", ",
+                                            m_function_parameter_list.stream().map(p -> p.getText()).toList())
+                                    + ") is not available in its platform "
+                                    + k + ".");
+                }
+
+                // Invoke the function
                 List<PSSVal> actuals = new ArrayList<PSSVal>();
                 for (PSSExpression arg : m_function_parameter_list) {
                     PSSInst arg_inst = arg.getInst(ctx);
@@ -180,6 +207,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
                     }
                 }
                 PSSFunctionInst fi = fm.declInst(ci, actuals);
+                fi.setExecKind(k);
                 inst = fi.eval(parent);
             } else {
                 PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
@@ -259,7 +287,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
 
     @Override
     public PSSVal eval(PSSInst var) {
-       return eval(null, var);
+        return eval(null, var);
     }
 
     @Override

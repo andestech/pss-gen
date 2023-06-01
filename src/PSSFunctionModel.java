@@ -126,6 +126,15 @@ public class PSSFunctionModel extends PSSModel {
     }
 
     /**
+     * Returns the platform qualifier of this function.
+     *
+     * @return the platform qualifier of this function
+     */
+    public PSSPlatformQualifier getPlatformQualifier() {
+        return m_platform_qualifier;
+    }
+
+    /**
      * Returns {@code true} if this function is pure.
      *
      * @return {@code true} if this function is pure
