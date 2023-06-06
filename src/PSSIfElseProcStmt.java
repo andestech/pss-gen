@@ -16,11 +16,13 @@ public class PSSIfElseProcStmt extends PSSProcStmt {
 	public void eval(PSSInst inst) {
 		PSSVal cond = m_cond.eval(inst);
 
+		PSSNamespaceInst body_inst = new PSSNamespaceInst("");
+		inst.addInst(body_inst);
 		if (cond.toBool()) {
-			m_true_stmt.eval(inst);
+			m_true_stmt.eval(body_inst);
 		} else {
 			if (m_false_stmt != null) {
-				m_false_stmt.eval(inst);
+				m_false_stmt.eval(body_inst);
 			}
 		}
 	}
