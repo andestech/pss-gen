@@ -557,14 +557,20 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSParser.Procedural_data_instantiationContext ctx_data_inst = ctx.procedural_data_instantiation(i);
 
 			String id = ctx_data_inst.identifier().getText();
-			PSSExpression expression = null;
 
+            PSSExpression array_dim = null;
+            if (ctx_data_inst.array_dim() != null) {
+                visit(ctx_data_inst.array_dim());
+                array_dim = exp_stack.pop();
+            }
+
+			PSSExpression expression = null;
 			if (ctx_data_inst.expression() != null) {
 				visit(ctx_data_inst.expression());
 				expression = exp_stack.pop();
 			}
 
-			PSSDataInstProcStmt stmt = new PSSDataInstProcStmt(id, expression);
+			PSSDataInstProcStmt stmt = new PSSDataInstProcStmt(id, array_dim, expression);
 			data_decl.addInst(stmt);
 
 		}

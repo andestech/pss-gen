@@ -16,12 +16,28 @@ component pss_top {
         int repeat_sum = 0;
 
         exec post_solve {
+            int subtrahend_a[2] = {0, 0};
+
+            // repeat_sum += 3
             repeat(3) {
-                repeat_sum += 1; // repeat_sum += 3
+                repeat_sum += 1;
+                subtrahend_a[0] += 1;
             }
+
+            // repeat_sum += 6
             repeat(i: 4) {
-                repeat_sum += i; // repeat_sum += 6
+                repeat_sum += i;
+                subtrahend_a[1] += i;
             }
+
+            // repeat_sum += 9
+            repeat(i: 9) {
+                int i = 1;
+                repeat_sum += i; // Use the i in the repeat scope.
+            }
+
+            repeat_sum -= subtrahend_a[0]; // repeat_sum -= 3
+            repeat_sum -= subtrahend_a[1]; // repeat_sum -= 6
         }
 
         activity {
