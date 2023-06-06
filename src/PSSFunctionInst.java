@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * A {@code PSSFunctionInst} is an invocation of a function.
  */
-public class PSSFunctionInst extends PSSInst {
+public class PSSFunctionInst extends PSSInst implements PSSIScope {
 
     /** the actual parameters */
     List<PSSVal> m_actuals;

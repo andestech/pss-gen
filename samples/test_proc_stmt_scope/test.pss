@@ -16,26 +16,34 @@ Portable Test and Stimulus Standard Version 2.0 <br>
 */
 component pss_top {
   int a = 100;
-  int b, c, d, e, f;
+  int b = 1;
+  int c = 2;
+  int d = 3;
+  int e = 4;
+  int f = 5;
+  int g = 6;
+  int h = 7;
 
   exec init_up {
-    e = 0;
-
     {
       int a = 999;
       b = a;         // b = 999
     }
     c = a;           // c = 100
 
-    if (b == 0)
+    if (d == d) {
       int a = 888;
-    d = a;           // d = 100
-
-    while(e <= 0) {
-      int a = 777;
-      e = a;         // e = 777
+      d = a;         // d = 888
     }
-    f = a;           // f = 100
+    e = a;           // e = 100
+
+    while(f <= e) {
+      int a = 777;
+      f = a;         // f = 777
+    }
+    g = a;           // g = 100
+
+    if (g >= a) int h = 666;
   }
 
   action A {
@@ -48,9 +56,11 @@ component pss_top {
     activity {
       do A with { x == this.comp.b; };     // 999
       do A with { x == this.comp.c; };     // 100
-      do A with { x == this.comp.d; };     // 100
-      do A with { x == this.comp.e; };     // 777
-      do A with { x == this.comp.f; };     // 100
+      do A with { x == this.comp.d; };     // 888
+      do A with { x == this.comp.e; };     // 100
+      do A with { x == this.comp.f; };     // 777
+      do A with { x == this.comp.g; };     // 100
+      do A with { x == this.comp.h; };     // 7
     }
   }
 

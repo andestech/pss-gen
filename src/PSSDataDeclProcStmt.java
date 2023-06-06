@@ -11,14 +11,20 @@ public class PSSDataDeclProcStmt extends PSSProcStmt {
 	}
 
 	public void eval(PSSInst inst) {
-		//PSSModel type_decl = findDeclaration(m_type);
-		//if (type_decl == null) {
-		//	PSSMessage.Error("DATADecl", "Cannot find type declaration " + m_type);
-		//}
+		// PSSModel type_decl = findDeclaration(m_type);
+		// if (type_decl == null) {
+		// PSSMessage.Error("DATADecl", "Cannot find type declaration " + m_type);
+		// }
 
 		// Declare Reference Inst
-		for (int i=0; i<m_list.size(); i++) {
+		for (int i = 0; i < m_list.size(); i++) {
 			PSSDataInstProcStmt item = m_list.get(i);
+
+			// Check if item.m_id is already declared in the same scope.
+			if (inst.findInstance(item.m_id, true) != null) {
+				PSSMessage.Error("PSSDataDeclProcStmt", item.m_id + " is redeclared in the same scope.");
+			}
+
 			PSSInst child_inst = m_type.declInst(item.m_id, false);
 			if (item.m_expression != null) {
 				PSSVal val = item.m_expression.eval(inst);
@@ -33,7 +39,7 @@ public class PSSDataDeclProcStmt extends PSSProcStmt {
 	}
 
 	public void dump(String indent) {
-		for (int i=0; i<m_list.size(); i++) {
+		for (int i = 0; i < m_list.size(); i++) {
 			PSSDataInstProcStmt item = m_list.get(i);
 			System.out.println(indent + m_type + " " + item.getText());
 		}

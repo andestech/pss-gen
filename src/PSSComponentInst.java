@@ -1,5 +1,5 @@
 
-public class PSSComponentInst extends PSSInst {
+public class PSSComponentInst extends PSSInst implements PSSIScope {
 
 	PSSComponentInst(String id, String type_name, PSSModel type_model) {
 		super(id, type_name, type_model, false);

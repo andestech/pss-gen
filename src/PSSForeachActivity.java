@@ -40,9 +40,6 @@ public class PSSForeachActivity extends PSSActivity {
             /* Create a new namespace to shadow the key and value variables */
             PSSNamespaceInst foreach_inst = new PSSNamespaceInst("");
             inst.addInst(foreach_inst);
-            /* Create one more namespace for the foreach body */
-            PSSNamespaceInst body_inst = new PSSNamespaceInst("");
-            foreach_inst.addInst(body_inst);
 
             if (m_index_identifier != null) {
                 if (!c.isIndexable())
@@ -61,7 +58,7 @@ public class PSSForeachActivity extends PSSActivity {
                 val_inst.setReadOnly(true);
                 val_inst.assign(val);
             }
-            m_activity_stmt.evalActivity(body_inst);
+            m_activity_stmt.evalActivity(foreach_inst);
         }
     }
 

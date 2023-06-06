@@ -179,7 +179,7 @@ public class PSSInst {
 		return null;
 	}
 
-	public PSSInst findInstance(String hierarchy_id) {
+	public PSSInst findInstance(String hierarchy_id, boolean local_scope) {
 		/* The current resolution order may not follow PSS 2.0. */
 
 		String[] tokens = hierarchy_id.split("\\.", 2);
@@ -229,6 +229,10 @@ public class PSSInst {
 			while (inst == null && base != null) {
 				inst = base.findInstanceUnder(tokens[0]);
 
+				// If local_scope is true, search in the local scope.
+				if (local_scope && base instanceof PSSIScope)
+					break;
+
 				/*
 				 * An expression in a nested component instance may be evaluated. In this case,
 				 * the expression is in the definition of a component instance while the
@@ -268,6 +272,10 @@ public class PSSInst {
 		}
 
 		return inst;
+	}
+
+	public PSSInst findInstance(String hierarchy_id) {
+		return findInstance(hierarchy_id, false);
 	}
 
 	public void init_up() {
