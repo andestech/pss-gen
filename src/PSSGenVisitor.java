@@ -717,7 +717,28 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitProcedural_match_stmt(PSSParser.Procedural_match_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+                visit(ctx.match_expression());
+                PSSExpression cond = exp_stack.pop();
+                int size = ctx.procedural_match_choice().size();
+                ArrayList<PSSExpression> ranges = new ArrayList<PSSExpression> (size);
+                ArrayList<PSSProcStmt> stmts = new ArrayList<PSSProcStmt> (size);
+                PSSProcStmt stmt = null;
+                for (int i = 0; i < size; i++) {
+                    if (ctx.procedural_match_choice(i).open_range_list() != null) {
+                        // open range list
+                        visit(ctx.procedural_match_choice(i).open_range_list());
+                        ranges.add(exp_stack.pop());
+                        visit(ctx.procedural_match_choice(i).procedural_stmt());
+                        stmts.add(proc_stmt_list.remove(0));
+                    } else {
+                        // default
+                        visit(ctx.procedural_match_choice(i).procedural_stmt());
+                        stmt = proc_stmt_list.remove(0);
+                    }
+                }
+		PSSMatchProcStmt match_stmt =
+                    new PSSMatchProcStmt(cond, ranges, stmts, stmt);
+		proc_stmt_list.add(match_stmt);
 		return 0;
 	}
 
