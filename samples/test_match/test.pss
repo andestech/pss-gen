@@ -21,9 +21,23 @@ component pss_top {
         exec body ASM = """out = {{out}}""";
     }
     action root_a {
+        list<string> act_out;
         activity {
             foreach (v : pss_top.out) {
                 do print with { out == v; };
+            }
+            foreach (t : pss_top.test) {
+                match (t) {
+                    [0, 2, 4] : do print with { out == "EVEN"; };
+                    [1, 3] : do print with { out == "ODD"; };
+                    default : do print with { out == "DOH"; };
+                }
+            }
+            foreach (t : pss_top.test) {
+                match (t) {
+                    [0 .. 10] : do print with {  out == "SMALL"; };
+                    default : do print with { out == "LARGE"; };
+                }
             }
         }
     }

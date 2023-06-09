@@ -1420,7 +1420,26 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitActivity_match_stmt(PSSParser.Activity_match_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+                visit(ctx.match_expression());
+                PSSExpression cond = exp_stack.pop();
+                PSSMatchActivity match_stmt = new PSSMatchActivity(cond);
+
+                for (PSSParser.Match_choiceContext choice_ctx : ctx.match_choice()) {
+                        if (choice_ctx.open_range_list() != null) {
+                            // open range list
+                            visit(choice_ctx.open_range_list());
+                            PSSExpression r = exp_stack.pop();
+                            visit(choice_ctx.activity_stmt());
+                            PSSActivity s = activity_stack.pop();
+                            match_stmt.addChoice(r, s);
+                        } else {
+                            // default
+                            visit(choice_ctx.activity_stmt());
+                            PSSActivity s = activity_stack.pop();
+                            match_stmt.addDefaultChoice(s);
+                        }
+                }
+                activity_stack.push(match_stmt);
 		return 0;
 	}
 
