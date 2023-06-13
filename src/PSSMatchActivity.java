@@ -2,10 +2,10 @@ import java.util.*;
 
 public class PSSMatchActivity extends PSSActivity {
 
-    public PSSExpression m_cond;
-    public List<PSSExpression> m_ranges;
-    public List<PSSActivity> m_stmts;
-    public PSSActivity m_default;
+    protected PSSExpression m_cond;
+    protected List<PSSExpression> m_ranges;
+    protected List<PSSActivity> m_stmts;
+    protected PSSActivity m_default;
 
     public PSSMatchActivity(PSSExpression cond) {
         m_cond = cond;
