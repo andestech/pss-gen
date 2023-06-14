@@ -2,7 +2,7 @@
 /**
  * This class is used to create a new namespace.
  */
-public class PSSNamespaceInst extends PSSInst {
+public class PSSNamespaceInst extends PSSInst implements PSSIScope {
 
 	public PSSNamespaceInst(String id) {
 		super(id, "", false);

@@ -14,6 +14,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	PSSVal cur_val;
 	PSSFunctionPrototype cur_function_prototype;
 	PSSFunctionReturnType cur_function_return_type;
+	PSSObjectKind cur_object_kind;
+	PSSStructKind cur_struct_kind;
+	PSSTypeCategory cur_type_category;
 	List<PSSFunctionParameter> function_parameter_list;
 
 	PSSGenVisitor() {
@@ -144,32 +147,79 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	}
 
 	@Override
-	public Integer visitFunction_parameter(PSSParser.Function_parameterContext ctx) {
-		if (ctx.data_type() == null)
-			PSSMessage.Fatal("Parameters other than data-type are not implemented");
+	public Integer visitObject_kind(PSSParser.Object_kindContext ctx) {
+		cur_object_kind = PSSObjectKind.valueOf(ctx.getText());
+		return 0;
+	}
 
-		PSSFunctionParameterDir dir = null;
-		if (ctx.function_parameter_dir() != null)
-			dir = PSSFunctionParameterDir.valueOf(ctx.function_parameter_dir().getText());
-		visit(ctx.data_type());
-		PSSModel data_type = cur_data_type;
+	@Override
+	public Integer visitStruct_kind(PSSParser.Struct_kindContext ctx) {
+		cur_struct_kind = PSSStructKind.valueOf(ctx.getText());
+		return 0;
+	}
+
+	@Override
+	public Integer visitType_category(PSSParser.Type_categoryContext ctx) {
+		cur_type_category = PSSTypeCategory.valueOf(ctx.getText());
+		return 0;
+	}
+
+	@Override
+	public Integer visitFunction_parameter(PSSParser.Function_parameterContext ctx) {
+		PSSFunctionParameter param = null;
 		String id = ctx.identifier().getText();
-		PSSExpression exp = null;
-		if (ctx.constant_expression() != null) {
-			visit(ctx.constant_expression());
-			exp = exp_stack.pop();
+		if (ctx.type != null) {
+			param = PSSFunctionParameter.newTypeParameter(id);
+		} else if (ctx.ref != null) {
+			visit(ctx.type_category());
+			param = PSSFunctionParameter.newRefParameter(cur_type_category, id);
+		} else if (ctx.struct != null) {
+			param = PSSFunctionParameter.newStructParameter(id);
+		} else {
+			PSSFunctionParameterDir dir = null;
+			if (ctx.function_parameter_dir() != null)
+				dir = PSSFunctionParameterDir.valueOf(ctx.function_parameter_dir().getText());
+			visit(ctx.data_type());
+			PSSModel data_type = cur_data_type;
+			PSSExpression exp = null;
+			if (ctx.constant_expression() != null) {
+				visit(ctx.constant_expression());
+				exp = exp_stack.pop();
+			}
+			param = PSSFunctionParameter.newPlainDataTypeParameter(dir, data_type, id, exp);
 		}
-		PSSFunctionParameter param = new PSSFunctionParameter(dir, data_type, id, exp);
+		function_parameter_list.add(param);
+		return 0;
+	}
+
+	@Override
+	public Integer visitVarargs_parameter(PSSParser.Varargs_parameterContext ctx) {
+		PSSFunctionParameter param = null;
+		String id = ctx.identifier().getText();
+		if (ctx.type != null) {
+			param = PSSFunctionParameter.newVariadicTypeParameter(id);
+		} else if (ctx.ref != null) {
+			visit(ctx.type_category());
+			param = PSSFunctionParameter.newVariadicRefParameter(cur_type_category, id);
+		} else if (ctx.struct != null) {
+			param = PSSFunctionParameter.newVariadicStructParameter(id);
+		} else {
+			visit(ctx.data_type());
+			PSSModel data_type = cur_data_type;
+			param = PSSFunctionParameter.newVariadicDataTypeParameter(data_type, id);
+		}
 		function_parameter_list.add(param);
 		return 0;
 	}
 
 	@Override
 	public Integer visitFunction_parameter_list_prototype(PSSParser.Function_parameter_list_prototypeContext ctx) {
-		if (ctx.varargs_parameter() != null)
-			PSSMessage.Fatal("varargs is not implemented");
-		for (PSSParser.Function_parameterContext c : ctx.function_parameter())
-			visit(c);
+		if (ctx.varargs_parameter() == null) {
+			for (PSSParser.Function_parameterContext c : ctx.function_parameter())
+				visit(c);
+		} else {
+			visit(ctx.varargs_parameter());
+		}
 
 		return 0;
 	}
@@ -296,9 +346,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitStruct_declaration(PSSParser.Struct_declarationContext ctx) {
+		visit(ctx.struct_kind());
+		PSSStructKind kind = cur_struct_kind;
 		String id = ctx.struct_identifier().getText();
 
-		PSSStructModel node = new PSSStructModel(id);
+		PSSStructModel node = new PSSStructModel(kind, id);
 		root.addChild(node);
 		root = node;
 
@@ -389,7 +441,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		} else {
 			String text = ctx.type_identifier().getText();
-			cur_data_type = new PSSDataTypeModel(text);
+			cur_data_type = new PSSDataTypeModel(root, text);
 		}
 
 		return 0;
@@ -405,7 +457,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			visit(ctx.string_type());
 		} else if (ctx.enum_type() != null) {
 			String text = ctx.enum_type().getText();
-			cur_data_type = new PSSDataTypeModel(text);
+			cur_data_type = new PSSDataTypeModel(root, text);
 		}
 
 		return 0;
@@ -505,14 +557,20 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSParser.Procedural_data_instantiationContext ctx_data_inst = ctx.procedural_data_instantiation(i);
 
 			String id = ctx_data_inst.identifier().getText();
-			PSSExpression expression = null;
 
+            PSSExpression array_dim = null;
+            if (ctx_data_inst.array_dim() != null) {
+                visit(ctx_data_inst.array_dim());
+                array_dim = exp_stack.pop();
+            }
+
+			PSSExpression expression = null;
 			if (ctx_data_inst.expression() != null) {
 				visit(ctx_data_inst.expression());
 				expression = exp_stack.pop();
 			}
 
-			PSSDataInstProcStmt stmt = new PSSDataInstProcStmt(id, expression);
+			PSSDataInstProcStmt stmt = new PSSDataInstProcStmt(id, array_dim, expression);
 			data_decl.addInst(stmt);
 
 		}
@@ -545,13 +603,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitProcedural_repeat_stmt(PSSParser.Procedural_repeat_stmtContext ctx) {
+        String index_id = null;
+        if (ctx.index_identifier() != null)
+            index_id = ctx.index_identifier().getText();
+
 		visit(ctx.expression());
 		PSSExpression cond = exp_stack.pop();
 
 		visit(ctx.procedural_stmt());
 		PSSProcStmt stmt = proc_stmt_list.remove(0);
 
-		PSSRepeatProcStmt repeat_stmt = new PSSRepeatProcStmt(cond, stmt);
+		PSSRepeatProcStmt repeat_stmt = new PSSRepeatProcStmt(index_id, cond, stmt);
 		proc_stmt_list.add(repeat_stmt);
 		return 0;
 	}
@@ -655,20 +717,41 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitProcedural_match_stmt(PSSParser.Procedural_match_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+                visit(ctx.match_expression());
+                PSSExpression cond = exp_stack.pop();
+                int size = ctx.procedural_match_choice().size();
+                ArrayList<PSSExpression> ranges = new ArrayList<PSSExpression> (size);
+                ArrayList<PSSProcStmt> stmts = new ArrayList<PSSProcStmt> (size);
+                PSSProcStmt stmt = null;
+                for (int i = 0; i < size; i++) {
+                    if (ctx.procedural_match_choice(i).open_range_list() != null) {
+                        // open range list
+                        visit(ctx.procedural_match_choice(i).open_range_list());
+                        ranges.add(exp_stack.pop());
+                        visit(ctx.procedural_match_choice(i).procedural_stmt());
+                        stmts.add(proc_stmt_list.remove(0));
+                    } else {
+                        // default
+                        visit(ctx.procedural_match_choice(i).procedural_stmt());
+                        stmt = proc_stmt_list.remove(0);
+                    }
+                }
+		PSSMatchProcStmt match_stmt =
+                    new PSSMatchProcStmt(cond, ranges, stmts, stmt);
+		proc_stmt_list.add(match_stmt);
 		return 0;
 	}
 
 	@Override
 	public Integer visitProcedural_break_stmt(PSSParser.Procedural_break_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		return 0;
+            proc_stmt_list.add(new PSSBreakProcStmt());
+            return 0;
 	}
 
 	@Override
 	public Integer visitProcedural_continue_stmt(PSSParser.Procedural_continue_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		return 0;
+            proc_stmt_list.add(new PSSContinueProcStmt());
+            return 0;
 	}
 
 	@Override
@@ -1337,7 +1420,26 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitActivity_match_stmt(PSSParser.Activity_match_stmtContext ctx) {
-		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+                visit(ctx.match_expression());
+                PSSExpression cond = exp_stack.pop();
+                PSSMatchActivity match_stmt = new PSSMatchActivity(cond);
+
+                for (PSSParser.Match_choiceContext choice_ctx : ctx.match_choice()) {
+                        if (choice_ctx.open_range_list() != null) {
+                            // open range list
+                            visit(choice_ctx.open_range_list());
+                            PSSExpression r = exp_stack.pop();
+                            visit(choice_ctx.activity_stmt());
+                            PSSActivity s = activity_stack.pop();
+                            match_stmt.addChoice(r, s);
+                        } else {
+                            // default
+                            visit(choice_ctx.activity_stmt());
+                            PSSActivity s = activity_stack.pop();
+                            match_stmt.addDefaultChoice(s);
+                        }
+                }
+                activity_stack.push(match_stmt);
 		return 0;
 	}
 
@@ -1379,7 +1481,6 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
 
 			String id = data_inst.identifier().getText();
-
 			PSSExpression array_dim = null;
 			if (data_inst.array_dim() != null) {
 				visit(data_inst.array_dim());

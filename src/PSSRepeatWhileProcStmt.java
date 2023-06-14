@@ -11,9 +11,19 @@ public class PSSRepeatWhileProcStmt extends PSSProcStmt {
 	}
 
 	public void eval(PSSInst inst) {
-		do {
-			m_stmt.eval(inst);
-		}while (m_cond.eval(inst).toBool());
+		PSSNamespaceInst body_inst = new PSSNamespaceInst("");
+		inst.addInst(body_inst);
+		try {
+			do {
+				try {
+					m_stmt.eval(body_inst);
+				} catch (PSSContinueException e) {
+					// continue
+				}
+			} while (m_cond.eval(inst).toBool());
+		} catch (PSSBreakException e) {
+			// break
+		}
 	}
 
 	public void dump(String indent) {

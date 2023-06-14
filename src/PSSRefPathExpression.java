@@ -32,6 +32,10 @@ public class PSSRefPathExpression extends PSSExpression {
 	 */
 	public PSSRefPathExpression(String type_identifier_elems, PSSMemberPathElemExpression ref_path,
 			PSSExpression bit_slice_from, PSSExpression bit_slice_to) {
+		if (type_identifier_elems != null) {
+			if (type_identifier_elems.endsWith("::"))
+				type_identifier_elems = type_identifier_elems.substring(0, type_identifier_elems.length() - 2);
+		}
 		m_type_identifier_elems = type_identifier_elems;
 		m_ref_path = ref_path;
 		m_bit_slice_from = bit_slice_from;
@@ -71,8 +75,9 @@ public class PSSRefPathExpression extends PSSExpression {
 
 	@Override
 	public PSSInst getInst(PSSInst var) {
-		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals(""))
+		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals("")) {
 			PSSMessage.Fatal("[" + getClass().getName() + "] type_identifier_elems is not implemented");
+		}
 
 		PSSInst inst = m_ref_path.getInst(var);
 		if (m_bit_slice_from != null && m_bit_slice_to != null)
@@ -83,10 +88,13 @@ public class PSSRefPathExpression extends PSSExpression {
 
 	@Override
 	public PSSVal eval(PSSInst var) {
-		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals(""))
-			PSSMessage.Fatal("[" + getClass().getName() + "] type_identifier_elems is not implemented");
-
-		PSSVal res = m_ref_path.eval(var);
+		PSSVal res = null;
+		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals("")) {
+			PSSModel m = var.getTypeModel().findDeclaration(m_type_identifier_elems);
+			res = m_ref_path.eval(m, var);
+		} else {
+			res = m_ref_path.eval(var);
+		}
 		if (m_bit_slice_from != null && m_bit_slice_to != null)
 			PSSMessage.Fatal("[" + getClass().getName() + "] bit_slice is not implemented");
 
@@ -95,7 +103,8 @@ public class PSSRefPathExpression extends PSSExpression {
 
 	@Override
 	public String getText() {
-		return (m_type_identifier_elems == null ? "" : m_type_identifier_elems) + m_ref_path.getText()
+		return (m_type_identifier_elems == null || m_type_identifier_elems.equals("") ? ""
+				: (m_type_identifier_elems + "::")) + m_ref_path.getText()
 				+ (m_bit_slice_from == null || m_bit_slice_to == null ? ""
 						: "[" + m_bit_slice_from.getText() + ":" + m_bit_slice_to.getText());
 	}

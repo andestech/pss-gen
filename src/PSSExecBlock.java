@@ -27,7 +27,8 @@ public class PSSExecBlock extends PSSModel {
 
 	public void eval(PSSInst inst) {
 		// Add an anonymous instance for exec local data
-		PSSInst block_inst = new PSSInst("", "", false);
+		// Associate the instance with this model so that the exec kind can be detected
+		PSSInst block_inst = new PSSInst("", "", this, false);
 		inst.addInst(block_inst);
 		try {
 			for (int i = 0; i < m_list.size(); i++) {
@@ -47,4 +48,5 @@ public class PSSExecBlock extends PSSModel {
 		}
 		System.out.println(indent + "}");
 	}
+
 }

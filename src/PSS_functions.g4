@@ -31,9 +31,9 @@ function_parameter_list_prototype
 
 function_parameter
 	: function_parameter_dir? data_type identifier ('=' constant_expression)?
-	| 'type' identifier
-	| 'ref' type_category identifier
-	| 'struct' identifier
+	| type='type' identifier
+	| ref='ref' type_category identifier
+	| struct='struct' identifier
 ;
 
 function_parameter_dir
@@ -44,8 +44,8 @@ function_parameter_dir
 
 varargs_parameter
 	: data_type '...' identifier
-	| 'type' '...' identifier
-	| 'ref' type_category '...' identifier
-	| 'struct' '...' identifier
+	| type='type' '...' identifier
+	| ref='ref' type_category '...' identifier
+	| struct='struct' '...' identifier
 ;
 

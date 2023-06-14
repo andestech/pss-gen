@@ -1,0 +1,94 @@
+/*!
+@weakgroup    test
+@{
+@file
+@author         Ming-Hsien Tsai
+@data           2023/05/30
+@brief          Test ref function parameters
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> 22.2 Functions <br>
+
+### Test Command
+
+    make test
+
+*/
+
+component AA {
+  int x;
+
+  exec init_up {
+    x = 10;
+  }
+}
+
+component BB {
+  int x;
+
+  exec init_up {
+    x = 20;
+  }
+}
+
+component pss_top {
+  AA aa;
+  BB bb;
+  int x;
+
+  struct SS {
+    int x;
+  }
+  struct TT {
+    int x;
+    int y;
+  }
+
+  SS s;
+  TT t;
+
+  function int add(ref component c1, ref component c2) {
+    return c1.x + c2.x;
+  }
+
+  function int double(ref component c) {
+    return add(c, c);
+  }
+
+  function int incr(ref action a) {
+    return a.x + 1;
+  }
+
+  function void decr(struct s) {
+    s.x = s.x - 1;
+  }
+
+  exec init_up {
+    x = 30;
+    s.x = 100;
+    t.x = 1000;
+    t.y = 10000;
+    decr(s);
+    decr(t);
+  }
+
+  action A {
+    rand int x;
+    exec body ASM =
+    """x = {{x}}""";
+  }
+
+  action root_a {
+    int x = 40;
+    activity {
+      do A with { x == double(comp.aa); };   // 20
+      do A with { x == double(comp.bb); };   // 40
+      do A with { x == double(pss_top); };   // 60
+      do A with { x == double(this.comp); }; // 60
+      do A with { x == incr(this); };        // 41
+      do A with { x == this.comp.s.x; };     // 99
+      do A with { x == this.comp.t.x; };     // 999
+    }
+  }
+  
+}

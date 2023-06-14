@@ -13,9 +13,11 @@ public class PSSSequenceProcStmt extends PSSProcStmt {
 	}
 
 	public void eval(PSSInst inst) {
+		PSSNamespaceInst body_inst = new PSSNamespaceInst("");
+		inst.addInst(body_inst);
 		for (int i=0; i<m_list.size(); i++) {
 			PSSProcStmt stmt = m_list.get(i);
-			stmt.eval(inst);
+			stmt.eval(body_inst);
 		}
 	}
 

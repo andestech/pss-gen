@@ -23,16 +23,6 @@ public class PSSRefVal extends PSSVal {
 	}
 
 	/**
-	 * Returns the type of the target.
-	 *
-	 * @return the type of the target
-	 */
-	public PSSModel getTargetTypeModel() {
-		PSSRefModel m = getTypeModel();
-		return m == null ? null : m.getTargetTypeModel();
-	}
-
-	/**
 	 * Returns the instance referred to by this reference.
 	 *
 	 * @return the instance referred to by this reference
@@ -72,7 +62,11 @@ public class PSSRefVal extends PSSVal {
 
 	@Override
 	public PSSVal indexOf(PSSVal index) {
-		return m_inst == null ? null : new PSSRefVal(null, m_inst.indexOf(index));
+		if (m_inst == null)
+			return null;
+		PSSInst res = m_inst.indexOf(index);
+		PSSModel m = res.getTypeModel();
+		return new PSSRefVal(new PSSRefModel(m), res);
 	}
 
 	@Override

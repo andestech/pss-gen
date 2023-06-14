@@ -1,0 +1,46 @@
+component pss_top {
+    list<int> suffix;
+    list<int> l;
+    exec init_down {
+        int i = 100;
+        repeat (10) {
+            suffix.push_back(i);
+            i = i + 1;
+        }
+    }
+    exec init_up {
+        int i = 0;
+        repeat (10) {
+           i = i + 1;
+           if (i % 2 == 0) continue;
+           l.push_back(i);
+        }
+        while (i < 20) {
+           i = i + 1;
+           if (i % 2 == 0) continue;
+           l.push_back(i);
+        }
+        repeat {
+           i = i + 1;
+           if (i % 2 == 0) continue;
+           l.push_back(i);
+        } while (i < 30);
+        foreach (s : suffix) {
+            i = i + 1;
+            if (i % 2 == 0) continue;
+            l.push_back (s);
+        }
+    }
+    action print {
+        rand int out;
+        exec body ASM = """out = {{out}}""";
+    }
+    action root_a {
+        activity {
+            foreach (v : pss_top.l) {
+                do print with { out == v; };
+            }
+        }
+    }
+}
+

@@ -11,8 +11,18 @@ public class PSSWhileProcStmt extends PSSProcStmt {
 	}
 
 	public void eval(PSSInst inst) {
-		while (m_cond.eval(inst).toBool()) {
-			m_stmt.eval(inst);
+		PSSNamespaceInst body_inst = new PSSNamespaceInst("");
+		inst.addInst(body_inst);
+		try {
+			while (m_cond.eval(inst).toBool()) {
+				try {
+					m_stmt.eval(body_inst);
+				} catch (PSSContinueException dontcare) {
+					// continue
+				}
+			}
+		} catch (PSSBreakException dontcare) {
+			// break
 		}
 	}
 

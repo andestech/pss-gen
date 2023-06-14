@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * A {@code PSSFunctionInst} is an invocation of a function.
  */
-public class PSSFunctionInst extends PSSInst {
+public class PSSFunctionInst extends PSSInst implements PSSIScope {
 
     /** the actual parameters */
     List<PSSVal> m_actuals;
@@ -14,7 +14,24 @@ public class PSSFunctionInst extends PSSInst {
     List<PSSInst> m_formals;
 
     /** the returned value */
-    PSSInst res;
+    PSSInst m_res;
+
+    /**
+     * the optional exec kind of the block containing the invocation of this
+     * function
+     */
+    PSSExecKind m_kind;
+
+    private static PSSModel resolve(PSSModel m) {
+        // A struct or an enum may be a PSSDataTypeModel
+        if (m instanceof PSSDataTypeModel)
+            m = ((PSSDataTypeModel) m).resolve();
+
+        if (m instanceof PSSIAggregate)
+            m = new PSSRefModel(m);
+
+        return m;
+    }
 
     /**
      * Constructs a function invocation.
@@ -24,25 +41,63 @@ public class PSSFunctionInst extends PSSInst {
      */
     public PSSFunctionInst(PSSFunctionModel m, List<PSSVal> actuals) {
         super(m.getPrototype().getID(), m.getPrototype().toString(), m, false);
+        List<PSSFunctionParameter> params = m.getPrototype().getParameters();
         m_actuals = actuals;
         m_formals = new ArrayList<PSSInst>();
-        for (PSSFunctionParameter param : m.getPrototype().getParameters()) {
+        for (int i = 0; i < params.size(); i++) {
+            PSSFunctionParameter param = params.get(i);
+            PSSVal actual = i < m_actuals.size() ? m_actuals.get(i) : null;
+
             // PSS 2.0 Section 22.3.3
             // Parameters of aggregate data types are passed as a handle to the instance in
             // the caller. Updates to these parameters in the callee will modify the
             // instances in the caller.
-            if (param.getDataType() instanceof PSSIAggregate) {
-                PSSInst pi = new PSSRefModel(param.getDataType()).declInst(this, param.getID(), false);
+            if (param.isPlainDataType()) {
+                PSSModel dt = resolve(param.getDataType());
+                m_formals.add(dt.declInst(this, param.getID(), false));
+            } else if (param.isRef()) {
+                PSSTypeCategory t = param.getTypeCategory();
+                PSSInst pi = new PSSRefModel(t).declInst(this, param.getID(), false);
+                m_formals.add(pi);
+            } else if (param.isType()) {
+                if (actual == null)
+                    PSSMessage.Error("PSSFunctionInst", "A value is required for the parameter " + param.getID());
+                PSSInst pi = actual.getTypeModel().declInst(this, param.getID(), false);
+                m_formals.add(pi);
+            } else if (param.isStruct()) {
+                if (actual == null)
+                    PSSMessage.Error("PSSFunctionInst", "A value is required for the parameter " + param.getID());
+                PSSInst pi = new PSSRefModel(PSSTypeCategory.STRUCT).declInst(this, param.getID(), false);
                 m_formals.add(pi);
             } else {
-                m_formals.add(param.getDataType().declInst(this, param.getID(), false));
+                PSSMessage.Fatal("Unsupported type of function parameter: " + param.toString());
             }
         }
         PSSFunctionReturnType rt = m.getPrototype().getReturnType();
         if (rt.isVoid())
-            res = null;
-        else
-            res = rt.getDataType().declInst("<" + m.getPrototype().getID() + ":return>", false);
+            m_res = null;
+        else {
+            PSSModel dr = resolve(rt.getDataType());
+            m_res = dr.declInst("<" + m.getPrototype().getID() + ":return>", false);
+        }
+    }
+
+    /**
+     * Sets the exec kind of this function invocation.
+     *
+     * @param kind an exec kind
+     */
+    public void setExecKind(PSSExecKind kind) {
+        m_kind = kind;
+    }
+
+    /**
+     * Returns the exec kind of this function invocation.
+     *
+     * @return the exec kind of this function invocation
+     */
+    public PSSExecKind getExecKind() {
+        return m_kind;
     }
 
     /**
@@ -56,14 +111,14 @@ public class PSSFunctionInst extends PSSInst {
         List<PSSFunctionParameter> params = m.getPrototype().getParameters();
         List<PSSProcStmt> stmts = m.getStatements();
 
-        if (m.getStatements() == null)
+        if (stmts == null)
             PSSMessage.Fatal("Invocation of an external function is not implemented yet");
 
         if (params.size() > 0 && params.get(params.size() - 1).isVarargs())
             PSSMessage.Error("PSS 2.0 Section 22.2.4",
                     "PSS does not provide a native mechanism to operate on an unspecified number of parameters or on parameters with no declared type, nor does PSS define mapping of functions with generic/varargs parameters to foreign languages.");
 
-        if (m_actuals.size() > m_formals.size())
+        if (m_actuals.size() > params.size())
             PSSMessage.Error("", "Too many actual parameters passed to function " + m.getPrototype().getID());
 
         // Assign actual parameters
@@ -84,16 +139,17 @@ public class PSSFunctionInst extends PSSInst {
                 stmt.eval(this);
             }
         } catch (PSSReturnException e) {
-            if (res != null)
-                res.assign(e.getReturnValue());
+            if (m_res != null)
+                m_res.assign(e.getReturnValue());
         }
 
-        return res;
+        return m_res;
     }
 
     @Override
     public String toString() {
-        return super.getTypeModel().getText();
+        return ((PSSFunctionModel) super.getTypeModel()).getPrototype().getID() + "("
+                + String.join(", ", m_actuals.stream().map(a -> a.getText()).toList()) + ")";
     }
 
 }
