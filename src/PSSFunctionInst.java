@@ -1,6 +1,7 @@
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * A {@code PSSFunctionInst} is an invocation of a function.
@@ -149,7 +150,7 @@ public class PSSFunctionInst extends PSSInst implements PSSIScope {
     @Override
     public String toString() {
         return ((PSSFunctionModel) super.getTypeModel()).getPrototype().getID() + "("
-                + String.join(", ", m_actuals.stream().map(a -> a.getText()).toList()) + ")";
+                + String.join(", ", m_actuals.stream().map(a -> a.getText()).collect(Collectors.toList())) + ")";
     }
 
 }

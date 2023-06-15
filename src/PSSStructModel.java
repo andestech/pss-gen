@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PSSStructModel extends PSSModel implements PSSIAggregate {
 
@@ -58,7 +59,7 @@ public class PSSStructModel extends PSSModel implements PSSIAggregate {
 	@Override
 	public String getText() {
 		return m_struct_kind.toString() + " " + m_id + " { "
-				+ String.join(" ", m_attrfield.stream().map(a -> a.getText()).toList()) + " }";
+				+ String.join(" ", m_attrfield.stream().map(a -> a.getText()).collect(Collectors.toList())) + " }";
 	}
 
 	@Override

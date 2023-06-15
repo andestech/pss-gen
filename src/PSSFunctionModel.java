@@ -1,5 +1,6 @@
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A {@code PSSFunctionModel} is a definition of a PSS native function.
@@ -222,7 +223,7 @@ public class PSSFunctionModel extends PSSModel {
         sb.append("function " + m_prototype.toString());
         if (m_stmts != null) {
             sb.append("{\n");
-            sb.append(String.join("", m_stmts.stream().map(stmt -> stmt.getText() + ";\n").toList()));
+            sb.append(String.join("", m_stmts.stream().map(stmt -> stmt.getText() + ";\n").collect(Collectors.toList())));
             sb.append("}");
         }
         return sb.toString();

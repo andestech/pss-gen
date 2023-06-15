@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A {@code PSSMemberPathElemExpression} contains an identifier, an optional
@@ -121,7 +122,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     private PSSInst evalMethod(PSSInst ctx, PSSInst var, String name, List<PSSExpression> args)
             throws NoSuchMethodException {
         /* Evaluate arguments */
-        List<PSSVal> vals = args.stream().map(a -> a.eval(ctx)).toList();
+        List<PSSVal> vals = args.stream().map(a -> a.eval(ctx)).collect(Collectors.toList());
 
         /* Invoke method */
         PSSInst res = var.evalMethod(name, vals);
@@ -187,7 +188,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
                     PSSMessage.Error("PSS 2.0 Section 22.4.1.3",
                             "The function call " + getUpperHierarchicalID() + "("
                                     + String.join(", ",
-                                            m_function_parameter_list.stream().map(p -> p.getText()).toList())
+                                            m_function_parameter_list.stream().map(p -> p.getText()).collect(Collectors.toList()))
                                     + ") is not available in its platform "
                                     + k + ".");
                 }

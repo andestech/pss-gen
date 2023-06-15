@@ -1,6 +1,7 @@
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * This is a class for function prototypes.
@@ -143,7 +144,7 @@ public class PSSFunctionPrototype {
     @Override
     public String toString() {
         return m_return_type.toString() + " " + m_id + "("
-                + String.join(", ", m_params.stream().map(p -> p.toString()).toList()) + ")";
+                + String.join(", ", m_params.stream().map(p -> p.toString()).collect(Collectors.toList())) + ")";
     }
 
 }
