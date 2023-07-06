@@ -21,7 +21,7 @@ public class PSSNumber {
 		return null;
 	}
 	public static PSSVal newHexNumber(String text) {
-		Pattern pattern = Pattern.compile("0x([0-9a-fA-F_]+)");
+		Pattern pattern = Pattern.compile("0[x,X]([0-9a-fA-F_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
 			String hexnumber = m.group(1).replaceAll("_", "");
