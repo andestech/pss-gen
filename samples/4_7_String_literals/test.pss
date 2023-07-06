@@ -1,0 +1,149 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/07/06
+@brief          Test quoted and triple-quoted string literal and assigned to string type.
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> Section 4.7 : String literals <br>
+> Section 8.2 : Numeric types <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+    action test_quoted_string {
+        // Quoted string with unescaped character
+        exec body ASM = " !#$%&()*+,-./"        ; // ASCII 0x20 ~ 0x2F; except 0x22 (double quotes), 0x27 (single quote)
+        exec body ASM = "0123456789:;<=>"       ; // ASCII 0x30 ~ 0x3F; except 0x3F (question mark)
+        exec body ASM = "@ABCDEFGHIJKLMNO"      ; // ASCII 0x40 ~ 0x4F
+        exec body ASM = "PQRSTUVWXYZ[]^_"       ; // ASCII 0x50 ~ 0x5F; except 0x5C (backslash)
+        exec body ASM = "`abcdefghijklmno"      ; // ASCII 0x60 ~ 0x6F
+        exec body ASM = "pqrstuvwxyz{|}~"       ; // ASCII 0x60 ~ 0x7E;
+
+        // Quoted string with escaped character
+        exec body ASM = "double quotes\"END"    ; // ASCII 0x22 (double quotes)
+        exec body ASM = "single quote\'END"     ; // ASCII 0x27 (single quote)
+        exec body ASM = "question mark\?END"    ; // ASCII 0x3F (question mark)
+        exec body ASM = "backslash\\END"        ; // ASCII 0x5C (backslash)
+        exec body ASM = "alert\aEND"            ; // ASCII 0x07 (alert)
+        exec body ASM = "backspace\bEND"        ; // ASCII 0x08 (backspace)
+        exec body ASM = "newline\nEND"          ; // ASCII 0x0A (newline)
+        exec body ASM = "vertical tab\vEND"     ; // ASCII 0x0B (vertical tab)
+        exec body ASM = "formfeed\fEND"         ; // ASCII 0x0C (formfeed)
+        exec body ASM = "carriage return\rEND"  ; // ASCII 0x0D (carriage return)
+        exec body ASM = "\040\041\042\043\044\045\046\047\050\051\052\053\054\055\056\057"  ; // ASCII 0x20 ~ 0x2F
+        exec body ASM = "\060\061\062\063\064\065\066\067\070\071\072\073\074\075\076\077"  ; // ASCII 0x30 ~ 0x3F
+        exec body ASM = "\100\101\102\103\104\105\106\107\110\111\112\113\114\115\116\117"  ; // ASCII 0x40 ~ 0x4F
+        exec body ASM = "\120\121\122\123\124\125\126\127\130\131\132\133\134\135\136\137"  ; // ASCII 0x50 ~ 0x5F
+        exec body ASM = "\140\141\142\143\144\145\146\147\150\151\152\153\154\155\156\157"  ; // ASCII 0x60 ~ 0x6F
+        exec body ASM = "\160\161\162\163\164\165\166\167\170\171\172\173\174\175\176"      ; // ASCII 0x70 ~ 0x7E
+        exec body ASM = "alert\007END"          ; // ASCII 0x07 (alert)
+        exec body ASM = "backspace\010END"      ; // ASCII 0x08 (backspace)
+        exec body ASM = "newline\012END"        ; // ASCII 0x0A (newline)
+        exec body ASM = "vertical tab\013END"   ; // ASCII 0x0B (vertical tab)
+        exec body ASM = "formfeed\014END"       ; // ASCII 0x0C (formfeed)
+        exec body ASM = "carriage return\015END"; // ASCII 0x0D (carriage return)
+    }
+
+    action test_sriple_quoted_string {
+        exec body ASM =
+"""
+ !"#$%&'()*+,-./
+0123456789:;<=>?
+@ABCDEFGHIJKLMNO
+PQRSTUVWXYZ[\]^_
+`abcdefghijklmno
+pqrstuvwxyz{|}~
+""";
+    }
+
+    action test_string_type {
+        string str_0 , str_1 , str_2 , str_3 , str_4 , str_5 , str_6 , str_7 , str_8 , str_9 ;
+        string str_10, str_11, str_12, str_13, str_14, str_15, str_16, str_17, str_18, str_19;
+        string str_20, str_21, str_22, str_23, str_24, str_25, str_26, str_27, str_28, str_29;
+
+        exec post_solve {
+            // Quoted string with unescaped character
+            str_0  = " !#$%&()*+,-./"           ; // ASCII 0x20 ~ 0x2F; except 0x22 (double quotes), 0x27 (single quote)
+            str_1  = "0123456789:;<=>"          ; // ASCII 0x30 ~ 0x3F; except 0x3F (question mark)
+            str_2  = "@ABCDEFGHIJKLMNO"         ; // ASCII 0x40 ~ 0x4F
+            str_3  = "PQRSTUVWXYZ[]^_"          ; // ASCII 0x50 ~ 0x5F; except 0x5C (backslash)
+            str_4  = "`abcdefghijklmno"         ; // ASCII 0x60 ~ 0x6F
+            str_5  = "pqrstuvwxyz{|}~"          ; // ASCII 0x60 ~ 0x7E;
+
+            // Quoted string with escaped character
+            str_6  = "double quotes\"END"       ; // ASCII 0x22 (double quotes)
+            str_7  = "single quote\'END"        ; // ASCII 0x27 (single quote)
+            str_9  = "question mark\?END"       ; // ASCII 0x3F (question mark)
+            str_8  = "backslash\\END"           ; // ASCII 0x5C (backslash)
+            str_10 = "alert\aEND"               ; // ASCII 0x07 (alert)
+            str_11 = "backspace\bEND"           ; // ASCII 0x08 (backspace)
+            str_12 = "newline\nEND"             ; // ASCII 0x0A (newline)
+            str_13 = "vertical tab\vEND"        ; // ASCII 0x0B (vertical tab)
+            str_14 = "formfeed\fEND"            ; // ASCII 0x0C (formfeed)
+            str_15 = "carriage return\rEND"     ; // ASCII 0x0D (carriage return)
+            str_16 = "\040\041\042\043\044\045\046\047\050\051\052\053\054\055\056\057" ; // ASCII 0x20 ~ 0x2F
+            str_17 = "\060\061\062\063\064\065\066\067\070\071\072\073\074\075\076\077" ; // ASCII 0x30 ~ 0x3F
+            str_18 = "\100\101\102\103\104\105\106\107\110\111\112\113\114\115\116\117" ; // ASCII 0x40 ~ 0x4F
+            str_19 = "\120\121\122\123\124\125\126\127\130\131\132\133\134\135\136\137" ; // ASCII 0x50 ~ 0x5F
+            str_20 = "\140\141\142\143\144\145\146\147\150\151\152\153\154\155\156\157" ; // ASCII 0x60 ~ 0x6F
+            str_21 = "\160\161\162\163\164\165\166\167\170\171\172\173\174\175\176"     ; // ASCII 0x70 ~ 0x7E
+            str_22 = "alert\007END"             ; // ASCII 0x07 (alert)
+            str_23 = "backspace\010END"         ; // ASCII 0x08 (backspace)
+            str_24 = "newline\012END"           ; // ASCII 0x0A (newline)
+            str_25 = "vertical tab\013END"      ; // ASCII 0x0B (vertical tab)
+            str_26 = "formfeed\014END"          ; // ASCII 0x0C (formfeed)
+            str_27 = "carriage return\015END"   ; // ASCII 0x0D (carriage return)
+        }
+
+        exec body ASM =
+"""
+str_0  = {{str_0}}
+str_1  = {{str_1}}
+str_2  = {{str_2}}
+str_3  = {{str_3}}
+str_4  = {{str_4}}
+str_5  = {{str_5}}
+str_6  = {{str_6}}
+str_7  = {{str_7}}
+str_8  = {{str_8}}
+str_9  = {{str_9}}
+str_10 = {{str_10}}
+str_11 = {{str_11}}
+str_12 = {{str_12}}
+str_13 = {{str_13}}
+str_14 = {{str_14}}
+str_15 = {{str_15}}
+str_16 = {{str_16}}
+str_17 = {{str_17}}
+str_18 = {{str_18}}
+str_19 = {{str_19}}
+str_20 = {{str_20}}
+str_21 = {{str_21}}
+str_22 = {{str_22}}
+str_23 = {{str_23}}
+str_24 = {{str_24}}
+str_25 = {{str_25}}
+str_26 = {{str_26}}
+str_27 = {{str_27}}
+""";
+    }
+
+	action root_a {
+        activity {
+            do test_quoted_string;
+            do test_sriple_quoted_string;
+            do test_string_type;
+        }
+    }
+}
+
+/**@}*/
