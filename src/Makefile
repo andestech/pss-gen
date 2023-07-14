@@ -8,7 +8,7 @@ SRC_PATH = ${PSS_HOME}/src
 ANTLR4 = java -jar $(ANTLR4_JAR_PATH)
 GRUN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) org.antlr.v4.gui.TestRig PSS model -gui -f
 
-JAVAC = javac -classpath $(SRC_PATH):$(ANTLR4_JAR_PATH)
+JAVAC = javac --release 13 -classpath $(SRC_PATH):$(ANTLR4_JAR_PATH)
 
 PSSGEN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
 
