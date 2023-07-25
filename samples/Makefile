@@ -1,7 +1,7 @@
 .PHONY: test clean
 
 SUBDIRS =
-TEST_SUBDIRS = $(wildcard test_*)
+TEST_SUBDIRS = $(shell find ./ -name "test.pss" -type f | sed 's/test\.pss//g' | sort)
 ALL_SUBDIRS = $(SUBDIRS) $(TEST_SUBDIRS)
 ARG =
 
@@ -12,15 +12,23 @@ test:
 	make result
 
 result:
-	$(eval total := $(shell ls |grep test_ |wc -l))
-	$(eval pass  := $(shell grep PASS test_*/result.log |wc -l))
-	$(eval fail  := $(shell let "fail = $(total) - $(pass)" ; echo $$fail))
+	@$(eval total := $(shell find ./ -name "test.pss" -type f | wc -l))
+	@$(eval pass  := $(shell find ./ -name "result.log" -type f | xargs grep PASS | wc -l))
+	@$(eval fail  := $(shell find ./ -name "result.log" -type f | xargs grep FAIL | wc -l))
+	@$(eval loss  := $(shell let "loss = $(total) - $(pass) - $(fail)" ; echo $$loss))
 
-	@echo -----------------------------------------
-	@echo TOTAL=$(total), PASS=$(pass), FAIL=$(fail)
-	@echo -----------------------------------------
+	@echo --------------------------------------------------------
+	@echo TOTAL=$(total), PASS=$(pass), FAIL=$(fail), LOSS=$(loss)
+	@echo --------------------------------------------------------
 
-	grep "[PASS|FAIL]" test_*/result.log
+	@for i in $(TEST_SUBDIRS); do \
+		RESULT_LOG=$$i"result.log"; \
+		if [ -f $$RESULT_LOG ]; then \
+			grep -H "[PASS|FAIL]" $$RESULT_LOG; \
+		else \
+			echo $$RESULT_LOG":LOSS"; \
+		fi \
+	done
 
 clean:
 	for i in $(ALL_SUBDIRS); do $(MAKE) -C $$i $@; done

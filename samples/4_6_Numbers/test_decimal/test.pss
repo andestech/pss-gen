@@ -1,0 +1,292 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/06/27
+@brief          Test integer constants with decimal format and assigned to int and bit types.
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> Section 4.6 : Numbers <br>
+> Section 8.2 : Numeric types <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+    action test_decimal_to_int {
+        int int_d0 , int_d1 , int_d2 , int_d3 , int_d4 , int_d5 , int_d6 , int_d7 , int_d8 , int_d9 ;
+        int int_d10, int_d11, int_d12, int_d13, int_d14, int_d15, int_d16, int_d17, int_d18, int_d19;
+        int int_d20, int_d21, int_d22, int_d23, int_d24, int_d25, int_d26, int_d27, int_d28, int_d29;
+        int int_d30, int_d31, int_d32, int_d33, int_d34, int_d35, int_d36, int_d37, int_d38, int_d39;
+
+        exec post_solve {
+            // No base specifier
+            int_d0  =  0                ; //                                                         =>  0
+            int_d1  =  2147483647       ; //   2**31 - 1                               => 0x7FFFFFFF =>  2147483647
+            int_d2  = -2147483647       ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 => -2147483647
+            int_d3  = -2147483648       ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 => -2147483648
+            int_d4  =  1234567890       ; //                                           => 0x499602D2 =>  1234567890
+            int_d5  =  12_456_890       ; // Support underscore between number         => 0x00BE13BA =>  12456890
+
+            // With base specifier but no size constant
+            int_d6  =  'd2147483647     ; //   2**31 - 1                               => 0x7FFFFFFF =>  2147483647
+            int_d7  = -'d2147483647     ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 => -2147483647
+            int_d8  =  'd2147483648     ; //   2**31                                   => 0x80000000 => -2147483648
+            int_d9  = -'d2147483648     ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 => -2147483648
+            int_d10 =  'd4294967295     ; //   2**32 - 1                               => 0xFFFFFFFF => -1
+            int_d11 = -'d4294967295     ; // -(2**32 - 1) => 2's-complement 0xFFFFFFFF => 0x00000001 =>  1
+            int_d12 =  'D12_456_890     ; // Support capital 'D' and underscore        => 0x00BE13BA =>  12456890
+
+            // With base specifier but no size constant and with signed designator
+            int_d13 =  'sd2147483647    ; //   2**31 - 1                               => 0x7FFFFFFF =>  2147483647
+            int_d14 = -'sd2147483647    ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 => -2147483647
+            int_d15 =  'sd2147483648    ; //   2**31                                   => 0x80000000 => -2147483648
+            int_d16 = -'sd2147483648    ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 => -2147483648
+            int_d17 =  'sd4294967295    ; //   2**32 - 1                               => 0xFFFFFFFF => -1
+            int_d18 = -'sd4294967295    ; // -(2**32 - 1) => 2's-complement 0xFFFFFFFF => 0x00000001 =>  1
+            int_d19 =  'SD12_456_890    ; // Support capital 'S' and underscore        => 0x00BE13BA =>  12456890
+
+            // With 33 bits base specifier
+            int_d20 =  33'd4294967295   ; //   2**32 - 1                                => 0x0FFFFFFFF => 0xFFFFFFFF => -1
+            int_d21 = -33'd4294967295   ; // -(2**32 - 1) => 2's-complement 0x0FFFFFFFF => 0x100000001 => 0x00000001 =>  1
+            int_d22 =  33'd4294967296   ; //   2**32                                    => 0x100000000 => 0x00000000 =>  0
+            int_d23 = -33'd4294967296   ; // -(2**32)     => 2's-complement 0x100000000 => 0x100000000 => 0x00000000 =>  0
+            int_d24 =  33'd8589934591   ; //   2**33 - 1                                => 0x1FFFFFFFF => 0xFFFFFFFF => -1
+            int_d25 = -33'd8589934591   ; // -(2**33 - 1) => 2's-complement 0x1FFFFFFFF => 0x000000001 => 0x00000001 =>  1
+
+            // With 33 bits base specifier and with signed designator
+            int_d26 =  33'sd4294967295  ; //   2**32 - 1                                => 0x0FFFFFFFF => 0xFFFFFFFF => -1
+            int_d27 = -33'sd4294967295  ; // -(2**32 - 1) => 2's-complement 0x0FFFFFFFF => 0x100000001 => 0x00000001 =>  1
+            int_d28 =  33'sd4294967296  ; //   2**32                                    => 0x100000000 => 0x00000000 =>  0
+            int_d29 = -33'sd4294967296  ; // -(2**32)     => 2's-complement 0x100000000 => 0x100000000 => 0x00000000 =>  0
+            int_d30 =  33'sd8589934591  ; //   2**33 - 1                                => 0x1FFFFFFFF => 0xFFFFFFFF => -1
+            int_d31 = -33'sd8589934591  ; // -(2**33 - 1) => 2's-complement 0x1FFFFFFFF => 0x000000001 => 0x00000001 =>  1
+        }
+
+        exec body ASM =
+"""
+int_d0  = {{int_d0}}
+int_d1  = {{int_d1}}
+int_d2  = {{int_d2}}
+int_d3  = {{int_d3}}
+int_d4  = {{int_d4}}
+int_d5  = {{int_d5}}
+int_d6  = {{int_d6}}
+int_d7  = {{int_d7}}
+int_d8  = {{int_d8}}
+int_d9  = {{int_d9}}
+int_d10 = {{int_d10}}
+int_d11 = {{int_d11}}
+int_d12 = {{int_d12}}
+int_d13 = {{int_d13}}
+int_d14 = {{int_d14}}
+int_d15 = {{int_d15}}
+int_d16 = {{int_d16}}
+int_d17 = {{int_d17}}
+int_d18 = {{int_d18}}
+int_d19 = {{int_d19}}
+int_d20 = {{int_d20}}
+int_d21 = {{int_d21}}
+int_d22 = {{int_d22}}
+int_d23 = {{int_d23}}
+int_d24 = {{int_d24}}
+int_d25 = {{int_d25}}
+int_d26 = {{int_d26}}
+int_d27 = {{int_d27}}
+int_d28 = {{int_d28}}
+int_d29 = {{int_d29}}
+int_d30 = {{int_d30}}
+int_d31 = {{int_d31}}
+""";
+    }
+
+    action test_decimal_to_byte {
+        bit [8] byte_d0  , byte_d1  , byte_d2  , byte_d3  , byte_d4  , byte_d5  , byte_d6  , byte_d7  , byte_d8  , byte_d9 ;
+        bit [8] byte_d10 , byte_d11 , byte_d12 , byte_d13 , byte_d14 , byte_d15 , byte_d16 , byte_d17 , byte_d18 , byte_d19;
+        bit [8] byte_d20 , byte_d21 , byte_d22 , byte_d23 , byte_d24 , byte_d25 , byte_d26 , byte_d27 , byte_d28 , byte_d29;
+        bit [8] byte_d30 , byte_d31 , byte_d32 , byte_d33 , byte_d34 , byte_d35 , byte_d36 , byte_d37 , byte_d38 , byte_d39;
+
+        exec post_solve {
+            // No base specifier
+            byte_d0  =  0               ; //                                                                 =>  0
+            byte_d1  =  2147483647      ; //   2**31 - 1                               => 0x7FFFFFFF => 0xFF =>  255
+            byte_d2  = -2147483647      ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 => 0x01 =>  1
+            byte_d3  = -2147483648      ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 => 0x00 =>  0
+            byte_d4  =  1234567890      ; //                                              0x499602D2 => 0x00 =>  0
+            byte_d5  =  12_456_890      ; // Support underscore between number         => 0x00BE13BA => 0xBA =>  186
+
+            // With base specifier but no size constant
+            byte_d6  =  'd2147483647    ; //   2**31 - 1                               => 0x7FFFFFFF => 0xFF =>  255
+            byte_d7  = -'d2147483647    ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 => 0x01 =>  1
+            byte_d8  =  'd2147483648    ; //   2**31                                   => 0x80000000 => 0x00 =>  0
+            byte_d9  = -'d2147483648    ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 => 0x00 =>  0
+            byte_d10 =  'd4294967295    ; //   2**32 - 1                               => 0xFFFFFFFF => 0xFF =>  255
+            byte_d11 = -'d4294967295    ; // -(2**32 - 1) => 2's-complement 0xFFFFFFFF => 0x00000001 => 0x01 =>  1
+            byte_d12 =  'D12_456_890    ; // Support capital 'D' and underscore        => 0x00BE13BA => 0xBA =>  186
+
+            // With base specifier but no size constant and with signed designator
+            byte_d13 =  'sd2147483647   ; //   2**31 - 1                               => 0x7FFFFFFF => 0xFF =>  255
+            byte_d14 = -'sd2147483647   ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 => 0x01 =>  1
+            byte_d15 =  'sd2147483648   ; //   2**31                                   => 0x80000000 => 0x00 =>  0
+            byte_d16 = -'sd2147483648   ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 => 0x00 =>  0
+            byte_d17 =  'sd4294967295   ; //   2**32 - 1                               => 0xFFFFFFFF => 0xFF =>  255
+            byte_d18 = -'sd4294967295   ; // -(2**32 - 1) => 2's-complement 0xFFFFFFFF => 0x00000001 => 0x01 =>  1
+            byte_d19 =  'SD12_456_890   ; // Support capital 'S' and underscore        => 0x00BE13BA => 0xBA =>  186
+
+            // With 33 bits base specifier
+            byte_d20 =  33'd4294967295  ; //   2**32 - 1                                => 0x0FFFFFFFF => 0xFF =>  255
+            byte_d21 = -33'd4294967295  ; // -(2**32 - 1) => 2's-complement 0x0FFFFFFFF => 0x100000001 => 0x01 =>  1
+            byte_d22 =  33'd4294967296  ; //   2**32                                    => 0x100000000 => 0x00 =>  0
+            byte_d23 = -33'd4294967296  ; // -(2**32)     => 2's-complement 0x100000000 => 0x100000000 => 0x00 =>  0
+            byte_d24 =  33'd8589934591  ; //   2**33 - 1                                => 0x1FFFFFFFF => 0xFF =>  255
+            byte_d25 = -33'd8589934591  ; // -(2**33 - 1) => 2's-complement 0x1FFFFFFFF => 0x000000001 => 0x01 =>  1
+
+            // With 33 bits base specifier and with signed designator
+            byte_d26 =  33'sd4294967295 ; //   2**32 - 1                                => 0x0FFFFFFFF => 0xFF =>  255
+            byte_d27 = -33'sd4294967295 ; // -(2**32 - 1) => 2's-complement 0x0FFFFFFFF => 0x100000001 => 0x01 =>  1
+            byte_d28 =  33'sd4294967296 ; //   2**32                                    => 0x100000000 => 0x00 =>  0
+            byte_d29 = -33'sd4294967296 ; // -(2**32)     => 2's-complement 0x100000000 => 0x100000000 => 0x00 =>  0
+            byte_d30 =  33'sd8589934591 ; //   2**33 - 1                                => 0x1FFFFFFFF => 0xFF =>  255
+            byte_d31 = -33'sd8589934591 ; // -(2**33 - 1) => 2's-complement 0x1FFFFFFFF => 0x000000001 => 0x01 =>  1
+        }
+
+        exec body ASM =
+"""
+byte_d0  = {{byte_d0}}
+byte_d1  = {{byte_d1}}
+byte_d2  = {{byte_d2}}
+byte_d3  = {{byte_d3}}
+byte_d4  = {{byte_d4}}
+byte_d5  = {{byte_d5}}
+byte_d6  = {{byte_d6}}
+byte_d7  = {{byte_d7}}
+byte_d8  = {{byte_d8}}
+byte_d9  = {{byte_d9}}
+byte_d10 = {{byte_d10}}
+byte_d11 = {{byte_d11}}
+byte_d12 = {{byte_d12}}
+byte_d13 = {{byte_d13}}
+byte_d14 = {{byte_d14}}
+byte_d15 = {{byte_d15}}
+byte_d16 = {{byte_d16}}
+byte_d17 = {{byte_d17}}
+byte_d18 = {{byte_d18}}
+byte_d19 = {{byte_d19}}
+byte_d20 = {{byte_d20}}
+byte_d21 = {{byte_d21}}
+byte_d22 = {{byte_d22}}
+byte_d23 = {{byte_d23}}
+byte_d24 = {{byte_d24}}
+byte_d25 = {{byte_d25}}
+byte_d26 = {{byte_d26}}
+byte_d27 = {{byte_d27}}
+byte_d28 = {{byte_d28}}
+byte_d29 = {{byte_d29}}
+byte_d30 = {{byte_d30}}
+byte_d31 = {{byte_d31}}
+""";
+    }
+
+    action test_decimal_to_uint32_t {
+        bit [32]  uint32_d0  , uint32_d1  , uint32_d2  , uint32_d3  , uint32_d4  , uint32_d5  , uint32_d6  , uint32_d7  , uint32_d8  , uint32_d9 ;
+        bit [32]  uint32_d10 , uint32_d11 , uint32_d12 , uint32_d13 , uint32_d14 , uint32_d15 , uint32_d16 , uint32_d17 , uint32_d18 , uint32_d19;
+        bit [32]  uint32_d20 , uint32_d21 , uint32_d22 , uint32_d23 , uint32_d24 , uint32_d25 , uint32_d26 , uint32_d27 , uint32_d28 , uint32_d29;
+        bit [32]  uint32_d30 , uint32_d31 , uint32_d32 , uint32_d33 , uint32_d34 , uint32_d35 , uint32_d36 , uint32_d37 , uint32_d38 , uint32_d39;
+
+        exec post_solve {
+            // No base specifier
+            uint32_d0  =  0                 ; //                                                         =>  0
+            uint32_d1  =  2147483647        ; //   2**31 - 1                               => 0x7FFFFFFF =>  2147483647
+            uint32_d2  = -2147483647        ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 =>  2147483649
+            uint32_d3  = -2147483648        ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 =>  2147483648
+            uint32_d4  =  1234567890        ; //                                              0x499602D2 =>  1234567890
+            uint32_d5  =  12_456_890        ; // Support underscore between number         => 0x00BE13BA =>  12456890
+
+            // With base specifier but no size constant
+            uint32_d6  =  'd2147483647      ; //   2**31 - 1                               => 0x7FFFFFFF =>  2147483647
+            uint32_d7  = -'d2147483647      ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 =>  2147483649
+            uint32_d8  =  'd2147483648      ; //   2**31                                   => 0x80000000 =>  2147483648
+            uint32_d9  = -'d2147483648      ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 =>  2147483648
+            uint32_d10 =  'd4294967295      ; //   2**32 - 1                               => 0xFFFFFFFF =>  4294967295
+            uint32_d11 = -'d4294967295      ; // -(2**32 - 1) => 2's-complement 0xFFFFFFFF => 0x00000001 =>  1
+            uint32_d12 =  'D12_456_890      ; // Support capital 'D' and underscore        => 0x00BE13BA =>  12456890
+
+            // With base specifier but no size constant and with signed designator
+            uint32_d13 =  'sd2147483647     ; //   2**31 - 1                               => 0x7FFFFFFF =>  2147483647
+            uint32_d14 = -'sd2147483647     ; // -(2**31 - 1) => 2's-complement 0x7FFFFFFF => 0x80000001 =>  2147483649
+            uint32_d15 =  'sd2147483648     ; //   2**31                                   => 0x80000000 =>  2147483648
+            uint32_d16 = -'sd2147483648     ; // -(2**31)     => 2's-complement 0x80000000 => 0x80000000 =>  2147483648
+            uint32_d17 =  'sd4294967295     ; //   2**32 - 1                               => 0xFFFFFFFF =>  4294967295
+            uint32_d18 = -'sd4294967295     ; // -(2**32 - 1) => 2's-complement 0xFFFFFFFF => 0x00000001 =>  1
+            uint32_d19 =  'SD12_456_890     ; // Support capital 'S' and underscore        => 0x00BE13BA =>  12456890
+
+            // With 33 bits base specifier
+            uint32_d20 =  33'd4294967295    ; //   2**32 - 1                                => 0x0FFFFFFFF => 0xFFFFFFFF =>  4294967295
+            uint32_d21 = -33'd4294967295    ; // -(2**32 - 1) => 2's-complement 0x0FFFFFFFF => 0x100000001 => 0x00000001 =>  1
+            uint32_d22 =  33'd4294967296    ; //   2**32                                    => 0x100000000 => 0x00000000 =>  0
+            uint32_d23 = -33'd4294967296    ; // -(2**32)     => 2's-complement 0x100000000 => 0x100000000 => 0x00000000 =>  0
+            uint32_d24 =  33'd8589934591    ; //   2**33 - 1                                => 0x1FFFFFFFF => 0xFFFFFFFF =>  4294967295
+            uint32_d25 = -33'd8589934591    ; // -(2**33 - 1) => 2's-complement 0x1FFFFFFFF => 0x000000001 => 0x00000001 =>  1
+
+            // With 33 bits base specifier and with signed designator
+            uint32_d26 =  33'sd4294967295   ; //   2**32 - 1                                => 0x0FFFFFFFF => 0xFFFFFFFF =>  4294967295
+            uint32_d27 = -33'sd4294967295   ; // -(2**32 - 1) => 2's-complement 0x0FFFFFFFF => 0x100000001 => 0x00000001 =>  1
+            uint32_d28 =  33'sd4294967296   ; //   2**32                                    => 0x100000000 => 0x00000000 =>  0
+            uint32_d29 = -33'sd4294967296   ; // -(2**32)     => 2's-complement 0x100000000 => 0x100000000 => 0x00000000 =>  0
+            uint32_d30 =  33'sd8589934591   ; //   2**33 - 1                                => 0x1FFFFFFFF => 0xFFFFFFFF =>  4294967295
+            uint32_d31 = -33'sd8589934591   ; // -(2**33 - 1) => 2's-complement 0x1FFFFFFFF => 0x000000001 => 0x00000001 =>  1
+        }
+
+        exec body ASM =
+"""
+uint32_d0  = {{uint32_d0}}
+uint32_d1  = {{uint32_d1}}
+uint32_d2  = {{uint32_d2}}
+uint32_d3  = {{uint32_d3}}
+uint32_d4  = {{uint32_d4}}
+uint32_d5  = {{uint32_d5}}
+uint32_d6  = {{uint32_d6}}
+uint32_d7  = {{uint32_d7}}
+uint32_d8  = {{uint32_d8}}
+uint32_d9  = {{uint32_d9}}
+uint32_d10 = {{uint32_d10}}
+uint32_d11 = {{uint32_d11}}
+uint32_d12 = {{uint32_d12}}
+uint32_d13 = {{uint32_d13}}
+uint32_d14 = {{uint32_d14}}
+uint32_d15 = {{uint32_d15}}
+uint32_d16 = {{uint32_d16}}
+uint32_d17 = {{uint32_d17}}
+uint32_d18 = {{uint32_d18}}
+uint32_d19 = {{uint32_d19}}
+uint32_d20 = {{uint32_d20}}
+uint32_d21 = {{uint32_d21}}
+uint32_d22 = {{uint32_d22}}
+uint32_d23 = {{uint32_d23}}
+uint32_d24 = {{uint32_d24}}
+uint32_d25 = {{uint32_d25}}
+uint32_d26 = {{uint32_d26}}
+uint32_d27 = {{uint32_d27}}
+uint32_d28 = {{uint32_d28}}
+uint32_d29 = {{uint32_d29}}
+uint32_d30 = {{uint32_d30}}
+uint32_d31 = {{uint32_d31}}
+""";
+    }
+
+	action root_a {
+        activity {
+            do test_decimal_to_int;
+            do test_decimal_to_byte;
+            do test_decimal_to_uint32_t;
+        }
+    }
+}
+
+/**@}*/

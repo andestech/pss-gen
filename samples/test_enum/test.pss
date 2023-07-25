@@ -1,26 +1,66 @@
-component pss_top {
-	enum count_e {
-                COUNT_1 = 1,
-		COUNT_2, COUNT_3, COUNT_4,
-		COUNT_10 = 10,
-		COUNT_NEG = -1
-        };
+// Declare enumeration outside component
+enum out_e {
+	OUT_0,
+	OUT_1 = 1,
+	OUT_2, OUT_3, OUT_4,
+	OUT_10 = 10,
+	OUT_NEG = -1,
+	SAME_NAME = 50
+};
 
-	action printf {
-		rand count_e val = 0;
+component pss_top {
+	// Declare enumeration inside component
+	enum in_e {
+		IN_1 = 1,
+		IN_2, IN_3, IN_4,
+		IN_10 = 10,
+		IN_NEG = -1,
+		SAME_NAME = 20
+	};
+
+	action test_declaration {
+		in_e	inVal_0;		// Declare without initialization
+		in_e	inVal_1 = IN_NEG;	// Declare with initialization
+		in_e	inVal_2 = SAME_NAME;	// Declare with same enum_item_identifier
+		out_e	outVal_0 = OUT_4;	// Type declared outside component
+		out_e	outVal_1 = out_e::SAME_NAME;	// Initialise with qualified name
+
 		exec body ASM =
-		"""count_e = {{val}}""";
+"""
+inVal_0 = {{inVal_0}}
+inVal_1 = {{inVal_1}}
+inVal_2 = {{inVal_2}}
+outVal_0 = {{outVal_0}}
+outVal_1 = {{outVal_1}}
+outVal_2 = {{outVal_2}}
+IN_2 = {{IN_2}}
+OUT_0 = {{OUT_0}}
+OUT_10 = {{OUT_10}}
+SAME_NAME = {{SAME_NAME}}
+out_e::SAME_NAME = {{out_e::SAME_NAME}}
+in_e::SAME_NAME = {{in_e::SAME_NAME}}
+""";
 	}
+
+	action test_random {
+		rand out_e	outVal;
+		rand in_e	inVal;
+		constraint {
+			inVal in [2..10];
+		}
+
+		exec body ASM =
+"""
+outVal = {{outVal}}
+inVal = {{inVal}}
+""";
+	}
+
 	action root_a {
 		activity {
-			do printf with {val == COUNT_1;};
-			do printf with {val == COUNT_2;};
-			do printf with {val == COUNT_3;};
-			do printf with {val == COUNT_4;};
-			do printf with {val == COUNT_10;};
-			do printf with {val == COUNT_NEG;};
+			do test_declaration;
+			do test_random with { outVal == OUT_3; inVal == IN_4; };
+			do test_random with { outVal in [OUT_4]; inVal < IN_3; };
 		}
 	}
-
 }
-

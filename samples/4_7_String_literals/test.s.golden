@@ -1,0 +1,73 @@
+ !#$%&()*+,-./
+0123456789:;<=>
+@ABCDEFGHIJKLMNO
+PQRSTUVWXYZ[]^_
+`abcdefghijklmno
+pqrstuvwxyz{|}~
+double quotes"END
+single quote'END
+question mark?END
+backslash\END
+alertEND
+backspacEND
+newline
+END
+vertical tab	END
+formfeed
+        END
+ENDriage return
+ !"#$%&'()*+,-./
+0123456789:;<=>?
+@ABCDEFGHIJKLMNO
+PQRSTUVWXYZ[\]^_
+`abcdefghijklmno
+pqrstuvwxyz{|}~
+alertEND
+backspacEND
+newline
+END
+vertical tab	END
+formfeed
+        END
+ENDriage return
+
+ !"#$%&'()*+,-./
+0123456789:;<=>?
+@ABCDEFGHIJKLMNO
+PQRSTUVWXYZ[\]^_
+`abcdefghijklmno
+pqrstuvwxyz{|}~
+
+
+str_0  =  !#$%&()*+,-./
+str_1  = 0123456789:;<=>
+str_2  = @ABCDEFGHIJKLMNO
+str_3  = PQRSTUVWXYZ[]^_
+str_4  = `abcdefghijklmno
+str_5  = pqrstuvwxyz{|}~
+str_6  = double quotes"END
+str_7  = single quote'END
+str_8  = question mark?END
+str_9  = backslash\END
+str_10 = alertEND
+str_11 = backspacEND
+str_12 = newline
+END
+str_13 = vertical tab	END
+str_14 = formfeed
+                 END
+END_15 = carriage return
+str_16 =  !"#$%&'()*+,-./
+str_17 = 0123456789:;<=>?
+str_18 = @ABCDEFGHIJKLMNO
+str_19 = PQRSTUVWXYZ[\]^_
+str_20 = `abcdefghijklmno
+str_21 = pqrstuvwxyz{|}~
+str_22 = alertEND
+str_23 = backspacEND
+str_24 = newline
+END
+str_25 = vertical tab	END
+str_26 = formfeed
+                 END
+END_27 = carriage return

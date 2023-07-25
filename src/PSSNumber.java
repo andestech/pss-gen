@@ -9,14 +9,22 @@ public class PSSNumber {
 		return new PSSIntVal(val);
 	}
 	public static PSSVal newDecNumber(String text) {
-		int val = Integer.parseInt(text);
-		return new PSSIntVal(val);
-	}
-	public static PSSVal newHexNumber(String text) {
-		Pattern pattern = Pattern.compile("0x([0-9a-fA-F]+)");
+		Pattern pattern = Pattern.compile("([-]?)([0-9]?[0-9_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String hexnumber = m.group(1);
+			String sign      = m.group(1)                    ;
+			String decnumber = m.group(2).replaceAll("_", "");
+			String sign_number = sign + decnumber;
+			int val = new BigDecimal(sign_number).intValue();
+			return new PSSIntVal(val);
+		}
+		return null;
+	}
+	public static PSSVal newHexNumber(String text) {
+		Pattern pattern = Pattern.compile("0[x,X]([0-9a-fA-F_]+)");
+		Matcher m = pattern.matcher(text);
+		if (m.find()) {
+			String hexnumber = m.group(1).replaceAll("_", "");
 			BigInteger val = new BigInteger(hexnumber, 16);
 			return new PSSIntVal(val);
 		}
@@ -24,12 +32,12 @@ public class PSSNumber {
 		return null;
 	}
 	public static PSSVal newBasedBinNumber(String text) {
-		Pattern pattern = Pattern.compile("([0-9]+)?'([ss]?)[bB]([01]+)");
+		Pattern pattern = Pattern.compile("([0-9]+)?'([sS]?)[bB]([01_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String numBits = m.group(1);
-			String sign= m.group(2);
-			String binnumber = m.group(3);
+			String numBits   = m.group(1)                    ;
+			String sign      = m.group(2)                    ;
+			String binnumber = m.group(3).replaceAll("_", "");
 
 			if (sign.equals("")) {
 				BigInteger val = new BigInteger(binnumber, 2);
@@ -47,12 +55,12 @@ public class PSSNumber {
 	public static PSSVal newBasedOctNumber(String text) {
 		// 64'o1
 		//   'o2
-		Pattern pattern = Pattern.compile("([0-9]+)?'([ss]?)[oO]([0-7]+)");
+		Pattern pattern = Pattern.compile("([0-9]+)?'([sS]?)[oO]([0-7_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String numBits = m.group(1);
-			String sign= m.group(2);
-			String octnumber = m.group(3);
+			String numBits   = m.group(1)                    ;
+			String sign      = m.group(2)                    ;
+			String octnumber = m.group(3).replaceAll("_", "");
 
 			if (sign.equals("")) {
 				BigInteger val = new BigInteger(octnumber, 8);
@@ -70,12 +78,12 @@ public class PSSNumber {
 	public static PSSVal newBasedDecNumber(String text) {
 		// 64'd1
 		//   'd2
-		Pattern pattern = Pattern.compile("([0-9]+)?'([ss]?)[dD]([0-9]+)");
+		Pattern pattern = Pattern.compile("([0-9]+)?'([sS]?)[dD]([0-9_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String numBits = m.group(1);
-			String sign= m.group(2);
-			String decnumber = m.group(3);
+			String numBits   = m.group(1)                    ;
+			String sign      = m.group(2)                    ;
+			String decnumber = m.group(3).replaceAll("_", "");
 
 			if (sign.equals("")) {
 				BigInteger val = new BigInteger(decnumber, 10);
@@ -93,12 +101,12 @@ public class PSSNumber {
 	public static PSSVal newBasedHexNumber(String text) {
 		// 64'h00000000E0500000
 		//   'h00000000E0500000
-		Pattern pattern = Pattern.compile("([0-9]+)?'([ss]?)[hH]([0-9a-fA-F]+)");
+		Pattern pattern = Pattern.compile("([0-9]+)?'([sS]?)[hH]([0-9a-fA-F_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String numBits = m.group(1);
-			String sign= m.group(2);
-			String hexnumber = m.group(3);
+			String numBits   = m.group(1)                    ;
+			String sign      = m.group(2)                    ;
+			String hexnumber = m.group(3).replaceAll("_", "");
 
 			if (sign.equals("")) {
 				BigInteger val = new BigInteger(hexnumber, 16);
