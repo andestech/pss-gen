@@ -59,3 +59,42 @@ test_unique_with_array/result.log:PASS
 test_with_constraint_ops/result.log:PASS
 test_with_multi_constraint/result.log:PASS
 ```
+
+---
+# Limitation
+#### 13.4.1 repeat(count)
+##### Limit 1: Can't use **this** to target *index*_identifier of **repeat**.
+**Example:**
+```pss
+action main {
+    activity {
+        repeat (foo_val:5) {
+            do foo with { foo_val == this.foo_val; };
+        }
+    }
+}
+
+action foo {
+    rand int foo_val;
+    ...
+}
+```
+In the example, we wish the built-in variable **this** will refer *index*_identifier of **repeat**.
+However, it actually try to refer *foo_val* under *main* scope, therefore travesal fails.
+We must avoid using same name between *index*_identifier of **repeat** and *variable*_identifier of callee action.
+
+**Solution:**
+```pss
+action main {
+    activity {
+        repeat (i:5) {
+            do foo with { foo_val == i; };
+        }
+    }
+}
+
+action foo {
+    rand int foo_val;
+    ...
+}
+```
