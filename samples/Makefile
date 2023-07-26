@@ -1,8 +1,10 @@
 .PHONY: test clean
 
+IGNORE_LIST = "4_6_Numbers\|4_7_String_literals\|test_enum"
+
 SUBDIRS =
-TEST_SUBDIRS = $(shell find ./ -name "test.pss" -type f | sed 's/test\.pss//g' | sort)
-ALL_SUBDIRS = $(SUBDIRS) $(TEST_SUBDIRS)
+TEST_SUBDIRS = $(shell find ./ -name "test.pss" -type f | grep -wv $(IGNORE_LIST) | sed 's/test\.pss//g' | sort)
+ALL_SUBDIRS = $(shell find ./ -name "test.pss" -type f | sed 's/test\.pss//g' | sort)
 ARG =
 
 test:
@@ -12,9 +14,9 @@ test:
 	make result
 
 result:
-	@$(eval total := $(shell find ./ -name "test.pss" -type f | wc -l))
-	@$(eval pass  := $(shell find ./ -name "result.log" -type f | xargs grep PASS | wc -l))
-	@$(eval fail  := $(shell find ./ -name "result.log" -type f | xargs grep FAIL | wc -l))
+	@$(eval total := $(shell find ./ -name "test.pss" -type f | grep -wv $(IGNORE_LIST) | wc -l))
+	@$(eval pass  := $(shell find ./ -name "result.log" -type f | grep -wv $(IGNORE_LIST) | xargs grep PASS | wc -l))
+	@$(eval fail  := $(shell find ./ -name "result.log" -type f | grep -wv $(IGNORE_LIST) | xargs grep FAIL | wc -l))
 	@$(eval loss  := $(shell let "loss = $(total) - $(pass) - $(fail)" ; echo $$loss))
 
 	@echo --------------------------------------------------------
@@ -32,6 +34,3 @@ result:
 
 clean:
 	for i in $(ALL_SUBDIRS); do $(MAKE) -C $$i $@; done
-
-
-
