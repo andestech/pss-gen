@@ -170,13 +170,15 @@ public class PSSInst {
 
 	public PSSInst findStaticInst(String hierarchiy_id) {
 		// Currently, find enum items only.
+		PSSInst res = null;
 		PSSModel m = getTypeModel();
-		while (!(m instanceof PSSComponentModel) && m != null)
+		while (m != null) {
+			res = m.findStaticInst(hierarchiy_id);
+			if (res != null)
+				break;
 			m = m.m_parent;
-		if (m != null) {
-			return m.findStaticInst(hierarchiy_id);
 		}
-		return null;
+		return res;
 	}
 
 	public PSSInst findInstance(String hierarchy_id, boolean local_scope) {

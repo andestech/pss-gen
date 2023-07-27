@@ -157,9 +157,12 @@ public class PSSMemberPathElemExpression extends PSSExpression {
      */
     private PSSInst getInstOne(PSSModel pkg, PSSInst ctx, PSSInst parent) {
         PSSInst inst = null;
-
         if (m_function_parameter_list == null) {
-            inst = m_parent == null ? ctx.findInstance(m_id) : parent.findInstanceUnder(m_id);
+            if (pkg == null || m_parent != null) {
+                inst = m_parent == null ? ctx.findInstance(m_id) : parent.findInstanceUnder(m_id);
+            } else {
+                inst = pkg.findStaticInst(m_id);
+            }
             if (inst == null)
                 PSSMessage.Error("PSSMemberPathElemExpression", getUpperHierarchicalID() + " is not defined.");
         } else if (m_parent == null || parent instanceof PSSComponentInst) {
@@ -188,7 +191,8 @@ public class PSSMemberPathElemExpression extends PSSExpression {
                     PSSMessage.Error("PSS 2.0 Section 22.4.1.3",
                             "The function call " + getUpperHierarchicalID() + "("
                                     + String.join(", ",
-                                            m_function_parameter_list.stream().map(p -> p.getText()).collect(Collectors.toList()))
+                                            m_function_parameter_list.stream().map(p -> p.getText())
+                                                    .collect(Collectors.toList()))
                                     + ") is not available in its platform "
                                     + k + ".");
                 }
@@ -253,6 +257,21 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             inst = m_child.getInst(null, ctx, inst);
 
         return inst;
+    }
+
+    /**
+     * Resolve the whole hierarchical reference path.
+     *
+     * @param pkg an optional package containing m_id (m_parent != null implies
+     *            pkg == null)
+     * @param var the containing instance
+     * @return the resolved instance of the whole hierarchical reference path
+     */
+    public PSSInst getInst(PSSModel pkg, PSSInst var) {
+        if (m_parent != null)
+            PSSMessage.Error("PSSMemberPathElemExpression",
+                    "Cannot evaluate a partial member path reference: " + getLowerHierarchicalID());
+        return getInst(pkg, var, var);
     }
 
     @Override
