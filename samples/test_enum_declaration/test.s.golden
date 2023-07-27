@@ -1,0 +1,17 @@
+
+inVal_1 = -1
+inVal_2 = 20
+outVal_0 = 4
+IN_2 = 2
+OUT_0 = 0
+OUT_10 = 10
+SAME_NAME = 20
+
+
+outVal = 3
+inVal = 4
+
+
+outVal = 4
+inVal = 2
+

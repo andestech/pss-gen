@@ -47,9 +47,12 @@ component pss_top {
             repeat(i : 6) {
                 do bit_a with {bit_val == i;};
             }
-            repeat(bit_val : 6) {
-                do bit_a with {bit_val == this.bit_val;};   // When index_identifier as same as action's random variable
-            }
+
+            /* Limitation: `this` scope cannot target on index_identifier of repeat */
+            // repeat(bit_val : 6) {
+            //     do bit_a with {bit_val == this.bit_val;};   // When index_identifier as same as action's random variable
+            // }
+            
             do int_print with {val == repeat_sum;};
         }
     }
