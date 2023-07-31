@@ -2,14 +2,33 @@ import java.util.*;
 
 public class PSSEnumModel extends PSSModel {
 
-	private HashMap<String, Integer> m_items;
+	private LinkedHashMap<String, Integer> m_items;
 
 	private Integer m_default_val;
 
 	public PSSEnumModel(String id) {
 		super(id);
-		m_items = new HashMap<String, Integer>();
+		m_items = new LinkedHashMap<String, Integer>();
 		m_default_val = 0;
+	}
+
+	/**
+	 * Returns items in this enum.
+	 *
+	 * @return items in this enum.
+	 */
+	public String[] getEnumItems() {
+		return m_items.keySet().toArray(new String[0]);
+	}
+
+	/**
+	 * Returns the value of a specified item in this enum.
+	 *
+	 * @param item an item in this enum
+	 * @return the value of item in this enum
+	 */
+	public int getEnumItemValue(String item) {
+		return m_items.get(item);
 	}
 
 	public void addEnumItem(String id) {

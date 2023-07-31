@@ -131,9 +131,9 @@ public class PSSModel {
 
 			child.declEnumItem(inst);
 		}
-		// if (m_parent != null) {
-		// m_parent.declEnumInst(inst);
-		// }
+		if (m_parent != null) {
+			m_parent.declEnumInst(inst);
+		}
 	}
 
 	public void init_up(PSSInst inst) {
