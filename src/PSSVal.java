@@ -325,6 +325,17 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	}
 
 	/**
+	 * "^" operator, numeric only
+	 *
+	 * @param rhs
+	 * @return
+	 */
+	public PSSVal BitwiseXor(PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseXor is not implemented");
+		return null;
+	}
+
+	/**
 	 * Unary "^" operator, numeric only
 	 *
 	 * @return

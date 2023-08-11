@@ -155,6 +155,13 @@ public class PSSIntVal extends PSSVal {
 	}
 
     @Override
+	public PSSVal BitwiseXor(PSSVal rhs) {
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result = m_val.xor(rhs_int);
+		return new PSSIntVal(result);
+	}
+
+    @Override
 	public PSSBoolVal InRange(PSSVal lhs) {
 		return Equal(lhs);
 	}

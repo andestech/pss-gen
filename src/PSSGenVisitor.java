@@ -999,6 +999,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 				case "|":
 					exp_stack.push(new PSSBitwiseOrExpression(left, right));
 					break;
+				case "^":
+					exp_stack.push(new PSSBitwiseXorExpression(left, right));
+					break;
 				default:
 					exp_stack.push(new PSSBinaryExpression(left, op, right));
 					break;
