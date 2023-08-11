@@ -45,6 +45,10 @@ public class PSSGenOpt {
 				m_lib_dir.add(args[i+1]);
 				i+=2;
 			}
+			else if (arg.equals("-info")) {
+				PSSMessage.Set_printInfoEn(true);
+				i++;
+			}
 			else if (arg.equals("-root")) {
 				m_root_action = args[i+1];
 				i+=2;
@@ -155,6 +159,7 @@ public class PSSGenOpt {
 		System.out.println("	-o <filename>		output file");
 		System.out.println("	-f <filename>		file list");
 		System.out.println("	-y <directory>		lib directory");
+		System.out.println("	-info			enable display `PSS-INFO` message");
 		System.out.println("	-root <root_action>");
 		System.out.println("	-seed <seed>");
 		System.exit(1);

@@ -1,6 +1,12 @@
 import java.util.*;
 
 public class PSSMessage {
+	private static boolean printInfoEn = false;	// Control of Info function
+
+	public static void Set_printInfoEn (boolean val) {
+		printInfoEn = val;
+	}
+
 	public static void Fatal(String msg) {
 		String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();;
 		String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
@@ -11,7 +17,7 @@ public class PSSMessage {
 		System.exit(1);
 	}
 	public static void Info(String msg){
-		System.out.println("PSS-INFO: " + msg);
+		if (true == printInfoEn) System.out.println("PSS-INFO: " + msg);
 	}
 	public static void Error(String ID, String msg){
 		System.out.println("PSS-ERROR: [" + ID + "] " + msg);
