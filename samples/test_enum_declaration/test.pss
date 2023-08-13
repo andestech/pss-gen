@@ -39,23 +39,69 @@ SAME_NAME = {{SAME_NAME}}
 
 	action test_random {
 		rand out_e	outVal;
+		rand int 	outInt;
+		rand string 	outStr;
+
 		rand in_e	inVal;
+		rand int 	inInt;
+		rand string 	inStr;
+
 		constraint {
-			inVal in [2..10];
+			outVal in [OUT_0..OUT_4, OUT_10];
+			inVal in [2..4, 10];
+		}
+		// todo : Fix outInt can't be constraint be caller's outVal.
+		//        It use first time randomization (i.e., outVal) for its if-condition.
+		//        Thus outInt will be any number in [0..4, 10]
+		constraint {
+			// if	(outVal == OUT_0) outInt in [0];
+			// else if (outVal == OUT_1) outInt in [1];
+			// else if (outVal == OUT_2) outInt in [2];
+			// else if (outVal == OUT_3) outInt in [3];
+			// else if (outVal == OUT_4) outInt in [4];
+			// else if (outVal == OUT_10) outInt in [10];
+			// else outInt in [-1];
+
+			if	(inVal == IN_2) inInt in [2];
+			else if (inVal == IN_3) inInt in [3];
+			else if (inVal == IN_4) inInt in [4];
+			else if (inVal == IN_10) inInt in [10];
+			else inInt in [-1];
+		}
+
+		exec post_solve {
+			if	(outVal == OUT_0) outStr = "OUT_0";
+			else if (outVal == OUT_1) outStr = "OUT_1";
+			else if (outVal == OUT_2) outStr = "OUT_2";
+			else if (outVal == OUT_3) outStr = "OUT_3";
+			else if (outVal == OUT_4) outStr = "OUT_4";
+			else if (outVal == OUT_10) outStr = "OUT_10";
+			else outStr = "Fail";
+
+			if	(inVal == IN_2) inStr = "IN_2";
+			else if (inVal == IN_3) inStr = "IN_3";
+			else if (inVal == IN_4) inStr = "IN_4";
+			else if (inVal == IN_10) inStr = "IN_10";
+			else inStr = "Fail";
 		}
 
 		exec body ASM =
+// outInt = {{outInt}}
 """
 outVal = {{outVal}}
+outStr = {{outStr}}
 inVal = {{inVal}}
+inInt = {{inInt}}
+inStr = {{inStr}}
 """;
 	}
 
 	action root_a {
 		activity {
 			do test_declaration;
-			do test_random with { outVal == OUT_3; inVal == IN_4; };
+			do test_random with { outVal == OUT_3; inVal > IN_4; };
 			do test_random with { outVal in [OUT_4]; inVal < IN_3; };
+			do sub_test::sub_root_a;
 		}
 	}
 }

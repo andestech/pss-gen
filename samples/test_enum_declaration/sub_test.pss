@@ -1,0 +1,80 @@
+// Declare enumeration outside component
+enum sub_out_e {
+    SUB_OUT_0,
+    SUB_OUT_1 = 1,
+    SUB_OUT_2, SUB_OUT_3, SUB_OUT_4,
+    SUB_OUT_10 = 10,
+    SUB_OUT_NEG = -1,
+    SUB_SAME_NAME = 50
+};
+
+component sub_test {
+    // Todo: Support declare enumeration inside component
+    // enum sub_in_e {
+    //     SUB_IN_1 = 1,
+    //     SUB_IN_2, SUB_IN_3, SUB_IN_4,
+    //     SUB_IN_10 = 10,
+    //     SUB_IN_NEG = -1,
+    //     SUB_SAME_NAME = 20
+    // };
+
+    action test_declaration {
+        // sub_in_e    sub_inVal_1 = SUB_IN_NEG;   // Declare with initialization
+        // sub_in_e    sub_inVal_2 = sub_in_e::SUB_SAME_NAME;    // Declare with same enum_item_identifier
+        sub_out_e   sub_outVal_0 = SUB_OUT_4;   // Type declared outside component
+
+		exec body ASM =
+// sub_inVal_1 = {{sub_inVal_1}}
+// sub_inVal_2 = {{sub_inVal_2}}
+// SUB_IN_2 = {{SUB_IN_2}}
+"""
+sub_outVal_0 = {{sub_outVal_0}}
+SUB_OUT_0 = {{SUB_OUT_0}}
+SUB_OUT_10 = {{SUB_OUT_10}}
+SUB_SAME_NAME = {{SUB_SAME_NAME}}
+""";
+	}
+
+    action test_random {
+        // rand sub_in_e   sub_inVal;
+        rand sub_out_e  sub_outVal;
+        rand int        sub_outInt;
+        rand string     sub_outStr;
+        constraint {
+            sub_outVal in [SUB_OUT_0..SUB_OUT_4, SUB_OUT_10];
+            if      (sub_outVal == OUT_0) sub_outInt in [0];
+            else if (sub_outVal == OUT_1) sub_outInt in [1];
+            else if (sub_outVal == OUT_2) sub_outInt in [2];
+            else if (sub_outVal == OUT_3) sub_outInt in [3];
+            else if (sub_outVal == OUT_4) sub_outInt in [4];
+            else if (sub_outVal == OUT_10) sub_outInt in [10];
+            else sub_outInt in [-1];
+        }
+
+        exec post_solve {
+            if      (sub_outVal == SUB_OUT_0) sub_outStr = "SUB_OUT_0";
+            else if (sub_outVal == SUB_OUT_1) sub_outStr = "SUB_OUT_1";
+            else if (sub_outVal == SUB_OUT_2) sub_outStr = "SUB_OUT_2";
+            else if (sub_outVal == SUB_OUT_3) sub_outStr = "SUB_OUT_3";
+            else if (sub_outVal == SUB_OUT_4) sub_outStr = "SUB_OUT_4";
+            else if (sub_outVal == SUB_OUT_10) sub_outStr = "SUB_OUT_10";
+            else sub_outStr = "Fail";
+        }
+
+        exec body ASM =
+"""
+sub_outVal = {{sub_outVal}}
+sub_outInt = {{sub_outInt}}
+sub_outStr = {{sub_outStr}}
+""";
+    }
+
+    action sub_root_a {
+        activity {
+            do test_declaration;
+            do test_random with { sub_outVal == OUT_3; };
+            do test_random with { sub_outVal in [OUT_4]; };
+        }
+    }
+
+}

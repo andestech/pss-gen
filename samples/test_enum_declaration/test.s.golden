@@ -9,9 +9,31 @@ SAME_NAME = 20
 
 
 outVal = 3
-inVal = 4
+outStr = OUT_3
+inVal = 10
+inInt = 10
+inStr = IN_10
 
 
 outVal = 4
+outStr = OUT_4
 inVal = 2
+inInt = 2
+inStr = IN_2
+
+
+sub_outVal_0 = 4
+SUB_OUT_0 = 0
+SUB_OUT_10 = 10
+SUB_SAME_NAME = 50
+
+
+sub_outVal = 3
+sub_outInt = 3
+sub_outStr = SUB_OUT_3
+
+
+sub_outVal = 4
+sub_outInt = 4
+sub_outStr = SUB_OUT_4
 
