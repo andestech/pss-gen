@@ -46,7 +46,11 @@ public class PSSGenOpt {
 				i+=2;
 			}
 			else if (arg.equals("-info")) {
-				PSSMessage.Set_printInfoEn(true);
+				PSSMessage.SetPrintInfoEn(true);
+				i++;
+			}
+			else if (arg.equals("-debug")) {
+				PSSMessage.SetPrintDebugEn(true);
 				i++;
 			}
 			else if (arg.equals("-root")) {
@@ -160,6 +164,7 @@ public class PSSGenOpt {
 		System.out.println("	-f <filename>		file list");
 		System.out.println("	-y <directory>		lib directory");
 		System.out.println("	-info			enable display `PSS-INFO` message");
+		System.out.println("	-debug			enable display `PSS-DEBUG` message");
 		System.out.println("	-root <root_action>");
 		System.out.println("	-seed <seed>");
 		System.exit(1);
