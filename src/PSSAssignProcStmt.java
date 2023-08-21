@@ -30,38 +30,38 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 			}
 		}
 
-        switch(m_op) {
-            case "=":
-                leftInst.assign(rightVal);
-                break;
+		switch(m_op) {
+			case "=":
+				leftInst.assign(rightVal);
+				break;
 
-            case "+=":
-                leftInst.assign(leftInst.toVal().Add(rightVal));
-                break;
+			case "+=":
+				leftInst.assign(leftInst.toVal().Add(rightVal));
+				break;
 
-            case "-=":
-                leftInst.assign(leftInst.toVal().Sub(rightVal));
-                break;
+			case "-=":
+				leftInst.assign(leftInst.toVal().Sub(rightVal));
+				break;
 
-            case "<<=":
-                leftInst.assign(leftInst.toVal().LeftShift(rightVal));
-                break;
+			case "<<=":
+				leftInst.assign(leftInst.toVal().LeftShift(rightVal));
+				break;
 
-            case ">>=":
-                leftInst.assign(leftInst.toVal().RightShift(rightVal));
-                break;
+			case ">>=":
+				leftInst.assign(leftInst.toVal().RightShift(rightVal));
+				break;
 
-            case "|=":
-                leftInst.assign(leftInst.toVal().BitwiseOr(rightVal));
-                break;
+			case "|=":
+				leftInst.assign(leftInst.toVal().BitwiseOr(rightVal));
+				break;
 
-            case "&=":
-                leftInst.assign(leftInst.toVal().BitwiseAnd(rightVal));
-                break;
+			case "&=":
+				leftInst.assign(leftInst.toVal().BitwiseAnd(rightVal));
+				break;
 
-            default:
-                PSSMessage.Error("", m_op + " is not an assign_op.");
-        }
+			default:
+				PSSMessage.Error("", m_op + " is not an assign_op.");
+		}
 
 	}
 
