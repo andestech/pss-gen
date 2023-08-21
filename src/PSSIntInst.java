@@ -13,20 +13,52 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
 	PSSIntDomain m_domain; // Solution domain
 
+	PSSIntVal m_BitSelect;	// Bit-selects
+
 	public PSSIntInst(String id, boolean rand, int width, boolean sign) {
 		super(id, "int", rand);
 		m_val = DEFAULT_VALUE; // PSS v2.0 8.2.1: the default value of the bit and int types is 0
 		m_width = width;
 		m_sign = sign;
 		m_domain = new PSSIntDomain(width, sign);
+		m_BitSelect = null;
 	}
 
 	public PSSIntDomain getInitDomain() {
 		return new PSSIntDomain(m_width, m_sign);
 	}
 
-	public PSSVal toVal() {
-		return m_val;
+	public PSSVal toVal () {
+		if (null != m_BitSelect) {
+			BigInteger bi_val = m_val.toBigInteger();
+			int i_BitSelect = m_BitSelect.toInt();
+			if (bi_val.testBit(i_BitSelect)) {
+				m_BitSelect = null;	// Clear mask
+				return new PSSIntVal(BigInteger.ONE);
+			}
+			else {
+				m_BitSelect = null;	// Clear mask
+				return new PSSIntVal(BigInteger.ZERO);
+			}
+		}
+		else {
+			m_BitSelect = null;	// Clear mask
+			return m_val;
+		}
+	}
+
+	@Override
+	public PSSInst indexOf (PSSVal index) {
+		m_BitSelect = new PSSIntVal(index.toBigInteger());
+		return this;
+	}
+
+	public boolean isAccessBitSelect () {
+		return (null != m_BitSelect) ? true : false;
+	}
+
+	public PSSIntVal getBitSelect () {
+		return m_BitSelect;
 	}
 
 	public boolean validate() {
@@ -66,15 +98,29 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
 	public void assign(PSSVal val) {
 		m_initialized = true;
-		BigInteger int_val = val.toBigInteger();
-		m_val = new PSSIntVal(int_val);
+		BigInteger inVal = val.toBigInteger();
+		if (null != m_BitSelect) {
+			BigInteger bi_val = m_val.toBigInteger();
+			int i_BitSelect = m_BitSelect.toInt();
+			bi_val = bi_val.clearBit(i_BitSelect);
+			if (inVal.compareTo(BigInteger.ZERO) != 0) {
+				bi_val = bi_val.setBit(i_BitSelect);
+			}
+			m_val = new PSSIntVal(bi_val);
+		}
+		else {
+			m_val = new PSSIntVal(inVal);
+		}
+		m_BitSelect = null;	// Clear mask
 	}
 
 	public String toTargetCode() {
 		if (!m_initialized) {
 			PSSMessage.Error("INTVAR-0001", "variable '" + getHierarchyId() + "' is not initialized");
 		}
-		return m_val.toTargetCode();
+		PSSVal val = toVal();
+		PSSIntVal intVal = new PSSIntVal(val.toBigInteger());
+		return intVal.toTargetCode();
 	}
 
 	public void dump(String indent) {
