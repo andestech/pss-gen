@@ -49,6 +49,14 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
 	@Override
 	public PSSInst indexOf (PSSVal index) {
+		/** [9.6.1 Bit-selects]: It shall be illegal for a bit-select to access on out-of-bounds bit index. */
+		if (index.toInt() > m_width) {
+			String errObj = "'" + getHierarchyId() + "[" + index.getText() + "]" + "'";
+			String errMsg = "Bit-selects access out-of-bounds bit index.";
+			String errExt = "sizeof(" + getHierarchyId() + ") = " + m_width;
+			PSSMessage.Error("ILLEGAL USAGE", errObj + " " + errMsg + " //" + errExt);
+		}
+
 		m_BitSelect = new PSSIntVal(index.toBigInteger());
 		return this;
 	}
