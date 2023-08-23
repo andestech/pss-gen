@@ -1,0 +1,50 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/08/23
+@brief          Test <i>index operator</i> `[]` applied to map.
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> Section 8.8 : Collections <br>
+> Section 8.8.4 : Maps <br>
+> Section 8.8.4.1 : Map operators <br>
+> Section 9.6 : Primary expressions <br>
+> Section 9.6.2 : Selecting an element from a collection (indexing) <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+	action root_a {
+        map<string, bit [4]> nibbleMap_0 = {"ONE": 4'b1100, "TWO": 4'b0110};
+        bit [4] nibble_0_0 = 4'b0010;
+        bit [4] nibble_0_1 = 4'b0100;
+        bit [4] nibble_0_2 = 4'b1000;
+
+        exec post_solve {
+            nibbleMap_0["ONE"]    = 4'b0001;
+            nibbleMap_0["TWO"]   |= nibbleMap_0["ONE"];
+            nibbleMap_0["THREE"]  = nibbleMap_0["ONE"] + nibbleMap_0["ONE"] + nibbleMap_0["ONE"];
+
+            nibble_0_0 = nibbleMap_0["ONE"];
+            nibble_0_1 = nibbleMap_0["TWO"];
+            nibble_0_2 = nibbleMap_0["THREE"];
+        }
+
+        exec body ASM =
+"""
+nibble_0_0 = {{nibble_0_0}} = {{nibble_0_0[3]}}{{nibble_0_0[2]}}{{nibble_0_0[1]}}{{nibble_0_0[0]}}
+nibble_0_1 = {{nibble_0_1}} = {{nibble_0_1[3]}}{{nibble_0_1[2]}}{{nibble_0_1[1]}}{{nibble_0_1[0]}}
+nibble_0_2 = {{nibble_0_2}} = {{nibble_0_2[3]}}{{nibble_0_2[2]}}{{nibble_0_2[1]}}{{nibble_0_2[0]}}
+""";
+    }
+}
+
+/**@}*/

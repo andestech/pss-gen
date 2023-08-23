@@ -1,0 +1,65 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/08/23
+@brief          Test <i>index operator</i> `[]` applied to array.
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> Section 8.8 : Collections <br>
+> Section 8.8.2 : Arrays <br>
+> Section 8.8.2.1 : Array operators <br>
+> Section 9.6 : Primary expressions <br>
+> Section 9.6.2 : Selecting an element from a collection (indexing) <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+	action root_a {
+        bit [4] nibbleArray_0 [3] = {4'b1100, 4'b0110, 4'b0011};
+        array<bit [4], 3> nibbleArray_1 = {4'b1100, 4'b0110, 4'b0011};
+        bit [4] nibble_0_0 = 4'b0001;
+        bit [4] nibble_0_1 = 4'b0010;
+        bit [4] nibble_0_2 = 4'b0100;
+        bit [4] nibble_1_0 = 4'b0001;
+        bit [4] nibble_1_1 = 4'b0010;
+        bit [4] nibble_1_2 = 4'b0100;
+
+        exec post_solve {
+            nibbleArray_0[0]  = 4'b0110;
+            nibbleArray_0[1]  = nibbleArray_0[2];
+            nibbleArray_0[2] |= nibbleArray_0[0];
+
+            nibbleArray_1[0]  = 4'b0110;
+            nibbleArray_1[1]  = nibbleArray_1[2];
+            nibbleArray_1[2] |= nibbleArray_1[0];
+
+            nibble_0_0 = nibbleArray_0[0];
+            nibble_0_1 = nibbleArray_0[1];
+            nibble_0_2 = nibbleArray_0[2];
+
+            nibble_1_0 = nibbleArray_1[0];
+            nibble_1_1 = nibbleArray_1[1];
+            nibble_1_2 = nibbleArray_1[2];
+        }
+
+        exec body ASM =
+"""
+nibble_0_0 = {{nibble_0_0}} = {{nibble_0_0[3]}}{{nibble_0_0[2]}}{{nibble_0_0[1]}}{{nibble_0_0[0]}}
+nibble_0_1 = {{nibble_0_1}} = {{nibble_0_1[3]}}{{nibble_0_1[2]}}{{nibble_0_1[1]}}{{nibble_0_1[0]}}
+nibble_0_2 = {{nibble_0_2}} = {{nibble_0_2[3]}}{{nibble_0_2[2]}}{{nibble_0_2[1]}}{{nibble_0_2[0]}}
+nibble_1_0 = {{nibble_1_0}} = {{nibble_1_0[3]}}{{nibble_1_0[2]}}{{nibble_1_0[1]}}{{nibble_1_0[0]}}
+nibble_1_1 = {{nibble_1_1}} = {{nibble_1_1[3]}}{{nibble_1_1[2]}}{{nibble_1_1[1]}}{{nibble_1_1[0]}}
+nibble_1_2 = {{nibble_1_2}} = {{nibble_1_2[3]}}{{nibble_1_2[2]}}{{nibble_1_2[1]}}{{nibble_1_2[0]}}
+""";
+    }
+}
+
+/**@}*/
