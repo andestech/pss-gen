@@ -165,7 +165,7 @@ public class PSSArrayInst extends PSSInst implements PSSIAggregate {
     public PSSIntInst sum() {
         if (!(m_elem_type_model instanceof PSSIntModel))
             PSSMessage.Error("ArrayInst",
-                    "Array.sum() is only used on Int type.");
+                    "Array.sum() is only used on `int` or `bit` type.");
 
         int sum = 0;
         for (PSSVal e : toVal().getValList())
