@@ -171,7 +171,12 @@ public class PSSInst {
 	public PSSInst findStaticInst(String hierarchiy_id) {
 		// Currently, find enum items only.
 		PSSInst res = null;
-		PSSModel m = getTypeModel();
+		PSSModel m = null;
+		PSSInst base = this;
+		while (m == null && base != null) {
+			m = base.getTypeModel();
+			base = base.m_parent;
+		}
 		while (m != null) {
 			res = m.findStaticInst(hierarchiy_id);
 			if (res != null)
