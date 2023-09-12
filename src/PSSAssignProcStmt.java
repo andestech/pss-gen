@@ -12,8 +12,8 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 	}
 
 	public void eval(PSSInst inst) {
-		PSSInst leftInst = m_ref.getInst(inst);
 		PSSVal rightVal = m_expression.eval(inst);
+		PSSInst leftInst = m_ref.getInst(inst);
 
 		if (leftInst.isReadOnly())
 			PSSMessage.Error("", m_ref.getText() + " is read-only");
@@ -30,38 +30,55 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 			}
 		}
 
-        switch(m_op) {
-            case "=":
-                leftInst.assign(rightVal);
-                break;
+		/** Backup Bit-Select value for prevert lost after leftInst.toVal() */
+		PSSIntVal backupBitSelect = null;
+		if (leftInst instanceof PSSIntInst && ((PSSIntInst)leftInst).isAccessBitSelect()) {
+			backupBitSelect = ((PSSIntInst)leftInst).getBitSelect();
+		}
 
-            case "+=":
-                leftInst.assign(leftInst.toVal().Add(rightVal));
-                break;
+		/** Get LHS value for later use */
+		PSSVal leftVal = null;
+		if (m_op.matches("[+-<>|&]+=")) {
+			leftVal = leftInst.toVal();
 
-            case "-=":
-                leftInst.assign(leftInst.toVal().Sub(rightVal));
-                break;
+			/** Restore back Bit-Selects value after clear by leftInst.toVal() */
+			if (null != backupBitSelect) {
+				leftInst = leftInst.indexOf(backupBitSelect);
+			}
+		}
 
-            case "<<=":
-                leftInst.assign(leftInst.toVal().LeftShift(rightVal));
-                break;
+		switch(m_op) {
+			case "=":
+				leftInst.assign(rightVal);
+				break;
 
-            case ">>=":
-                leftInst.assign(leftInst.toVal().RightShift(rightVal));
-                break;
+			case "+=":
+				leftInst.assign(leftVal.Add(rightVal));
+				break;
 
-            case "|=":
-                leftInst.assign(leftInst.toVal().BitwiseOr(rightVal));
-                break;
+			case "-=":
+				leftInst.assign(leftVal.Sub(rightVal));
+				break;
 
-            case "&=":
-                leftInst.assign(leftInst.toVal().BitwiseAnd(rightVal));
-                break;
+			case "<<=":
+				leftInst.assign(leftVal.LeftShift(rightVal));
+				break;
 
-            default:
-                PSSMessage.Error("", m_op + " is not an assign_op.");
-        }
+			case ">>=":
+				leftInst.assign(leftVal.RightShift(rightVal));
+				break;
+
+			case "|=":
+				leftInst.assign(leftVal.BitwiseOr(rightVal));
+				break;
+
+			case "&=":
+				leftInst.assign(leftVal.BitwiseAnd(rightVal));
+				break;
+
+			default:
+				PSSMessage.Error("", m_op + " is not an assign_op.");
+		}
 
 	}
 

@@ -1,0 +1,50 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/08/23
+@brief          Test <i>index operator</i> `[]` applied to list.
+@version
+Portable Test and Stimulus Standard Version 2.0 <br>
+> Section 8.8 : Collections <br>
+> Section 8.8.3 : Lists <br>
+> Section 8.8.3.1 : List operators <br>
+> Section 9.6 : Primary expressions <br>
+> Section 9.6.2 : Selecting an element from a collection (indexing) <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+	action root_a {
+        list<bit [4]> nibbleList_0 = {4'b1100, 4'b0110, 4'b0011};
+        bit [4] nibble_0_0 = 4'b0001;
+        bit [4] nibble_0_1 = 4'b0010;
+        bit [4] nibble_0_2 = 4'b0100;
+
+        exec post_solve {
+            nibbleList_0[0]  = 4'b0110;
+            nibbleList_0[1]  = nibbleList_0[2];
+            nibbleList_0[2] |= nibbleList_0[0];
+
+            nibble_0_0 = nibbleList_0[0];
+            nibble_0_1 = nibbleList_0[1];
+            nibble_0_2 = nibbleList_0[2];
+        }
+
+        exec body ASM =
+"""
+nibble_0_0 = {{nibble_0_0}} = {{nibble_0_0[3]}}{{nibble_0_0[2]}}{{nibble_0_0[1]}}{{nibble_0_0[0]}}
+nibble_0_1 = {{nibble_0_1}} = {{nibble_0_1[3]}}{{nibble_0_1[2]}}{{nibble_0_1[1]}}{{nibble_0_1[0]}}
+nibble_0_2 = {{nibble_0_2}} = {{nibble_0_2[3]}}{{nibble_0_2[2]}}{{nibble_0_2[1]}}{{nibble_0_2[0]}}
+""";
+    }
+}
+
+/**@}*/

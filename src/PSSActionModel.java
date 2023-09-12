@@ -98,7 +98,8 @@ public class PSSActionModel extends PSSModel {
 	}
 
 	public void evalPostSolve(PSSInst inst) {
-		for (int i=0; i<m_exec_list.size(); i++) {
+		PSSMessage.Info("evalPostSolve");
+		for (int i = 0; i < m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
 			if (block.getKind().equals(PSSExecKind.post_solve)) {
 				block.eval(inst);
