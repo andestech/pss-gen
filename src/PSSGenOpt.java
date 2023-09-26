@@ -53,6 +53,11 @@ public class PSSGenOpt {
 				PSSMessage.SetPrintDebugEn(true);
 				i++;
 			}
+			else if (arg.equals("-debug_random")) {
+				PSSMessage.SetPrintDebugEn(true);
+				PSSMessage.SetPrintRandEn(true);
+				i++;
+			}
 			else if (arg.equals("-root")) {
 				m_root_action = args[i+1];
 				i+=2;
@@ -165,6 +170,7 @@ public class PSSGenOpt {
 		System.out.println("	-y <directory>		lib directory");
 		System.out.println("	-info			enable display `PSS-INFO` message");
 		System.out.println("	-debug			enable display `PSS-DEBUG` message");
+		System.out.println("	-debug_random	enable display randomize sequence");
 		System.out.println("	-root <root_action>");
 		System.out.println("	-seed <seed>");
 		System.exit(1);

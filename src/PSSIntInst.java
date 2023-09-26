@@ -95,7 +95,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	public void randomize_one() {
 		BigInteger rand_val = m_domain.random().toBigInteger();
 		m_val = new PSSIntVal(rand_val);
-		// PSSMessage.Debug("randomize_one: val = " + m_val.toInt());
+		if (PSSMessage.isPrintRandEn()) PSSMessage.Debug("randomize_one: '" + getHierarchyId() + "' = " + m_val.toInt());
 	}
 
 	public void assignDomain(PSSDomain domain) {

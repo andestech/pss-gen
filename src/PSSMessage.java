@@ -2,18 +2,24 @@ import java.util.*;
 
 public class PSSMessage {
 	private static boolean b_PrintInfoEn = false;	// Control of Info function
-	private static boolean b_PrintDebugEn = false;	// Control of Info function
+	private static boolean b_PrintDebugEn = false;	// Control of Debug function
+	private static boolean b_PrintRandEn = false;	// Control of print random sequence
 
 	public static void SetPrintInfoEn (boolean val) {
 		b_PrintInfoEn = val;
 	}
-
 	public static void SetPrintDebugEn (boolean val) {
 		b_PrintDebugEn = val;
+	}
+	public static void SetPrintRandEn (boolean val) {
+		b_PrintRandEn = val;
 	}
 
 	public static boolean isPrintDebugEn () {
 		return b_PrintDebugEn;
+	}
+	public static boolean isPrintRandEn () {
+		return b_PrintRandEn;
 	}
 
 	public static void Fatal(String msg) {
