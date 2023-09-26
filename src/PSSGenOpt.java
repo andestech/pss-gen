@@ -58,6 +58,10 @@ public class PSSGenOpt {
 				PSSMessage.SetPrintRandEn(true);
 				i++;
 			}
+			else if (arg.equals("-set_random_limit")) {
+				PSSRandom.setRetryLimit(Integer.valueOf(args[i+1]));
+				i+=2;
+			}
 			else if (arg.equals("-root")) {
 				m_root_action = args[i+1];
 				i+=2;
@@ -171,6 +175,7 @@ public class PSSGenOpt {
 		System.out.println("	-info			enable display `PSS-INFO` message");
 		System.out.println("	-debug			enable display `PSS-DEBUG` message");
 		System.out.println("	-debug_random	enable display randomize sequence");
+		System.out.println("	-set_random_limit <val>		change max. iterations of randomization (default: 1000)");
 		System.out.println("	-root <root_action>");
 		System.out.println("	-seed <seed>");
 		System.exit(1);
