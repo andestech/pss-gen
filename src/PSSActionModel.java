@@ -151,7 +151,8 @@ public class PSSActionModel extends PSSModel {
 
 		// solve
 		PSSMessage.Info("solve action '" + inst.m_type+ "'");
-		solver.solve();
+		int interation = solver.solve();
+		PSSMessage.Debug("solve iteration: " + String.valueOf(interation));
 
 		// post_solve
 		evalPostSolve(inst);
