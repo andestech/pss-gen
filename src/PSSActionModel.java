@@ -89,7 +89,8 @@ public class PSSActionModel extends PSSModel {
 	}
 
 	public void evalPreSolve(PSSInst inst) {
-		for (int i=0; i<m_exec_list.size(); i++) {
+		if (m_exec_list.size() > 0) PSSMessage.Info("pre_solve action '" + inst.m_type+ "'");
+		for (int i = 0; i < m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
 			if (block.getKind().equals(PSSExecKind.pre_solve)) {
 				block.eval(inst);
@@ -98,7 +99,7 @@ public class PSSActionModel extends PSSModel {
 	}
 
 	public void evalPostSolve(PSSInst inst) {
-		PSSMessage.Info("evalPostSolve");
+		if (m_exec_list.size() > 0) PSSMessage.Info("post_solve action '" + inst.m_type+ "'");
 		for (int i = 0; i < m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
 			if (block.getKind().equals(PSSExecKind.post_solve)) {
@@ -149,6 +150,7 @@ public class PSSActionModel extends PSSModel {
 		evalPreSolve(inst);
 
 		// solve
+		PSSMessage.Info("solve action '" + inst.m_type+ "'");
 		solver.solve();
 
 		// post_solve

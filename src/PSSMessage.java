@@ -19,7 +19,7 @@ public class PSSMessage {
 	public static void Fatal(String msg) {
 		String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();;
 		String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
-	        String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+		String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
 		int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
 
 		System.out.println(className + "." + methodName + "(), Ln" + lineNumber + ": " + msg);

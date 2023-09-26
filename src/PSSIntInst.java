@@ -87,6 +87,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 				validated = validate();
 				retry++;
 			}
+			// PSSMessage.Debug("randomize iteration: " + getHierarchyId() + " = " + String.valueOf(retry));
 			m_initialized = true;
 		}
 	}
