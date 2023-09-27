@@ -1,6 +1,9 @@
+TAGS = `git describe --abbrev=0 --tags`
+PSSGEN_NAME = pssgen_${TAGS}.jar
 
 ANTLR4_JAR_PATH = ${PSS_HOME}/antlr4/antlr-4.9.3-complete.jar
-PSSGEN_JAR_PATH = ${PSS_HOME}/src/pssgen.jar
+PSSGEN_JAR_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}
+
 
 SRC_PATH = ${PSS_HOME}/src
 #CLASSPATH="$ANTLR4_JAR_PATH:$SRC_PATH:$CLASSPATH"
@@ -16,7 +19,7 @@ PSSGEN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
 jar: guard-PSS_HOME
 	$(ANTLR4) -no-listener -visitor PSS.g4;
 	$(JAVAC) PSS*.java
-	jar cf pssgen.jar *.class
+	jar cf ${PSSGEN_NAME} *.class
 
 clean:
 	rm $(SRC_PATH)/*.class -f
