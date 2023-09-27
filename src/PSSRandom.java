@@ -3,6 +3,13 @@ import java.util.*;
 import java.math.*;
 
 public class PSSRandom {
+	private static int i_RetryLimit = 2000;	// Max. iteration of randomization
+	public static void setRetryLimit (int val) {
+		if (val < 1) PSSMessage.Fatal("RetryLimit must greater than 0: value = " + String.valueOf(val));
+		PSSMessage.Info("Change retry limit: " + String.valueOf(i_RetryLimit) + " -> " + String.valueOf(val));
+		i_RetryLimit = val;
+	}
+
 	static String m_alphabet = "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	static Random m_rand;
 	public static void initRandom(long seed) {
@@ -36,7 +43,7 @@ public class PSSRandom {
 		return schedule;
 	}
 	public static void limitRetry(int retry) {
-		if (retry > 1000) {
+		if (retry > i_RetryLimit) {
 			PSSMessage.Fatal("randomize fail");
 		}
 	}

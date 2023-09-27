@@ -72,7 +72,7 @@ public class PSSSolver {
 		return true;
 	}
 
-	void solve() {
+	int solve() {
 		boolean validated = false;
 		int retry = 0;
 
@@ -88,6 +88,7 @@ public class PSSSolver {
 			validated = validate();
 			retry++;
 		}
+		return retry;
 	}
 
 }

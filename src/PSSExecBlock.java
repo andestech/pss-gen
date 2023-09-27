@@ -33,7 +33,7 @@ public class PSSExecBlock extends PSSModel {
 		try {
 			for (int i = 0; i < m_list.size(); i++) {
 				PSSProcStmt stmt = m_list.get(i);
-				if (PSSMessage.isPrintDebugEn()) stmt.dump("PSSExecBlock.eval ");
+				// if (PSSMessage.isPrintDebugEn()) stmt.dump("PSSExecBlock.eval ");
 				stmt.eval(block_inst);
 			}
 		} catch (PSSReturnException e) {
