@@ -1,0 +1,210 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/12
+@brief          Test list operators.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    /** @todo: PSSGenVisitor.visitTypedef_declaration(), Ln314: Syntax is not yet supported: 'typedefbit[32]uint32_t;' */
+    // typedef bit [32] uint32_t;
+
+    action root_a {
+        list<int     > intList    = {5      , 6      , 7   };
+        list<bit [8] > byteList   = {8'd9   , 8'd8   , 8'd7};
+        // list<bool    > boolList   = {true   , false  , true};   // todo: PSSListInst.assign(), Ln142: The list type should be assigned as a list_literal.
+        list<bool    > boolList                             ;
+        list<string  > stringList = {"Hello", "World", "!" };
+        list<eSTR2NUM> enumList   = {TWO    , ONE    , TWO };
+        // list<sSTR2NUM> structList = {"NULL" , 0            };   // todo: PSSInst.assign(), Ln321: PSSStructInst::assign is not impelemented
+        list<sSTR2NUM> structList                           ;
+
+        sSTR2NUM dummyStruct;
+
+        int      intTestIndex    = 0           ;
+        bit [8]  byteTestIndex   = 8'b0000_0000;
+        // bool     boolTestIndex   = false       ; // todo: PSSVal.toBigInteger(), Ln72: PSSBoolVal::toBigInteger is not implemented
+        string   stringTestIndex = "NULL"      ;
+        eSTR2NUM enumTestIndex   = ZERO        ;
+        // sSTR2NUM structTestIndex = {"NULL", 0} ; // todo: PSSInst.assign(), Ln321: PSSStructInst::assign is not impelemented
+
+        bit [20] bitTestEqu = 20'h0;
+        bit [20] bitTestInequ = 20'h0;
+        bit [20] bitTestIn = 20'h0;
+
+        int      intTestForeach    = 0           ;
+        bit [8]  byteTestForeach   = 8'b0000_0000;
+        // bool     boolTestForeach   = false       ; // todo: PSSVal.toBigInteger(), Ln72: PSSBoolVal::toBigInteger is not implemented
+        string   stringTestForeach = "NULL"      ;
+        eSTR2NUM enumTestForeach   = ZERO        ;
+        // sSTR2NUM structTestForeach = {"NULL", 0} ; // todo: PSSInst.assign(), Ln321: PSSStructInst::assign is not impelemented
+
+
+        exec pre_solve {
+            dummyStruct.stringVal = "World"   ;
+            dummyStruct.intVal    = 6         ;
+            // structList.insert(0, dummyStruct );  // todo: PSSModel.getText(), Ln284: PSSRefModel::getText is not impelemented
+        }
+
+        exec post_solve {
+            /** Test index operator `[]` */
+            intTestIndex    = intList   [0];
+            byteTestIndex   = byteList  [0];
+            // boolTestIndex   = boolList  [0];
+            stringTestIndex = stringList[0];
+            enumTestIndex   = enumList  [0];
+            // structTestIndex = structList[0];
+
+            /** Test assignment operator `=` */
+            intList    [0] = 6             ;
+            byteList   [0] = 8'b1001_1001  ;
+            // boolList   [0] = false         ;
+            stringList [0] = "olleH"       ;
+            // enumList   [0] = ONE           ;
+            dummyStruct.stringVal = "dlroW";
+            dummyStruct.intVal    = 5      ;
+            // structList [0] = dummyStruct   ;
+
+            /** Test equality operator `==` */
+            if (intList    == intList   ) bitTestEqu[ 0] = 1;
+            if (intList    == byteList  ) bitTestEqu[ 1] = 1;
+            if (intList    == boolList  ) bitTestEqu[ 2] = 1;
+            if (intList    == stringList) bitTestEqu[ 3] = 1;
+            if (intList    == enumList  ) bitTestEqu[ 4] = 1;
+            if (intList    == structList) bitTestEqu[ 5] = 1;
+            if (byteList   == byteList  ) bitTestEqu[ 6] = 1;
+            if (byteList   == boolList  ) bitTestEqu[ 7] = 1;
+            if (byteList   == stringList) bitTestEqu[ 8] = 1;
+            if (byteList   == enumList  ) bitTestEqu[ 9] = 1;
+            if (byteList   == structList) bitTestEqu[10] = 1;
+            if (boolList   == boolList  ) bitTestEqu[11] = 1;
+            if (boolList   == stringList) bitTestEqu[12] = 1;
+            if (boolList   == enumList  ) bitTestEqu[13] = 1;
+            if (boolList   == structList) bitTestEqu[14] = 1;
+            if (stringList == stringList) bitTestEqu[15] = 1;
+            if (stringList == enumList  ) bitTestEqu[16] = 1;
+            if (stringList == structList) bitTestEqu[17] = 1;
+            if (enumList   == enumList  ) bitTestEqu[18] = 1;
+            if (enumList   == structList) bitTestEqu[19] = 1;
+            if (structList == structList) bitTestEqu[20] = 1;
+
+            /** Test inequality operator `!=` */
+            if (intList    != intList   ) bitTestInequ[ 0] = 1;
+            if (intList    != byteList  ) bitTestInequ[ 1] = 1;
+            if (intList    != boolList  ) bitTestInequ[ 2] = 1;
+            if (intList    != stringList) bitTestInequ[ 3] = 1;
+            if (intList    != enumList  ) bitTestInequ[ 4] = 1;
+            if (intList    != structList) bitTestInequ[ 5] = 1;
+            if (byteList   != byteList  ) bitTestInequ[ 6] = 1;
+            if (byteList   != boolList  ) bitTestInequ[ 7] = 1;
+            if (byteList   != stringList) bitTestInequ[ 8] = 1;
+            if (byteList   != enumList  ) bitTestInequ[ 9] = 1;
+            if (byteList   != structList) bitTestInequ[10] = 1;
+            if (boolList   != boolList  ) bitTestInequ[11] = 1;
+            if (boolList   != stringList) bitTestInequ[12] = 1;
+            if (boolList   != enumList  ) bitTestInequ[13] = 1;
+            if (boolList   != structList) bitTestInequ[14] = 1;
+            if (stringList != stringList) bitTestInequ[15] = 1;
+            if (stringList != enumList  ) bitTestInequ[16] = 1;
+            if (stringList != structList) bitTestInequ[17] = 1;
+            if (enumList   != enumList  ) bitTestInequ[18] = 1;
+            if (enumList   != structList) bitTestInequ[19] = 1;
+            if (structList != structList) bitTestEqu[20] = 1;
+
+            /** Test set membership operator `in` */
+            if ( 6            in intList   ) bitTestIn[0] = 1;
+            if ( 8'b1001_1001 in byteList  ) bitTestIn[1] = 1;
+            if ( false        in boolList  ) bitTestIn[2] = 1;
+            if ( "olleH"      in stringList) bitTestIn[3] = 1;
+            if ( ONE          in enumList  ) bitTestIn[4] = 1;
+            if ( dummyStruct  in structList) bitTestIn[5] = 1;
+
+            /** Test `foreach` statement */
+            foreach (intList[i]) {
+                intTestForeach = intList[i];
+            }
+            foreach (byteList[i]) {
+                byteTestForeach = byteList[i];
+            }
+            foreach (boolList[i]) {
+                // boolTestForeach = boolList[i];
+            }
+            foreach (stringList[i]) {
+                stringTestForeach = stringList[i];
+            }
+            foreach (enumList[i]) {
+                enumTestForeach = enumList[i];
+            }
+            foreach (structList[i]) {
+                // structTestForeach = structList[i];
+            }
+        }
+
+        exec body ASM =
+"""
+/** Test index operator `[]` */
+intTestIndex    = {{intTestIndex}}
+byteTestIndex   = {{byteTestIndex}}
+stringTestIndex = {{stringTestIndex}}
+enumTestIndex   = {{enumTestIndex}}
+
+/** Test assignment operator `=` */
+intList    = {{intList[0]}}
+byteList   = {{byteList[0]}}
+stringList = {{stringList[0]}}
+
+/** Test equality operator `==` */
+bitTestEqu[ 7:0 ] = {{bitTestEqu[7]}}, {{bitTestEqu[6]}}, {{bitTestEqu[5]}}, {{bitTestEqu[4]}}, {{bitTestEqu[3]}}, {{bitTestEqu[2]}}, {{bitTestEqu[1]}}, {{bitTestEqu[0]}}
+bitTestEqu[15:8 ] = {{bitTestEqu[15]}}, {{bitTestEqu[14]}}, {{bitTestEqu[13]}}, {{bitTestEqu[12]}}, {{bitTestEqu[11]}}, {{bitTestEqu[10]}}, {{bitTestEqu[9]}}, {{bitTestEqu[8]}}
+bitTestEqu[19:16] = {{bitTestEqu[19]}}, {{bitTestEqu[18]}}, {{bitTestEqu[17]}}, {{bitTestEqu[16]}}
+
+/** Test inequality operator `!=` */
+bitTestInequ[ 7:0 ] = {{bitTestInequ[7]}}, {{bitTestInequ[6]}}, {{bitTestInequ[5]}}, {{bitTestInequ[4]}}, {{bitTestInequ[3]}}, {{bitTestInequ[2]}}, {{bitTestInequ[1]}}, {{bitTestInequ[0]}}
+bitTestInequ[15:8 ] = {{bitTestInequ[15]}}, {{bitTestInequ[14]}}, {{bitTestInequ[13]}}, {{bitTestInequ[12]}}, {{bitTestInequ[11]}}, {{bitTestInequ[10]}}, {{bitTestInequ[9]}}, {{bitTestInequ[8]}}
+bitTestInequ[19:16] = {{bitTestInequ[19]}}, {{bitTestInequ[18]}}, {{bitTestInequ[17]}}, {{bitTestInequ[16]}}
+
+/** Test set membership operator `in` */
+bitTestIn[ 7:0 ] = {{bitTestIn[7]}}, {{bitTestIn[6]}}, {{bitTestIn[5]}}, {{bitTestIn[4]}}, {{bitTestIn[3]}}, {{bitTestIn[2]}}, {{bitTestIn[1]}}, {{bitTestIn[0]}}
+bitTestIn[15:8 ] = {{bitTestIn[15]}}, {{bitTestIn[14]}}, {{bitTestIn[13]}}, {{bitTestIn[12]}}, {{bitTestIn[11]}}, {{bitTestIn[10]}}, {{bitTestIn[9]}}, {{bitTestIn[8]}}
+bitTestIn[19:16] = {{bitTestIn[19]}}, {{bitTestIn[18]}}, {{bitTestIn[17]}}, {{bitTestIn[16]}}
+
+/** Test `foreach` statement */
+intTestForeach    = {{intTestForeach}}
+byteTestForeach   = {{byteTestForeach}}
+stringTestForeach = {{stringTestForeach}}
+enumTestForeach   = {{enumTestForeach}}
+""";
+// boolTestIndex = {{boolTestIndex}}
+// structTestIndex = {{structTestIndex.stringVal}}, {{structTestIndex.intVal}}
+// boolList = {{boolList[0]}}
+// enumList = {{enumList[0]}}
+// structList = {{structList[0].stringVal}}, {{structList[0].intVal}}
+// boolTestForeach   = {{boolTestForeach}}
+// structTestForeach = {{structTestForeach.stringVal}}, {{structTestForeach.intVal}}
+    }
+}
+
+/**@}*/

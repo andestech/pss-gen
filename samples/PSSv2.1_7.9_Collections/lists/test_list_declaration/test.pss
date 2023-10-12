@@ -1,0 +1,55 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/12
+@brief          Test list declarations.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    /** @todo: PSSGenVisitor.visitTypedef_declaration(), Ln314: Syntax is not yet supported: 'typedefbit[32]uint32_t;' */
+    // typedef bit [32] uint32_t;
+
+    action root_a {
+        list<int     > intList    = {5      , 6      , 7   };
+        list<bit [8] > byteList   = {8'd9   , 8'd8   , 8'd7};
+        // list<bool    > boolList   = {true   , false  , true};   // todo: PSSListInst.assign(), Ln142: The list type should be assigned as a list_literal.
+        list<string  > stringList = {"Hello", "World", "!" };
+        list<eSTR2NUM> enumList   = {TWO    , ONE    , TWO };
+        // list<sSTR2NUM> structList = {"NULL" , 0            };   // todo: PSSInst.assign(), Ln321: PSSStructInst::assign is not impelemented
+
+        exec body ASM =
+"""
+intList    = {{intList[0]}}
+byteList   = {{byteList[0]}}
+stringList = {{stringList[0]}}
+enumList   = {{enumList[0]}}
+""";
+// boolList = {{boolList[0]}}
+// structList = {{structList[0].stringVal}}, {{structList[0].intVal}}
+    }
+}
+
+/**@}*/

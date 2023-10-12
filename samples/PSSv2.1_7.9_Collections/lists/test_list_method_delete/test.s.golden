@@ -1,0 +1,13 @@
+
+/** Test `delete()` */
+intElem    = 5
+byteElem   = 9
+stringElem = Hello
+enumElem   = 2
+intVal_0 = 2
+intVal_1 = 2
+intVal_2 = 0
+intVal_3 = 2
+intVal_4 = 2
+intVal_5 = 0
+

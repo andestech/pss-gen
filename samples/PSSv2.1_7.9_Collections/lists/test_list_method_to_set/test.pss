@@ -1,0 +1,93 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/12
+@brief          Test list methods: `to_set()`.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal;
+        int intVal;
+    };
+
+    action root_a {
+        list<int     > intList    = {5      , 6      , 7   };
+        list<bit [8] > byteList   = {8'd9   , 8'd8   , 8'd7};
+        // list<bool    > boolList   = {true   , false  , true};   // todo: PSSListInst.assign(), Ln142: The list type should be assigned as a list_literal.
+        list<bool    > boolList                             ;
+        list<string  > stringList = {"Hello", "World", "!" };
+        list<eSTR2NUM> enumList   = {TWO    , ONE    , TWO };
+        // list<sSTR2NUM> structList = {"NULL" , 0            };   // todo: PSSInst.assign(), Ln321: PSSStructInst::assign is not impelemented
+        list<sSTR2NUM> structList                           ;
+
+        sSTR2NUM dummyStruct;
+
+        int intVal_0 = 0;
+        int intVal_1 = 0;
+        int intVal_2 = 0;
+        int intVal_3 = 0;
+        int intVal_4 = 0;
+        int intVal_5 = 0;
+
+        set<int     > intSet   ;
+        set<bit [8] > byteSet  ;
+        set<bool    > boolSet  ;
+        set<string  > stringSet;
+        set<eSTR2NUM> enumSet  ;
+        set<sSTR2NUM> structSet;
+
+        exec pre_solve {
+            dummyStruct.stringVal = "World"   ;
+            dummyStruct.intVal    = 6         ;
+            // structList.insert(0, dummyStruct );  // todo: PSSModel.getText(), Ln284: PSSRefModel::getText is not impelemented
+        }
+
+        exec post_solve {
+            /** Test `to_set()` */
+            intSet    = intList.to_set()   ;
+            byteSet   = byteList.to_set()  ;
+            // boolSet   = boolList.to_set()  ;
+            stringSet = stringList.to_set();
+            // enumSet   = enumList.to_set()  ;
+            // structSet = structList.to_set();
+
+            intVal_0 = intSet.size()   ;
+            intVal_1 = byteSet.size()  ;
+            intVal_2 = boolSet.size()  ;
+            intVal_3 = stringSet.size();
+            intVal_4 = enumSet.size()  ;
+            intVal_5 = structSet.size();
+        }
+
+        exec body ASM =
+"""
+/** Test `to_set()` */
+intVal_0 = {{intVal_0}}
+intVal_1 = {{intVal_1}}
+intVal_2 = {{intVal_2}}
+intVal_3 = {{intVal_3}}
+intVal_4 = {{intVal_4}}
+intVal_5 = {{intVal_5}}
+""";
+    }
+}
+
+/**@}*/

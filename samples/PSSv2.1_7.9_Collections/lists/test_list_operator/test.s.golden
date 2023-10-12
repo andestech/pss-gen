@@ -1,0 +1,33 @@
+
+/** Test index operator `[]` */
+intTestIndex    = 5
+byteTestIndex   = 9
+stringTestIndex = Hello
+enumTestIndex   = 2
+
+/** Test assignment operator `=` */
+intList    = 6
+byteList   = 153
+stringList = olleH
+
+/** Test equality operator `==` */
+bitTestEqu[ 7:0 ] = 0, 1, 0, 0, 0, 0, 0, 1
+bitTestEqu[15:8 ] = 1, 1, 0, 0, 1, 0, 0, 0
+bitTestEqu[19:16] = 0, 1, 0, 0
+
+/** Test inequality operator `!=` */
+bitTestInequ[ 7:0 ] = 1, 0, 1, 1, 1, 1, 1, 0
+bitTestInequ[15:8 ] = 0, 0, 1, 1, 0, 1, 1, 1
+bitTestInequ[19:16] = 1, 0, 1, 1
+
+/** Test set membership operator `in` */
+bitTestIn[ 7:0 ] = 0, 0, 0, 1, 1, 0, 1, 1
+bitTestIn[15:8 ] = 0, 0, 0, 0, 0, 0, 0, 0
+bitTestIn[19:16] = 0, 0, 0, 0
+
+/** Test `foreach` statement */
+intTestForeach    = 7
+byteTestForeach   = 7
+stringTestForeach = !
+enumTestForeach   = 2
+
