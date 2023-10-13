@@ -55,12 +55,12 @@ component pss_top {
 
         exec post_solve {
             /** Test `shuffle()` */
-            // intList.shuffle()   ;
-            // byteList.shuffle()  ;
-            // boolList.shuffle()  ;
-            // stringList.shuffle();
-            // enumList.shuffle()  ;
-            // structList.shuffle();
+            intList.shuffle()   ;
+            byteList.shuffle()  ;
+            boolList.shuffle()  ;
+            stringList.shuffle();
+            enumList.shuffle()  ;
+            structList.shuffle();
 
             intVal_0 = intList.size()   ;
             intVal_1 = byteList.size()  ;
@@ -73,12 +73,10 @@ component pss_top {
         exec body ASM =
 """
 /** Test `shuffle()` */
-intVal_0 = {{intVal_0}}
-intVal_1 = {{intVal_1}}
-intVal_2 = {{intVal_2}}
-intVal_3 = {{intVal_3}}
-intVal_4 = {{intVal_4}}
-intVal_5 = {{intVal_5}}
+intList [0:2] = {{intList[0]}}, {{intList[1]}}, {{intList[2]}}
+byteList[0:2] = {{byteList[0]}}, {{byteList[1]}}, {{byteList[2]}}
+stringList[0:2] = {{stringList[0]}}, {{stringList[1]}}, {{stringList[2]}}
+enumList[0:2] = {{enumList[0]}}, {{enumList[1]}}, {{enumList[2]}}
 """;
     }
 }

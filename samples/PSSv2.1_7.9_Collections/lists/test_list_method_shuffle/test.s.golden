@@ -1,9 +1,7 @@
 
 /** Test `shuffle()` */
-intVal_0 = 3
-intVal_1 = 3
-intVal_2 = 0
-intVal_3 = 3
-intVal_4 = 3
-intVal_5 = 0
+intList [0:2] = 6, 5, 7
+byteList[0:2] = 8, 9, 7
+stringList[0:2] = World, Hello, !
+enumList[0:2] = 2, 2, 1
 
