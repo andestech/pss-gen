@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * A {@code PSSListInst} is an instance holding a list of elements.
@@ -70,6 +69,13 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
         }
     };
 
+    NativeMethod m_method_shuffle = new NativeMethod("shuffle", 0) {
+        protected PSSInst doEval(List<PSSVal> args) {
+            shuffle();
+            return null;
+        }
+    };
+
     /**
      * Constructs this list.
      *
@@ -89,6 +95,7 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
         addNativeMethod(m_method_pop_back);
         addNativeMethod(m_method_push_back);
         addNativeMethod(m_method_to_set);
+        addNativeMethod(m_method_shuffle);
     }
 
     /**
@@ -156,10 +163,13 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
         return collectedVal;
     }
 
+    /**
+     * @todo Randomize order list
+     * 
+     * @note Support after PSSv2.1
+     */
     @Override
     public void randomize() {
-        // PSS Standard V2.0 - 8.1 Data types General
-        // The list collection type is not randomizable.
     }
 
     @Override
@@ -354,6 +364,16 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
                 collectedVal.insert(elem);
         }
         return collectedVal;
+    }
+
+    /**
+     * Reorders all elements in the list.
+     * 
+     * @note Support after PSSv2.1
+     */
+    public void shuffle() {
+        Random rnd = PSSRandom.getRandomObj();
+        Collections.shuffle(m_list, rnd);
     }
 
 };
