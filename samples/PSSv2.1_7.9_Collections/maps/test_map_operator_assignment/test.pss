@@ -1,0 +1,194 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/24
+@brief          Test map assignment operator `=`.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.4 : Maps <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        // `bit` as key
+        map<bit [4], bit [4] > nibbleMap_0;
+        map<bit [4], int     > nibbleMap_1;
+        map<bit [4], bool    > nibbleMap_2;
+        map<bit [4], eSTR2NUM> nibbleMap_3;
+        map<bit [4], string  > nibbleMap_4;
+        map<bit [4], float32 > nibbleMap_5;
+        map<bit [4], float64 > nibbleMap_6;
+        map<bit [4], sSTR2NUM> nibbleMap_7;
+
+        // `int` as key
+        map<int, bit [4] > intMap_0;
+        map<int, int     > intMap_1;
+        map<int, bool    > intMap_2;
+        map<int, eSTR2NUM> intMap_3;
+        map<int, string  > intMap_4;
+        map<int, float32 > intMap_5;
+        map<int, float64 > intMap_6;
+        map<int, sSTR2NUM> intMap_7;
+
+        // `bool` as key
+        map<bool, bit [4] > boolMap_0;
+        map<bool, int     > boolMap_1;
+        map<bool, bool    > boolMap_2;
+        map<bool, eSTR2NUM> boolMap_3;
+        map<bool, string  > boolMap_4;
+        map<bool, float32 > boolMap_5;
+        map<bool, float64 > boolMap_6;
+        map<bool, sSTR2NUM> boolMap_7;
+
+        // `enum` as key
+        map<eSTR2NUM, bit [4] > enumMap_0;
+        map<eSTR2NUM, int     > enumMap_1;
+        map<eSTR2NUM, bool    > enumMap_2;
+        map<eSTR2NUM, eSTR2NUM> enumMap_3;
+        map<eSTR2NUM, string  > enumMap_4;
+        map<eSTR2NUM, float32 > enumMap_5;
+        map<eSTR2NUM, float64 > enumMap_6;
+        map<eSTR2NUM, sSTR2NUM> enumMap_7;
+
+        // `string` as key
+        map<string, bit [4] > stringMap_0;
+        map<string, int     > stringMap_1;
+        map<string, bool    > stringMap_2;
+        map<string, eSTR2NUM> stringMap_3;
+        map<string, string  > stringMap_4;
+        map<string, float32 > stringMap_5;
+        map<string, float64 > stringMap_6;
+        map<string, sSTR2NUM> stringMap_7;
+
+        // `float32` as key
+        map<float32, bit [4] > floatMap_0;
+        map<float32, int     > floatMap_1;
+        map<float32, bool    > floatMap_2;
+        map<float32, eSTR2NUM> floatMap_3;
+        map<float32, string  > floatMap_4;
+        map<float32, float32 > floatMap_5;
+        map<float32, float64 > floatMap_6;
+        map<float32, sSTR2NUM> floatMap_7;
+
+        // `struct` as key
+        map<sSTR2NUM, bit [4] > structMap_0;
+        map<sSTR2NUM, int     > structMap_1;
+        map<sSTR2NUM, bool    > structMap_2;
+        map<sSTR2NUM, eSTR2NUM> structMap_3;
+        map<sSTR2NUM, string  > structMap_4;
+        map<sSTR2NUM, float32 > structMap_5;
+        map<sSTR2NUM, float64 > structMap_6;
+        map<sSTR2NUM, sSTR2NUM> structMap_7;
+
+        exec pre_solve {
+            // `bit` as key
+            nibbleMap_0 = {4'b1110:4'b0011, 4'b0110:4'b0010};
+            nibbleMap_1 = {4'b1110:3      , 4'b0110:2      };
+            // nibbleMap_2 = {4'b1110:true   , 4'b0110:false  };
+            // nibbleMap_3 = {4'b1110:ONE    , 4'b0110:TWO    };
+            nibbleMap_4 = {4'b1110:"C"    , 4'b0110:"B"    };
+            // nibbleMap_5 = {4'b1110:3.3    , 4'b0110:2.2    };
+            // nibbleMap_6 = {4'b1110:3.3    , 4'b0110:2.2    };
+
+            // `int` as key
+            intMap_0 = {4:4'b0011, 5:4'b0010};
+            intMap_1 = {4:3      , 5:2      };
+            // intMap_2 = {4:true   , 5:false  };
+            // intMap_3 = {4:ONE    , 5:TWO    };
+            intMap_4 = {4:"C"    , 5:"B"    };
+            // intMap_5 = {4:3.3    , 5:2.2    };
+            // intMap_6 = {4:3.3    , 5:2.2    };
+
+            // `bool` as key
+            // boolMap_0 = {false:4'b0011, true:4'b0010};
+            // boolMap_1 = {false:3      , true:2      };
+            // boolMap_2 = {false:true   , true:false  };
+            // boolMap_3 = {false:ONE    , true:TWO    };
+            // boolMap_4 = {false:"C"    , true:"B"    };
+            // boolMap_5 = {false:3.3    , true:2.2    };
+            // boolMap_6 = {false:3.3    , true:2.2    };
+
+            // `enum` as key
+            // enumMap_0 = {ONE:4'b0011, TWO:4'b0010};
+            // enumMap_1 = {ONE:3      , TWO:2      };
+            // enumMap_2 = {ONE:true   , TWO:false  };
+            // enumMap_3 = {ONE:ONE    , TWO:TWO    };
+            // enumMap_4 = {ONE:"C"    , TWO:"B"    };
+            // enumMap_5 = {ONE:3.3    , TWO:2.2    };
+            // enumMap_6 = {ONE:3.3    , TWO:2.2    };
+
+            // `string` as key
+            stringMap_0 = {"c":4'b0011, "b":4'b0010};
+            stringMap_1 = {"c":3      , "b":2      };
+            // stringMap_2 = {"c":true   , "b":false  };
+            // stringMap_3 = {"c":ONE    , "b":TWO    };
+            stringMap_4 = {"c":"C"    , "b":"B"    };
+            // stringMap_5 = {"c":3.3    , "b":2.2    };
+            // stringMap_6 = {"c":3.3    , "b":2.2    };
+
+            // `float32` as key
+            // floatMap_0 = {1.0:4'b0011, 2.0:4'b0010};
+            // floatMap_1 = {1.0:3      , 2.0:2      };
+            // floatMap_2 = {1.0:true   , 2.0:false  };
+            // floatMap_3 = {1.0:ONE    , 2.0:TWO    };
+            // floatMap_4 = {1.0:"C"    , 2.0:"B"    };
+            // floatMap_5 = {1.0:3.3    , 2.0:2.2    };
+            // floatMap_6 = {1.0:3.3    , 2.0:2.2    };
+        }
+
+        bit [4] nibble_0, nibble_1, nibble_2;
+        int int_0, int_1, int_2;
+        string string_0, string_1, string_2;
+        exec post_solve {
+            nibble_0 = nibbleMap_0[4'b1110];
+            int_0    = nibbleMap_1[4'b1110];
+            string_0 = nibbleMap_4[4'b1110];
+
+            nibble_1 = intMap_0[4];
+            int_1    = intMap_1[4];
+            string_1 = intMap_4[4];
+
+            nibble_2 = stringMap_0["c"];
+            int_2    = stringMap_1["c"];
+            string_2 = stringMap_4["c"];
+        }
+
+        exec body ASM =
+"""
+// test_map_operator_assignment
+nibbleMap_0 = {{nibble_0}}
+nibbleMap_1 = {{int_0}}
+nibbleMap_4 = {{string_0}}
+
+intMap_0 = {{nibble_1}}
+intMap_1 = {{int_1}}
+intMap_4 = {{string_1}}
+
+stringMap_0 = {{nibble_2}}
+stringMap_1 = {{int_2}}
+stringMap_4 = {{string_2}}
+""";
+    }
+}
+
+/**@}*/

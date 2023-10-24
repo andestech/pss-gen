@@ -1,0 +1,14 @@
+
+// test_map_operator_assignment
+nibbleMap_0 = 3
+nibbleMap_1 = 3
+nibbleMap_4 = C
+
+intMap_0 = 3
+intMap_1 = 3
+intMap_4 = C
+
+stringMap_0 = 3
+stringMap_1 = 3
+stringMap_4 = C
+

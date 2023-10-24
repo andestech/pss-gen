@@ -1,0 +1,17 @@
+
+// test_map_operator_index
+nibbleMap_0 = 3
+nibbleMap_1 = 3
+nibbleMap_3 = 2
+nibbleMap_4 = THREE
+
+intMap_0 = 3
+intMap_1 = 3
+intMap_3 = 2
+intMap_4 = THREE
+
+stringMap_0 = 3
+stringMap_1 = 3
+stringMap_3 = 2
+stringMap_4 = THREE
+
