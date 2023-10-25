@@ -1,0 +1,11 @@
+
+// test_set_method_insert
+nibbleSet  = 3
+intSet     = 3
+boolSet    = 0
+enumSet    = 0
+stringSet  = 3
+float32Set = 0
+float64Set = 0
+structSet  = 0
+

@@ -1,0 +1,78 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/24
+@brief          Test set set membership operator `in`.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.5 : Sets <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        set<bit [4] > nibbleSet  = {4'b0010, 4'b0011};
+        set<int     > intSet     = {2, 3};
+        set<bool    > boolSet;
+        set<eSTR2NUM> enumSet;
+        set<string  > stringSet  = {"A", "B"};
+        set<float32 > float32Set;
+        set<float64 > float64Set;
+        // set<chandle > chandleSet;
+        set<sSTR2NUM> structSet ;
+
+        sSTR2NUM dummyStruct;
+
+        bit bit_0 = 0;
+        bit bit_1 = 0;
+        bit bit_2 = 0;
+        bit bit_3 = 0;
+        bit bit_4 = 0;
+        bit bit_5 = 0;
+        bit bit_6 = 0;
+        bit bit_7 = 0;
+        
+        exec post_solve {
+            if (4'b0010     in nibbleSet ) bit_0 = 1;
+            if (2           in intSet    ) bit_1 = 1;
+            if (false       in boolSet   ) bit_2 = 1;
+            if (TWO         in enumSet   ) bit_3 = 1;
+            if ("A"         in stringSet ) bit_4 = 1;
+            // if (2.2         in float32Set) bit_5 = 1;
+            // if (3.3         in float64Set) bit_6 = 1;
+            if (dummyStruct in structSet ) bit_7 = 1;
+        }
+
+        exec body ASM =
+"""
+// test_set_operator_in
+nibbleSet = {{bit_0}}
+intSet    = {{bit_1}}
+boolSet   = {{bit_2}}
+enumSet   = {{bit_3}}
+stringSet = {{bit_4}}
+structSet = {{bit_7}}
+""";
+    }
+}
+
+/**@}*/

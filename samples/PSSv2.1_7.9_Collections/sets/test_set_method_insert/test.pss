@@ -1,0 +1,90 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test set `insert()` method.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.5 : Sets <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        set<bit [4] > nibbleSet  = {4'b0010, 4'b0011};
+        set<int     > intSet     = {2, 3};
+        set<bool    > boolSet;
+        set<eSTR2NUM> enumSet;
+        set<string  > stringSet  = {"A", "B"};
+        set<float32 > float32Set;
+        set<float64 > float64Set;
+        // set<chandle > chandleSet;
+        set<sSTR2NUM> structSet ;
+
+        sSTR2NUM dummyStruct;
+
+        exec pre_solve {
+            nibbleSet.insert(4'b0100);
+            intSet.insert(4);
+            // boolSet.insert(true);
+            // enumSet.insert(TWO);
+            stringSet.insert("C");
+            // float32Set.insert(2.2);
+            // float64Set.insert(3.3);
+            // structSet.insert(dummyStruct);
+        }
+
+        int nibbleSize  = -1;
+        int intSize     = -1;
+        int boolSize    = -1;
+        int enumSize    = -1;
+        int stringSize  = -1;
+        int float32Size = -1;
+        int float64Size = -1;
+        int structSize  = -1;
+        exec post_solve {
+            nibbleSize  = nibbleSet.size();
+            intSize     = intSet.size();
+            boolSize    = boolSet.size();
+            enumSize    = enumSet.size();
+            stringSize  = stringSet.size();
+            float32Size = float32Set.size();
+            float64Size = float64Set.size();
+            structSize  = structSet.size();
+        }
+
+        exec body ASM =
+"""
+// test_set_method_insert
+nibbleSet  = {{nibbleSize}}
+intSet     = {{intSize}}
+boolSet    = {{boolSize}}
+enumSet    = {{enumSize}}
+stringSet  = {{stringSize}}
+float32Set = {{float32Size}}
+float64Set = {{float64Size}}
+structSet  = {{structSize}}
+""";
+    }
+}
+
+/**@}*/

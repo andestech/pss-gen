@@ -1,0 +1,11 @@
+
+// test_set_method_to_list
+nibbleSet  = 2
+intSet     = 2
+boolSet    = 0
+enumSet    = 0
+stringSet  = 2
+float32Set = 0
+float64Set = 0
+structSet  = 0
+
