@@ -1,0 +1,50 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test array template format declaration.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.2 : Arrays <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        array<bit [4] , 3> nibbleArray;
+        array<int     , 3> intArray   ;
+        array<bool    , 3> boolArray  ;
+        array<eSTR2NUM, 3> enumArray  ;
+        array<string  , 3> stringArray;
+        // array<float32 , 3> float32Array;
+        // array<float64 , 3> float64Array;
+        array<sSTR2NUM, 3> structArray;
+        array<array<int, 2>, 2> nestedArray;
+
+        exec body ASM =
+"""
+// test_array_declaration_template
+""";
+    }
+}
+
+/**@}*/

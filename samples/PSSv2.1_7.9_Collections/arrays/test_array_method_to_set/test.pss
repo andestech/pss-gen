@@ -1,0 +1,109 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test array `to_set()` method.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.2 : Arrays <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        array<bit [4] , 2> nibbleArray_0 = {4'b0010, 4'b0010};
+        array<int     , 2> intArray_0    = {2, 2};
+        array<bool    , 2> boolArray_0   ;
+        array<eSTR2NUM, 2> enumArray_0   ;
+        array<string  , 2> stringArray_0 = {"A", "A"};
+        // array<float32 , 2> float32Array_0;
+        // array<float64 , 2> float64Array_0;
+        array<sSTR2NUM, 2> structArray_0 ;
+        array<array<int, 2>, 2> nestedArray = {{2, 3}, {2, 3}};
+
+        bit [4]  nibbleArray_1  [2] = {4'b0010, 4'b0010};
+        int      intArray_1     [2] = {2, 2};
+        bool     boolArray_1    [2];
+        eSTR2NUM enumArray_1    [2];
+        string   stringArray_1  [2] = {"A", "A"};
+        // float32  float32Array_1 [2];
+        // float64  float64Array_1 [2];
+        sSTR2NUM structArray_1  [2];
+
+        set<bit [4] > nibbleSet ;
+        set<int     > intSet    ;
+        set<bool    > boolSet   ;
+        set<eSTR2NUM> enumSet   ;
+        set<string  > stringSet ;
+        set<float32 > float32Set;
+        set<float64 > float64Set;
+        set<sSTR2NUM> structSet ;
+        // set<array<int, 2>> nestedSet;
+        exec pre_solve {
+            nibbleSet  = nibbleArray_0.to_set() ;
+            intSet     = intArray_0.to_set()    ;
+            // boolSet    = boolArray_0.to_set()   ;
+            // enumSet    = enumArray_0.to_set()   ;
+            stringSet  = stringArray_0.to_set() ;
+            // float32Set = float32Array_0.to_set();
+            // float64Set = float64Array_0.to_set();
+            // structSet  = structArray_0.to_set() ;
+            // nestedSet  = nestedArray.to_set()   ;
+        }
+
+        int nibbleSet_size  = -1;
+        int intSet_size     = -1;
+        int boolSet_size    = -1;
+        int enumSet_size    = -1;
+        int stringSet_size  = -1;
+        int float32Set_size = -1;
+        int float64Set_size = -1;
+        int structSet_size  = -1;
+        // int nestedSet_size  = -1;
+        exec post_solve {
+            nibbleSet_size  = nibbleSet.size() ;
+            intSet_size     = intSet.size()    ;
+            boolSet_size    = boolSet.size()   ;
+            enumSet_size    = enumSet.size()   ;
+            stringSet_size  = stringSet.size() ;
+            float32Set_size = float32Set.size();
+            float64Set_size = float64Set.size();
+            structSet_size  = structSet.size() ;
+            // nestedSet_size  = nestedSet.size() ;
+        }
+
+        exec body ASM =
+"""
+// test_array_method_to_set
+nibbleSet_size  = {{nibbleSet_size}}
+intSet_size     = {{intSet_size}}
+boolSet_size    = {{boolSet_size}}
+enumSet_size    = {{enumSet_size}}
+stringSet_size  = {{stringSet_size}}
+float32Set_size = {{float32Set_size}}
+float64Set_size = {{float64Set_size}}
+structSet_size  = {{structSet_size}}
+""";
+    }
+}
+
+/**@}*/

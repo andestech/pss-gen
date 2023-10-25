@@ -1,0 +1,9 @@
+
+// test_array_operator_inequality
+nibbleArray_equ  = 0
+intArray_equ     = 0
+boolArray_equ    = 1
+enumArray_equ    = 0
+stringArray_equ  = 0
+structArray_equ  = 1
+

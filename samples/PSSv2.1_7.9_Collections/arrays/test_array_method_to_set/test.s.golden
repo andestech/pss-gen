@@ -1,0 +1,11 @@
+
+// test_array_method_to_set
+nibbleSet_size  = 1
+intSet_size     = 1
+boolSet_size    = 0
+enumSet_size    = 0
+stringSet_size  = 1
+float32Set_size = 0
+float64Set_size = 0
+structSet_size  = 0
+

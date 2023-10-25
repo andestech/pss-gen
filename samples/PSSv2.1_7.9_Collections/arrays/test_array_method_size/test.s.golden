@@ -1,0 +1,11 @@
+
+// test_array_method_size
+nibbleArray_0  = 2
+intArray_0     = 2
+boolArray_0    = 2
+enumArray_0    = 2
+stringArray_0  = 2
+float32Array_0 = -1
+float64Array_0 = -1
+structArray_0  = 2
+

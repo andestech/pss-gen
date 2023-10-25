@@ -1,0 +1,59 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test array initialization assignment.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.2 : Arrays <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        array<bit [4] , 2> nibbleArray_0 = {4'b0010, 4'b0011};
+        array<int     , 2> intArray_0    = {2, 3};
+        array<bool    , 2> boolArray_0   ;
+        array<eSTR2NUM, 2> enumArray_0   ;
+        array<string  , 2> stringArray_0 = {"A", "B"};
+        // array<float32 , 2> float32Array_0;
+        // array<float64 , 2> float64Array_0;
+        array<sSTR2NUM, 2> structArray_0 ;
+        array<array<int, 2>, 2> nestedArray = {{2, 3}, {4, 5}};
+
+        bit [4]  nibbleArray_1  [2] = {4'b0010, 4'b0011};
+        int      intArray_1     [2] = {2, 3};
+        bool     boolArray_1    [2];
+        eSTR2NUM enumArray_1    [2];
+        string   stringArray_1  [2] = {"A", "B"};
+        // float32  float32Array_1 [2];
+        // float64  float64Array_1 [2];
+        sSTR2NUM structArray_1  [2];
+
+        exec body ASM =
+"""
+// test_array_initialization_assignment
+""";
+    }
+}
+
+/**@}*/
