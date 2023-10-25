@@ -1,10 +1,10 @@
 
-// test_list_method_insert
-nibbleList  = 3
-intList     = 3
+// test_list_operator_in
+nibbleList  = 1
+intList     = 1
 boolList    = 0
 enumList    = 0
-stringList  = 3
+stringList  = 1
 float32List = 0
 float64List = 0
 structList  = 0

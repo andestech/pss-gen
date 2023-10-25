@@ -1,0 +1,7 @@
+
+// test_list_operator_foreach
+nibbleList  = 3
+intList     = 3
+stringList  = B
+structList  = NULL, 0
+

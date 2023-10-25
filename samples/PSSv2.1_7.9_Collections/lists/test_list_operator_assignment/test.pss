@@ -3,8 +3,8 @@
 @{
 @file
 @author         Luther Lee
-@data           2023/10/12
-@brief          Test list declarations.
+@data           2023/10/25
+@brief          Test list assignment operator `=`.
 @version
 Portable Test and Stimulus Standard Version 2.1 <br>
 > Section 7.9 : Collections <br>
@@ -40,9 +40,22 @@ component pss_top {
         // list<chandle > chandleList;
         list<sSTR2NUM> structList ;
 
+        sSTR2NUM dummyStruct;
+
+        exec post_solve {
+            nibbleList  = {4'b0010, 4'b0011};
+            intList     = {2, 3};
+            // boolList    = {true, false};
+            // enumList    = {TWO, ONE};
+            stringList  = {"A", "B"};
+            // float32List = {2.2, 2.3};
+            // float64List = {3.3.,3.4};
+            // structList  = {dummyStruct, dummyStruct};
+        }
+
         exec body ASM =
 """
-// test_list_declaration
+// test_list_operator_assignment
 """;
     }
 }

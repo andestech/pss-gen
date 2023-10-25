@@ -1,7 +1,11 @@
 
-/** Test `shuffle()` */
-intList [0:2] = 6, 5, 7
-byteList[0:2] = 8, 9, 7
-stringList[0:2] = World, Hello, !
-enumList[0:2] = 2, 2, 1
+// test_list_method_shuffle
+nibbleList_equ  = 1
+intList_equ     = 1
+boolList_equ    = 0
+enumList_equ    = 0
+stringList_equ  = 1
+float32List_equ = 0
+float64List_equ = 0
+structList_equ  = 0
 

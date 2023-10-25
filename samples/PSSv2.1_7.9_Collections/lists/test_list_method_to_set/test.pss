@@ -4,7 +4,7 @@
 @file
 @author         Luther Lee
 @data           2023/10/12
-@brief          Test list methods: `to_set()`.
+@brief          Test list `to_set()` method.
 @version
 Portable Test and Stimulus Standard Version 2.1 <br>
 > Section 7.9 : Collections <br>
@@ -19,73 +19,76 @@ make gentarget
 @endcode
 */
 component pss_top {
+
     enum eSTR2NUM {
         ZERO, ONE, TWO
     };
 
     struct sSTR2NUM {
-        string stringVal;
-        int intVal;
+        string stringVal = "NULL";
+        int intVal = 0;
     };
 
     action root_a {
-        list<int     > intList    = {5      , 6      , 7   };
-        list<bit [8] > byteList   = {8'd9   , 8'd8   , 8'd7};
-        // list<bool    > boolList   = {true   , false  , true};   // todo: PSSListInst.assign(), Ln142: The list type should be assigned as a list_literal.
-        list<bool    > boolList                             ;
-        list<string  > stringList = {"Hello", "World", "!" };
-        list<eSTR2NUM> enumList   = {TWO    , ONE    , TWO };
-        // list<sSTR2NUM> structList = {"NULL" , 0            };   // todo: PSSInst.assign(), Ln321: PSSStructInst::assign is not impelemented
-        list<sSTR2NUM> structList                           ;
+        list<bit [4] > nibbleList = {4'b0010, 4'b0011};
+        list<int     > intList    = {2, 3};
+        list<bool    > boolList   ;
+        list<eSTR2NUM> enumList   ;
+        list<string  > stringList = {"A", "B"};
+        list<float32 > float32List;
+        list<float64 > float64List;
+        // list<chandle > chandleList;
+        list<sSTR2NUM> structList ;
 
-        sSTR2NUM dummyStruct;
-
-        int intVal_0 = 0;
-        int intVal_1 = 0;
-        int intVal_2 = 0;
-        int intVal_3 = 0;
-        int intVal_4 = 0;
-        int intVal_5 = 0;
-
-        set<int     > intSet   ;
-        set<bit [8] > byteSet  ;
-        set<bool    > boolSet  ;
-        set<string  > stringSet;
-        set<eSTR2NUM> enumSet  ;
-        set<sSTR2NUM> structSet;
-
+        set<bit [4] > nibbleSet ;
+        set<int     > intSet    ;
+        set<bool    > boolSet   ;
+        set<eSTR2NUM> enumSet   ;
+        set<string  > stringSet ;
+        set<float32 > float32Set;
+        set<float64 > float64Set;
+        set<sSTR2NUM> structSet ;
         exec pre_solve {
-            dummyStruct.stringVal = "World"   ;
-            dummyStruct.intVal    = 6         ;
-            // structList.insert(0, dummyStruct );  // todo: PSSModel.getText(), Ln284: PSSRefModel::getText is not impelemented
+            nibbleSet  = nibbleList.to_set() ;
+            intSet     = intList.to_set()    ;
+            boolSet    = boolList.to_set()   ;
+            enumSet    = enumList.to_set()   ;
+            stringSet  = stringList.to_set() ;
+            float32Set = float32List.to_set();
+            float64Set = float64List.to_set();
+            structSet  = structList.to_set() ;
         }
 
+        int nibbleSize  = -1;
+        int intSize     = -1;
+        int boolSize    = -1;
+        int enumSize    = -1;
+        int stringSize  = -1;
+        int float32Size = -1;
+        int float64Size = -1;
+        int structSize  = -1;
         exec post_solve {
-            /** Test `to_set()` */
-            intSet    = intList.to_set()   ;
-            byteSet   = byteList.to_set()  ;
-            // boolSet   = boolList.to_set()  ;
-            stringSet = stringList.to_set();
-            // enumSet   = enumList.to_set()  ;
-            // structSet = structList.to_set();
-
-            intVal_0 = intSet.size()   ;
-            intVal_1 = byteSet.size()  ;
-            intVal_2 = boolSet.size()  ;
-            intVal_3 = stringSet.size();
-            intVal_4 = enumSet.size()  ;
-            intVal_5 = structSet.size();
+            nibbleSize  = nibbleSet.size();
+            intSize     = intSet.size();
+            boolSize    = boolSet.size();
+            enumSize    = enumSet.size();
+            stringSize  = stringSet.size();
+            float32Size = float32Set.size();
+            float64Size = float64Set.size();
+            structSize  = structSet.size();
         }
 
         exec body ASM =
 """
-/** Test `to_set()` */
-intVal_0 = {{intVal_0}}
-intVal_1 = {{intVal_1}}
-intVal_2 = {{intVal_2}}
-intVal_3 = {{intVal_3}}
-intVal_4 = {{intVal_4}}
-intVal_5 = {{intVal_5}}
+// test_list_method_to_set
+nibbleList  = {{nibbleSize}}
+intList     = {{intSize}}
+boolList    = {{boolSize}}
+enumList    = {{enumSize}}
+stringList  = {{stringSize}}
+float32List = {{float32Size}}
+float64List = {{float64Size}}
+structList  = {{structSize}}
 """;
     }
 }

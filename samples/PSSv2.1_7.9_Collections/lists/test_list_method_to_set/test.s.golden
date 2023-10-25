@@ -1,9 +1,11 @@
 
-/** Test `to_set()` */
-intVal_0 = 3
-intVal_1 = 3
-intVal_2 = 0
-intVal_3 = 3
-intVal_4 = 0
-intVal_5 = 0
+// test_list_method_to_set
+nibbleList  = 2
+intList     = 2
+boolList    = 0
+enumList    = 0
+stringList  = 2
+float32List = 0
+float64List = 0
+structList  = 0
 

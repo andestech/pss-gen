@@ -4,7 +4,7 @@
 @file
 @author         Luther Lee
 @data           2023/10/12
-@brief          Test list methods: `shuffle()`.
+@brief          Test list `shuffle()` method.
 @version
 Portable Test and Stimulus Standard Version 2.1 <br>
 > Section 7.9 : Collections <br>
@@ -19,64 +19,77 @@ make gentarget
 @endcode
 */
 component pss_top {
+
     enum eSTR2NUM {
         ZERO, ONE, TWO
     };
 
     struct sSTR2NUM {
-        string stringVal;
-        int intVal;
+        string stringVal = "NULL";
+        int intVal = 0;
     };
 
     action root_a {
-        list<int     > intList    = {5      , 6      , 7   };
-        list<bit [8] > byteList   = {8'd9   , 8'd8   , 8'd7};
-        // list<bool    > boolList   = {true   , false  , true};   // todo: PSSListInst.assign(), Ln142: The list type should be assigned as a list_literal.
-        list<bool    > boolList                             ;
-        list<string  > stringList = {"Hello", "World", "!" };
-        list<eSTR2NUM> enumList   = {TWO    , ONE    , TWO };
-        // list<sSTR2NUM> structList = {"NULL" , 0            };   // todo: PSSInst.assign(), Ln321: PSSStructInst::assign is not impelemented
-        list<sSTR2NUM> structList                           ;
-
-        sSTR2NUM dummyStruct;
-
-        int intVal_0 = 0;
-        int intVal_1 = 0;
-        int intVal_2 = 0;
-        int intVal_3 = 0;
-        int intVal_4 = 0;
-        int intVal_5 = 0;
+        list<bit [4] > nibbleList_0 = {4'b0010, 4'b0011, 4'b0100, 4'b0101};
+        list<bit [4] > nibbleList_1 = {4'b0010, 4'b0011, 4'b0100, 4'b0101};
+        list<int     > intList_0    = {2, 3, 4, 5};
+        list<int     > intList_1    = {2, 3, 4, 5};
+        list<bool    > boolList_0   ;
+        list<bool    > boolList_1   ;
+        list<eSTR2NUM> enumList_0   ;
+        list<eSTR2NUM> enumList_1   ;
+        list<string  > stringList_0 = {"A", "B", "C", "D"};
+        list<string  > stringList_1 = {"A", "B", "C", "D"};
+        list<float32 > float32List_0;
+        list<float32 > float32List_1;
+        list<float64 > float64List_0;
+        list<float64 > float64List_1;
+        // list<chandle > chandleList_0;
+        // list<chandle > chandleList_1;
+        list<sSTR2NUM> structList_0 ;
+        list<sSTR2NUM> structList_1 ;
 
         exec pre_solve {
-            dummyStruct.stringVal = "World"   ;
-            dummyStruct.intVal    = 6         ;
-            // structList.insert(0, dummyStruct );  // todo: PSSModel.getText(), Ln284: PSSRefModel::getText is not impelemented
+            nibbleList_1.shuffle() ;
+            intList_1.shuffle()    ;
+            boolList_1.shuffle()   ;
+            enumList_1.shuffle()   ;
+            stringList_1.shuffle() ;
+            float32List_1.shuffle();
+            float64List_1.shuffle();
+            structList_1.shuffle() ;
         }
 
+        bit nibbleList_equ  = 0;
+        bit intList_equ     = 0;
+        bit boolList_equ    = 0;
+        bit enumList_equ    = 0;
+        bit stringList_equ  = 0;
+        bit float32List_equ = 0;
+        bit float64List_equ = 0;
+        bit structList_equ  = 0;
         exec post_solve {
-            /** Test `shuffle()` */
-            intList.shuffle()   ;
-            byteList.shuffle()  ;
-            boolList.shuffle()  ;
-            stringList.shuffle();
-            enumList.shuffle()  ;
-            structList.shuffle();
-
-            intVal_0 = intList.size()   ;
-            intVal_1 = byteList.size()  ;
-            intVal_2 = boolList.size()  ;
-            intVal_3 = stringList.size();
-            intVal_4 = enumList.size()  ;
-            intVal_5 = structList.size();
+            if (nibbleList_0  != nibbleList_1 ) nibbleList_equ  = 1;
+            if (intList_0     != intList_1    ) intList_equ     = 1;
+            if (boolList_0    != boolList_1   ) boolList_equ    = 1;
+            if (enumList_0    != enumList_1   ) enumList_equ    = 1;
+            if (stringList_0  != stringList_1 ) stringList_equ  = 1;
+            if (float32List_0 != float32List_1) float32List_equ = 1;
+            if (float64List_0 != float64List_1) float64List_equ = 1;
+            if (structList_0  != structList_1 ) structList_equ  = 1;
         }
 
         exec body ASM =
 """
-/** Test `shuffle()` */
-intList [0:2] = {{intList[0]}}, {{intList[1]}}, {{intList[2]}}
-byteList[0:2] = {{byteList[0]}}, {{byteList[1]}}, {{byteList[2]}}
-stringList[0:2] = {{stringList[0]}}, {{stringList[1]}}, {{stringList[2]}}
-enumList[0:2] = {{enumList[0]}}, {{enumList[1]}}, {{enumList[2]}}
+// test_list_method_shuffle
+nibbleList_equ  = {{nibbleList_equ}}
+intList_equ     = {{intList_equ}}
+boolList_equ    = {{boolList_equ}}
+enumList_equ    = {{enumList_equ}}
+stringList_equ  = {{stringList_equ}}
+float32List_equ = {{float32List_equ}}
+float64List_equ = {{float64List_equ}}
+structList_equ  = {{structList_equ}}
 """;
     }
 }

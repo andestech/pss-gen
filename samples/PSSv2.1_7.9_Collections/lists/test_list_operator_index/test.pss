@@ -3,8 +3,8 @@
 @{
 @file
 @author         Luther Lee
-@data           2023/10/12
-@brief          Test list `size()` method.
+@data           2023/10/25
+@brief          Test list index operator `[]`.
 @version
 Portable Test and Stimulus Standard Version 2.1 <br>
 > Section 7.9 : Collections <br>
@@ -40,36 +40,21 @@ component pss_top {
         // list<chandle > chandleList;
         list<sSTR2NUM> structList ;
 
-        int nibbleSize  = -1;
-        int intSize     = -1;
-        int boolSize    = -1;
-        int enumSize    = -1;
-        int stringSize  = -1;
-        int float32Size = -1;
-        int float64Size = -1;
-        int structSize  = -1;
+        bit [4] nibbleVal;
+        int     intVal   ;
+        string  stringVal;
         exec post_solve {
-            nibbleSize  = nibbleList.size();
-            intSize     = intList.size();
-            boolSize    = boolList.size();
-            enumSize    = enumList.size();
-            stringSize  = stringList.size();
-            float32Size = float32List.size();
-            float64Size = float64List.size();
-            structSize  = structList.size();
+            nibbleVal = nibbleList[0];
+            intVal    = intList[0];
+            stringVal = stringList[0];
         }
 
         exec body ASM =
 """
-// test_list_method_size
-nibbleList  = {{nibbleSize}}
-intList     = {{intSize}}
-boolList    = {{boolSize}}
-enumList    = {{enumSize}}
-stringList  = {{stringSize}}
-float32List = {{float32Size}}
-float64List = {{float64Size}}
-structList  = {{structSize}}
+// test_list_operator_index
+nibbleVal = {{nibbleVal}}
+intVal    = {{intVal}}
+stringVal = {{stringVal}}
 """;
     }
 }

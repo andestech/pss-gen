@@ -1,9 +1,11 @@
 
-/** Test `push_front()` */
-intVal_0 = 4
-intVal_1 = 4
-intVal_2 = 0
-intVal_3 = 4
-intVal_4 = 3
-intVal_5 = 0
+// test_list_method_push_front
+nibbleList  = 3
+intList     = 3
+boolList    = 0
+enumList    = 0
+stringList  = 3
+float32List = 0
+float64List = 0
+structList  = 0
 
