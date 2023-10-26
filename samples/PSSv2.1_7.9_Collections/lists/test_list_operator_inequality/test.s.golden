@@ -1,0 +1,11 @@
+
+// test_list_operator_inequality
+nibbleList  = 0
+intList     = 0
+boolList    = 0
+enumList    = 0
+stringList  = 0
+float32List = 0
+float64List = 0
+structList  = 0
+

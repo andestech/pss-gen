@@ -12,9 +12,17 @@ public class PSSRandom {
 
 	static String m_alphabet = "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	static Random m_rand;
+	static long m_seed;
 	public static void initRandom(long seed) {
 		PSSMessage.Info("random seed is " + String.valueOf(seed));
+		m_seed = seed;
 		m_rand = new Random(seed);
+	}
+	public static long getSeed() {
+		return m_seed;
+	}
+	public static Random getRandomObj() {
+		return m_rand;
 	}
 	public static String nextString(int len) {
 		String str = "";

@@ -1,0 +1,79 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test set inequality operator `!=`.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.5 : Sets <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        set<bit [4] > nibbleSet  = {4'b0010, 4'b0011};
+        set<int     > intSet     = {2, 3};
+        set<bool    > boolSet;
+        set<eSTR2NUM> enumSet;
+        set<string  > stringSet  = {"A", "B"};
+        set<float32 > float32Set;
+        set<float64 > float64Set;
+        // set<chandle > chandleSet;
+        set<sSTR2NUM> structSet ;
+
+        sSTR2NUM dummyStruct;
+
+        bit equ_0 = 0;
+        bit equ_1 = 0;
+        bit equ_2 = 0;
+        bit equ_3 = 0;
+        bit equ_4 = 0;
+        bit equ_5 = 0;
+        bit equ_6 = 0;
+        bit equ_7 = 0;
+        exec pre_solve {
+            if (nibbleSet  != nibbleSet ) equ_0 = 1;
+            if (intSet     != intSet    ) equ_1 = 1;
+            if (boolSet    != boolSet   ) equ_2 = 1;
+            if (enumSet    != enumSet   ) equ_3 = 1;
+            if (stringSet  != stringSet ) equ_4 = 1;
+            if (float32Set != float32Set) equ_5 = 1;
+            if (float64Set != float64Set) equ_6 = 1;
+            if (structSet  != structSet ) equ_7 = 1;
+        }
+
+        exec body ASM =
+"""
+// test_set_operator_inequality
+nibbleSet  = {{equ_0}}
+intSet     = {{equ_1}}
+boolSet    = {{equ_2}}
+enumSet    = {{equ_3}}
+stringSet  = {{equ_4}}
+float32Set = {{equ_5}}
+float64Set = {{equ_6}}
+structSet  = {{equ_7}}
+""";
+    }
+}
+
+/**@}*/

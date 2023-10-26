@@ -1,0 +1,11 @@
+
+// test_list_method_size
+nibbleList  = 2
+intList     = 2
+boolList    = 0
+enumList    = 0
+stringList  = 2
+float32List = 0
+float64List = 0
+structList  = 0
+

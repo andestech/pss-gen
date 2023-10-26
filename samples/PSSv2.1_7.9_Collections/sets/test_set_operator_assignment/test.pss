@@ -1,0 +1,63 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/24
+@brief          Test set assignment operator `=`.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.5 : Sets <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        set<bit [4] > nibbleSet ;
+        set<int     > intSet    ;
+        set<bool    > boolSet   ;
+        set<eSTR2NUM> enumSet   ;
+        set<string  > stringSet ;
+        set<float32 > float32Set;
+        set<float64 > float64Set;
+        // set<chandle > chandleSet;
+        set<sSTR2NUM> structSet ;
+
+        sSTR2NUM dummyStruct;
+
+        exec post_solve {
+            nibbleSet  = {4'b0010, 4'b0011};
+            intSet     = {2, 3};
+            // boolSet    = {false, true};
+            // enumSet    = {ONE, TWO};
+            stringSet  = {"A", "B"};
+            // float32Set = {2.2, 2.3};
+            // float64Set = {2.2, 2.3};
+            // structSet  = {dummyStruct};
+        }
+
+        exec body ASM =
+"""
+// test_set_operator_assignment
+""";
+    }
+}
+
+/**@}*/

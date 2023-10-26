@@ -1,0 +1,8 @@
+
+// test_set_operator_foreach
+nibbleSet  = 3
+intSet     = 3
+enumSet    = 0
+stringSet  = B
+structSet  = NULL, 0
+

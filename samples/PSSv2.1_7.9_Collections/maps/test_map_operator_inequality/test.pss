@@ -1,0 +1,284 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/24
+@brief          Test map inequality operator `!=`.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.4 : Maps <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        // `bit` as key
+        map<bit [4], bit [4] > nibbleMap_0 = {4'b1110:4'b0011, 4'b0110:4'b0010};
+        map<bit [4], int     > nibbleMap_1 = {4'b1110:3      , 4'b0110:2      };
+        map<bit [4], bool    > nibbleMap_2;
+        map<bit [4], eSTR2NUM> nibbleMap_3;
+        map<bit [4], string  > nibbleMap_4 = {4'b1110:"C"    , 4'b0110:"B"    };
+        map<bit [4], float32 > nibbleMap_5;;
+        map<bit [4], float64 > nibbleMap_6;;
+        map<bit [4], sSTR2NUM> nibbleMap_7;
+
+        // `int` as key
+        map<int, bit [4] > intMap_0 = {4:4'b0011, 5:4'b0010};
+        map<int, int     > intMap_1 = {4:3      , 5:2      };
+        map<int, bool    > intMap_2;
+        map<int, eSTR2NUM> intMap_3;
+        map<int, string  > intMap_4 = {4:"B"    , 5:"B"    };
+        map<int, float32 > intMap_5;
+        map<int, float64 > intMap_6;
+        map<int, sSTR2NUM> intMap_7;
+
+        // `bool` as key
+        map<bool, bit [4] > boolMap_0;
+        map<bool, int     > boolMap_1;
+        map<bool, bool    > boolMap_2;
+        map<bool, eSTR2NUM> boolMap_3;
+        map<bool, string  > boolMap_4;
+        map<bool, float32 > boolMap_5;
+        map<bool, float64 > boolMap_6;
+        map<bool, sSTR2NUM> boolMap_7;
+
+        // `enum` as key
+        map<eSTR2NUM, bit [4] > enumMap_0;
+        map<eSTR2NUM, int     > enumMap_1;
+        map<eSTR2NUM, bool    > enumMap_2;
+        map<eSTR2NUM, eSTR2NUM> enumMap_3;
+        map<eSTR2NUM, string  > enumMap_4;
+        map<eSTR2NUM, float32 > enumMap_5;
+        map<eSTR2NUM, float64 > enumMap_6;
+        map<eSTR2NUM, sSTR2NUM> enumMap_7;
+
+        // `string` as key
+        map<string, bit [4] > stringMap_0 = {"c":4'b0011, "b":4'b0010};
+        map<string, int     > stringMap_1 = {"c":3      , "b":2      };
+        map<string, bool    > stringMap_2;
+        map<string, eSTR2NUM> stringMap_3;
+        map<string, string  > stringMap_4 = {"c":"C"    , "b":"B"    };
+        map<string, float32 > stringMap_5;
+        map<string, float64 > stringMap_6;
+        map<string, sSTR2NUM> stringMap_7;
+
+        // `float32` as key
+        // map<float32, bit [4] > floatMap_0 = {1.0:4'b0011, 2.0:4'b0010};
+        // map<float32, int     > floatMap_1 = {1.0:3      , 2.0:2      };
+        // map<float32, bool    > floatMap_2 = {1.0:true   , 2.0:false  };
+        // map<float32, eSTR2NUM> floatMap_3 = {1.0:ONE    , 2.0:TWO    };
+        // map<float32, string  > floatMap_4 = {1.0:"C"    , 2.0:"B"    };
+        // map<float32, float32 > floatMap_5 = {1.0:3.3    , 2.0:2.2    };
+        // map<float32, float64 > floatMap_6 = {1.0:3.3    , 2.0:2.2    };
+        // map<float32, sSTR2NUM> floatMap_7;
+
+        // `struct` as key
+        map<sSTR2NUM, bit [4] > structMap_0;
+        map<sSTR2NUM, int     > structMap_1;
+        map<sSTR2NUM, bool    > structMap_2;
+        map<sSTR2NUM, eSTR2NUM> structMap_3;
+        map<sSTR2NUM, string  > structMap_4;
+        map<sSTR2NUM, float32 > structMap_5;
+        map<sSTR2NUM, float64 > structMap_6;
+        map<sSTR2NUM, sSTR2NUM> structMap_7;
+
+        // `bit` as key
+        bit nibbleMap_equ0 = 0;
+        bit nibbleMap_equ1 = 0;
+        bit nibbleMap_equ2 = 0;
+        bit nibbleMap_equ3 = 0;
+        bit nibbleMap_equ4 = 0;
+        bit nibbleMap_equ5 = 0;
+        bit nibbleMap_equ6 = 0;
+        bit nibbleMap_equ7 = 0;
+
+        // `int` as key
+        bit intMap_equ0 = 0;
+        bit intMap_equ1 = 0;
+        bit intMap_equ2 = 0;
+        bit intMap_equ3 = 0;
+        bit intMap_equ4 = 0;
+        bit intMap_equ5 = 0;
+        bit intMap_equ6 = 0;
+        bit intMap_equ7 = 0;
+
+        // `bool` as key
+        bit boolMap_equ0 = 0;
+        bit boolMap_equ1 = 0;
+        bit boolMap_equ2 = 0;
+        bit boolMap_equ3 = 0;
+        bit boolMap_equ4 = 0;
+        bit boolMap_equ5 = 0;
+        bit boolMap_equ6 = 0;
+        bit boolMap_equ7 = 0;
+
+        // `enum` as key
+        bit enumMap_equ0 = 0;
+        bit enumMap_equ1 = 0;
+        bit enumMap_equ2 = 0;
+        bit enumMap_equ3 = 0;
+        bit enumMap_equ4 = 0;
+        bit enumMap_equ5 = 0;
+        bit enumMap_equ6 = 0;
+        bit enumMap_equ7 = 0;
+
+        // `string` as key
+        bit stringMap_equ0 = 0;
+        bit stringMap_equ1 = 0;
+        bit stringMap_equ2 = 0;
+        bit stringMap_equ3 = 0;
+        bit stringMap_equ4 = 0;
+        bit stringMap_equ5 = 0;
+        bit stringMap_equ6 = 0;
+        bit stringMap_equ7 = 0;
+
+        // `struct` as key
+        bit structMap_equ0 = 0;
+        bit structMap_equ1 = 0;
+        bit structMap_equ2 = 0;
+        bit structMap_equ3 = 0;
+        bit structMap_equ4 = 0;
+        bit structMap_equ5 = 0;
+        bit structMap_equ6 = 0;
+        bit structMap_equ7 = 0;
+        exec post_solve {
+            // `bit` as key
+            if (nibbleMap_0 != nibbleMap_0) nibbleMap_equ0 = 1;
+            if (nibbleMap_1 != nibbleMap_1) nibbleMap_equ1 = 1;
+            if (nibbleMap_2 != nibbleMap_2) nibbleMap_equ2 = 1;
+            if (nibbleMap_3 != nibbleMap_3) nibbleMap_equ3 = 1;
+            if (nibbleMap_4 != nibbleMap_4) nibbleMap_equ4 = 1;
+            if (nibbleMap_5 != nibbleMap_5) nibbleMap_equ5 = 1;
+            if (nibbleMap_6 != nibbleMap_6) nibbleMap_equ6 = 1;
+            if (nibbleMap_7 != nibbleMap_7) nibbleMap_equ7 = 1;
+
+            // `int` as key
+            if (intMap_0 != intMap_0) intMap_equ0 = 1;
+            if (intMap_1 != intMap_1) intMap_equ1 = 1;
+            if (intMap_2 != intMap_2) intMap_equ2 = 1;
+            if (intMap_3 != intMap_3) intMap_equ3 = 1;
+            if (intMap_4 != intMap_4) intMap_equ4 = 1;
+            if (intMap_5 != intMap_5) intMap_equ5 = 1;
+            if (intMap_6 != intMap_6) intMap_equ6 = 1;
+            if (intMap_7 != intMap_7) intMap_equ7 = 1;
+
+            // `bool` as key
+            if (boolMap_0 != boolMap_0) boolMap_equ0 = 1;
+            if (boolMap_1 != boolMap_1) boolMap_equ1 = 1;
+            if (boolMap_2 != boolMap_2) boolMap_equ2 = 1;
+            if (boolMap_3 != boolMap_3) boolMap_equ3 = 1;
+            if (boolMap_4 != boolMap_4) boolMap_equ4 = 1;
+            if (boolMap_5 != boolMap_5) boolMap_equ5 = 1;
+            if (boolMap_6 != boolMap_6) boolMap_equ6 = 1;
+            if (boolMap_7 != boolMap_7) boolMap_equ7 = 1;
+
+            // `enum` as key
+            if (enumMap_0 != enumMap_0) enumMap_equ0 = 1;
+            if (enumMap_1 != enumMap_1) enumMap_equ1 = 1;
+            if (enumMap_2 != enumMap_2) enumMap_equ2 = 1;
+            if (enumMap_3 != enumMap_3) enumMap_equ3 = 1;
+            if (enumMap_4 != enumMap_4) enumMap_equ4 = 1;
+            if (enumMap_5 != enumMap_5) enumMap_equ5 = 1;
+            if (enumMap_6 != enumMap_6) enumMap_equ6 = 1;
+            if (enumMap_7 != enumMap_7) enumMap_equ7 = 1;
+
+            // `string` as key
+            if (stringMap_0 != stringMap_0) stringMap_equ0 = 1;
+            if (stringMap_1 != stringMap_1) stringMap_equ1 = 1;
+            if (stringMap_2 != stringMap_2) stringMap_equ2 = 1;
+            if (stringMap_3 != stringMap_3) stringMap_equ3 = 1;
+            if (stringMap_4 != stringMap_4) stringMap_equ4 = 1;
+            if (stringMap_5 != stringMap_5) stringMap_equ5 = 1;
+            if (stringMap_6 != stringMap_6) stringMap_equ6 = 1;
+            if (stringMap_7 != stringMap_7) stringMap_equ7 = 1;
+
+            // `struct` as key
+            if (structMap_0 != structMap_0) structMap_equ0 = 1;
+            if (structMap_1 != structMap_1) structMap_equ1 = 1;
+            if (structMap_2 != structMap_2) structMap_equ2 = 1;
+            if (structMap_3 != structMap_3) structMap_equ3 = 1;
+            if (structMap_4 != structMap_4) structMap_equ4 = 1;
+            if (structMap_5 != structMap_5) structMap_equ5 = 1;
+            if (structMap_6 != structMap_6) structMap_equ6 = 1;
+            if (structMap_7 != structMap_7) structMap_equ7 = 1;
+        }
+
+        exec body ASM =
+"""
+// test_map_operator_inequality
+nibbleMap_0 = {{nibbleMap_equ0}}
+nibbleMap_1 = {{nibbleMap_equ1}}
+nibbleMap_2 = {{nibbleMap_equ2}}
+nibbleMap_3 = {{nibbleMap_equ3}}
+nibbleMap_4 = {{nibbleMap_equ4}}
+nibbleMap_5 = {{nibbleMap_equ5}}
+nibbleMap_6 = {{nibbleMap_equ6}}
+nibbleMap_7 = {{nibbleMap_equ7}}
+
+intMap_0 = {{intMap_equ0}}
+intMap_1 = {{intMap_equ1}}
+intMap_2 = {{intMap_equ2}}
+intMap_3 = {{intMap_equ3}}
+intMap_4 = {{intMap_equ4}}
+intMap_5 = {{intMap_equ5}}
+intMap_6 = {{intMap_equ6}}
+intMap_7 = {{intMap_equ7}}
+
+boolMap_0 = {{boolMap_equ0}}
+boolMap_1 = {{boolMap_equ1}}
+boolMap_2 = {{boolMap_equ2}}
+boolMap_3 = {{boolMap_equ3}}
+boolMap_4 = {{boolMap_equ4}}
+boolMap_5 = {{boolMap_equ5}}
+boolMap_6 = {{boolMap_equ6}}
+boolMap_7 = {{boolMap_equ7}}
+
+enumMap_0 = {{enumMap_equ0}}
+enumMap_1 = {{enumMap_equ1}}
+enumMap_2 = {{enumMap_equ2}}
+enumMap_3 = {{enumMap_equ3}}
+enumMap_4 = {{enumMap_equ4}}
+enumMap_5 = {{enumMap_equ5}}
+enumMap_6 = {{enumMap_equ6}}
+enumMap_7 = {{enumMap_equ7}}
+
+stringMap_0 = {{stringMap_equ0}}
+stringMap_1 = {{stringMap_equ1}}
+stringMap_2 = {{stringMap_equ2}}
+stringMap_3 = {{stringMap_equ3}}
+stringMap_4 = {{stringMap_equ4}}
+stringMap_5 = {{stringMap_equ5}}
+stringMap_6 = {{stringMap_equ6}}
+stringMap_7 = {{stringMap_equ7}}
+
+structMap_0 = {{structMap_equ0}}
+structMap_1 = {{structMap_equ1}}
+structMap_2 = {{structMap_equ2}}
+structMap_3 = {{structMap_equ3}}
+structMap_4 = {{structMap_equ4}}
+structMap_5 = {{structMap_equ5}}
+structMap_6 = {{structMap_equ6}}
+structMap_7 = {{structMap_equ7}}
+""";
+    }
+}
+
+/**@}*/

@@ -1,0 +1,56 @@
+
+// test_map_operator_equality
+nibbleMap_0 = 1
+nibbleMap_1 = 1
+nibbleMap_2 = 1
+nibbleMap_3 = 1
+nibbleMap_4 = 1
+nibbleMap_5 = 1
+nibbleMap_6 = 1
+nibbleMap_7 = 1
+
+intMap_0 = 1
+intMap_1 = 1
+intMap_2 = 1
+intMap_3 = 1
+intMap_4 = 1
+intMap_5 = 1
+intMap_6 = 1
+intMap_7 = 1
+
+boolMap_0 = 1
+boolMap_1 = 1
+boolMap_2 = 1
+boolMap_3 = 1
+boolMap_4 = 1
+boolMap_5 = 1
+boolMap_6 = 1
+boolMap_7 = 1
+
+enumMap_0 = 1
+enumMap_1 = 1
+enumMap_2 = 1
+enumMap_3 = 1
+enumMap_4 = 1
+enumMap_5 = 1
+enumMap_6 = 1
+enumMap_7 = 1
+
+stringMap_0 = 1
+stringMap_1 = 1
+stringMap_2 = 1
+stringMap_3 = 1
+stringMap_4 = 1
+stringMap_5 = 1
+stringMap_6 = 1
+stringMap_7 = 1
+
+structMap_0 = 1
+structMap_1 = 1
+structMap_2 = 1
+structMap_3 = 1
+structMap_4 = 1
+structMap_5 = 1
+structMap_6 = 1
+structMap_7 = 1
+

@@ -1,0 +1,97 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/12
+@brief          Test list `shuffle()` method.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        list<bit [4] > nibbleList_0 = {4'b0010, 4'b0011, 4'b0100, 4'b0101};
+        list<bit [4] > nibbleList_1 = {4'b0010, 4'b0011, 4'b0100, 4'b0101};
+        list<int     > intList_0    = {2, 3, 4, 5};
+        list<int     > intList_1    = {2, 3, 4, 5};
+        list<bool    > boolList_0   ;
+        list<bool    > boolList_1   ;
+        list<eSTR2NUM> enumList_0   ;
+        list<eSTR2NUM> enumList_1   ;
+        list<string  > stringList_0 = {"A", "B", "C", "D"};
+        list<string  > stringList_1 = {"A", "B", "C", "D"};
+        list<float32 > float32List_0;
+        list<float32 > float32List_1;
+        list<float64 > float64List_0;
+        list<float64 > float64List_1;
+        // list<chandle > chandleList_0;
+        // list<chandle > chandleList_1;
+        list<sSTR2NUM> structList_0 ;
+        list<sSTR2NUM> structList_1 ;
+
+        exec pre_solve {
+            nibbleList_1.shuffle() ;
+            intList_1.shuffle()    ;
+            boolList_1.shuffle()   ;
+            enumList_1.shuffle()   ;
+            stringList_1.shuffle() ;
+            float32List_1.shuffle();
+            float64List_1.shuffle();
+            structList_1.shuffle() ;
+        }
+
+        bit nibbleList_equ  = 0;
+        bit intList_equ     = 0;
+        bit boolList_equ    = 0;
+        bit enumList_equ    = 0;
+        bit stringList_equ  = 0;
+        bit float32List_equ = 0;
+        bit float64List_equ = 0;
+        bit structList_equ  = 0;
+        exec post_solve {
+            if (nibbleList_0  != nibbleList_1 ) nibbleList_equ  = 1;
+            if (intList_0     != intList_1    ) intList_equ     = 1;
+            if (boolList_0    != boolList_1   ) boolList_equ    = 1;
+            if (enumList_0    != enumList_1   ) enumList_equ    = 1;
+            if (stringList_0  != stringList_1 ) stringList_equ  = 1;
+            if (float32List_0 != float32List_1) float32List_equ = 1;
+            if (float64List_0 != float64List_1) float64List_equ = 1;
+            if (structList_0  != structList_1 ) structList_equ  = 1;
+        }
+
+        exec body ASM =
+"""
+// test_list_method_shuffle
+nibbleList_equ  = {{nibbleList_equ}}
+intList_equ     = {{intList_equ}}
+boolList_equ    = {{boolList_equ}}
+enumList_equ    = {{enumList_equ}}
+stringList_equ  = {{stringList_equ}}
+float32List_equ = {{float32List_equ}}
+float64List_equ = {{float64List_equ}}
+structList_equ  = {{structList_equ}}
+""";
+    }
+}
+
+/**@}*/

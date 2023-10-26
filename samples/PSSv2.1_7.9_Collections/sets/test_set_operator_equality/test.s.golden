@@ -1,0 +1,11 @@
+
+// test_set_operator_equality
+nibbleSet  = 1
+intSet     = 1
+boolSet    = 1
+enumSet    = 1
+stringSet  = 1
+float32Set = 1
+float64Set = 1
+structSet  = 1
+

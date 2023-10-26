@@ -1,4 +1,4 @@
-TAGS = `git describe --abbrev=0 --tags`
+TAGS = $(shell git describe --abbrev=0 --tags)
 PSSGEN_NAME = pssgen_${TAGS}.jar
 
 ANTLR4_JAR_PATH = ${PSS_HOME}/antlr4/antlr-4.9.3-complete.jar

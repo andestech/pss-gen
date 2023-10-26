@@ -1,0 +1,88 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/12
+@brief          Test list `clear()` method.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        list<bit [4] > nibbleList = {4'b0010, 4'b0011};
+        list<int     > intList    = {2, 3};
+        list<bool    > boolList   ;
+        list<eSTR2NUM> enumList   ;
+        list<string  > stringList = {"A", "B"};
+        list<float32 > float32List;
+        list<float64 > float64List;
+        // list<chandle > chandleList;
+        list<sSTR2NUM> structList ;
+
+        exec pre_solve {
+            nibbleList.clear();
+            intList.clear();
+            boolList.clear();
+            enumList.clear();
+            stringList.clear();
+            float32List.clear();
+            float64List.clear();
+            structList.clear();
+        }
+
+        int nibbleSize  = -1;
+        int intSize     = -1;
+        int boolSize    = -1;
+        int enumSize    = -1;
+        int stringSize  = -1;
+        int float32Size = -1;
+        int float64Size = -1;
+        int structSize  = -1;
+        exec post_solve {
+            nibbleSize  = nibbleList.size();
+            intSize     = intList.size();
+            boolSize    = boolList.size();
+            enumSize    = enumList.size();
+            stringSize  = stringList.size();
+            float32Size = float32List.size();
+            float64Size = float64List.size();
+            structSize  = structList.size();
+        }
+
+        exec body ASM =
+"""
+// test_list_method_clear
+nibbleList  = {{nibbleSize}}
+intList     = {{intSize}}
+boolList    = {{boolSize}}
+enumList    = {{enumSize}}
+stringList  = {{stringSize}}
+float32List = {{float32Size}}
+float64List = {{float64Size}}
+structList  = {{structSize}}
+""";
+    }
+}
+
+/**@}*/

@@ -1,0 +1,238 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/24
+@brief          Test map `foreach` statement.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.4 : Maps <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        // `bit` as key
+        map<bit [4], bit [4] > nibbleMap_0 = {4'b1110:4'b0011, 4'b0110:4'b0010};
+        map<bit [4], int     > nibbleMap_1 = {4'b1110:3      , 4'b0110:2      };
+        map<bit [4], bool    > nibbleMap_2;
+        map<bit [4], eSTR2NUM> nibbleMap_3;
+        map<bit [4], string  > nibbleMap_4 = {4'b1110:"C"    , 4'b0110:"B"    };
+        map<bit [4], float32 > nibbleMap_5;
+        map<bit [4], float64 > nibbleMap_6;
+        map<bit [4], sSTR2NUM> nibbleMap_7;
+
+        // `int` as key
+        map<int, bit [4] > intMap_0 = {4:4'b0011, 5:4'b0010};
+        map<int, int     > intMap_1 = {4:3      , 5:2      };
+        map<int, bool    > intMap_2;
+        map<int, eSTR2NUM> intMap_3;
+        map<int, string  > intMap_4 = {4:"C"    , 5:"B"    };
+        map<int, float32 > intMap_5;
+        map<int, float64 > intMap_6;
+        map<int, sSTR2NUM> intMap_7;
+
+        // `bool` as key
+        map<bool, bit [4] > boolMap_0;
+        map<bool, int     > boolMap_1;
+        map<bool, bool    > boolMap_2;
+        map<bool, eSTR2NUM> boolMap_3;
+        map<bool, string  > boolMap_4;
+        map<bool, float32 > boolMap_5;
+        map<bool, float64 > boolMap_6;
+        map<bool, sSTR2NUM> boolMap_7;
+
+        // `enum` as key
+        map<eSTR2NUM, bit [4] > enumMap_0;
+        map<eSTR2NUM, int     > enumMap_1;
+        map<eSTR2NUM, bool    > enumMap_2;
+        map<eSTR2NUM, eSTR2NUM> enumMap_3;
+        map<eSTR2NUM, string  > enumMap_4;
+        map<eSTR2NUM, float32 > enumMap_5;
+        map<eSTR2NUM, float64 > enumMap_6;
+        map<eSTR2NUM, sSTR2NUM> enumMap_7;
+
+        // `string` as key
+        map<string, bit [4] > stringMap_0 = {"c":4'b0011, "b":4'b0010};
+        map<string, int     > stringMap_1 = {"c":3      , "b":2      };
+        map<string, bool    > stringMap_2;
+        map<string, eSTR2NUM> stringMap_3;
+        map<string, string  > stringMap_4 = {"c":"C"    , "b":"B"    };
+        map<string, float32 > stringMap_5;
+        map<string, float64 > stringMap_6;
+        map<string, sSTR2NUM> stringMap_7;
+
+        // `float32` as key
+        map<float32, bit [4] > floatMap_0;
+        map<float32, int     > floatMap_1;
+        map<float32, bool    > floatMap_2;
+        map<float32, eSTR2NUM> floatMap_3;
+        map<float32, string  > floatMap_4;
+        map<float32, float32 > floatMap_5;
+        map<float32, float64 > floatMap_6;
+        map<float32, sSTR2NUM> floatMap_7;
+
+        // `struct` as key
+        map<sSTR2NUM, bit [4] > structMap_0;
+        map<sSTR2NUM, int     > structMap_1;
+        map<sSTR2NUM, bool    > structMap_2;
+        map<sSTR2NUM, eSTR2NUM> structMap_3;
+        map<sSTR2NUM, string  > structMap_4;
+        map<sSTR2NUM, float32 > structMap_5;
+        map<sSTR2NUM, float64 > structMap_6;
+        map<sSTR2NUM, sSTR2NUM> structMap_7;
+
+        sSTR2NUM dummyStruct;
+
+        // `bit` as key
+        bit [4]  nibble_0 = 4'b0;
+        bit [4]  nibble_1 = 4'b0;
+        bit [4]  nibble_2 = 4'b0;
+        bit [4]  nibble_3 = 4'b0;
+        bit [4]  nibble_4 = 4'b0;
+        bit [4]  nibble_5 = 4'b0;
+
+        // `int` as key
+        int      int_0 = 0;
+        int      int_1 = 0;
+        int      int_2 = 0;
+        int      int_3 = 0;
+        int      int_4 = 0;
+        int      int_5 = 0;
+
+        // `bool` as key
+        bool     bool_0;
+        bool     bool_1;
+        bool     bool_2;
+        bool     bool_3;
+        bool     bool_4;
+        bool     bool_5;
+
+        // `enum` as key
+        eSTR2NUM enum_0;
+        eSTR2NUM enum_1;
+        eSTR2NUM enum_2;
+        eSTR2NUM enum_3;
+        eSTR2NUM enum_4;
+        eSTR2NUM enum_5;
+
+        // `string` as key
+        string   string_0 = "";
+        string   string_1 = "";
+        string   string_2 = "";
+        string   string_3 = "";
+        string   string_4 = "";
+        string   string_5 = "";
+
+        // `struct` as key
+        sSTR2NUM struct_0;
+        sSTR2NUM struct_1;
+        sSTR2NUM struct_2;
+        sSTR2NUM struct_3;
+        sSTR2NUM struct_4;
+        sSTR2NUM struct_5;
+        exec post_solve {
+            // `bit` as key
+            foreach (i : nibbleMap_0[j]) nibble_0  = i;
+            foreach (i : nibbleMap_1[j]) int_0     = i;
+            foreach (i : nibbleMap_2[j]) bool_0    = i;
+            foreach (i : nibbleMap_3[j]) enum_0    = i;
+            foreach (i : nibbleMap_4[j]) string_0  = i;
+            foreach (i : nibbleMap_7[j]) struct_0  = i;
+
+            // `int` as key
+            foreach (i : intMap_0[j]) nibble_1  = i;
+            foreach (i : intMap_1[j]) int_1     = i;
+            foreach (i : intMap_2[j]) bool_1    = i;
+            foreach (i : intMap_3[j]) enum_1    = i;
+            foreach (i : intMap_4[j]) string_1  = i;
+            foreach (i : intMap_7[j]) struct_1  = i;
+
+            // `bool` as key
+            foreach (i : boolMap_0[j]) nibble_2  = i;
+            foreach (i : boolMap_1[j]) int_2     = i;
+            foreach (i : boolMap_2[j]) bool_2    = i;
+            foreach (i : boolMap_3[j]) enum_2    = i;
+            foreach (i : boolMap_4[j]) string_2  = i;
+            foreach (i : boolMap_7[j]) struct_2  = i;
+
+            // `enum` as key
+            foreach (i : enumMap_0[j]) nibble_3  = i;
+            foreach (i : enumMap_1[j]) int_3     = i;
+            foreach (i : enumMap_2[j]) bool_3    = i;
+            foreach (i : enumMap_3[j]) enum_3    = i;
+            foreach (i : enumMap_4[j]) string_3  = i;
+            foreach (i : enumMap_7[j]) struct_3  = i;
+
+            // `string` as key
+            foreach (i : stringMap_0[j]) nibble_4  = i;
+            foreach (i : stringMap_1[j]) int_4     = i;
+            foreach (i : stringMap_2[j]) bool_4    = i;
+            foreach (i : stringMap_3[j]) enum_4    = i;
+            foreach (i : stringMap_4[j]) string_4  = i;
+            foreach (i : stringMap_7[j]) struct_4  = i;
+
+            // `struct` as key
+            foreach (i : structMap_0[j]) nibble_5  = i;
+            foreach (i : structMap_1[j]) int_5     = i;
+            foreach (i : structMap_2[j]) bool_5    = i;
+            foreach (i : structMap_3[j]) enum_5    = i;
+            foreach (i : structMap_4[j]) string_5  = i;
+            foreach (i : structMap_7[j]) struct_5  = i;
+        }
+
+        exec body ASM =
+"""
+// test_map_operator_foreach
+nibbleMap_0 = {{nibble_0}}
+nibbleMap_1 = {{int_0}}
+nibbleMap_4 = {{string_0}}
+nibbleMap_7 = {{struct_0.stringVal}}, {{struct_0.intVal}}
+
+intMap_0 = {{nibble_1}}
+intMap_1 = {{int_1}}
+intMap_4 = {{string_1}}
+intMap_7 = {{struct_1.stringVal}}, {{struct_1.intVal}}
+
+boolMap_0 = {{nibble_2}}
+boolMap_1 = {{int_2}}
+boolMap_4 = {{string_2}}
+boolMap_7 = {{struct_2.stringVal}}, {{struct_2.intVal}}
+
+enumMap_0 = {{nibble_3}}
+enumMap_1 = {{int_3}}
+enumMap_4 = {{string_3}}
+enumMap_7 = {{struct_3.stringVal}}, {{struct_3.intVal}}
+
+stringMap_0 = {{nibble_4}}
+stringMap_1 = {{int_4}}
+stringMap_4 = {{string_4}}
+stringMap_7 = {{struct_4.stringVal}}, {{struct_4.intVal}}
+
+structMap_0 = {{nibble_5}}
+structMap_1 = {{int_5}}
+structMap_4 = {{string_5}}
+structMap_7 = {{struct_5.stringVal}}, {{struct_5.intVal}}
+""";
+    }
+}
+
+/**@}*/

@@ -1,0 +1,9 @@
+
+// test_array_operator_in
+nibbleArray_in  = 1
+intArray_in     = 1
+boolArray_in    = 0
+enumArray_in    = 0
+stringArray_in  = 1
+structArray_in  = 0
+

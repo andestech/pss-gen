@@ -1,0 +1,96 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/12
+@brief          Test list `pop_back()` method.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        list<bit [4] > nibbleList = {4'b0010, 4'b0011};
+        list<int     > intList    = {2, 3};
+        list<bool    > boolList   ;
+        list<eSTR2NUM> enumList   ;
+        list<string  > stringList = {"A", "B"};
+        list<float32 > float32List;
+        list<float64 > float64List;
+        // list<chandle > chandleList;
+        list<sSTR2NUM> structList ;
+
+        bit [4]  nibbleVal ;
+        int      intVal    ;
+        bool     boolVal   ;
+        eSTR2NUM enumVal   ;
+        string   stringVal ;
+        // float32  float32Val;
+        // float64  float64Val;
+        sSTR2NUM structVal ;
+        exec pre_solve {
+            nibbleVal  = nibbleList.pop_back();
+            intVal     = intList.pop_back();
+            // boolVal    = boolList.pop_back();
+            // enumVal    = enumList.pop_back();
+            stringVal  = stringList.pop_back();
+            // float32Val = float32List.pop_back();
+            // float64Val = float64List.pop_back();
+            // structVal  = structList.pop_back();
+        }
+
+        int nibbleSize  = -1;
+        int intSize     = -1;
+        int boolSize    = -1;
+        int enumSize    = -1;
+        int stringSize  = -1;
+        int float32Size = -1;
+        int float64Size = -1;
+        int structSize  = -1;
+        exec post_solve {
+            nibbleSize  = nibbleList.size();
+            intSize     = intList.size();
+            boolSize    = boolList.size();
+            enumSize    = enumList.size();
+            stringSize  = stringList.size();
+            float32Size = float32List.size();
+            float64Size = float64List.size();
+            structSize  = structList.size();
+        }
+
+        exec body ASM =
+"""
+// test_list_method_pop_back
+nibbleList  = {{nibbleSize}}, {{nibbleVal}}
+intList     = {{intSize}}, {{intVal}}
+boolList    = {{boolSize}}
+enumList    = {{enumSize}}
+stringList  = {{stringSize}}, {{stringVal}}
+float32List = {{float32Size}}
+float64List = {{float64Size}}
+structList  = {{structSize}}
+""";
+    }
+}
+
+/**@}*/

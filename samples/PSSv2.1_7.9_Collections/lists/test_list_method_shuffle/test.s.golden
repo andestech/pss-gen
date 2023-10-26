@@ -1,0 +1,11 @@
+
+// test_list_method_shuffle
+nibbleList_equ  = 1
+intList_equ     = 1
+boolList_equ    = 0
+enumList_equ    = 0
+stringList_equ  = 1
+float32List_equ = 0
+float64List_equ = 0
+structList_equ  = 0
+

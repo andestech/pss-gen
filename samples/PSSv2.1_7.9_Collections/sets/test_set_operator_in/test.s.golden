@@ -1,0 +1,9 @@
+
+// test_set_operator_in
+nibbleSet = 1
+intSet    = 1
+boolSet   = 0
+enumSet   = 0
+stringSet = 1
+structSet = 0
+

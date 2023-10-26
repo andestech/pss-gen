@@ -1,0 +1,55 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test array `sum()` method.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.2 : Arrays <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        array<bit [4] , 2> nibbleArray_0 = {4'b0010, 4'b0011};
+        array<int     , 2> intArray_0    = {2, 3};
+
+        bit [4]  nibbleArray_1  [2] = {4'b0010, 4'b0011};
+        int      intArray_1     [2] = {2, 3};
+
+        bit [4] nibbleArray_sum  = 0;
+        int     intArray_sum     = 0;
+        exec post_solve {
+            nibbleArray_sum = nibbleArray_0.sum();
+            intArray_sum    = intArray_0.sum()   ;
+        }
+
+        exec body ASM =
+"""
+// test_array_method_sum
+nibbleArray_0  = {{nibbleArray_sum}}
+intArray_0     = {{intArray_sum}}
+""";
+    }
+}
+
+/**@}*/

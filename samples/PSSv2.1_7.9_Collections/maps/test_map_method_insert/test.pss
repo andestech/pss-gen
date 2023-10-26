@@ -1,0 +1,378 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/24
+@brief          Test map `insert()` method.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.4 : Maps <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        // `bit` as key
+        map<bit [4], bit [4] > nibbleMap_0;
+        map<bit [4], int     > nibbleMap_1;
+        map<bit [4], bool    > nibbleMap_2;
+        map<bit [4], eSTR2NUM> nibbleMap_3;
+        map<bit [4], string  > nibbleMap_4;
+        map<bit [4], float32 > nibbleMap_5;
+        map<bit [4], float64 > nibbleMap_6;
+        map<bit [4], sSTR2NUM> nibbleMap_7;
+
+        // `int` as key
+        map<int, bit [4] > intMap_0;
+        map<int, int     > intMap_1;
+        map<int, bool    > intMap_2;
+        map<int, eSTR2NUM> intMap_3;
+        map<int, string  > intMap_4;
+        map<int, float32 > intMap_5;
+        map<int, float64 > intMap_6;
+        map<int, sSTR2NUM> intMap_7;
+
+        // `bool` as key
+        map<bool, bit [4] > boolMap_0;
+        map<bool, int     > boolMap_1;
+        map<bool, bool    > boolMap_2;
+        map<bool, eSTR2NUM> boolMap_3;
+        map<bool, string  > boolMap_4;
+        map<bool, float32 > boolMap_5;
+        map<bool, float64 > boolMap_6;
+        map<bool, sSTR2NUM> boolMap_7;
+
+        // `enum` as key
+        map<eSTR2NUM, bit [4] > enumMap_0;
+        map<eSTR2NUM, int     > enumMap_1;
+        map<eSTR2NUM, bool    > enumMap_2;
+        map<eSTR2NUM, eSTR2NUM> enumMap_3;
+        map<eSTR2NUM, string  > enumMap_4;
+        map<eSTR2NUM, float32 > enumMap_5;
+        map<eSTR2NUM, float64 > enumMap_6;
+        map<eSTR2NUM, sSTR2NUM> enumMap_7;
+
+        // `string` as key
+        map<string, bit [4] > stringMap_0;
+        map<string, int     > stringMap_1;
+        map<string, bool    > stringMap_2;
+        map<string, eSTR2NUM> stringMap_3;
+        map<string, string  > stringMap_4;
+        map<string, float32 > stringMap_5;
+        map<string, float64 > stringMap_6;
+        map<string, sSTR2NUM> stringMap_7;
+
+        // `float32` as key
+        map<float32, bit [4] > floatMap_0;
+        map<float32, int     > floatMap_1;
+        map<float32, bool    > floatMap_2;
+        map<float32, eSTR2NUM> floatMap_3;
+        map<float32, string  > floatMap_4;
+        map<float32, float32 > floatMap_5;
+        map<float32, float64 > floatMap_6;
+        map<float32, sSTR2NUM> floatMap_7;
+
+        // `struct` as key
+        map<sSTR2NUM, bit [4] > structMap_0;
+        map<sSTR2NUM, int     > structMap_1;
+        map<sSTR2NUM, bool    > structMap_2;
+        map<sSTR2NUM, eSTR2NUM> structMap_3;
+        map<sSTR2NUM, string  > structMap_4;
+        map<sSTR2NUM, float32 > structMap_5;
+        map<sSTR2NUM, float64 > structMap_6;
+        map<sSTR2NUM, sSTR2NUM> structMap_7;
+
+        sSTR2NUM dummyStruct;
+
+        exec pre_solve {
+            // `bit` as key
+            nibbleMap_0.insert(4'b1111, 4'b0110);
+            nibbleMap_1.insert(4'b1111, 6);
+            // nibbleMap_2.insert(4'b1111, false);
+            // nibbleMap_3.insert(4'b1111, TWO);
+            nibbleMap_4.insert(4'b1111, "C");
+            // nibbleMap_5.insert(4'b1111, 6.6);
+            // nibbleMap_6.insert(4'b1111, 7.7);
+            // nibbleMap_7.insert(4'b1111, dummyStruct);
+
+            // `int` as key
+            intMap_0.insert(3, 4'b0110);
+            intMap_1.insert(3, 6);
+            // intMap_2.insert(3, false);
+            // intMap_3.insert(3, TWO);
+            intMap_4.insert(3, "C");
+            // intMap_5.insert(3, 6.6);
+            // intMap_6.insert(3, 7.7);
+            // intMap_7.insert(3, dummyStruct);
+
+            // `bool` as key
+            // boolMap_0.insert(true, 4'b0110);
+            // boolMap_1.insert(true, 6);
+            // boolMap_2.insert(true, false);
+            // boolMap_3.insert(true, TWO);
+            // boolMap_4.insert(true, "C");
+            // boolMap_5.insert(true, 6.6);
+            // boolMap_6.insert(true, 7.7);
+            // boolMap_7.insert(true, dummyStruct);
+
+            // `enum` as key
+            // enumMap_0.insert(ONE, 4'b0110);
+            // enumMap_1.insert(ONE, 6);
+            // enumMap_2.insert(ONE, false);
+            // enumMap_3.insert(ONE, TWO);
+            // enumMap_4.insert(ONE, "C");
+            // enumMap_5.insert(ONE, 6.6);
+            // enumMap_6.insert(ONE, 7.7);
+            // enumMap_7.insert(ONE, dummyStruct);
+
+            // `string` as key
+            stringMap_0.insert("WORD", 4'b0110);
+            stringMap_1.insert("WORD", 6);
+            // stringMap_2.insert("WORD", false);
+            // stringMap_3.insert("WORD", TWO);
+            stringMap_4.insert("WORD", "C");
+            // stringMap_5.insert("WORD", 6.6);
+            // stringMap_6.insert("WORD", 7.7);
+            // stringMap_7.insert("WORD", dummyStruct);
+
+            // `float32` as key
+            // floatMap_0.insert(2.2, 4'b0110);
+            // floatMap_1.insert(2.2, 6);
+            // floatMap_2.insert(2.2, false);
+            // floatMap_3.insert(2.2, TWO);
+            // floatMap_4.insert(2.2, "C");
+            // floatMap_5.insert(2.2, 6.6);
+            // floatMap_6.insert(2.2, 7.7);
+            // floatMap_7.insert(2.2, dummyStruct);
+
+            // `struct` as key
+            // structMap_0.insert(dummyStruct, 4'b0110);
+            // structMap_1.insert(dummyStruct, 6);
+            // structMap_2.insert(dummyStruct, false);
+            // structMap_3.insert(dummyStruct, TWO);
+            // structMap_4.insert(dummyStruct, "C");
+            // structMap_5.insert(dummyStruct, 6.6);
+            // structMap_6.insert(dummyStruct, 7.7);
+            // structMap_7.insert(dummyStruct, dummyStruct);
+        }
+
+        // `bit` as key
+        int nibbleSize_0 = -1;
+        int nibbleSize_1 = -1;
+        int nibbleSize_2 = -1;
+        int nibbleSize_3 = -1;
+        int nibbleSize_4 = -1;
+        int nibbleSize_5 = -1;
+        int nibbleSize_6 = -1;
+        int nibbleSize_7 = -1;
+
+        // `int` as key
+        int intSize_0 = -1;
+        int intSize_1 = -1;
+        int intSize_2 = -1;
+        int intSize_3 = -1;
+        int intSize_4 = -1;
+        int intSize_5 = -1;
+        int intSize_6 = -1;
+        int intSize_7 = -1;
+
+        // `bool` as key
+        int boolSize_0 = -1;
+        int boolSize_1 = -1;
+        int boolSize_2 = -1;
+        int boolSize_3 = -1;
+        int boolSize_4 = -1;
+        int boolSize_5 = -1;
+        int boolSize_6 = -1;
+        int boolSize_7 = -1;
+
+        // `enum` as key
+        int enumSize_0 = -1;
+        int enumSize_1 = -1;
+        int enumSize_2 = -1;
+        int enumSize_3 = -1;
+        int enumSize_4 = -1;
+        int enumSize_5 = -1;
+        int enumSize_6 = -1;
+        int enumSize_7 = -1;
+
+        // `string` as key
+        int stringSize_0 = -1;
+        int stringSize_1 = -1;
+        int stringSize_2 = -1;
+        int stringSize_3 = -1;
+        int stringSize_4 = -1;
+        int stringSize_5 = -1;
+        int stringSize_6 = -1;
+        int stringSize_7 = -1;
+
+        // `float32` as key
+        int floatSize_0 = -1;
+        int floatSize_1 = -1;
+        int floatSize_2 = -1;
+        int floatSize_3 = -1;
+        int floatSize_4 = -1;
+        int floatSize_5 = -1;
+        int floatSize_6 = -1;
+        int floatSize_7 = -1;
+
+        // `struct` as key
+        int structSize_0 = -1;
+        int structSize_1 = -1;
+        int structSize_2 = -1;
+        int structSize_3 = -1;
+        int structSize_4 = -1;
+        int structSize_5 = -1;
+        int structSize_6 = -1;
+        int structSize_7 = -1;
+        exec post_solve {
+            // `bit` as key
+            nibbleSize_0 = nibbleMap_0.size();
+            nibbleSize_1 = nibbleMap_1.size();
+            nibbleSize_2 = nibbleMap_2.size();
+            nibbleSize_3 = nibbleMap_3.size();
+            nibbleSize_4 = nibbleMap_4.size();
+            nibbleSize_5 = nibbleMap_5.size();
+            nibbleSize_6 = nibbleMap_6.size();
+            nibbleSize_7 = nibbleMap_7.size();
+
+            // `int` as key
+            intSize_0 = intMap_0.size();
+            intSize_1 = intMap_1.size();
+            intSize_2 = intMap_2.size();
+            intSize_3 = intMap_3.size();
+            intSize_4 = intMap_4.size();
+            intSize_5 = intMap_5.size();
+            intSize_6 = intMap_6.size();
+            intSize_7 = intMap_7.size();
+
+            // `bool` as key
+            boolSize_0 = boolMap_0.size();
+            boolSize_1 = boolMap_1.size();
+            boolSize_2 = boolMap_2.size();
+            boolSize_3 = boolMap_3.size();
+            boolSize_4 = boolMap_4.size();
+            boolSize_5 = boolMap_5.size();
+            boolSize_6 = boolMap_6.size();
+            boolSize_7 = boolMap_7.size();
+
+            // `enum` as key
+            enumSize_0 = enumMap_0.size();
+            enumSize_1 = enumMap_1.size();
+            enumSize_2 = enumMap_2.size();
+            enumSize_3 = enumMap_3.size();
+            enumSize_4 = enumMap_4.size();
+            enumSize_5 = enumMap_5.size();
+            enumSize_6 = enumMap_6.size();
+            enumSize_7 = enumMap_7.size();
+
+            // `string` as key
+            stringSize_0 = stringMap_0.size();
+            stringSize_1 = stringMap_1.size();
+            stringSize_2 = stringMap_2.size();
+            stringSize_3 = stringMap_3.size();
+            stringSize_4 = stringMap_4.size();
+            stringSize_5 = stringMap_5.size();
+            stringSize_6 = stringMap_6.size();
+            stringSize_7 = stringMap_7.size();
+
+            // `float32` as key
+            floatSize_0 = floatMap_0.size();
+            floatSize_1 = floatMap_1.size();
+            floatSize_2 = floatMap_2.size();
+            floatSize_3 = floatMap_3.size();
+            floatSize_4 = floatMap_4.size();
+            floatSize_5 = floatMap_5.size();
+            floatSize_6 = floatMap_6.size();
+            floatSize_7 = floatMap_7.size();
+
+            // `struct` as key
+            structSize_0 = structMap_0.size();
+            structSize_1 = structMap_1.size();
+            structSize_2 = structMap_2.size();
+            structSize_3 = structMap_3.size();
+            structSize_4 = structMap_4.size();
+            structSize_5 = structMap_5.size();
+            structSize_6 = structMap_6.size();
+            structSize_7 = structMap_7.size();
+        }
+
+        exec body ASM =
+"""
+// test_map_method_insert
+nibbleMap_0 = {{nibbleSize_0}}
+nibbleMap_1 = {{nibbleSize_1}}
+nibbleMap_2 = {{nibbleSize_2}}
+nibbleMap_3 = {{nibbleSize_3}}
+nibbleMap_4 = {{nibbleSize_4}}
+nibbleMap_5 = {{nibbleSize_5}}
+nibbleMap_6 = {{nibbleSize_6}}
+nibbleMap_7 = {{nibbleSize_7}}
+
+intMap_0 = {{intSize_0}}
+intMap_1 = {{intSize_1}}
+intMap_2 = {{intSize_2}}
+intMap_3 = {{intSize_3}}
+intMap_4 = {{intSize_4}}
+intMap_5 = {{intSize_5}}
+intMap_6 = {{intSize_6}}
+intMap_7 = {{intSize_7}}
+
+boolMap_0 = {{boolSize_0}}
+boolMap_1 = {{boolSize_1}}
+boolMap_2 = {{boolSize_2}}
+boolMap_3 = {{boolSize_3}}
+boolMap_4 = {{boolSize_4}}
+boolMap_5 = {{boolSize_5}}
+boolMap_6 = {{boolSize_6}}
+boolMap_7 = {{boolSize_7}}
+
+enumMap_0 = {{enumSize_0}}
+enumMap_1 = {{enumSize_1}}
+enumMap_2 = {{enumSize_2}}
+enumMap_3 = {{enumSize_3}}
+enumMap_4 = {{enumSize_4}}
+enumMap_5 = {{enumSize_5}}
+enumMap_6 = {{enumSize_6}}
+enumMap_7 = {{enumSize_7}}
+
+stringMap_0 = {{stringSize_0}}
+stringMap_1 = {{stringSize_1}}
+stringMap_2 = {{stringSize_2}}
+stringMap_3 = {{stringSize_3}}
+stringMap_4 = {{stringSize_4}}
+stringMap_5 = {{stringSize_5}}
+stringMap_6 = {{stringSize_6}}
+stringMap_7 = {{stringSize_7}}
+
+structMap_0 = {{structSize_0}}
+structMap_1 = {{structSize_1}}
+structMap_2 = {{structSize_2}}
+structMap_3 = {{structSize_3}}
+structMap_4 = {{structSize_4}}
+structMap_5 = {{structSize_5}}
+structMap_6 = {{structSize_6}}
+structMap_7 = {{structSize_7}}
+""";
+    }
+}
+
+/**@}*/

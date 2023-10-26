@@ -1,0 +1,49 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test array square format declaration.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.2 : Arrays <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        bit [4]  nibbleArray  [3];
+        int      intArray     [3];
+        bool     boolArray    [3];
+        eSTR2NUM enumArray    [3];
+        string   stringArray  [3];
+        // float32  float32Array [3];
+        // float64  float64Array [3];
+        sSTR2NUM structArray  [3];
+
+        exec body ASM =
+"""
+// test_array_declaration_square
+""";
+    }
+}
+
+/**@}*/

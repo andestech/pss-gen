@@ -1,0 +1,96 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/12
+@brief          Test list `to_set()` method.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        list<bit [4] > nibbleList = {4'b0010, 4'b0011};
+        list<int     > intList    = {2, 3};
+        list<bool    > boolList   ;
+        list<eSTR2NUM> enumList   ;
+        list<string  > stringList = {"A", "B"};
+        list<float32 > float32List;
+        list<float64 > float64List;
+        // list<chandle > chandleList;
+        list<sSTR2NUM> structList ;
+
+        set<bit [4] > nibbleSet ;
+        set<int     > intSet    ;
+        set<bool    > boolSet   ;
+        set<eSTR2NUM> enumSet   ;
+        set<string  > stringSet ;
+        set<float32 > float32Set;
+        set<float64 > float64Set;
+        set<sSTR2NUM> structSet ;
+        exec pre_solve {
+            nibbleSet  = nibbleList.to_set() ;
+            intSet     = intList.to_set()    ;
+            boolSet    = boolList.to_set()   ;
+            enumSet    = enumList.to_set()   ;
+            stringSet  = stringList.to_set() ;
+            float32Set = float32List.to_set();
+            float64Set = float64List.to_set();
+            structSet  = structList.to_set() ;
+        }
+
+        int nibbleSize  = -1;
+        int intSize     = -1;
+        int boolSize    = -1;
+        int enumSize    = -1;
+        int stringSize  = -1;
+        int float32Size = -1;
+        int float64Size = -1;
+        int structSize  = -1;
+        exec post_solve {
+            nibbleSize  = nibbleSet.size();
+            intSize     = intSet.size();
+            boolSize    = boolSet.size();
+            enumSize    = enumSet.size();
+            stringSize  = stringSet.size();
+            float32Size = float32Set.size();
+            float64Size = float64Set.size();
+            structSize  = structSet.size();
+        }
+
+        exec body ASM =
+"""
+// test_list_method_to_set
+nibbleList  = {{nibbleSize}}
+intList     = {{intSize}}
+boolList    = {{boolSize}}
+enumList    = {{enumSize}}
+stringList  = {{stringSize}}
+float32List = {{float32Size}}
+float64List = {{float64Size}}
+structList  = {{structSize}}
+""";
+    }
+}
+
+/**@}*/

@@ -1,0 +1,79 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test list set membership operator `in`.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        list<bit [4] > nibbleList = {4'b0010, 4'b0011};
+        list<int     > intList    = {2, 3};
+        list<bool    > boolList   ;
+        list<eSTR2NUM> enumList   ;
+        list<string  > stringList = {"A", "B"};
+        list<float32 > float32List;
+        list<float64 > float64List;
+        // list<chandle > chandleList;
+        list<sSTR2NUM> structList ;
+
+        sSTR2NUM dummyStruct;
+
+        bit nibbleList_in  = 0;
+        bit intList_in     = 0;
+        bit boolList_in    = 0;
+        bit enumList_in    = 0;
+        bit stringList_in  = 0;
+        bit float32List_in = 0;
+        bit float64List_in = 0;
+        bit structList_in  = 0;
+        exec post_solve {
+            if (4'b0010     in nibbleList ) nibbleList_in  = 1;
+            if (2           in intList    ) intList_in     = 1;
+            if (false       in boolList   ) boolList_in    = 1;
+            if (TWO         in enumList   ) enumList_in    = 1;
+            if ("A"         in stringList ) stringList_in  = 1;
+            // if (2.2         in float32List) float32List_in = 1;
+            // if (3.3         in float64List) float64List_in = 1;
+            if (dummyStruct in structList ) structList_in  = 1;
+        }
+
+        exec body ASM =
+"""
+// test_list_operator_in
+nibbleList  = {{nibbleList_in}}
+intList     = {{intList_in}}
+boolList    = {{boolList_in}}
+enumList    = {{enumList_in}}
+stringList  = {{stringList_in}}
+float32List = {{float32List_in}}
+float64List = {{float64List_in}}
+structList  = {{structList_in}}
+""";
+    }
+}
+
+/**@}*/

@@ -1,0 +1,76 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test set `foreach` statement.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.5 : Sets <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        set<bit [4] > nibbleSet  = {4'b0010, 4'b0011};
+        set<int     > intSet     = {2, 3};
+        set<bool    > boolSet;
+        set<eSTR2NUM> enumSet;
+        set<string  > stringSet  = {"A", "B"};
+        set<float32 > float32Set;
+        set<float64 > float64Set;
+        // set<chandle > chandleSet;
+        set<sSTR2NUM> structSet ;
+
+        sSTR2NUM dummyStruct;
+
+        bit [4]  nibbleVal  = 4'b0;
+        int      intVal     = 0;
+        bool     boolVal;
+        eSTR2NUM enumVal    = ZERO;
+        string   stringVal  = "";
+        // float32  float32Val = 0.0;
+        // float64  float64Val = 0.0;
+        sSTR2NUM structVal;
+        exec pre_solve {
+            foreach (i : nibbleSet ) nibbleVal  = i;
+            foreach (i : intSet    ) intVal     = i;
+            foreach (i : boolSet   ) boolVal    = i;
+            foreach (i : enumSet   ) enumVal    = i;
+            foreach (i : stringSet ) stringVal  = i;
+            foreach (i : float32Set) float32Val = i;
+            foreach (i : float64Set) float64Val = i;
+            foreach (i : structSet ) structVal  = i;
+        }
+
+        exec body ASM =
+"""
+// test_set_operator_foreach
+nibbleSet  = {{nibbleVal}}
+intSet     = {{intVal}}
+enumSet    = {{enumVal}}
+stringSet  = {{stringVal}}
+structSet  = {{structVal.stringVal}}, {{structVal.intVal}}
+""";
+    }
+}
+
+/**@}*/

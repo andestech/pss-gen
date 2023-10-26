@@ -1,0 +1,73 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/25
+@brief          Test list `foreach` statement.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.3 : Lists <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        list<bit [4] > nibbleList = {4'b0010, 4'b0011};
+        list<int     > intList    = {2, 3};
+        list<bool    > boolList   ;
+        list<eSTR2NUM> enumList   ;
+        list<string  > stringList = {"A", "B"};
+        list<float32 > float32List;
+        list<float64 > float64List;
+        // list<chandle > chandleList;
+        list<sSTR2NUM> structList ;
+
+        bit [4]  nibbleVal = 4'b0000;
+        int      intVal    = 0      ;
+        bool     boolVal   ;
+        eSTR2NUM enumVal   ;
+        string   stringVal = ""     ;
+        // float32  float32Val;
+        // float64  float64Val;
+        sSTR2NUM structVal ;
+        exec post_solve {
+            foreach (i : nibbleList[j] ) nibbleVal  = i;
+            foreach (i : intList[j]    ) intVal     = i;
+            foreach (i : boolList[j]   ) boolVal    = i;
+            foreach (i : enumList[j]   ) enumVal    = i;
+            foreach (i : stringList[j] ) stringVal  = i;
+            foreach (i : float32List[j]) float32Val = i;
+            foreach (i : float64List[j]) float64Val = i;
+            foreach (i : structList[j] ) structVal  = i;
+        }
+
+        exec body ASM =
+"""
+// test_list_operator_foreach
+nibbleList  = {{nibbleVal}}
+intList     = {{intVal}}
+stringList  = {{stringVal}}
+structList  = {{structVal.stringVal}}, {{structVal.intVal}}
+""";
+    }
+}
+
+/**@}*/

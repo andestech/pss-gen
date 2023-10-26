@@ -1,0 +1,56 @@
+
+// test_map_method_insert
+nibbleMap_0 = 1
+nibbleMap_1 = 1
+nibbleMap_2 = 0
+nibbleMap_3 = 0
+nibbleMap_4 = 1
+nibbleMap_5 = 0
+nibbleMap_6 = 0
+nibbleMap_7 = 0
+
+intMap_0 = 1
+intMap_1 = 1
+intMap_2 = 0
+intMap_3 = 0
+intMap_4 = 1
+intMap_5 = 0
+intMap_6 = 0
+intMap_7 = 0
+
+boolMap_0 = 0
+boolMap_1 = 0
+boolMap_2 = 0
+boolMap_3 = 0
+boolMap_4 = 0
+boolMap_5 = 0
+boolMap_6 = 0
+boolMap_7 = 0
+
+enumMap_0 = 0
+enumMap_1 = 0
+enumMap_2 = 0
+enumMap_3 = 0
+enumMap_4 = 0
+enumMap_5 = 0
+enumMap_6 = 0
+enumMap_7 = 0
+
+stringMap_0 = 1
+stringMap_1 = 1
+stringMap_2 = 0
+stringMap_3 = 0
+stringMap_4 = 1
+stringMap_5 = 0
+stringMap_6 = 0
+stringMap_7 = 0
+
+structMap_0 = 0
+structMap_1 = 0
+structMap_2 = 0
+structMap_3 = 0
+structMap_4 = 0
+structMap_5 = 0
+structMap_6 = 0
+structMap_7 = 0
+

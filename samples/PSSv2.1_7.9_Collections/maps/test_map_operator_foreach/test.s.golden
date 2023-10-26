@@ -1,0 +1,32 @@
+
+// test_map_operator_foreach
+nibbleMap_0 = 2
+nibbleMap_1 = 2
+nibbleMap_4 = B
+nibbleMap_7 = NULL, 0
+
+intMap_0 = 2
+intMap_1 = 2
+intMap_4 = B
+intMap_7 = NULL, 0
+
+boolMap_0 = 0
+boolMap_1 = 0
+boolMap_4 = 
+boolMap_7 = NULL, 0
+
+enumMap_0 = 0
+enumMap_1 = 0
+enumMap_4 = 
+enumMap_7 = NULL, 0
+
+stringMap_0 = 3
+stringMap_1 = 3
+stringMap_4 = C
+stringMap_7 = NULL, 0
+
+structMap_0 = 0
+structMap_1 = 0
+structMap_4 = 
+structMap_7 = NULL, 0
+

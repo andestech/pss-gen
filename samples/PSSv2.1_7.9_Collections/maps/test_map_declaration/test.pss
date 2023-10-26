@@ -1,0 +1,110 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/17
+@brief          Test map declarations.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 7.9 : Collections <br>
+> Section 7.9.4 : Maps <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        // `bit` as key
+        map<bit [4], bit [4] > nibbleMap_0;
+        map<bit [4], int     > nibbleMap_1;
+        map<bit [4], bool    > nibbleMap_2;
+        map<bit [4], eSTR2NUM> nibbleMap_3;
+        map<bit [4], string  > nibbleMap_4;
+        map<bit [4], float32 > nibbleMap_5;
+        map<bit [4], float64 > nibbleMap_6;
+        map<bit [4], sSTR2NUM> nibbleMap_7;
+
+        // `int` as key
+        map<int, bit [4] > intMap_0;
+        map<int, int     > intMap_1;
+        map<int, bool    > intMap_2;
+        map<int, eSTR2NUM> intMap_3;
+        map<int, string  > intMap_4;
+        map<int, float32 > intMap_5;
+        map<int, float64 > intMap_6;
+        map<int, sSTR2NUM> intMap_7;
+
+        // `bool` as key
+        map<bool, bit [4] > boolMap_0;
+        map<bool, int     > boolMap_1;
+        map<bool, bool    > boolMap_2;
+        map<bool, eSTR2NUM> boolMap_3;
+        map<bool, string  > boolMap_4;
+        map<bool, float32 > boolMap_5;
+        map<bool, float64 > boolMap_6;
+        map<bool, sSTR2NUM> boolMap_7;
+
+        // `enum` as key
+        map<eSTR2NUM, bit [4] > enumMap_0;
+        map<eSTR2NUM, int     > enumMap_1;
+        map<eSTR2NUM, bool    > enumMap_2;
+        map<eSTR2NUM, eSTR2NUM> enumMap_3;
+        map<eSTR2NUM, string  > enumMap_4;
+        map<eSTR2NUM, float32 > enumMap_5;
+        map<eSTR2NUM, float64 > enumMap_6;
+        map<eSTR2NUM, sSTR2NUM> enumMap_7;
+
+        // `string` as key
+        map<string, bit [4] > stringMap_0;
+        map<string, int     > stringMap_1;
+        map<string, bool    > stringMap_2;
+        map<string, eSTR2NUM> stringMap_3;
+        map<string, string  > stringMap_4;
+        map<string, float32 > stringMap_5;
+        map<string, float64 > stringMap_6;
+        map<string, sSTR2NUM> stringMap_7;
+
+        // `float32` as key
+        map<float32, bit [4] > floatMap_0;
+        map<float32, int     > floatMap_1;
+        map<float32, bool    > floatMap_2;
+        map<float32, eSTR2NUM> floatMap_3;
+        map<float32, string  > floatMap_4;
+        map<float32, float32 > floatMap_5;
+        map<float32, float64 > floatMap_6;
+        map<float32, sSTR2NUM> floatMap_7;
+
+        // `struct` as key
+        map<sSTR2NUM, bit [4] > structMap_0;
+        map<sSTR2NUM, int     > structMap_1;
+        map<sSTR2NUM, bool    > structMap_2;
+        map<sSTR2NUM, eSTR2NUM> structMap_3;
+        map<sSTR2NUM, string  > structMap_4;
+        map<sSTR2NUM, float32 > structMap_5;
+        map<sSTR2NUM, float64 > structMap_6;
+        map<sSTR2NUM, sSTR2NUM> structMap_7;
+
+        exec body ASM =
+"""
+// test_map_declaration
+""";
+    }
+}
+
+/**@}*/
