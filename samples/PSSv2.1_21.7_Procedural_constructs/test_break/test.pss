@@ -1,0 +1,161 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/27
+@brief          Test `break` statement.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 21.7 : Procedural constructs <br>
+> Section 21.7.11 : break/continue statement <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        int intVal_0 = -1;
+        int intVal_1 = -1;
+        int intVal_2 = -1;
+        int intVal_3 = -1;
+        int intVal_4 = -1;
+        array<int, 3  > intArray = {4  , 5  , 6  };
+        list <int     > intList  = {4  , 5  , 6  };
+        map  <int, int> intMap   = {4:7, 5:8, 6:9};
+        set  <int>      intSet   = {4  , 5  , 6  };
+
+        exec pre_solve {
+            repeat (0) {
+                intVal_0 += 1;
+                break;
+                intVal_0 += 1;
+            }
+            repeat (5) {
+                intVal_1 += 1;
+                break;
+                intVal_1 += 1;
+            }
+            repeat (i : 10) {
+                intVal_2 += 1;
+                break;
+                intVal_2 += 1;
+            }
+            repeat {
+                intVal_3 += 1;
+                break;
+                intVal_3 += 1;
+            } while (intVal_3 < 1);
+            while (intVal_4 < 3) {
+                intVal_4 += 1;
+                break;
+                intVal_4 += 1;
+            }
+
+            foreach (i : intArray[j]) {
+                intArray[j] = i + j;
+                break;
+                intArray[j] = 0;
+            }
+            foreach (i : intList[j] ) {
+                intList[j]  = i + j;
+                break;
+                intList[j]  = 0;
+            }
+            foreach (i : intMap[j]  ) {
+                intMap[j]   = i + j;
+                break;
+                intMap[j]   = 0;
+            }
+            foreach (i : intSet     ) {
+                intSet.insert(i + intSet.size());
+                break;
+                intSet.insert(0);
+            }
+        }
+
+        rand array<int, 3> intArray_rand;
+        constraint {
+            foreach (i : intArray_rand[j]) {
+                intArray_rand[j] in [j+1];
+                // break;
+            }
+        }
+
+        int intSet_size = -1;
+        exec post_solve {
+            intSet_size = intSet.size();
+        }
+
+        exec body ASM =
+"""
+// test_break
+intVal_0 = {{intVal_0}}
+intVal_1 = {{intVal_1}}
+intVal_2 = {{intVal_2}}
+intVal_3 = {{intVal_3}}
+intVal_4 = {{intVal_4}}
+intArray = {{intArray[0]}}, {{intArray[1]}}, {{intArray[2]}}
+intList  = {{intList[0]}}, {{intList[1]}}, {{intList[2]}}
+intMap   = {{intMap[4]}}, {{intMap[5]}}, {{intMap[6]}}
+intSet   = {{intSet_size}}
+
+intArray_rand = {{intArray_rand[0]}}, {{intArray_rand[1]}}, {{intArray_rand[2]}}
+""";
+
+        activity {
+            repeat (0) {
+                do printf with {msg == "test0"; index in [-1]; value in [-1];};
+                // break;
+            }
+            repeat (5) {
+                do printf with {msg == "test5"; index in [-1]; value in [-1];};
+                // break;
+            }
+            repeat (i : 10) {
+                do printf with {msg == "testi"; index in [-1]; value in [i];};
+                // break;
+            }
+
+            foreach (i : intArray[j]) {
+                do printf with {msg == "intArray"; index in [j] ; value in [i];};
+                // break;
+            }
+            foreach (i : intList[j] ) {
+                do printf with {msg == "intList" ; index in [j] ; value in [i];};
+                // break;
+            }
+            foreach (i : intMap[j]  ) {
+                do printf with {msg == "intMap"  ; index in [j] ; value in [i];};
+                // break;
+            }
+            foreach (i : intSet     ) {
+                do printf with {msg == "intSet"  ; index in [-1]; value in [i];};
+                // break;
+            }
+        }
+    }
+
+    action printf {
+        rand string msg;
+        rand int index, value;
+        exec body ASM = """{{msg}}, {{index}}, {{value}}""";
+    }
+}
+
+/**@}*/

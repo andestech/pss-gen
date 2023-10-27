@@ -1,0 +1,104 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/27
+@brief          Test `match` statement.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 21.7 : Procedural constructs <br>
+> Section 21.7.10 : match statement <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        int intVal_0 = -1;
+        int intVal_1 = 1;
+
+        exec pre_solve {
+            match (-1) {
+                [-100..-1] : intVal_0 = -100;
+                [0, 2, 4]  : intVal_0 = 0;
+                [5..9]     : intVal_0 = 1;
+                [10..99]   : intVal_0 = 100;
+            }
+            match (1) {
+                [-100..-1] : intVal_1 = -100;
+                [0, 2, 4]  : intVal_1 = 0;
+                [5..9]     : intVal_1 = 1;
+                [10..99]   : intVal_1 = 100;
+                default    : intVal_1 = -1;
+            }
+        }
+
+        int intRand = -1;
+        rand int intVal_0_rand;
+        rand int intVal_1_rand;
+
+        constraint {
+            // match (intRand) {
+            //     [-100..-1] : intVal_0_rand in [-100];
+            //     [0, 2, 4]  : intVal_0_rand in [0];
+            //     [5..9]     : intVal_0_rand in [1];
+            //     [10..99]   : intVal_0_rand in [100];
+            // }
+
+            // match (1) {
+            //     [-100..-1] : intVal_1_rand in [-100];
+            //     [0, 2, 4]  : intVal_1_rand in [0];
+            //     [5..9]     : intVal_1_rand in [1];
+            //     [10..99]   : intVal_1_rand in [100];
+            //     default    : intVal_1_rand in [-1];
+            // }
+        }
+
+        exec body ASM =
+"""
+// test_match
+intVal_0 = {{intVal_0}}
+intVal_1 = {{intVal_1}}
+""";
+
+        activity {
+            match (-1) {
+                [-100..-1] : {do printf with {msg == "match < 0";};     }
+                [0, 2, 4]  : {do printf with {msg == "match 0, 2, 4";}; }
+                [5..9]     : {do printf with {msg == "match 5..9";};    }
+                [10..99]   : {do printf with {msg == "match > 9";};     }
+                default    : {do printf with {msg == "match default";}; }
+            }
+            match (1) {
+                [-100..-1] : {do printf with {msg == "match < 0";};     }
+                [0, 2, 4]  : {do printf with {msg == "match 0, 2, 4";}; }
+                [5..9]     : {do printf with {msg == "match 5..9";};    }
+                [10..99]   : {do printf with {msg == "match > 9";};     }
+                default    : {do printf with {msg == "match default";}; }
+            }
+        }
+    }
+
+    action printf {
+        rand string msg;
+        exec body ASM = """{{msg}}""";
+    }
+}
+
+/**@}*/

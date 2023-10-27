@@ -1,0 +1,47 @@
+/*!
+@weakgroup      test
+@{
+@file
+@author         Luther Lee
+@data           2023/10/27
+@brief          Test `repeat`-`while` statement.
+@version
+Portable Test and Stimulus Standard Version 2.1 <br>
+> Section 21.7 : Procedural constructs <br>
+> Section 21.7.7 : repeat-while statement <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make gentarget
+@endcode
+*/
+component pss_top {
+
+    enum eSTR2NUM {
+        ZERO, ONE, TWO
+    };
+
+    struct sSTR2NUM {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        int intVal_0 = -1;
+
+        exec pre_solve {
+            repeat intVal_0 += 1; while (intVal_0 < 1);
+        }
+
+        exec body ASM =
+"""
+// test_repeat_while
+intVal_0 = {{intVal_0}}
+""";
+    }
+}
+
+/**@}*/

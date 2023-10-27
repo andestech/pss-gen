@@ -1,0 +1,7 @@
+
+// test_match
+intVal_0 = -100
+intVal_1 = -1
+
+match < 0
+match default

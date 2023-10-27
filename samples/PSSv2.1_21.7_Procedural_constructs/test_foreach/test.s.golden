@@ -1,0 +1,24 @@
+
+// test_foreach
+intArray = 4, 6, 8
+intList  = 4, 6, 8
+intMap   = 11, 13, 15
+intSet   = 6
+
+intArray_rand = 1, 2, 3
+
+intArray, 0, 4
+intArray, 1, 6
+intArray, 2, 8
+intList, 0, 4
+intList, 1, 6
+intList, 2, 8
+intMap, 4, 11
+intMap, 5, 13
+intMap, 6, 15
+intSet, -1, 11
+intSet, -1, 4
+intSet, -1, 5
+intSet, -1, 6
+intSet, -1, 7
+intSet, -1, 9

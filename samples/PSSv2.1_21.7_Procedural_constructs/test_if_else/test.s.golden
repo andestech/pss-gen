@@ -1,0 +1,11 @@
+
+// test_if_else
+intVal_0 = 1
+intVal_1 = 100
+
+intVal_0_rand = -50
+intVal_1_rand = 50
+
+if with true
+if-else with false,else
+if-else with true,if
