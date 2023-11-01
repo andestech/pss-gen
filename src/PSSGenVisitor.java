@@ -516,11 +516,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		Integer width;
 		boolean sign = integer_atom_type.equals("int");
 
-		if (ctx.number() != null) {
-			int lsb = Integer.valueOf(ctx.number().getText());
-			int msb = Integer.valueOf(ctx.constant_expression().getText());
-			width = msb - lsb + 1;
-		} else if (ctx.constant_expression() != null) {
+		if (ctx.constant_expression() != null) {
 			width = Integer.valueOf(ctx.constant_expression().getText());
 		} else {
 			if (sign) {
@@ -1054,20 +1050,22 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			exp_stack.push(new PSSPrimaryExpression(new PSSStringVal(text)));
 		} else if (ctx.number() != null) {
 			String text = ctx.getText();
-			if (ctx.number().OCT_NUMBER() != null) {
+			if (ctx.number().integer_number().OCT_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newOctNumber(text)));
-			} else if (ctx.number().DEC_NUMBER() != null) {
+			} else if (ctx.number().integer_number().DEC_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newDecNumber(text)));
-			} else if (ctx.number().HEX_NUMBER() != null) {
+			} else if (ctx.number().integer_number().HEX_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newHexNumber(text)));
-			} else if (ctx.number().based_bin_number() != null) {
+			} else if (ctx.number().integer_number().based_bin_number() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBasedBinNumber(text)));
-			} else if (ctx.number().based_oct_number() != null) {
+			} else if (ctx.number().integer_number().based_oct_number() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBasedOctNumber(text)));
-			} else if (ctx.number().based_dec_number() != null) {
+			} else if (ctx.number().integer_number().based_dec_number() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBasedDecNumber(text)));
-			} else if (ctx.number().based_hex_number() != null) {
+			} else if (ctx.number().integer_number().based_hex_number() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBasedHexNumber(text)));
+			} else {
+				PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 			}
 		} else if (ctx.bool_literal() != null) {
 			String text = ctx.getText();

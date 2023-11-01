@@ -7,7 +7,7 @@ grammar PSS_foreign_procedural_interface;
 
 import_function
 	: 'import' platform_qualifier? language_identifier? 'function' type_identifier ';'
-	| 'import' platform_qualifier? language_identifier? 'function' function_prototype ';'	
+	| 'import' platform_qualifier? language_identifier? 'static'? 'function' function_prototype ';'	
 ;
 
 platform_qualifier
@@ -16,7 +16,7 @@ platform_qualifier
 ;
 
 target_template_function
-	: 'target' language_identifier 'function' function_prototype '=' string_literal ';'
+	: 'target' language_identifier 'static'? 'function' function_prototype '=' string_literal ';'
 ;
 
 import_class_decl

@@ -7,6 +7,7 @@ grammar PSS_activity_statements;
 
 activity_stmt
 	: ( label_identifier ':')? labeled_activity_stmt
+	| activity_action_traversal_stmt
 	| activity_data_field
 	| activity_bind_stmt
 	| action_handle_declaration
@@ -16,8 +17,7 @@ activity_stmt
 ;
 
 labeled_activity_stmt
-	: activity_action_traversal_stmt
-	| activity_sequence_block_stmt
+	: activity_sequence_block_stmt
 	| activity_parallel_stmt
 	| activity_schedule_stmt
 	| activity_repeat_stmt
@@ -27,6 +27,7 @@ labeled_activity_stmt
 	| activity_match_stmt
 	| activity_replicate_stmt
 	| activity_super_stmt
+	| activity_atomic_block_stmt
 	| symbol_call
 ;
 
@@ -125,6 +126,10 @@ activity_replicate_stmt
 
 activity_super_stmt
 	: 'super' ';'
+;
+
+activity_atomic_block_stmt
+	: 'atomic' '{' activity_stmt* '}'
 ;
 
 activity_bind_stmt

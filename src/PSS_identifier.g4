@@ -8,6 +8,7 @@ grammar PSS_identifier;
 
 identifier
 	: ID
+	| ESCAPED_ID
 ;
 
 hierarchical_id_list

@@ -19,13 +19,13 @@ array_dim
 	: '[' constant_expression ']'
 ;
 
+attr_field
+	: access_modifier? rand_or_static_const? data_declaration
+;
+
 rand_or_static_const
 	: 'rand'
 	| 'static' 'const'
-;
-
-attr_field
-	: access_modifier? rand_or_static_const? data_declaration
 ;
 
 access_modifier

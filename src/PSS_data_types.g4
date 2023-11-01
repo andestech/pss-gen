@@ -19,12 +19,15 @@ scalar_data_type
 	| string_type
 	| bool_type
 	| enum_type
+	| float_type
 ;
 
 casting_type
 	: integer_type
 	| bool_type
 	| enum_type
+	| float_type
+	| reference_type
 	| type_identifier
 ;
 
@@ -35,7 +38,7 @@ chandle_type
 
 integer_type
 	: integer_atom_type
-          ('[' constant_expression (':' number)? ']')?
+          ('[' constant_expression (':' '0')? ']')?
           ('in' '[' domain_open_range_list ']')?
 ;
 
@@ -63,7 +66,7 @@ bool_type
 ;
 
 enum_declaration
-	: 'enum' enum_identifier '{' (enum_item (',' enum_item)*)? '}'
+	: 'enum' enum_identifier (':' data_type)? '{' (enum_item (',' enum_item)*)? '}'
 ;
 
 enum_item
@@ -72,6 +75,11 @@ enum_item
 
 enum_type
 	: enum_type_identifier ('in' '[' domain_open_range_list ']')?
+;
+
+float_type
+	: 'float32'
+	| 'float64'
 ;
 
 collection_type

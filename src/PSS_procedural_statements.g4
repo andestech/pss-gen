@@ -13,13 +13,16 @@ procedural_stmt
 	| procedural_void_function_call_stmt
 	| procedural_return_stmt
 	| procedural_repeat_stmt
-	| procedural_repeat_while_stmt
 	| procedural_while_stmt
+	| procedural_repeat_while_stmt
 	| procedural_foreach_stmt
 	| procedural_if_else_stmt
 	| procedural_match_stmt
 	| procedural_break_stmt
 	| procedural_continue_stmt
+	| procedural_randomization_stmt
+	| procedural_compile_if
+	| stmt_terminator
 ;
 
 procedural_sequence_block_stmt
@@ -85,8 +88,16 @@ procedural_continue_stmt
 	: 'continue' ';'
 ;
 
-
+procedural_randomization_stmt
+	: 'randomize' procedural_randomization_target procedural_randomization_term
+;
 	  
+procedural_randomization_target
+	: hierarchical_id (',' hierarchical_id)*
+;
 
-
+procedural_randomization_term
+	: 'with' constraint_set
+	| ';'
+;
 

@@ -7,12 +7,12 @@ grammar PSS_functions;
 
 
 procedural_function
-	: platform_qualifier? pure='pure'? 'function'
+	: platform_qualifier? pure='pure'? 'static'? 'function'
           function_prototype '{' procedural_stmt* '}'
 ;
 
 function_decl
-	: pure='pure'? 'function' function_prototype ';'
+	: pure='pure'? 'static'? 'function' function_prototype ';'
 ;
 
 function_prototype

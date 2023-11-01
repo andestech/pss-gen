@@ -18,12 +18,12 @@ covergroup_body_item
 	: covergroup_option
 	| covergroup_coverpoint
 	| covergroup_cross
+	| covergroup_body_compile_if
 	| stmt_terminator
 ;
 
 covergroup_option
 	: 'option' '.' identifier '=' constant_expression ';'
-	| 'type_option' '.' identifier '=' constant_expression ';'
 ;
 
 covergroup_instantiation
@@ -53,7 +53,6 @@ covergroup_options_or_empty
 	: 'with' '{' covergroup_option* '}'
 	| ';'
 ;
-
 
 covergroup_coverpoint
 	:  (data_type? coverpoint_identifier ':')? 'coverpoint'
@@ -120,5 +119,4 @@ covergroup_cross_binspec
 	: bins_keyword identifier '=' covercross_identifier
 	  'with' '(' covergroup_expression ')' ';'
 ;
-
 

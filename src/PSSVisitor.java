@@ -466,6 +466,24 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProcedural_continue_stmt(PSSParser.Procedural_continue_stmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PSSParser#procedural_randomization_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProcedural_randomization_stmt(PSSParser.Procedural_randomization_stmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#procedural_randomization_target}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProcedural_randomization_target(PSSParser.Procedural_randomization_targetContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#procedural_randomization_term}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProcedural_randomization_term(PSSParser.Procedural_randomization_termContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PSSParser#component_declaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -670,6 +688,12 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitActivity_super_stmt(PSSParser.Activity_super_stmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PSSParser#activity_atomic_block_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitActivity_atomic_block_stmt(PSSParser.Activity_atomic_block_stmtContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PSSParser#activity_bind_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -748,17 +772,17 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArray_dim(PSSParser.Array_dimContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PSSParser#rand_or_static_const}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRand_or_static_const(PSSParser.Rand_or_static_constContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link PSSParser#attr_field}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAttr_field(PSSParser.Attr_fieldContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#rand_or_static_const}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRand_or_static_const(PSSParser.Rand_or_static_constContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSSParser#access_modifier}.
 	 * @param ctx the parse tree
@@ -910,6 +934,12 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitEnum_type(PSSParser.Enum_typeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PSSParser#float_type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloat_type(PSSParser.Float_typeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PSSParser#collection_type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -1017,6 +1047,30 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitUnique_constraint_item(PSSParser.Unique_constraint_itemContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#dist_directive}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDist_directive(PSSParser.Dist_directiveContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#dist_list}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDist_list(PSSParser.Dist_listContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#dist_item}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDist_item(PSSParser.Dist_itemContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#dist_weight}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDist_weight(PSSParser.Dist_weightContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSSParser#covergroup_declaration}.
 	 * @param ctx the parse tree
@@ -1162,23 +1216,11 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPackage_body_compile_if(PSSParser.Package_body_compile_ifContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PSSParser#package_body_compile_if_item}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPackage_body_compile_if_item(PSSParser.Package_body_compile_if_itemContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link PSSParser#action_body_compile_if}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAction_body_compile_if(PSSParser.Action_body_compile_ifContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link PSSParser#action_body_compile_if_item}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAction_body_compile_if_item(PSSParser.Action_body_compile_if_itemContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSSParser#component_body_compile_if}.
 	 * @param ctx the parse tree
@@ -1186,23 +1228,83 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitComponent_body_compile_if(PSSParser.Component_body_compile_ifContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PSSParser#component_body_compile_if_item}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComponent_body_compile_if_item(PSSParser.Component_body_compile_if_itemContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link PSSParser#struct_body_compile_if}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitStruct_body_compile_if(PSSParser.Struct_body_compile_ifContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PSSParser#procedural_compile_if}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProcedural_compile_if(PSSParser.Procedural_compile_ifContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#constraint_body_compile_if}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstraint_body_compile_if(PSSParser.Constraint_body_compile_ifContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#covergroup_body_compile_if}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCovergroup_body_compile_if(PSSParser.Covergroup_body_compile_ifContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#override_compile_if}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOverride_compile_if(PSSParser.Override_compile_ifContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#package_body_compile_if_item}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPackage_body_compile_if_item(PSSParser.Package_body_compile_if_itemContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#action_body_compile_if_item}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAction_body_compile_if_item(PSSParser.Action_body_compile_if_itemContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#component_body_compile_if_item}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComponent_body_compile_if_item(PSSParser.Component_body_compile_if_itemContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PSSParser#struct_body_compile_if_item}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitStruct_body_compile_if_item(PSSParser.Struct_body_compile_if_itemContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#procedural_compile_if_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProcedural_compile_if_stmt(PSSParser.Procedural_compile_if_stmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#constraint_body_compile_if_item}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstraint_body_compile_if_item(PSSParser.Constraint_body_compile_if_itemContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#covergroup_body_compile_if_item}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCovergroup_body_compile_if_item(PSSParser.Covergroup_body_compile_if_itemContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#override_compile_if_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOverride_compile_if_stmt(PSSParser.Override_compile_if_stmtContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSSParser#compile_has_expr}.
 	 * @param ctx the parse tree
@@ -1570,6 +1672,12 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNumber(PSSParser.NumberContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PSSParser#integer_number}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInteger_number(PSSParser.Integer_numberContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PSSParser#based_bin_number}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -1593,6 +1701,42 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBased_hex_number(PSSParser.Based_hex_numberContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#floating_point_number}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloating_point_number(PSSParser.Floating_point_numberContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#unsigned_number}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnsigned_number(PSSParser.Unsigned_numberContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#floating_point_dec_number}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloating_point_dec_number(PSSParser.Floating_point_dec_numberContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#floating_point_sci_number}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloating_point_sci_number(PSSParser.Floating_point_sci_numberContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp(PSSParser.ExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#sign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSign(PSSParser.SignContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSSParser#aggregate_literal}.
 	 * @param ctx the parse tree
@@ -1653,6 +1797,18 @@ public interface PSSVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitString_literal(PSSParser.String_literalContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#double_quoted_string}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDouble_quoted_string(PSSParser.Double_quoted_stringContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSSParser#escaped_character}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEscaped_character(PSSParser.Escaped_characterContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSSParser#filename_string}.
 	 * @param ctx the parse tree

@@ -19,6 +19,7 @@ exec_block
 exec_kind
 	: 'pre_solve'
 	| 'post_solve'
+	| 'pre_body'
 	| 'body'
 	| 'header'
 	| 'declaration'
@@ -45,8 +46,4 @@ target_code_exec_block
 target_file_exec_block
 	: 'exec' 'file' filename_string '=' string_literal ';'
 ;
-
-
-
-
 

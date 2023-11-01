@@ -12,6 +12,7 @@ override_declaration
 override_stmt
 	: type_override
 	| instance_override
+	| override_compile_if
 	| stmt_terminator
 ;
 

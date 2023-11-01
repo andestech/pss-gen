@@ -28,6 +28,8 @@ constraint_body_item
 	| unique_constraint_item
 	| 'default' hierarchical_id '==' constant_expression ';'
 	| 'default' 'disable' hierarchical_id ';'
+	| dist_directive
+	| constraint_body_compile_if
 	| stmt_terminator
 ;
 
@@ -56,4 +58,20 @@ unique_constraint_item
 	: 'unique' '{' hierarchical_id_list '}' ';'
 ;
 
+dist_directive
+	: 'dist' expression 'in' '[' dist_list ']' ';'
+;
+
+dist_list
+	: dist_item (',' dist_item)*
+;
+
+dist_item
+	: open_range_value dist_weight?
+;
+
+dist_weight
+	: ':=' expression
+	| ':/' expression
+;
 
