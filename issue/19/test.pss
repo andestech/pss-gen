@@ -1,0 +1,57 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2024/05/08
+@brief          Test issue 19.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+component pss_top {
+    action root_a {
+        activity {
+            do randWithIfElseCondition with { condition == "foo"; };
+            do randWithIfElseCondition with { condition == "bar"; };
+            do randWithIfCondition with { condition == "foo"; };
+            do randWithIfCondition with { condition == "bar"; };
+        }
+    }
+
+    action randWithIfElseCondition {
+        rand string condition;
+        rand int value;
+        constraint {
+            if ("foo" == condition) value in [12345];
+            else value in [0];
+        }
+
+        exec post_solve {
+            if (12345 != value) value = 54321;
+        }
+        exec body ASM = """randWithIfElseCondition: {{condition}} ; {{value}}""";
+    }
+
+    action randWithIfCondition {
+        rand string condition;
+        rand int value;
+        constraint {
+            if ("foo" == condition) value in [12345];
+        }
+
+        exec post_solve {
+            if (12345 != value) value = 54321;
+        }
+        exec body ASM = """randWithIfCondition: {{condition}} ; {{value}}""";
+    }
+}
+
+/**@}*/

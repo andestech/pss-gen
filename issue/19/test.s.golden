@@ -1,0 +1,4 @@
+randWithIfElseCondition: foo ; 12345
+randWithIfElseCondition: bar ; 54321
+randWithIfCondition: foo ; 12345
+randWithIfCondition: bar ; 54321
