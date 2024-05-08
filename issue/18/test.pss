@@ -1,0 +1,34 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2024/05/08
+@brief          Test issue 18.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+component pss_top {
+    action root_a {
+        activity {
+            do printStr with { str == "one ;"; };
+            do printStr with { str == "two ;"; };;
+            do printStr with { str == "three ;"; };;;
+        }
+    }
+
+    action printStr {
+        rand string str;
+        exec body ASM = """printStr: {{str}}""";
+    }
+}
+
+/**@}*/
