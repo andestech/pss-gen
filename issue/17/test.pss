@@ -1,0 +1,63 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2024/05/08
+@brief          Test issue 17.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+component pss_top {
+    action root_a {
+        list<int> foo_list = {1, 2};
+
+        activity {
+            do printStr with { str == "root_a"; };
+            foreach (i : foo_list[j]) {
+                do printVal with { val in [i]; };
+            }
+
+            do appendList with { val in [3]; };
+
+            do printStr with { str == "root_a"; };
+            foreach (i : foo_list[j]) {
+                do printVal with { val in [i]; };
+            }
+        }
+    }
+
+    action appendList {
+        rand int val;
+        exec post_solve {
+            foo_list.push_back(val);
+        }
+        exec body ASM = """appendList: {{val}}""";
+        activity {
+            do printStr with { str == "appendList"; };
+            foreach (i : foo_list[j]) {
+                do printVal with { val in [i]; };
+            }
+        }
+    }
+
+    action printVal {
+        rand int val;
+        exec body ASM = """printVal: {{val}}""";
+    }
+
+    action printStr {
+        rand string str;
+        exec body ASM = """printStr: {{str}}""";
+    }
+}
+
+/**@}*/
