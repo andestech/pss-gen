@@ -1,0 +1,49 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2024/06/13
+@brief          Test issue 21.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+component pss_top {
+    action root_a {
+        activity {
+            do chainConstraintWithString with { tf in [1]; };
+        }
+    }
+
+    action chainConstraintWithString {
+        rand bit tf;
+        rand string foo;
+        rand int bar;
+
+        constraint {
+            if (tf in [1]) {
+                foo in ["foo"];
+            } else {
+                foo in ["oof"];
+            }
+            if (foo in ["foo"]) {
+                bar in [100];
+            } else if (foo in ["oof"]) {
+                bar in [200];
+            } else {
+                bar in [300];
+            }
+        }
+        exec body ASM = """chainConstraintWithString: {{tf}} ; {{foo}} ; {{bar}}""";
+    }
+}
+
+/**@}*/
