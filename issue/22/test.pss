@@ -1,0 +1,39 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2024/07/03
+@brief          Test issue 22.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+component pss_top {
+    action root_a {
+        activity {
+            do invertSingleBit with { val in [0]; };
+            do invertSingleBit with { val in [1]; };
+        }
+    }
+
+    action invertSingleBit {
+        rand bit val;
+        bit val_n;
+
+        exec post_solve {
+            val_n = ~val;
+        }
+
+        exec body ASM = """invertSingleBit: {{val}} -> {{val_n}}""";
+    }
+}
+
+/**@}*/
