@@ -1,0 +1,40 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2024/10/07
+@brief          Test issue 23.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+component pss_top {
+    action root_a {
+        activity {
+            do printStr with { str == "normal"; };
+            if (1) {
+                do print1;
+            };
+        }
+    }
+
+    action printStr {
+        rand string str;
+        exec body ASM = """printStr: {{str}}""";
+    }
+
+    action print1 {
+        exec body ASM = """print1""";
+    }
+
+}
+
+/**@}*/
