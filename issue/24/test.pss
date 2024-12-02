@@ -1,0 +1,41 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2024/12/02
+@brief          Test issue 24.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+component pss_top {
+    action root_a {
+        activity {
+            do print1;
+            do print1_workaround;
+        }
+    }
+
+    action print1 {
+        rand int in [1] val;
+        exec body ASM = """print1: {{val}}""";
+    }
+
+    action print1_workaround {
+        rand int val;
+        constraint {
+            val in [1];
+        }
+        exec body ASM = """print1_workaround: {{val}}""";
+    }
+}
+
+/**@}*/
