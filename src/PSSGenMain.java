@@ -33,7 +33,7 @@ public class PSSGenMain {
 			PSSParser         parser = new PSSParser         (tokens);
 
 			parser.removeErrorListeners();
-			parser.addErrorListener(new VerboseListener());
+			parser.addErrorListener(new VerboseListener(file));
 
 			ParseTree tree = parser.model();
 			tree_list.add(tree);
