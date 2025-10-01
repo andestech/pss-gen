@@ -1,0 +1,50 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/10/01
+@brief          Test issue 26.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+
+
+component pss_top {
+    action root_a {
+        rand int iVal;
+        constraint iVal in [2];
+        exec pre_solve {
+            iVal = 1;
+        }
+        exec post_solve {
+            iVal = 3;
+        }
+
+        exec body ASM = """root_a: {{iVal}}""";
+    }
+
+    action print1 {
+        rand int iVal;
+        constraint iVal in [5];
+        exec pre_solve {
+            iVal = 4;
+        }
+        exec post_solve {
+            iVal = 6;
+        }
+        exec body ASM = """print1: {{iVal}}""";
+    }
+
+}
+
+/**@}*/
