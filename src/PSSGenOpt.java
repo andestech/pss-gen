@@ -80,6 +80,7 @@ public class PSSGenOpt {
 
 		}
 
+		PSSMessage.Initial();
 		PSSRandom.initRandom(m_seed);
 
 		if (m_output_file.equals("")) {
