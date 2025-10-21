@@ -2,6 +2,7 @@ import java.util.*;
 
 public class PSSTraversalList {
 	ArrayList <PSSTraversal> m_list;
+	boolean contain_flow_action;
 
 	PSSTraversalList() {
 		m_list = new ArrayList <PSSTraversal>();
@@ -72,7 +73,9 @@ public class PSSTraversalList {
 	}
 
 	void traverse() {
-		schedule();
+		if (contain_flow_action) {
+			schedule();	// TODO: Fix performance issue
+		}
 		for (int i=0; i<m_list.size(); i++) {
 			PSSTraversal t = m_list.get(i);
 			PSSActionInst sub = t.getInst();
@@ -86,6 +89,10 @@ public class PSSTraversalList {
 			PSSTraversal t = m_list.get(i);
 			PSSActionInst sub_ah = t.getInst();
 			PSSUnboundRefList list = sub_ah.getUnboundRefList();
+
+			if (0 < list.size()) {
+				contain_flow_action = true;
+			}
 
 			for (int j=0; j<list.size(); j++) {
 				PSSUnboundRef uref = list.get(j);

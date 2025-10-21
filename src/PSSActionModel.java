@@ -160,7 +160,7 @@ public class PSSActionModel extends PSSModel {
 		// activity
 		evalActivity(inst);
 
-		//
+		// infer action that use flow object
 		inst.inferSubAction();
 
 		// traverse sub-actions
