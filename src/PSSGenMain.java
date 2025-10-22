@@ -1,8 +1,8 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.atn.PredictionMode;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -18,15 +18,17 @@ public class PSSGenMain {
 	}
 
 	public static ArrayList<ParseTree> parseFiles(ArrayList<String> flist) throws Exception {
-		PSSMessage.Info("parseFiles");
 		ArrayList<ParseTree> tree_list = new ArrayList<ParseTree>();
 
-		for (int i = 0; i < flist.size(); i++) {
-			String file = flist.get(i);
-			PSSMessage.Info("parse file '" + file + "'");
-
-			InputStream is    = new FileInputStream(file);
-			CharStream  input = CharStreams.fromStream(is);
+		for (String file : flist) {
+			CharStream input = null;
+			try {
+				PSSMessage.Info("parse file '" + file + "'");
+				input = CharStreams.fromFileName(file);
+			} catch (IOException e) {
+				PSSMessage.Error("", e.getMessage());
+			}
+			if (null == input) PSSMessage.Error("", "Fail to read '" + file + "'");
 
 			PSSLexer          lexer  = new PSSLexer          (input );
 			CommonTokenStream tokens = new CommonTokenStream (lexer );
@@ -34,6 +36,7 @@ public class PSSGenMain {
 
 			parser.removeErrorListeners();
 			parser.addErrorListener(new VerboseListener(file));
+			parser.getInterpreter().setPredictionMode(PredictionMode.SLL);	// Fix performance when executing adaptivePredict() on large file
 
 			ParseTree tree = parser.model();
 			tree_list.add(tree);
