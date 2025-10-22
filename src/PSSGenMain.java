@@ -49,16 +49,12 @@ public class PSSGenMain {
 		PSSMessage.Info("createModel");
 		PSSModel      model = new PSSModel("");
 		PSSGenVisitor eval  = new PSSGenVisitor();
+		eval.root = model;
 
 		PSSMessage.Debug("tree_list.size = " + tree_list.size());
-		for (int i = 0; i < tree_list.size(); i++) {
-			eval.root = model;
-			ParseTree tree_cur = tree_list.get(i);
-			eval.visit(tree_list.get(i));
+		for (ParseTree tree_cur : tree_list) {
+			eval.visit(tree_cur);
 		}
-
-		//model.dump("");
-		//System.exit(0);
 
 		return model;
 	}
