@@ -1,6 +1,8 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.atn.PredictionMode;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import java.io.IOException;
 import java.util.*;
@@ -22,6 +24,7 @@ public class PSSGenMain {
 
 		for (String file : flist) {
 			CharStream input = null;
+			ParseTree  tree  = null;
 			try {
 				PSSMessage.Info("parse file '" + file + "'");
 				input = CharStreams.fromFileName(file);
@@ -34,11 +37,23 @@ public class PSSGenMain {
 			CommonTokenStream tokens = new CommonTokenStream (lexer );
 			PSSParser         parser = new PSSParser         (tokens);
 
-			parser.removeErrorListeners();
-			parser.addErrorListener(new VerboseListener(file));
-			parser.getInterpreter().setPredictionMode(PredictionMode.SLL);	// Fix performance when executing adaptivePredict() on large file
+			// Enhance performance by starting with SLL then failing to combined SLL/LL (Two-Stage Parsing)
+			// See https://www.antlr.org/api/Java/org/antlr/v4/runtime/atn/ParserATNSimulator.html
+			try {
+				parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
+				parser.removeErrorListeners();
+				parser.setErrorHandler(new BailErrorStrategy());
+				tree = parser.model();
+			} catch (ParseCancellationException ex) {
+				// Retry with LL mode
+				tokens.seek(0); // rewind
+				parser.reset();
+				parser.removeErrorListeners();
+				parser.addErrorListener(new VerboseListener(file));
+				parser.getInterpreter().setPredictionMode(PredictionMode.LL);
+				tree = parser.model();
+			}
 
-			ParseTree tree = parser.model();
 			tree_list.add(tree);
 		}
 
