@@ -1,36 +1,42 @@
-.PHONY: test clean
+SHELL := /bin/bash
+include ./Make.vars
 
-IGNORE_LIST = ""
+IGNORE_LIST := 
+SUBDIRS := $(filter-out $(IGNORE_LIST), $(shell find . -mindepth 2 -type f -name 'Makefile' | xargs -I {} dirname {} | sort))
+SUMMARY := summary.log
 
-SUBDIRS =
-TEST_SUBDIRS = $(shell find ./ -name "test.pss" -type f | grep -wv $(IGNORE_LIST) | sed 's/test\.pss//g' | sort)
-ALL_SUBDIRS = $(shell find ./ -name "test.pss" -type f | sed 's/test\.pss//g' | sort)
-ARG =
+.PHONY: all run-subdirs summary clean
 
-test:
-	for i in $(TEST_SUBDIRS); do \
-		$(MAKE) -C $$i $@; \
+all: run-subdirs summary
+
+run-subdirs:
+	@for i in $(SUBDIRS); do \
+		$(MAKE) -C $$i || exit 1; \
 	done
-	make result
 
-result:
-	@$(eval total := $(shell find ./ -name "test.pss" -type f | grep -wv $(IGNORE_LIST) | wc -l))
-	@$(eval pass  := $(shell find ./ -name "result.log" -type f | grep -wv $(IGNORE_LIST) | xargs grep PASS | wc -l))
-	@$(eval fail  := $(shell find ./ -name "result.log" -type f | grep -wv $(IGNORE_LIST) | xargs grep FAIL | wc -l))
-	@$(eval loss  := $(shell let "loss = $(total) - $(pass) - $(fail)" ; echo $$loss))
-
-	@echo --------------------------------------------------------
-	@echo TOTAL=$(total), PASS=$(pass), FAIL=$(fail), LOSS=$(loss)
-	@echo --------------------------------------------------------
-
-	@for i in $(TEST_SUBDIRS); do \
-		RESULT_LOG=$$i"result.log"; \
-		if [ -f $$RESULT_LOG ]; then \
-			grep -H "[PASS|FAIL]" $$RESULT_LOG; \
+$(SUMMARY):
+	@rm -f $@
+	@for i in $(SUBDIRS); do \
+		f="$$i/$(RESULT_LOG)"; \
+		if [ -f $$f ]; then \
+			echo "$$i: $$(grep -E 'PASS|FAIL' $$f || echo 'NO RESULT')" >> $@; \
 		else \
-			echo $$RESULT_LOG":LOSS"; \
-		fi \
+			echo "$$i: NO RESULT_LOG" >> $@; \
+		fi; \
 	done
+
+summary: $(SUMMARY)
+	@total=$$(find . -mindepth 2 -type f -name 'Makefile' | wc -l); \
+    pass=$$(grep -Pc 'PASS' $<); \
+    fail=$$(grep -Pc 'FAIL|NO.RESULT|NO.RESULT_LOG' $<); \
+	skip=$$(( $$total - $$pass - $$fail )); \
+	echo "--------------------------------------------------------"; \
+	echo "TOTAL=$$total, PASS=$$pass, FAIL=$$fail, SKIP=$$skip"; \
+	echo "--------------------------------------------------------"; \
+    cat $<
 
 clean:
-	for i in $(ALL_SUBDIRS); do $(MAKE) -C $$i $@; done
+	@for i in $(SUBDIRS); do \
+		$(MAKE) -C $$i $@; \
+	done
+	-rm -f $(SUMMARY)
