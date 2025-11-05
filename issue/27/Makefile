@@ -28,9 +28,9 @@ all: $(OUT) check
 # Generic rule for .s from .pss
 %.s: %.pss
 ifeq ($(HAS_FLIST), $(FLIST))
-	@$(PSSGEN) -f $(FLIST) -root pss_top::root_a -info 2>&1 | tee $(RUN_LOG);
+	@$(PSSGEN) -f $(FLIST) -root pss_top::root_a $(ARG) 2>&1 | tee $(RUN_LOG);
 else
-	@$(PSSGEN) $< -o $@ $(LIB) -root pss_top::root_a -info 2>&1 | tee $(RUN_LOG);
+	@$(PSSGEN) $< -o $@ $(LIB) -root pss_top::root_a $(ARG) 2>&1 | tee $(RUN_LOG);
 endif
 
 check:

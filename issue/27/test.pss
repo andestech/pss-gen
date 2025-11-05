@@ -1,0 +1,40 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/11/05
+@brief          Test issue 27.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+
+
+component pss_top {
+    action root_a {
+        bit [5] root_val = 1;
+        activity {
+            do printVal with { val in [2]; };
+            do printVal with { val in [3]; root_val > 0; };
+        }
+    }
+
+    action printVal {
+        rand int val;
+        constraint {
+            root_val in [0..31];
+        }
+        exec body ASM = """val = {{val}}""";
+    }
+}
+
+/**@}*/
