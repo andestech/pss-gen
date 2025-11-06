@@ -14,7 +14,7 @@ public class PSSGenOpt {
 	String m_output_file;
 	String m_root_action;
 	ArrayList<String> m_lib_dir;
-	int m_seed;
+	long m_seed;
 
 
 	public PSSGenOpt(String[] args) {
@@ -70,7 +70,7 @@ public class PSSGenOpt {
 				help();
 			}
 			else if (arg.equals("-seed")) {
-				m_seed = Integer.valueOf(args[i+1]);
+				m_seed = Long.valueOf(args[i+1]);
 				i+=2;
 			}
 			else {
