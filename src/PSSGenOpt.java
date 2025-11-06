@@ -176,7 +176,7 @@ public class PSSGenOpt {
 		System.out.println("	-info			enable display `PSS-INFO` message");
 		System.out.println("	-debug			enable display `PSS-DEBUG` message");
 		System.out.println("	-debug_random	enable display randomize sequence");
-		System.out.println("	-set_random_limit <val>		change max. iterations of randomization (default: 1000)");
+		System.out.println("	-set_random_limit <val>		change max. iterations of randomization (default: 2000)");
 		System.out.println("	-root <root_action>");
 		System.out.println("	-seed <seed>");
 		System.exit(1);
