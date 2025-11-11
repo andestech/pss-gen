@@ -11,7 +11,7 @@ Portable Test and Stimulus Standard Version 2.0 <br>
 
 ### Test Command
 
-    make test
+    make
 
 */
 component pss_top {
