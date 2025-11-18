@@ -3,6 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: bug
+type: Bug
 assignees: LeeKaiXuan
 
 ---
@@ -11,9 +12,12 @@ assignees: LeeKaiXuan
 A clear and concise description of what the bug is.
 
 ## Scenario Code
-```sv
+```pss
 action example {
-    rand int in [1] val;
+    rand int val;
+    constraint {
+        val in [1];
+    }
     exec body ASM =
 """
 val = {{val}}
@@ -28,7 +32,7 @@ val = 1
 **OR**
 You can describe expected behaviour here.
 
-## Error Message from PSSGen or JAVA
+## Error Message from PSSGen or JAVA (Optional)
 ```
 PSS-ERROR: ...
 ```
