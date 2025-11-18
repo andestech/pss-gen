@@ -792,9 +792,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		if (ctx.inline_constraints_or_empty().constraint_set() != null) {
 			visit(ctx.inline_constraints_or_empty().constraint_set());
 
-			for (int i = 0; i < constraint_list.size(); i++) {
-				PSSConstraint c = constraint_list.get(i);
-				node.addConstraint(c);
+			for (PSSConstraint item : constraint_list) {
+				node.addConstraint(item);
 			}
 			constraint_list.clear();
 			activity_stack.push(node);
@@ -814,9 +813,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		visit(ctx.constraint_set());
 
-		for (int i = 0; i < constraint_list.size(); i++) {
-			PSSConstraint c = constraint_list.get(i);
-			root.addConstraint(c);
+		for (PSSConstraint item : constraint_list) {
+			root.addConstraint(item);
 		}
 		constraint_list.clear();
 		return 0;
@@ -837,7 +835,6 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitForeach_constraint_item(PSSParser.Foreach_constraint_itemContext ctx) {
 		String iterator_id = null;
 		PSSExpression exp = null;
-		List<PSSConstraint> constraints = new ArrayList<PSSConstraint>();
 		String index_id = null;
 		if (ctx.iterator_identifier() != null)
 			iterator_id = ctx.iterator_identifier().getText();
@@ -846,15 +843,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		if (ctx.index_identifier() != null)
 			index_id = ctx.index_identifier().getText();
 		visit(ctx.constraint_set());
-		constraints.addAll(constraint_list);
-		constraint_list.clear();
-		;
 
 		/* try to separate index_identifier due to grammar ambiguity */
 		if (index_id == null)
 			index_id = separate_index(exp);
 
-		constraint_list.add(new PSSForeachConstraint(iterator_id, exp, index_id, constraints));
+		constraint_list.add(new PSSForeachConstraint(iterator_id, exp, index_id, constraint_list));
 		return 0;
 	}
 
@@ -870,21 +864,20 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		PSSExpression exp = exp_stack.pop();
 		PSSIfConstraint constraint = new PSSIfConstraint(exp);
+		int valid_mark = constraint_list.size();	// The contents inside the list is independent to If_constraint
 
 		visit(ctx.constraint_set(0));
-		for (int i = 0; i < constraint_list.size(); i++) {
-			PSSConstraint c = constraint_list.get(i);
-			constraint.addTrueConstraint(c);
+		for (PSSConstraint item : constraint_list.subList(valid_mark, constraint_list.size())) {
+			constraint.addTrueConstraint(item);
+			constraint_list.remove(item);
 		}
-		constraint_list.clear();
 
 		if (ctx.constraint_set().size() > 1) {
 			visit(ctx.constraint_set(1));
-			for (int i = 0; i < constraint_list.size(); i++) {
-				PSSConstraint c = constraint_list.get(i);
-				constraint.addFalseConstraint(c);
+			for (PSSConstraint item : constraint_list.subList(valid_mark, constraint_list.size())) {
+				constraint.addFalseConstraint(item);
+				constraint_list.remove(item);
 			}
-			constraint_list.clear();
 		}
 
 		constraint_list.add(constraint);
