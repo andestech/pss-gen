@@ -73,21 +73,14 @@ public class PSSSolver {
 	}
 
 	int solve() {
-		boolean validated = false;
 		int retry = 0;
 
-		// reduce domain with constraints
-		reduceDomain();
-
-		// randomize kernel
-		while (validated == false) {
-			PSSRandom.limitRetry(retry);
-
+		do {
 			m_inst.randomize();
+			reduceDomain();	// reduce domain with constraints
+			PSSRandom.limitRetry(++retry);
+		} while (validate() == false);
 
-			validated = validate();
-			retry++;
-		}
 		return retry;
 	}
 
