@@ -1,3 +1,4 @@
+import java.math.*;
 
 /**
  * A {@code PSSBoolVal} can be either {@link #TRUE} or {@link #FALSE}.
@@ -46,6 +47,11 @@ public class PSSBoolVal extends PSSVal {
 		return String.valueOf(m_val);
 	}
 
+    @Override
+	public BigInteger toBigInteger() {
+		return (m_val) ? BigInteger.ONE : BigInteger.ZERO;
+	}
+
 	@Override
 	public int toInt() {
 		PSSMessage.Error("INTVAL", "BoolVal cannot be converted to int");
@@ -64,17 +70,43 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSBoolVal Equal(PSSVal o) {
-		if (o instanceof PSSBoolVal) {
-			PSSBoolVal b = (PSSBoolVal) o;
-			return new PSSBoolVal(m_val == b.m_val);
-		}
-		return new PSSBoolVal(false);
+	public PSSBoolVal Equal(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		return (lhs_int.compareTo(rhs_int) == 0) ? TRUE : FALSE;
 	}
 
 	@Override
-	public PSSBoolVal NotEqual(PSSVal o) {
-		return Equal(o).LogicalNot();
+	public PSSBoolVal NotEqual(PSSVal rhs) {
+		return Equal(rhs).LogicalNot();
+	}
+
+    @Override
+	public PSSBoolVal GreaterThan(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		return (lhs_int.compareTo(rhs_int) > 0) ? TRUE : FALSE;
+	}
+
+    @Override
+	public PSSBoolVal GreaterEqual(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		return (lhs_int.compareTo(rhs_int) >= 0) ? TRUE : FALSE;
+	}
+
+    @Override
+	public PSSBoolVal LessThan(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		return (lhs_int.compareTo(rhs_int) < 0) ? TRUE : FALSE;
+	}
+
+    @Override
+	public PSSBoolVal LessEqual(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		return (lhs_int.compareTo(rhs_int) <= 0) ? TRUE : FALSE;
 	}
 
 	@Override
@@ -92,6 +124,11 @@ public class PSSBoolVal extends PSSVal {
 	@Override
 	public PSSBoolVal LogicalNot() {
 		return new PSSBoolVal(!m_val);
+	}
+
+    @Override
+	public PSSVal BitwiseNot() {
+		return (m_val) ? new PSSIntVal(BigInteger.ZERO) : new PSSIntVal(BigInteger.ONE);
 	}
 
 	@Override

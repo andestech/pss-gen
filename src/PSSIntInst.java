@@ -29,22 +29,22 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public PSSVal toVal () {
-		if (null != m_BitSelect) {
+		PSSVal ret = m_val;
+
+		if (null != m_BitSelect) {	// Bit-select
 			BigInteger bi_val = m_val.toBigInteger();
 			int i_BitSelect = m_BitSelect.toInt();
 			if (bi_val.testBit(i_BitSelect)) {
-				m_BitSelect = null;	// Clear mask
-				return new PSSIntVal(BigInteger.ONE);
+				ret = new PSSIntVal(BigInteger.ONE);
+			} else {
+				ret = new PSSIntVal(BigInteger.ZERO);
 			}
-			else {
-				m_BitSelect = null;	// Clear mask
-				return new PSSIntVal(BigInteger.ZERO);
-			}
+		} else if (m_sign == false && m_width == 1) {	// Single bit variable
+			ret = (m_val.toBool()) ? PSSBoolVal.TRUE : PSSBoolVal.FALSE;
 		}
-		else {
-			m_BitSelect = null;	// Clear mask
-			return m_val;
-		}
+
+		m_BitSelect = null;	// Clear mask
+		return ret;
 	}
 
 	@Override
