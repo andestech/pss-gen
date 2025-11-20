@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.List;
 
 /**
  * This class provides a domain of integers.
@@ -236,8 +237,7 @@ public class PSSIntDomain extends PSSDomain {
 	}
 
 	@Override
-	public PSSIntDomain reduceDomainIn(PSSListVal val) {
-		List<PSSVal> list = val.getValList();
+	public PSSIntDomain reduceDomainIn(List<PSSVal> list) {
 		return join(list);
 	}
 

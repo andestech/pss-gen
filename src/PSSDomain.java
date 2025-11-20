@@ -1,3 +1,4 @@
+import java.util.List;
 
 /**
  * A {@code PSSDomain} represents a domain of values.
@@ -133,13 +134,13 @@ public abstract class PSSDomain {
 
 	/**
 	 * Returns a domain reduced from this one by keeping only elements in a
-	 * specified set.
+	 * specified list.
 	 *
-	 * @param val a set
+	 * @param list of PSSVal
 	 * @return a domain reduced from this one by keeping only elements in the set
 	 *         {@code val}
 	 */
-	public PSSDomain reduceDomainIn(PSSListVal val) {
+	public PSSDomain reduceDomainIn(List<PSSVal> list) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainIn is not impelemented");
 		return null;
 	}

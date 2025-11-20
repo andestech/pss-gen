@@ -1,4 +1,5 @@
 import java.math.*;
+import java.util.List;
 
 /**
  * This class provides a default implementation of values. All operations are
@@ -101,6 +102,16 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	public boolean toBool() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::toBool is not implemented");
 		return false;
+	}
+
+    /**
+     * Returns the list elements.
+     *
+     * @return the list elements
+     */
+    public List<PSSVal> getValList() {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::getValList is not implemented");
+		return null;
 	}
 
 	/**

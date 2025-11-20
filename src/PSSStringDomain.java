@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.List;
 
 /**
  * This class provides a domain of strings.
@@ -132,8 +133,7 @@ public class PSSStringDomain extends PSSDomain {
 	}
 
 	@Override
-	public PSSStringDomain reduceDomainIn(PSSListVal val) {
-		List<PSSVal> list = val.getValList();
+	public PSSStringDomain reduceDomainIn(List<PSSVal> list) {
 		return join(list);
 	}
 

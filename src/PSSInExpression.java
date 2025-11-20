@@ -1,3 +1,4 @@
+import java.util.List;
 
 public class PSSInExpression extends PSSExpression {
 
@@ -14,9 +15,9 @@ public class PSSInExpression extends PSSExpression {
 		PSSDomainMap map = new PSSDomainMap();
 		PSSInst leftInst = m_left.getInst(var);
 		if (leftInst != null) {
-			PSSListVal rightVal = (PSSListVal) m_right.eval(var);
+			List<PSSVal> rightList = m_right.eval(var).getValList();
 			PSSDomain left_domain = leftInst.getInitDomain();
-			left_domain = left_domain.reduceDomainIn(rightVal);
+			left_domain = left_domain.reduceDomainIn(rightList);
 			map.add(leftInst, left_domain);
 		}
 		return map;
