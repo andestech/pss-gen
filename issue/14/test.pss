@@ -1,0 +1,62 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/11/21
+@brief          Test issue 14.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        activity {
+            repeat(4) do print;
+        }
+    }
+
+    action print {
+        rand int in [1..5]  val1;
+        // rand int in [100..] val2;    // No yet supported
+        // rand int in [..10]  val3;    // No yet supported
+        rand int in [10..11,30..31] val4;
+
+        int ans1 = 0;
+        int ans2 = 0;
+        int ans3 = 0;
+        int ans4 = 0;
+        exec post_solve {
+            if (val1 in [1..5]) {
+                ans1 = 1;
+            }
+            // if (val2 >= 100) {
+            //     ans2 = 1;
+            // }
+            // if (val3 <= 100) {
+            //     ans3 = 1;
+            // }
+            if (val4 in [10..11,30..31]) {
+                ans4 = 1;
+            }
+        }
+
+        exec body ASM =
+        """
+            ans1 = {{ans1}}
+            ans2 = {{ans2}}
+            ans3 = {{ans3}}
+            ans4 = {{ans4}}
+        """;
+    }
+}
+
+/**@}*/
