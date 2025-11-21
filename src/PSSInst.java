@@ -380,6 +380,17 @@ public class PSSInst {
 	}
 
 	/**
+	 * Returns {@code true} if this instance is random variable. If an instance is
+	 * random variable, it should warning user if it was updated by assignment statements
+	 * in pre_solve block.
+	 *
+	 * @return {@code true} if this instance is random variable
+	 */
+	public boolean isRandomable() {
+		return m_rand;
+	}
+
+	/**
 	 * Sets the read-only property of this instance. If an instance is read-only, it
 	 * cannot be updated by assignment statements but still can be updated via
 	 * {@link #assign(PSSVal)}.

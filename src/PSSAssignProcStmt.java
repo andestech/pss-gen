@@ -11,6 +11,20 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 		m_expression = expression;
 	}
 
+	@Override
+	public void eval(PSSInst inst, PSSExecKind exec_kind) {
+		// Report warning when assign value to a random variable in pre_solve block
+		if (exec_kind == PSSExecKind.pre_solve) {
+			PSSInst leftInst = m_ref.getInst(inst);
+			if (leftInst.isRandomable()) {
+				PSSMessage.Warning("Assign to random variable in pre_solve block is meaningless: "
+						+ m_ref.getText() + m_op + m_expression.getText());
+			}
+		}
+
+		eval(inst);
+	}
+
 	public void eval(PSSInst inst) {
 		PSSVal rightVal = m_expression.eval(inst);
 		PSSInst leftInst = m_ref.getInst(inst);
