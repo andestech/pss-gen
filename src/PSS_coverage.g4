@@ -87,8 +87,8 @@ covergroup_range_list
 
 covergroup_value_range
 	: expression
-	| expression '..' expression?
-	| expression? '..' expression
+	| expression RANGE expression?
+	| expression? RANGE expression
 ;
 
 bins_keyword

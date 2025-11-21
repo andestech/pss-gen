@@ -10,6 +10,8 @@ COMMENT : '/*' .*? '*/' -> skip ;
 
 ID : [a-zA-Z_] [a-zA-Z0-9_]* ;
 
+RANGE : '..' ;
+
 string_literal
 	: QUOTED_STRING
 	| TRIPLE_QUOTED_STRING

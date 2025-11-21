@@ -456,6 +456,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		} else if (ctx.string_type() != null) {
 			visit(ctx.string_type());
 		} else if (ctx.enum_type() != null) {
+			if (ctx.enum_type().domain_open_range_list() != null) {
+				PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.enum_type().getText() + "'");
+			}
 			String text = ctx.enum_type().getText();
 			cur_data_type = new PSSDataTypeModel(root, text);
 		}
@@ -505,17 +508,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitInteger_type(PSSParser.Integer_typeContext ctx) {
-		// bit[7] // [constant_expression]
-		// bit[3:0] // [constant_expression (':' number)? ]
-
-		if (ctx.domain_open_range_list() != null) {
-			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		}
-
 		String integer_atom_type = ctx.integer_atom_type().getText();
 		Integer width;
 		boolean sign = integer_atom_type.equals("int");
 
+		// bit[7] // [constant_expression]
+		// bit[3:0] // [constant_expression (':' number)? ]
 		if (ctx.number() != null) {
 			int lsb = Integer.valueOf(ctx.number().getText());
 			int msb = Integer.valueOf(ctx.constant_expression().getText());
@@ -530,13 +528,61 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			}
 		}
 
-		cur_data_type = new PSSIntModel(width, sign);
+		// in [0,1,2]	// domain_open_range_value,domain_open_range_value,domain_open_range_value
+		// in [0..2]	// constant_expression..constant_expression
+		// in [0..]		// constant_expression..
+		// in [..2]		// ..constant_expression
+		if (ctx.domain_open_range_list() != null) {
+			visit(ctx.domain_open_range_list());
+		}
 
+		cur_data_type = new PSSIntModel(width, sign);
+		return 0;
+	}
+
+	@Override
+	public Integer visitDomain_open_range_list(PSSParser.Domain_open_range_listContext ctx) {
+		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
+		for (int i = 0; i < ctx.domain_open_range_value().size(); i++) {
+			visit(ctx.domain_open_range_value(i));
+			PSSOpenRangeValueExpression value = (PSSOpenRangeValueExpression) exp_stack.pop();
+			open_range_list.addOpenRangeValueExpression(value);
+		}
+		exp_stack.push(open_range_list);
+		return 0;
+	}
+
+	@Override
+	public Integer visitDomain_open_range_value(PSSParser.Domain_open_range_valueContext ctx) {
+		if (ctx.RANGE().size() != 1 || ctx.constant_expression().size() == 0) {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
+
+		Token exp_node			= ctx.constant_expression(0).getStop();
+		TerminalNode range_node = ctx.RANGE(0);
+		int exp_position		= exp_node.getTokenIndex();
+		int range_position		= range_node.getSymbol().getTokenIndex();
+
+		if (ctx.constant_expression().size() == 2) {	// constant_expression '..' constant_expression
+			visit(ctx.constant_expression(0));
+			visit(ctx.constant_expression(1));
+			PSSExpression end = exp_stack.pop();
+			PSSExpression begin = exp_stack.pop();
+			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin, end);
+			exp_stack.push(item);
+		} else if (range_position < exp_position) {	// '..' constant_expression
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		} else {	// constant_expression ('..')?
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
 		return 0;
 	}
 
 	@Override
 	public Integer visitString_type(PSSParser.String_typeContext ctx) {
+		if (ctx.string_literal().size() != 0) {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
 		cur_data_type = PSSStringModel.getInstance();
 		return 0;
 	}
@@ -1196,37 +1242,33 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	@Override
 	public Integer visitOpen_range_list(PSSParser.Open_range_listContext ctx) {
 		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
-
 		for (int i = 0; i < ctx.open_range_value().size(); i++) {
-
 			visit(ctx.open_range_value(i));
 			PSSOpenRangeValueExpression value = (PSSOpenRangeValueExpression) exp_stack.pop();
-
 			open_range_list.addOpenRangeValueExpression(value);
-
 		}
-
 		exp_stack.push(open_range_list);
-
 		return 0;
 	}
 
 	@Override
 	public Integer visitOpen_range_value(PSSParser.Open_range_valueContext ctx) {
-		if (ctx.expression().size() == 2) {
+		if (ctx.expression().size() == 2 && ctx.RANGE() != null) {	// expression '..' expression
 			visit(ctx.expression(0));
 			visit(ctx.expression(1));
 			PSSExpression end = exp_stack.pop();
 			PSSExpression begin = exp_stack.pop();
 			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin, end);
 			exp_stack.push(item);
-		} else {
+		} else if (ctx.expression().size() == 1 && ctx.RANGE() == null) {	// expression
 			visit(ctx.expression(0));
 			PSSExpression begin = exp_stack.pop();
 			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin);
 			exp_stack.push(item);
+		} else {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+			return -1;
 		}
-
 		return 0;
 	}
 
@@ -1467,6 +1509,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitData_declaration(PSSParser.Data_declarationContext ctx) {
+		int watermark = exp_stack.size();
 		visit(ctx.data_type());
 		PSSModel data_type = cur_data_type;
 		root.addChild(data_type);
@@ -1488,6 +1531,14 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 				visit(data_inst.constant_expression());
 
 				const_expression = exp_stack.pop();
+			}
+
+			if (watermark < exp_stack.size()) {
+				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id);
+				PSSExpression open_range_list = exp_stack.pop();
+				PSSInExpression in_expression = new PSSInExpression(variable, open_range_list);
+				PSSExpressionConstraint in_constriant = new PSSExpressionConstraint(in_expression);
+				root.addConstraint(in_constriant);
 			}
 
 			PSSDataInstModel inst = new PSSDataInstModel(id, array_dim, const_expression);
