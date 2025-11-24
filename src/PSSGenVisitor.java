@@ -433,10 +433,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitData_type(PSSParser.Data_typeContext ctx) {
+		Integer ret = 0;
 		if (ctx.scalar_data_type() != null) {
-			visit(ctx.scalar_data_type());
+			ret = visit(ctx.scalar_data_type());
 		} else if (ctx.collection_type() != null) {
-			visit(ctx.collection_type());
+			ret = visit(ctx.collection_type());
 		} else if (ctx.reference_type() != null) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		} else {
@@ -444,17 +445,18 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			cur_data_type = new PSSDataTypeModel(root, text);
 		}
 
-		return 0;
+		return ret;
 	}
 
 	@Override
 	public Integer visitScalar_data_type(PSSParser.Scalar_data_typeContext ctx) {
+		Integer ret = 0;
 		if (ctx.chandle_type() != null) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		} else if (ctx.integer_type() != null) {
-			visit(ctx.integer_type());
+			ret = visit(ctx.integer_type());
 		} else if (ctx.string_type() != null) {
-			visit(ctx.string_type());
+			ret = visit(ctx.string_type());
 		} else if (ctx.enum_type() != null) {
 			if (ctx.enum_type().domain_open_range_list() != null) {
 				PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.enum_type().getText() + "'");
@@ -463,7 +465,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			cur_data_type = new PSSDataTypeModel(root, text);
 		}
 
-		return 0;
+		return ret;
 	}
 
 	@Override
@@ -508,6 +510,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitInteger_type(PSSParser.Integer_typeContext ctx) {
+		Integer ret = 0;
 		String integer_atom_type = ctx.integer_atom_type().getText();
 		Integer width;
 		boolean sign = integer_atom_type.equals("int");
@@ -533,23 +536,32 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		// in [0..]		// constant_expression..
 		// in [..2]		// ..constant_expression
 		if (ctx.domain_open_range_list() != null) {
-			visit(ctx.domain_open_range_list());
+			ret = visit(ctx.domain_open_range_list());
 		}
 
 		cur_data_type = new PSSIntModel(width, sign);
-		return 0;
+		return ret;
 	}
 
 	@Override
 	public Integer visitDomain_open_range_list(PSSParser.Domain_open_range_listContext ctx) {
+		Integer ret = 0;
 		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
 		for (int i = 0; i < ctx.domain_open_range_value().size(); i++) {
-			visit(ctx.domain_open_range_value(i));
-			PSSOpenRangeValueExpression value = (PSSOpenRangeValueExpression) exp_stack.pop();
-			open_range_list.addOpenRangeValueExpression(value);
+			ret += visit(ctx.domain_open_range_value(i));
+			PSSExpression item = exp_stack.pop();
+			if (item instanceof PSSOpenRangeValueExpression) {
+				open_range_list.addOpenRangeValueExpression((PSSOpenRangeValueExpression)item);
+				ret--;
+			} else {
+				exp_stack.push(item);
+			}
 		}
-		exp_stack.push(open_range_list);
-		return 0;
+		if (ret < ctx.domain_open_range_value().size()) {
+			exp_stack.push(open_range_list);
+			ret++;
+		}
+		return ret;
 	}
 
 	@Override
@@ -571,11 +583,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin, end);
 			exp_stack.push(item);
 		} else if (range_position < exp_position) {	// '..' constant_expression
-			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+			visit(ctx.constant_expression(0));
+			PSSExpression end = exp_stack.pop();
+			PSSLessEqualExpression item = new PSSLessEqualExpression(null, end);
+			exp_stack.push(item);
 		} else {	// constant_expression ('..')?
-			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+			visit(ctx.constant_expression(0));
+			PSSExpression begin = exp_stack.pop();
+			PSSGreaterEqualExpression item = new PSSGreaterEqualExpression(null, begin);
+			exp_stack.push(item);
 		}
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -1509,8 +1527,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitData_declaration(PSSParser.Data_declarationContext ctx) {
-		int watermark = exp_stack.size();
-		visit(ctx.data_type());
+		Integer domain_constraint = visit(ctx.data_type());
 		PSSModel data_type = cur_data_type;
 		root.addChild(data_type);
 
@@ -1533,12 +1550,20 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 				const_expression = exp_stack.pop();
 			}
 
-			if (watermark < exp_stack.size()) {
+			if (0 < domain_constraint) {
 				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id);
-				PSSExpression open_range_list = exp_stack.pop();
-				PSSInExpression in_expression = new PSSInExpression(variable, open_range_list);
-				PSSExpressionConstraint in_constriant = new PSSExpressionConstraint(in_expression);
-				root.addConstraint(in_constriant);
+				while (domain_constraint-- > 0) {
+					PSSExpression item = exp_stack.pop();
+					if (item instanceof PSSOpenRangeListExpression) {
+						item = new PSSInExpression(variable, item);
+					} else if (item instanceof PSSLessEqualExpression) {
+						item.setLeftExpression(variable);
+					} else if (item instanceof PSSGreaterEqualExpression) {
+						item.setLeftExpression(variable);
+					}
+					PSSExpressionConstraint expression_constraint = new PSSExpressionConstraint(item);
+					root.addConstraint(expression_constraint);
+				}
 			}
 
 			PSSDataInstModel inst = new PSSDataInstModel(id, array_dim, const_expression);

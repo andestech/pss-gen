@@ -10,6 +10,11 @@ public class PSSLessEqualExpression extends PSSExpression {
 		m_right = right;
 	}
 
+	@Override
+	public void setLeftExpression(PSSExpression left) {
+		m_left = left;
+	}
+
 	public PSSVal eval(PSSInst var) {
 		PSSVal result;
 		PSSVal leftVal = m_left.eval(var);

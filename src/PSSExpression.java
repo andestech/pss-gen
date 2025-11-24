@@ -5,6 +5,17 @@ public class PSSExpression {
 	}
 
 	/**
+	 * Override left expression.
+	 * CAUTION: this API carries potential risks. Ensure you understand the implications before use.
+	 * 
+	 * @param left
+	 * @return void
+	 */
+	public void setLeftExpression (PSSExpression left) {
+		PSSMessage.Fatal(getClass().getSimpleName() + ".setLeftExpression() is not implemented");
+	}
+
+	/**
 	 * Infers the domains of variables that satisfy this expression.
 	 *
 	 * @param var
