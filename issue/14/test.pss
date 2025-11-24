@@ -26,8 +26,8 @@ component pss_top {
 
     action print {
         rand int in [1..5]  val1;
-        // rand int in [100..] val2;    // No yet supported
-        // rand int in [..10]  val3;    // No yet supported
+        rand int in [100..] val2;    // No yet supported
+        rand int in [..10]  val3;    // No yet supported
         rand int in [10..11,30..31] val4;
 
         int ans1 = 0;
@@ -38,12 +38,12 @@ component pss_top {
             if (val1 in [1..5]) {
                 ans1 = 1;
             }
-            // if (val2 >= 100) {
-            //     ans2 = 1;
-            // }
-            // if (val3 <= 100) {
-            //     ans3 = 1;
-            // }
+            if (val2 >= 100) {
+                ans2 = 1;
+            }
+            if (val3 <= 100) {
+                ans3 = 1;
+            }
             if (val4 in [10..11,30..31]) {
                 ans4 = 1;
             }
