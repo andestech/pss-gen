@@ -62,7 +62,7 @@ public class PSSModel {
 	}
 
 	public void addComponentDataDecl(PSSComponentDataDeclModel data_decl) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::addComponentDataDecl is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::addComponentDataDecl is not implemented");
 	}
 
 	public PSSFlowRefModel addFlowRef(PSSFlowRefModel node) {
@@ -74,16 +74,16 @@ public class PSSModel {
 	}
 
 	public PSSConstraint addConstraint(PSSConstraint node) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::addConstraint is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::addConstraint is not implemented");
 		return null;
 	}
 
 	public void addExecBlock(PSSExecBlock block) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::addExecBlock is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::addExecBlock is not implemented");
 	}
 
 	public PSSConstraintList getConstraintList() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::getConstraintList is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::getConstraintList is not implemented");
 		return null;
 	}
 
@@ -94,7 +94,7 @@ public class PSSModel {
 	 * @param rand {@code true} if the instance can be randomized
 	 */
 	public PSSInst declInst(String id, boolean rand) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::declInst is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::declInst is not implemented");
 		return null;
 	}
 
@@ -137,19 +137,19 @@ public class PSSModel {
 	}
 
 	public void init_up(PSSInst inst) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::init_up is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::init_up is not implemented");
 	}
 
 	public void init_down(PSSInst inst) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::init_down is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::init_down is not implemented");
 	}
 
 	public void evalActivity(PSSInst inst) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::evalActivity is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::evalActivity is not implemented");
 	}
 
 	public void getTargetCode(PSSInst inst, PSSExecKind exec_kind) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::getTargetCode is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::getTargetCode is not implemented");
 	}
 
 	public PSSModel findObject(String hierarchy_id) {
@@ -281,7 +281,7 @@ public class PSSModel {
 	}
 
 	public String getText() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::getText is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::getText is not implemented");
 		return null;
 	}
 

@@ -286,11 +286,11 @@ public class PSSInst {
 	}
 
 	public void init_up() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::init_up is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::init_up is not implemented");
 	}
 
 	public void init_down() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::init_down is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::init_down is not implemented");
 	}
 
 	/**
@@ -300,72 +300,72 @@ public class PSSInst {
 	 * @return
 	 */
 	public PSSInst indexOf(PSSVal index) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::indexOf is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::indexOf is not implemented");
 		return null;
 	}
 
 	public PSSDomain getInitDomain() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::getInitDomain is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::getInitDomain is not implemented");
 		return null;
 	}
 
 	void assignDomain(PSSDomain domain) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::assignDomain is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::assignDomain is not implemented");
 	}
 
 	public void randomize() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::randomize is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::randomize is not implemented");
 	}
 
 	public void assign(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::assign is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::assign is not implemented");
 	}
 
 	public String toTargetCode() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::toTargetCode is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::toTargetCode is not implemented");
 		return "";
 	}
 
 	public PSSVal toVal() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::toVal is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::toVal is not implemented");
 		return null;
 	}
 
 	public PSSConstraintList getConstraintList() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::getConstraintList is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::getConstraintList is not implemented");
 		return null;
 	}
 
 	public void addTraversal(PSSActionInst inst) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::addTraversal is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::addTraversal is not implemented");
 	}
 
 	public void addSequentialTraversal(PSSActionInst inst) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::addSequentialTraversal is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::addSequentialTraversal is not implemented");
 	}
 
 	public void traverseSubAction() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::traverseSubAction is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::traverseSubAction is not implemented");
 	}
 
 	public void inferSubAction() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::inferSubAction is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::inferSubAction is not implemented");
 	}
 
 	public void inferAction(PSSInst parent) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::inferAction is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::inferAction is not implemented");
 	}
 
 	public void collectConstraint(PSSSolver solver) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::collectConstraint is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::collectConstraint is not implemented");
 	}
 
 	public void execute() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::execute is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::execute is not implemented");
 	}
 
 	public void execute_kind(PSSExecKind kind) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::execute_kind is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::execute_kind is not implemented");
 	}
 
 	/**
