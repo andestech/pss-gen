@@ -42,6 +42,11 @@ public class PSSRefPathExpression extends PSSExpression {
 		m_bit_slice_to = bit_slice_to;
 	}
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		return getInst(var).isRandomable();
+	}
+
 	/**
 	 * Parses a reference from a string.
 	 *

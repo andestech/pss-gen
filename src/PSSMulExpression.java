@@ -10,6 +10,13 @@ public class PSSMulExpression extends PSSExpression {
 		m_right = right;
 	}
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		boolean left_isRandomable = m_left.isRandomable(var);
+		boolean right_isRandomable = m_right.isRandomable(var);
+		return (left_isRandomable || right_isRandomable);
+	}
+
 	public PSSVal eval(PSSInst var) {
 		PSSVal result;
 		PSSVal leftVal = m_left.eval(var);

@@ -45,6 +45,11 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         this(id, null, null);
     }
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		return getInst(var).isRandomable();
+	}
+
     /**
      * Returns the parent of this expression.
      *

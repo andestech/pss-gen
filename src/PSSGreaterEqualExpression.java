@@ -11,6 +11,13 @@ public class PSSGreaterEqualExpression extends PSSExpression {
 	}
 
 	@Override
+	public boolean isRandomable (PSSInst var) {
+		boolean left_isRandomable = m_left.isRandomable(var);
+		boolean right_isRandomable = m_right.isRandomable(var);
+		return (left_isRandomable || right_isRandomable);
+	}
+
+	@Override
 	public void setLeftExpression(PSSExpression left) {
 		m_left = left;
 	}

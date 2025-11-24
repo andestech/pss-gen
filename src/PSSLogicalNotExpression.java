@@ -8,6 +8,11 @@ public class PSSLogicalNotExpression extends PSSExpression {
 		m_exp = exp;
 	}
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		return m_exp.isRandomable(var);
+	}
+
 	public PSSVal eval(PSSInst var) {
 		PSSVal val = m_exp.eval(var);
 

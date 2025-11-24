@@ -11,6 +11,11 @@ public class PSSInExpression extends PSSExpression {
 	}
 
 	@Override
+	public boolean isRandomable (PSSInst var) {
+		return m_left.isRandomable(var);
+	}
+
+	@Override
 	public PSSDomainMap deduceDomain(PSSInst var) {
 		PSSDomainMap map = new PSSDomainMap();
 		PSSInst leftInst = m_left.getInst(var);
