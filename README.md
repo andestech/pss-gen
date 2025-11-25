@@ -30,8 +30,6 @@ You should see the following logs.
 
 ```
 --------------------------------------------------------
-TOTAL=108, PASS=102, FAIL=0, SKIP=6
---------------------------------------------------------
 ./9_6_Primary_expressions/test_bit_selects: PASS
 ./9_6_Primary_expressions/test_indexing_array: PASS
 ./9_6_Primary_expressions/test_indexing_list: PASS
@@ -134,6 +132,9 @@ TOTAL=108, PASS=102, FAIL=0, SKIP=6
 ./test_unique_with_array: PASS
 ./test_with_constraint_ops: PASS
 ./test_with_multi_constraint: PASS
+--------------------------------------------------------
+TOTAL=108, PASS=102, FAIL=0, SKIP=6
+--------------------------------------------------------
 ```
 
 ---

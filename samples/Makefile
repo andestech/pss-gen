@@ -26,14 +26,15 @@ $(SUMMARY):
 	done
 
 summary: $(SUMMARY)
-	@total=$$(find . -mindepth 2 -type f -name 'Makefile' | wc -l); \
-    pass=$$(grep -Pc 'PASS' $<); \
-    fail=$$(grep -Pc 'FAIL|NO.RESULT|NO.RESULT_LOG' $<); \
+	@echo "--------------------------------------------------------"; \
+	cat $<; \
+	total=$$(find . -mindepth 2 -type f -name 'Makefile' | wc -l); \
+	pass=$$(grep -Pc 'PASS' $<); \
+	fail=$$(grep -Pc 'FAIL|NO.RESULT|NO.RESULT_LOG' $<); \
 	skip=$$(( $$total - $$pass - $$fail )); \
 	echo "--------------------------------------------------------"; \
 	echo "TOTAL=$$total, PASS=$$pass, FAIL=$$fail, SKIP=$$skip"; \
-	echo "--------------------------------------------------------"; \
-    cat $<
+	echo "--------------------------------------------------------"
 
 clean:
 	@for i in $(SUBDIRS); do \
