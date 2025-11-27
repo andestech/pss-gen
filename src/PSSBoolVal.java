@@ -47,7 +47,24 @@ public class PSSBoolVal extends PSSVal {
 		return String.valueOf(m_val);
 	}
 
-    @Override
+	@Override
+	public PSSVal join(PSSVal val) {
+		if (val.isRangeVal()) {
+			if (GreaterEqual(val.getMin()).toBool() && LessEqual(val.getMax()).toBool()) {
+				return new PSSIntVal(toBigInteger());
+			} else {
+				return null;
+			}
+		} else {
+			if (Equal(val).toBool()) {
+				return new PSSIntVal(toBigInteger());
+			} else {
+				return null;
+			}
+		}
+	}
+
+	@Override
 	public BigInteger toBigInteger() {
 		return (m_val) ? BigInteger.ONE : BigInteger.ZERO;
 	}
@@ -110,6 +127,90 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
+	public PSSVal Add(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result  = lhs_int.add(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSVal Sub(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result  = lhs_int.subtract(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSVal Mul(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result  = lhs_int.multiply(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSVal Div(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result  = lhs_int.divide(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSVal Mod(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result  = lhs_int.mod(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSVal LeftShift(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		int        rhs_int = rhs.toInt();
+		BigInteger result  = lhs_int.shiftLeft(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSVal RightShift(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		int        rhs_int = rhs.toInt();
+		BigInteger result  = lhs_int.shiftRight(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
 	public PSSBoolVal LogicalAnd(PSSVal rhs) {
 		boolean rhs_val = rhs.toBool();
 		return new PSSBoolVal(m_val && rhs_val);
@@ -122,8 +223,49 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
+	public PSSBoolVal InRange(PSSVal lhs) {
+		return Equal(lhs);
+	}
+
+	@Override
 	public PSSBoolVal LogicalNot() {
 		return new PSSBoolVal(!m_val);
+	}
+
+	@Override
+	public PSSVal BitwiseAnd(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result  = lhs_int.and(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSVal BitwiseOr(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result  = lhs_int.or(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSVal BitwiseXor(PSSVal rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger rhs_int = rhs.toBigInteger();
+		BigInteger result  = lhs_int.xor(rhs_int);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
 	}
 
     @Override

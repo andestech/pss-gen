@@ -294,7 +294,7 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	/**
 	 * "in" operator
 	 *
-	 * @param rhs
+	 * @param lhs
 	 * @return
 	 */
 	public PSSBoolVal InRange(PSSVal lhs) {
