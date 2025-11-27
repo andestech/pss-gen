@@ -1,0 +1,38 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/11/25
+@brief          Test issue 15.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        activity {
+            do test with { en == 0; };
+            repeat (5) {
+                do test;
+            }
+            do test with { en == 0; };
+        }
+    }
+
+    action test {
+        rand bit en;
+        constraint default en == 1;
+        exec body ASM = """en = {{en}}""";
+    }
+}
+
+/**@}*/
