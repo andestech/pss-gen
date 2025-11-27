@@ -28,6 +28,8 @@ public class PSSGenOpt {
 			help();
 		}
 
+		PSSMessage.Initial();
+
 		int i=0;
 		while (i < args.length) {
 			String arg = args[i];
@@ -80,7 +82,6 @@ public class PSSGenOpt {
 
 		}
 
-		PSSMessage.Initial();
 		PSSRandom.initRandom(m_seed);
 
 		if (m_output_file.equals("")) {
