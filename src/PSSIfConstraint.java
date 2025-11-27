@@ -10,9 +10,19 @@ public class PSSIfConstraint extends PSSConstraint {
 		m_true = new ArrayList<PSSConstraint>();
 		m_false = new ArrayList<PSSConstraint>();
 	}
+	public void addTrueConstraint(List<PSSConstraint> c_list) {
+		for (var item : c_list) {
+			addTrueConstraint(item);
+		}
+	}
 	public void addTrueConstraint(PSSConstraint node) {
 		m_true.add(node);
 		node.m_parent = this;
+	}
+	public void addFalseConstraint(List<PSSConstraint> c_list) {
+		for (var item : c_list) {
+			addFalseConstraint(item);
+		}
 	}
 	public void addFalseConstraint(PSSConstraint node) {
 		m_false.add(node);

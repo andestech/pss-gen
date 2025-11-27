@@ -971,17 +971,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		int valid_mark = constraint_list.size();	// The contents inside the list is independent to If_constraint
 
 		visit(ctx.constraint_set(0));
-		for (PSSConstraint item : constraint_list.subList(valid_mark, constraint_list.size())) {
-			constraint.addTrueConstraint(item);
-			constraint_list.remove(item);
-		}
+		var true_constraint = constraint_list.subList(valid_mark, constraint_list.size());
+		constraint.addTrueConstraint(true_constraint);
+		true_constraint.clear();
 
 		if (ctx.constraint_set().size() > 1) {
 			visit(ctx.constraint_set(1));
-			for (PSSConstraint item : constraint_list.subList(valid_mark, constraint_list.size())) {
-				constraint.addFalseConstraint(item);
-				constraint_list.remove(item);
-			}
+			var false_constraint = constraint_list.subList(valid_mark, constraint_list.size());
+			constraint.addFalseConstraint(false_constraint);
+			false_constraint.clear();
 		}
 
 		constraint_list.add(constraint);
