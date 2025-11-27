@@ -5,6 +5,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
+import java.util.ArrayList;
+
 /**
  * A {@code PSSRefPathExpression} is a simple or hierarchical reference.
  */
@@ -76,6 +78,13 @@ public class PSSRefPathExpression extends PSSExpression {
 		}
 
 		return res;
+	}
+
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.add(getInst(var));
+		return ret;
 	}
 
 	@Override

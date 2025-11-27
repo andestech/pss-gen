@@ -6,6 +6,7 @@ public class PSSActionModel extends PSSModel {
 	public ArrayList<PSSAttrField> m_attrfield;
 	public ArrayList<PSSActivity> m_activity;
 	public PSSConstraintList m_constraint;
+	public PSSConstraintList m_default_constraint;
 	public ArrayList<PSSExecBlock> m_exec_list;
 	public PSSTargetCodeList m_target_code;
 
@@ -15,6 +16,7 @@ public class PSSActionModel extends PSSModel {
 		m_flowref   = new ArrayList<PSSFlowRefModel>();
 		m_attrfield = new ArrayList<PSSAttrField>();
 		m_constraint = new PSSConstraintList();
+		m_default_constraint = new PSSConstraintList();
 		m_exec_list = new ArrayList<PSSExecBlock>();
 		m_target_code = new PSSTargetCodeList();
 	}
@@ -59,6 +61,13 @@ public class PSSActionModel extends PSSModel {
 		node.m_parent = this;
 		return node;
 	}
+
+	public PSSConstraint addDefaultConstraint (PSSConstraint node) {
+		m_default_constraint.add(node);
+		node.m_parent = this;
+		return node;
+	}
+
 	public PSSTargetCode addTargetCode (PSSTargetCode node) {
 		m_target_code.add(node);
 		return node;
@@ -123,6 +132,7 @@ public class PSSActionModel extends PSSModel {
 
 		// constraint declaration
 		solver.add(inst, m_constraint);
+		solver.addDefaultConstraint(inst, m_default_constraint);
 		// inline constraint
 		solver.add(inst, inst.getConstraintList());
 

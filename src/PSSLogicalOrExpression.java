@@ -30,6 +30,14 @@ public class PSSLogicalOrExpression extends PSSExpression {
 		return null;
 	}
 
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_left.getInsts(var));
+		ret.addAll(m_right.getInsts(var));
+		return ret;
+	}
+
 	public String getText() {
 		return m_left.getText() + "||" + m_right.getText();
 	}

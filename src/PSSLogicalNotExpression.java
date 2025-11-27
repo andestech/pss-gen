@@ -19,6 +19,13 @@ public class PSSLogicalNotExpression extends PSSExpression {
 		return val.LogicalNot();
 	}
 
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_exp.getInsts(var));
+		return ret;
+	}
+
 	public String getText() {
 		return "!" + m_exp.getText();
 	}

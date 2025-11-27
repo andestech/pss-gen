@@ -7,6 +7,10 @@ public class PSSExpressionConstraint extends PSSConstraint {
 		m_expression = expression;
 	}
 
+	public PSSExpression getExpression() {
+		return m_expression;
+	}
+
 	public PSSDomainMap deduceDomain(PSSInst var) {
 		return m_expression.deduceDomain(var);
 	}

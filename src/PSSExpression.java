@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class PSSExpression {
 
@@ -46,6 +47,18 @@ public class PSSExpression {
 	public PSSVal eval(PSSInst var) {
 		PSSMessage.Fatal(getClass().getSimpleName() + ".eval() is not implemented");
 		return null;
+	}
+
+	/**
+	 * Returns all instances from left to right (if exist) expression.
+	 *
+	 * @param var
+	 * @return all instances of the expression, or {@code null} if the expression
+	 *         is not a variable
+	 */
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		return ret;
 	}
 
 	/**

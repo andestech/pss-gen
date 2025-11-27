@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList;
 
 public class PSSInExpression extends PSSExpression {
 
@@ -33,6 +34,14 @@ public class PSSInExpression extends PSSExpression {
 		PSSVal leftVal = m_left.eval(var);
 		PSSVal rightVal = m_right.eval(var);
 		return rightVal.InRange(leftVal);
+	}
+
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_left.getInsts(var));
+		ret.addAll(m_right.getInsts(var));
+		return ret;
 	}
 
 	@Override

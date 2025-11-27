@@ -9,6 +9,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	Stack<PSSActivity> activity_stack;
 	ArrayList<PSSProcStmt> proc_stmt_list;
 	ArrayList<PSSConstraint> constraint_list;
+	ArrayList<PSSConstraint> default_constraint_list;
 	PSSModel cur_data_type;
 	PSSDataDeclModel cur_data_decl;
 	PSSVal cur_val;
@@ -24,6 +25,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		activity_stack = new Stack<PSSActivity>();
 		proc_stmt_list = new ArrayList<PSSProcStmt>();
 		constraint_list = new ArrayList<PSSConstraint>();
+		default_constraint_list = new ArrayList<PSSConstraint>();
 		function_parameter_list = new ArrayList<PSSFunctionParameter>();
 	}
 
@@ -874,13 +876,51 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	}
 
 	public Integer visitConstraint_declaration(PSSParser.Constraint_declarationContext ctx) {
-
-		visit(ctx.constraint_set());
+		if (ctx.identifier() != null) {
+			visit(ctx.constraint_block());
+		} else {
+			visit(ctx.constraint_set());
+		}
 
 		for (PSSConstraint item : constraint_list) {
 			root.addConstraint(item);
 		}
 		constraint_list.clear();
+
+		for (PSSConstraint item : default_constraint_list) {
+			root.addDefaultConstraint(item);
+		}
+		default_constraint_list.clear();
+		return 0;
+	}
+
+	@Override
+	public Integer visitConstraint_body_item(PSSParser.Constraint_body_itemContext ctx) {
+		if        (ctx.expression_constraint_item() != null) {
+			visit(ctx.expression_constraint_item());
+		} else if (ctx.foreach_constraint_item() != null) {
+			visit(ctx.foreach_constraint_item());
+		} else if (ctx.forall_constraint_item() != null) {
+			visit(ctx.forall_constraint_item());
+		} else if (ctx.if_constraint_item() != null) {
+			visit(ctx.if_constraint_item());
+		} else if (ctx.implication_constraint_item() != null) {
+			visit(ctx.implication_constraint_item());
+		} else if (ctx.unique_constraint_item() != null) {
+			visit(ctx.unique_constraint_item());
+		} else if (ctx.constant_expression() != null) {
+			// Syntax: 'default' hierarchical_id '==' constant_expression ';'
+			visit(ctx.constant_expression());
+			visit(ctx.hierarchical_id());
+			PSSExpression id = exp_stack.pop();
+			PSSExpression const_exp = exp_stack.pop();
+			PSSEqualExpression equal_exp = new PSSEqualExpression(id, const_exp);
+			PSSExpressionConstraint item = new PSSExpressionConstraint(equal_exp);
+			default_constraint_list.add(item);
+		} else if (ctx.hierarchical_id() != null) {
+			// Syntax: 'default' 'disable' hierarchical_id ';'
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
 		return 0;
 	}
 

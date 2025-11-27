@@ -243,6 +243,13 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         return inst;
     }
 
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.add(getInst(var));
+		return ret;
+	}
+
     /**
      * Resolve the whole hierarchical reference path.
      *

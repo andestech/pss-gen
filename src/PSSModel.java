@@ -78,6 +78,11 @@ public class PSSModel {
 		return null;
 	}
 
+	public PSSConstraint addDefaultConstraint(PSSConstraint node) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::addDefaultConstraint is not implemented");
+		return null;
+	}
+
 	public void addExecBlock(PSSExecBlock block) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::addExecBlock is not implemented");
 	}

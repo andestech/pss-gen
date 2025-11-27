@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class PSSEqualExpression extends PSSExpression {
 
@@ -34,6 +35,14 @@ public class PSSEqualExpression extends PSSExpression {
 			map.add(leftInst, left_domain);
 		}
 		return map;
+	}
+
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_left.getInsts(var));
+		ret.addAll(m_right.getInsts(var));
+		return ret;
 	}
 
 	public String getText() {
