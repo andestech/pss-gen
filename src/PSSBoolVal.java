@@ -87,6 +87,16 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
+	public PSSVal extract (int msb, int lsb) {
+		if (msb < lsb) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb should not small than lsb");
+		if (msb < 0 || lsb < 0) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb/lsb should be non-neg value");
+		if (msb != lsb) PSSMessage.Warning("Extract more than 1 bit from boolean-type is meanless");
+		if (lsb > 0) PSSMessage.Warning("Extract other than index 0 from boolean-type is meanless");
+
+		return (lsb == 0 && m_val) ? TRUE : FALSE;
+	}
+
+	@Override
 	public PSSBoolVal Equal (PSSVal rhs) {
 		BigInteger lhs_int = toBigInteger();
 		BigInteger rhs_int = rhs.toBigInteger();

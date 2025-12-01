@@ -104,6 +104,19 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 		return false;
 	}
 
+	/**
+	 * Extract part from value.
+	 *
+	 * @return the part of value
+	 * @note extract single bit if both msb and lsb are equal
+	 */
+	public PSSVal extract (int msb, int lsb) {
+		if (msb < lsb) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb should not small than lsb");
+		if (msb < 0 || lsb < 0) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb/lsb should be non-neg value");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::extract is not implemented");
+		return null;
+	}
+
     /**
      * Returns the list elements.
      *

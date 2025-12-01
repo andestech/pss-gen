@@ -42,6 +42,8 @@ public class PSSRefPathExpression extends PSSExpression {
 		m_ref_path = ref_path;
 		m_bit_slice_from = bit_slice_from;
 		m_bit_slice_to = bit_slice_to;
+		if (m_bit_slice_from != null ^ m_bit_slice_to != null)
+			PSSMessage.Fatal("[" + getClass().getName() + "] bit_slice should have both msb and lsb");
 	}
 
 	@Override
@@ -96,26 +98,41 @@ public class PSSRefPathExpression extends PSSExpression {
 		} else {
 			inst = m_ref_path.getInst(var);
 		}
-
-		if (m_bit_slice_from != null && m_bit_slice_to != null)
-			PSSMessage.Fatal("[" + getClass().getName() + "] bit_slice is not implemented");
-
 		return inst;
 	}
 
 	@Override
 	public PSSVal eval(PSSInst var) {
-		PSSVal res = null;
-		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals("")) {
-			PSSModel m = var.getTypeModel().findDeclaration(m_type_identifier_elems);
-			res = m_ref_path.eval(m, var);
-		} else {
-			res = m_ref_path.eval(var);
+		PSSVal res = evalOriVal(var);
+		if (m_bit_slice_from != null && m_bit_slice_to != null) {
+			int msb = m_bit_slice_to.eval(var).toInt();
+			int lsb = m_bit_slice_from.eval(var).toInt();
+			res = res.extract(msb, lsb);
 		}
-		if (m_bit_slice_from != null && m_bit_slice_to != null)
-			PSSMessage.Fatal("[" + getClass().getName() + "] bit_slice is not implemented");
-
 		return res;
+	}
+
+	public void assign (PSSInst var, PSSVal val) {
+		PSSInst inst = getInst(var);
+
+		if (val instanceof PSSIntVal || val instanceof PSSBoolVal) {
+			PSSVal val_int = new PSSIntVal(val.toBigInteger());
+			if (m_bit_slice_from != null && m_bit_slice_to != null) {
+				int msb = m_bit_slice_to.eval(var).toInt();
+				int lsb = m_bit_slice_from.eval(var).toInt();
+				PSSVal ori_val = evalOriVal(var);
+				PSSVal invert_mask = ori_val.extract(msb, lsb);
+				invert_mask = invert_mask.LeftShift(lsb);
+				ori_val = ori_val.BitwiseXor(invert_mask);
+	
+				val_int = val_int.extract(msb-lsb,0);
+				val_int = val_int.LeftShift(lsb);
+				val_int = ori_val.BitwiseOr(val_int);
+			}
+			inst.assign(val_int);
+		} else {
+			inst.assign(val);
+		}
 	}
 
 	@Override
@@ -129,6 +146,17 @@ public class PSSRefPathExpression extends PSSExpression {
 	@Override
 	public String toString() {
 		return getText();
+	}
+
+	private PSSVal evalOriVal (PSSInst var) {
+		PSSVal res = null;
+		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals("")) {
+			PSSModel m = var.getTypeModel().findDeclaration(m_type_identifier_elems);
+			res = m_ref_path.eval(m, var);
+		} else {
+			res = m_ref_path.eval(var);
+		}
+		return res;
 	}
 
 }

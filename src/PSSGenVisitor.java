@@ -1252,13 +1252,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSExpression bit_slice_to = null;
 		if (ctx.bit_slice() != null) {
 			visit(ctx.bit_slice().constant_expression(0));
-			bit_slice_from = exp_stack.pop();
-			visit(ctx.bit_slice().constant_expression(1));
 			bit_slice_to = exp_stack.pop();
+			visit(ctx.bit_slice().constant_expression(1));
+			bit_slice_from = exp_stack.pop();
 		}
 
-		PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, null,
-				null);
+		PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, bit_slice_from, bit_slice_to);
 		exp_stack.push(e);
 
 		return 0;

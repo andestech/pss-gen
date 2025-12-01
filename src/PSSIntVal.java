@@ -69,6 +69,16 @@ public class PSSIntVal extends PSSVal {
 	}
 
 	@Override
+	public PSSVal extract (int msb, int lsb) {
+		if (msb < lsb) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb should not small than lsb");
+		if (msb < 0 || lsb < 0) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb/lsb should be non-neg value");
+		BigInteger mask = BigInteger.valueOf((1 << (msb - lsb + 1)) - 1);
+		BigInteger ret = m_val.shiftRight(lsb);
+		ret = ret.and(mask);
+		return new PSSIntVal(ret);
+	}
+
+	@Override
 	public PSSBoolVal Equal (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
 		return Equal(rhs_int);
