@@ -132,7 +132,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSBoolVal Equal(PSSVal rhs) {
+	public PSSBoolVal Equal (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::Equal is not implemented");
+		return null;
+	}
+	public PSSBoolVal Equal (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Equal is not implemented");
 		return null;
 	}
@@ -143,7 +147,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSBoolVal NotEqual(PSSVal rhs) {
+	public PSSBoolVal NotEqual (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::NotEqual is not implemented");
+		return null;
+	}
+	public PSSBoolVal NotEqual (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::NotEqual is not implemented");
 		return null;
 	}
@@ -154,7 +162,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSBoolVal GreaterThan(PSSVal rhs) {
+	public PSSBoolVal GreaterThan (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::GreaterThan is not implemented");
+		return null;
+	}
+	public PSSBoolVal GreaterThan (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::GreaterThan is not implemented");
 		return null;
 	}
@@ -165,7 +177,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSBoolVal GreaterEqual(PSSVal rhs) {
+	public PSSBoolVal GreaterEqual (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::GreaterEqual is not implemented");
+		return null;
+	}
+	public PSSBoolVal GreaterEqual (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::GreaterEqual is not implemented");
 		return null;
 	}
@@ -176,7 +192,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSBoolVal LessEqual(PSSVal rhs) {
+	public PSSBoolVal LessEqual (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::LessEqual is not implemented");
+		return null;
+	}
+	public PSSBoolVal LessEqual (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LessEqual is not implemented");
 		return null;
 	}
@@ -187,7 +207,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSBoolVal LessThan(PSSVal rhs) {
+	public PSSBoolVal LessThan (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::LessThan is not implemented");
+		return null;
+	}
+	public PSSBoolVal LessThan (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LessThan is not implemented");
 		return null;
 	}
@@ -198,7 +222,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal Add(PSSVal rhs) {
+	public PSSVal Add (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::Add is not implemented");
+		return null;
+	}
+	public PSSVal Add (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Add is not implemented");
 		return null;
 	}
@@ -209,7 +237,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal Sub(PSSVal rhs) {
+	public PSSVal Sub (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::Sub is not implemented");
+		return null;
+	}
+	public PSSVal Sub (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Sub is not implemented");
 		return null;
 	}
@@ -220,7 +252,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal Mul(PSSVal rhs) {
+	public PSSVal Mul (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::Mul is not implemented");
+		return null;
+	}
+	public PSSVal Mul (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Mul is not implemented");
 		return null;
 	}
@@ -231,7 +267,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal Div(PSSVal rhs) {
+	public PSSVal Div (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::Div is not implemented");
+		return null;
+	}
+	public PSSVal Div (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Div is not implemented");
 		return null;
 	}
@@ -242,7 +282,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal Mod(PSSVal rhs) {
+	public PSSVal Mod (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::Mod is not implemented");
+		return null;
+	}
+	public PSSVal Mod (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::Mod is not implemented");
 		return null;
 	}
@@ -253,7 +297,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal LeftShift(PSSVal rhs) {
+	public PSSVal LeftShift (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::LeftShift is not implemented");
+		return null;
+	}
+	public PSSVal LeftShift (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LeftShift is not implemented");
 		return null;
 	}
@@ -264,7 +312,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal RightShift(PSSVal rhs) {
+	public PSSVal RightShift (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::RightShift is not implemented");
+		return null;
+	}
+	public PSSVal RightShift (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::RightShift is not implemented");
 		return null;
 	}
@@ -275,7 +327,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSBoolVal LogicalAnd(PSSVal rhs) {
+	public PSSBoolVal LogicalAnd (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalAnd is not implemented");
+		return null;
+	}
+	public PSSBoolVal LogicalAnd (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalAnd is not implemented");
 		return null;
 	}
@@ -286,7 +342,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSBoolVal LogicalOr(PSSVal rhs) {
+	public PSSBoolVal LogicalOr (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalOr is not implemented");
+		return null;
+	}
+	public PSSBoolVal LogicalOr (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalOr is not implemented");
 		return null;
 	}
@@ -319,7 +379,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal BitwiseAnd(PSSVal rhs) {
+	public PSSVal BitwiseAnd (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseAnd is not implemented");
+		return null;
+	}
+	public PSSVal BitwiseAnd (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseAnd is not implemented");
 		return null;
 	}
@@ -330,7 +394,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal BitwiseOr(PSSVal rhs) {
+	public PSSVal BitwiseOr (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseOr is not implemented");
+		return null;
+	}
+	public PSSVal BitwiseOr (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseOr is not implemented");
 		return null;
 	}
@@ -341,7 +409,11 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @param rhs
 	 * @return
 	 */
-	public PSSVal BitwiseXor(PSSVal rhs) {
+	public PSSVal BitwiseXor (PSSVal rhs) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseXor is not implemented");
+		return null;
+	}
+	public PSSVal BitwiseXor (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::BitwiseXor is not implemented");
 		return null;
 	}

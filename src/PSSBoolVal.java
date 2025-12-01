@@ -87,50 +87,90 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSBoolVal Equal(PSSVal rhs) {
+	public PSSBoolVal Equal (PSSVal rhs) {
 		BigInteger lhs_int = toBigInteger();
 		BigInteger rhs_int = rhs.toBigInteger();
 		return (lhs_int.compareTo(rhs_int) == 0) ? TRUE : FALSE;
 	}
 
 	@Override
-	public PSSBoolVal NotEqual(PSSVal rhs) {
+	public PSSBoolVal NotEqual (PSSVal rhs) {
 		return Equal(rhs).LogicalNot();
 	}
 
-    @Override
-	public PSSBoolVal GreaterThan(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	@Override
+	public PSSBoolVal GreaterThan (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		return (lhs_int.compareTo(rhs_int) > 0) ? TRUE : FALSE;
+		return GreaterThan(rhs_int);
 	}
-
-    @Override
-	public PSSBoolVal GreaterEqual(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
-		BigInteger rhs_int = rhs.toBigInteger();
-		return (lhs_int.compareTo(rhs_int) >= 0) ? TRUE : FALSE;
+	@Override
+	public PSSBoolVal GreaterThan (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return GreaterThan(rhs_int);
 	}
-
-    @Override
-	public PSSBoolVal LessThan(PSSVal rhs) {
+	protected PSSBoolVal GreaterThan (BigInteger rhs) {
 		BigInteger lhs_int = toBigInteger();
-		BigInteger rhs_int = rhs.toBigInteger();
-		return (lhs_int.compareTo(rhs_int) < 0) ? TRUE : FALSE;
-	}
-
-    @Override
-	public PSSBoolVal LessEqual(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
-		BigInteger rhs_int = rhs.toBigInteger();
-		return (lhs_int.compareTo(rhs_int) <= 0) ? TRUE : FALSE;
+		return (lhs_int.compareTo(rhs) > 0) ? TRUE : FALSE;
 	}
 
 	@Override
-	public PSSVal Add(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	public PSSBoolVal GreaterEqual (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		BigInteger result  = lhs_int.add(rhs_int);
+		return GreaterEqual(rhs_int);
+	}
+	@Override
+	public PSSBoolVal GreaterEqual (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return GreaterEqual(rhs_int);
+	}
+	protected PSSBoolVal GreaterEqual (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		return (lhs_int.compareTo(rhs) >= 0) ? TRUE : FALSE;
+	}
+
+	@Override
+	public PSSBoolVal LessEqual (PSSVal rhs) {
+		BigInteger rhs_int = rhs.toBigInteger();
+		return LessEqual(rhs_int);
+	}
+	@Override
+	public PSSBoolVal LessEqual (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return LessEqual(rhs_int);
+	}
+	protected PSSBoolVal LessEqual (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		return (lhs_int.compareTo(rhs) <= 0) ? TRUE : FALSE;
+	}
+
+	@Override
+	public PSSBoolVal LessThan (PSSVal rhs) {
+		BigInteger rhs_int = rhs.toBigInteger();
+		return LessThan(rhs_int);
+	}
+	@Override
+	public PSSBoolVal LessThan (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return LessThan(rhs_int);
+	}
+	protected PSSBoolVal LessThan (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		return (lhs_int.compareTo(rhs) < 0) ? TRUE : FALSE;
+	}
+
+	@Override
+	public PSSVal Add (PSSVal rhs) {
+		BigInteger rhs_int = rhs.toBigInteger();
+		return Add(rhs_int);
+	}
+	@Override
+	public PSSVal Add (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return Add(rhs_int);
+	}
+	protected PSSVal Add (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger result  = lhs_int.add(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -139,10 +179,18 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSVal Sub(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	public PSSVal Sub (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		BigInteger result  = lhs_int.subtract(rhs_int);
+		return Sub(rhs_int);
+	}
+	@Override
+	public PSSVal Sub (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return Sub(rhs_int);
+	}
+	protected PSSVal Sub (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger result  = lhs_int.subtract(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -151,10 +199,18 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSVal Mul(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	public PSSVal Mul (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		BigInteger result  = lhs_int.multiply(rhs_int);
+		return Mul(rhs_int);
+	}
+	@Override
+	public PSSVal Mul (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return Mul(rhs_int);
+	}
+	protected PSSVal Mul (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger result  = lhs_int.multiply(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -163,10 +219,18 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSVal Div(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	public PSSVal Div (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		BigInteger result  = lhs_int.divide(rhs_int);
+		return Div(rhs_int);
+	}
+	@Override
+	public PSSVal Div (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return Div(rhs_int);
+	}
+	protected PSSVal Div (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger result  = lhs_int.divide(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -175,22 +239,18 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSVal Mod(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	public PSSVal Mod (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		BigInteger result  = lhs_int.mod(rhs_int);
-		if (result.testBit(0)) {
-			return new PSSIntVal(BigInteger.ONE);
-		} else {
-			return new PSSIntVal(BigInteger.ZERO);
-		}
+		return Mod(rhs_int);
 	}
-
 	@Override
-	public PSSVal LeftShift(PSSVal rhs) {
+	public PSSVal Mod (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return Mod(rhs_int);
+	}
+	protected PSSVal Mod (BigInteger rhs) {
 		BigInteger lhs_int = toBigInteger();
-		int        rhs_int = rhs.toInt();
-		BigInteger result  = lhs_int.shiftLeft(rhs_int);
+		BigInteger result  = lhs_int.mod(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -199,10 +259,14 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSVal RightShift(PSSVal rhs) {
+	public PSSVal LeftShift (PSSVal rhs) {
+		int rhs_int = rhs.toInt();
+		return LeftShift(rhs_int);
+	}
+	@Override
+	public PSSVal LeftShift (int rhs) {
 		BigInteger lhs_int = toBigInteger();
-		int        rhs_int = rhs.toInt();
-		BigInteger result  = lhs_int.shiftRight(rhs_int);
+		BigInteger result  = lhs_int.shiftLeft(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -211,15 +275,39 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSBoolVal LogicalAnd(PSSVal rhs) {
+	public PSSVal RightShift (PSSVal rhs) {
+		int rhs_int = rhs.toInt();
+		return RightShift(rhs_int);
+	}
+	@Override
+	public PSSVal RightShift (int rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger result  = lhs_int.shiftLeft(rhs);
+		if (result.testBit(0)) {
+			return new PSSIntVal(BigInteger.ONE);
+		} else {
+			return new PSSIntVal(BigInteger.ZERO);
+		}
+	}
+
+	@Override
+	public PSSBoolVal LogicalAnd (PSSVal rhs) {
 		boolean rhs_val = rhs.toBool();
 		return new PSSBoolVal(m_val && rhs_val);
 	}
+	@Override
+	public PSSBoolVal LogicalAnd (int rhs) {
+		return new PSSBoolVal(m_val && (rhs != 0));
+	}
 
 	@Override
-	public PSSBoolVal LogicalOr(PSSVal rhs) {
+	public PSSBoolVal LogicalOr (PSSVal rhs) {
 		boolean rhs_val = rhs.toBool();
 		return new PSSBoolVal(m_val || rhs_val);
+	}
+	@Override
+	public PSSBoolVal LogicalOr (int rhs) {
+		return new PSSBoolVal(m_val || (rhs != 0));
 	}
 
 	@Override
@@ -233,10 +321,18 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSVal BitwiseAnd(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	public PSSVal BitwiseAnd (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		BigInteger result  = lhs_int.and(rhs_int);
+		return BitwiseAnd(rhs_int);
+	}
+	@Override
+	public PSSVal BitwiseAnd (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return BitwiseAnd(rhs_int);
+	}
+	protected PSSVal BitwiseAnd (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger result = lhs_int.and(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -245,10 +341,18 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSVal BitwiseOr(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	public PSSVal BitwiseOr (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		BigInteger result  = lhs_int.or(rhs_int);
+		return BitwiseOr(rhs_int);
+	}
+	@Override
+	public PSSVal BitwiseOr (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return BitwiseOr(rhs_int);
+	}
+	protected PSSVal BitwiseOr (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger result = lhs_int.or(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -257,10 +361,18 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
-	public PSSVal BitwiseXor(PSSVal rhs) {
-		BigInteger lhs_int = toBigInteger();
+	public PSSVal BitwiseXor (PSSVal rhs) {
 		BigInteger rhs_int = rhs.toBigInteger();
-		BigInteger result  = lhs_int.xor(rhs_int);
+		return BitwiseXor(rhs_int);
+	}
+	@Override
+	public PSSVal BitwiseXor (int rhs) {
+		BigInteger rhs_int = BigInteger.valueOf(rhs);
+		return BitwiseXor(rhs_int);
+	}
+	protected PSSVal BitwiseXor (BigInteger rhs) {
+		BigInteger lhs_int = toBigInteger();
+		BigInteger result = lhs_int.xor(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
@@ -268,7 +380,7 @@ public class PSSBoolVal extends PSSVal {
 		}
 	}
 
-    @Override
+	@Override
 	public PSSVal BitwiseNot() {
 		return (m_val) ? new PSSIntVal(BigInteger.ZERO) : new PSSIntVal(BigInteger.ONE);
 	}
