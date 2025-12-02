@@ -1,0 +1,55 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/12/02
+@brief          Test issue 35.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        activity {
+            do testConvert;
+        }
+    }
+
+    action testConvert {
+        bit [8] ans1 = 8'b00000000;
+        bit [8] ans2 = 8'b11111111;
+        bit [8] ans3 = 8'b01101010;
+        bit [8] ans4 = 8'b01101010;
+        bit [8] ans5 = 8'b00000000;
+        bit [8] ans6 = 8'b00000000;
+        exec post_solve {
+            ans1 = (bit [4]) 8'b01101010;   // 00001010
+            ans2 = (bit [8]) 4'b1010;       // 00001010
+            ans3 = (bit [4]) ans3;          // 00001010
+            ans4 = (bit [8]) ans4;          // 01101010
+            ans5 = (bit [8]) 2'b10 << 3;    // 00010000
+            ans6 = (bit [8]) 2'b1 << 3;     // 00001000
+        }
+        exec body ASM =
+        """
+            # testConvert
+            ans1 = {{ans1}}
+            ans2 = {{ans2}}
+            ans3 = {{ans3}}
+            ans4 = {{ans4}}
+            ans5 = {{ans5}}
+            ans6 = {{ans6}}
+        """;
+    }
+}
+
+/**@}*/
