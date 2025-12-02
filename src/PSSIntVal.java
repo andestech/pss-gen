@@ -19,6 +19,26 @@ public class PSSIntVal extends PSSVal {
 	}
 
 	@Override
+	public void setTypeModel (PSSModel type) {
+		if (!(type instanceof PSSIntModel)) {
+			PSSMessage.Fatal("Casting integer to " + type.getClass().getSimpleName() + " is not yet support");
+		}
+		// LRM v3.0 Section 7.12 Data type conversion
+		PSSModel ori_model = super.getTypeModel();
+		int ori_width = ((PSSIntModel)ori_model).getSize();
+		int new_width = ((PSSIntModel)type).getSize();
+		if        (new_width < ori_width) {
+			// truncated if casting_type width is smaller than original
+			m_val = _extract(new_width - 1, 0);
+			super.setTypeModel(type);
+		} else if (ori_width < new_width) {
+			// left-zero-padded if casting_type width is larger than original
+			m_val = _extract(new_width - 1, 0);
+			super.setTypeModel(type);
+		}
+	}
+
+	@Override
 	public String getText() {
 		return m_val.toString(10);
 	}
@@ -72,10 +92,13 @@ public class PSSIntVal extends PSSVal {
 	public PSSVal extract (int msb, int lsb) {
 		if (msb < lsb) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb should not small than lsb");
 		if (msb < 0 || lsb < 0) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb/lsb should be non-neg value");
+		return new PSSIntVal(_extract(msb, lsb));
+	}
+	protected BigInteger _extract (int msb, int lsb) {
 		BigInteger mask = BigInteger.valueOf((1 << (msb - lsb + 1)) - 1);
 		BigInteger ret = m_val.shiftRight(lsb);
 		ret = ret.and(mask);
-		return new PSSIntVal(ret);
+		return ret;
 	}
 
 	@Override

@@ -1173,6 +1173,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			visit(ctx.paren_expr().expression());
 		} else if (ctx.aggregate_literal() != null) {
 			visit(ctx.aggregate_literal());
+		} else if (ctx.cast_expression() != null) {
+			visit(ctx.cast_expression());
 		} else {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		}
@@ -1291,6 +1293,32 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		}
 		if (res != null)
 			exp_stack.push(res);
+		return 0;
+	}
+
+	@Override
+	public Integer visitCast_expression(PSSParser.Cast_expressionContext ctx) {
+		visit(ctx.casting_type());
+		visit(ctx.expression());
+		PSSExpression rhs_exp = exp_stack.pop();
+		PSSExpression exp = new PSSCastExpression(cur_data_type, rhs_exp);
+		exp_stack.push(exp);
+		return 0;
+	}
+
+	@Override
+	public Integer visitCasting_type(PSSParser.Casting_typeContext ctx) {
+		if (ctx.integer_type() != null) {
+			visit(ctx.integer_type());
+		} else if (ctx.bool_type() != null) {
+			PSSMessage.Fatal("Cast to bool_type is not yet supported: '" + ctx.getText() + "'");
+		} else if (ctx.enum_type() != null) {
+			PSSMessage.Fatal("Cast to enum_type is not yet supported: '" + ctx.getText() + "'");
+		} else if (ctx.type_identifier() != null) {
+			PSSMessage.Fatal("Cast to user-defined type is not yet supported: '" + ctx.getText() + "'");
+		} else {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
 		return 0;
 	}
 
