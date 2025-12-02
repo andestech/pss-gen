@@ -1,0 +1,56 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/12/02
+@brief          Test issue 36.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        activity {
+            do testBitSize;
+        }
+    }
+
+    action testBitSize {
+        bit [32] ans1 = 0;
+        bit [32] ans2 = 0;
+        bit [32] ans3 = 8'b11111111;
+        bit [32] ans4 = 8'b01101010;
+        bit [32] ans5 = 8'b11111111;
+        bit [32] ans6 = 8'b11111111;
+        bit [8]  src  = 8'b01101010;
+        exec post_solve {
+            ans1 = 1 << 32;     // 4294967296
+            ans2 = 8'b10 << 3;  // 00010000
+            ans3 = 8'b10 << 8;  // 0
+            ans4 = ans4  << 8;  // 27136
+            ans5 = src   << 8;  // 0
+            ans6 = src   << 4;  // 10100000
+        }
+        exec body ASM =
+        """
+            # testBitSize
+            ans1 = {{ans1}}
+            ans2 = {{ans2}}
+            ans3 = {{ans3}}
+            ans4 = {{ans4}}
+            ans5 = {{ans5}}
+            ans6 = {{ans6}}
+        """;
+    }
+}
+
+/**@}*/
