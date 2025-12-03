@@ -1,0 +1,205 @@
+/*!
+@weakgroup      7_2_Integer_types
+@{
+@file
+@author         Luther Lee
+@data           2025/12/03
+@brief          Test int declaration with diffrent syntax.
+@version
+Portable Test and Stimulus Standard Version 3.0 <br>
+> Section 7.2 : Integer types <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+*/
+component pss_top {
+	action root_a {
+        rand int                         int_0;
+        rand int       in [1]            int_1;
+        rand int       in [0..]          int_2;
+        rand int       in [..-1]         int_3;
+        rand int       in [0,1]          int_4;
+        rand int       in [..2147483648] int_5;
+        rand int [8]                     byte_0;
+        rand int [8]   in [-128]         byte_1;
+        rand int [8]   in [0..]          byte_2;
+        rand int [8]   in [..-1]         byte_3;
+        rand int [8]   in [0,1]          byte_4;
+        rand int [8]   in [..128]        byte_5;
+        rand int [64]                                  long_0;
+        rand int [64]  in [-4294967296]                long_1;
+        rand int [64]  in [0..]                        long_2;
+        rand int [64]  in [..-1]                       long_3;
+        rand int [64]  in [0,1]                        long_4;
+        rand int [64]  in [..1 , 8..16 , 4294967296..] long_5;
+        rand int [128]                                 vector_0;
+        rand int [128] in [-4294967296]                vector_1;
+        rand int [128] in [0..]                        vector_2;
+        rand int [128] in [..-1]                       vector_3;
+        rand int [128] in [0,1]                        vector_4;
+        rand int [128] in [..1 , 8..16 , 4294967296..] vector_5;
+
+        bit [32] default_int_0;
+        bit [32] default_int_1;
+        bit [32] default_int_2;
+        bit [32] default_int_3;
+        bit [32] default_int_4;
+        bit [32] default_int_5;
+        bit [32] default_byte_0;
+        bit [32] default_byte_1;
+        bit [32] default_byte_2;
+        bit [32] default_byte_3;
+        bit [32] default_byte_4;
+        bit [32] default_byte_5;
+        bit [65] default_long_0;
+        bit [65] default_long_1;
+        bit [65] default_long_2;
+        bit [65] default_long_3;
+        bit [65] default_long_4;
+        bit [65] default_long_5;
+        bit [129] default_vector_0;
+        bit [129] default_vector_1;
+        bit [129] default_vector_2;
+        bit [129] default_vector_3;
+        bit [129] default_vector_4;
+        bit [129] default_vector_5;
+        exec pre_solve {
+            default_int_0    = int_0;
+            default_int_1    = int_1;
+            default_int_2    = int_2;
+            default_int_3    = int_3;
+            default_int_4    = int_4;
+            default_int_5    = int_5;
+            default_byte_0   = byte_0;
+            default_byte_1   = byte_1;
+            default_byte_2   = byte_2;
+            default_byte_3   = byte_3;
+            default_byte_4   = byte_4;
+            default_byte_5   = byte_5;
+            default_long_0   = long_0;
+            default_long_1   = long_1;
+            default_long_2   = long_2;
+            default_long_3   = long_3;
+            default_long_4   = long_4;
+            default_long_5   = long_5;
+            default_vector_0 = vector_0;
+            default_vector_1 = vector_1;
+            default_vector_2 = vector_2;
+            default_vector_3 = vector_3;
+            default_vector_4 = vector_4;
+            default_vector_5 = vector_5;
+        }
+
+        bit check_int_0    = 0;
+        bit check_int_1    = 0;
+        bit check_int_2    = 0;
+        bit check_int_3    = 0;
+        bit check_int_4    = 0;
+        bit check_int_5    = 0;
+        bit check_byte_0   = 0;
+        bit check_byte_1   = 0;
+        bit check_byte_2   = 0;
+        bit check_byte_3   = 0;
+        bit check_byte_4   = 0;
+        bit check_byte_5   = 0;
+        bit check_long_0   = 0;
+        bit check_long_1   = 0;
+        bit check_long_2   = 0;
+        bit check_long_3   = 0;
+        bit check_long_4   = 0;
+        bit check_long_5   = 0;
+        bit check_vector_0 = 0;
+        bit check_vector_1 = 0;
+        bit check_vector_2 = 0;
+        bit check_vector_3 = 0;
+        bit check_vector_4 = 0;
+        bit check_vector_5 = 0;
+        exec post_solve {
+            if (int_0  in [-2147483648..2147483647]              ) check_int_0 = 1;
+            if (int_1  in [1]                                    ) check_int_1 = 1;
+            if (int_2  >= 0                                      ) check_int_2 = 1;
+            if (int_3  <= -1                                     ) check_int_3 = 1;
+            if (int_4  in [0..1]                                 ) check_int_4 = 1;
+            if (int_5  in [-2147483648..2147483647]              ) check_int_5 = 1;
+            if (byte_0 in [-128..127]                            ) check_byte_0 = 1;
+            if (byte_1 in [-128]                                 ) check_byte_1 = 1;
+            if (byte_2 >= 0                                      ) check_byte_2 = 1;
+            if (byte_3 <= -1                                     ) check_byte_3 = 1;
+            if (byte_4 in [0..1]                                 ) check_byte_4 = 1;
+            if (byte_5 in [-128..127]                            ) check_byte_5 = 1;
+            if (long_0 > 0 || long_0 < 0                         ) check_long_0 = 1;
+            if (long_1 in [-4294967296]                          ) check_long_1 = 1;
+            if (long_2 >= 0                                      ) check_long_2 = 1;
+            if (long_3 <= -1                                     ) check_long_3 = 1;
+            if (long_4 in [0..1]                                 ) check_long_4 = 1;
+            if (long_5 in [0..1 , 8..16] || long_5 > 4294967296  ) check_long_5 = 1;
+            if (vector_0 > 0 || long_0 < 0                       ) check_vector_0 = 1;
+            if (vector_1 in [-4294967296]                        ) check_vector_1 = 1;
+            if (vector_2 >= 0                                    ) check_vector_2 = 1;
+            if (vector_3 <= -1                                   ) check_vector_3 = 1;
+            if (vector_4 in [0..1]                               ) check_vector_4 = 1;
+            if (vector_5 in [0..1 , 8..16] || long_5 > 4294967296) check_vector_5 = 1;
+        }
+
+
+        exec body ASM =
+        """
+            # testInt
+            default_int_0    = {{default_int_0}}
+            default_int_1    = {{default_int_1}}
+            default_int_2    = {{default_int_2}}
+            default_int_3    = {{default_int_3}}
+            default_int_4    = {{default_int_4}}
+            default_int_5    = {{default_int_5}}
+            default_byte_0   = {{default_byte_0}}
+            default_byte_1   = {{default_byte_1}}
+            default_byte_2   = {{default_byte_2}}
+            default_byte_3   = {{default_byte_3}}
+            default_byte_4   = {{default_byte_4}}
+            default_byte_5   = {{default_byte_5}}
+            default_long_0   = {{default_long_0}}
+            default_long_1   = {{default_long_1}}
+            default_long_2   = {{default_long_2}}
+            default_long_3   = {{default_long_3}}
+            default_long_4   = {{default_long_4}}
+            default_long_5   = {{default_long_5}}
+            default_vector_0 = {{default_vector_0}}
+            default_vector_1 = {{default_vector_1}}
+            default_vector_2 = {{default_vector_2}}
+            default_vector_3 = {{default_vector_3}}
+            default_vector_4 = {{default_vector_4}}
+            default_vector_5 = {{default_vector_5}}
+            check_int_0      = {{check_int_0}}
+            check_int_1      = {{check_int_1}}
+            check_int_2      = {{check_int_2}}
+            check_int_3      = {{check_int_3}}
+            check_int_4      = {{check_int_4}}
+            check_int_5      = {{check_int_5}}
+            check_byte_0     = {{check_byte_0}}
+            check_byte_1     = {{check_byte_1}}
+            check_byte_2     = {{check_byte_2}}
+            check_byte_3     = {{check_byte_3}}
+            check_byte_4     = {{check_byte_4}}
+            check_byte_5     = {{check_byte_5}}
+            check_long_0     = {{check_long_0}}
+            check_long_1     = {{check_long_1}}
+            check_long_2     = {{check_long_2}}
+            check_long_3     = {{check_long_3}}
+            check_long_4     = {{check_long_4}}
+            check_long_5     = {{check_long_5}}
+            check_vector_0   = {{check_vector_0}}
+            check_vector_1   = {{check_vector_1}}
+            check_vector_2   = {{check_vector_2}}
+            check_vector_3   = {{check_vector_3}}
+            check_vector_4   = {{check_vector_4}}
+            check_vector_5   = {{check_vector_5}}
+        """;
+    }
+}
+
+/**@}*/
