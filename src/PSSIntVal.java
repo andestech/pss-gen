@@ -95,7 +95,8 @@ public class PSSIntVal extends PSSVal {
 		return new PSSIntVal(_extract(msb, lsb));
 	}
 	protected BigInteger _extract (int msb, int lsb) {
-		BigInteger mask = BigInteger.valueOf((1 << (msb - lsb + 1)) - 1);
+		BigInteger mask = BigInteger.ONE.shiftLeft(msb - lsb + 1);
+		mask = mask.subtract(BigInteger.ONE);
 		BigInteger ret = m_val.shiftRight(lsb);
 		ret = ret.and(mask);
 		return ret;
