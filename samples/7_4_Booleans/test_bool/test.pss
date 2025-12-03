@@ -1,0 +1,36 @@
+/*!
+@weakgroup      7_4_Booleans
+@{
+@file
+@author         Luther Lee
+@data           2025/12/03
+@brief          Test built-in Boolean type declaration.
+@version
+Portable Test and Stimulus Standard Version 3.0 <br>
+> Section 7.4 : Booleans <br>
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+*/
+component pss_top {
+	action root_a {
+        bool bool_0;    // 7.4 Booleans: When not initialized, the default value of a bool type is false.
+        bool bool_1 = true;
+        bool bool_2 = false;
+
+        exec body ASM =
+        """
+            # testBool
+            bool_0 = {{bool_0}}
+            bool_1 = {{bool_1}}
+            bool_2 = {{bool_2}}
+        """;
+    }
+}
+
+/**@}*/
