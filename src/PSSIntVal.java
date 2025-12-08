@@ -4,14 +4,29 @@ public class PSSIntVal extends PSSVal {
 
 	BigInteger m_val;
 
-	public PSSIntVal(BigInteger val) {
-		super(PSSIntModel.getDefaultDecimalModel());
-		m_val = val;
-	}
-
 	public PSSIntVal(int val) {
-		super(PSSIntModel.getDefaultDecimalModel());
-		m_val = BigInteger.valueOf(val);
+		this(BigInteger.valueOf(val), PSSIntModel.getDefaultDecimalModel());
+	}
+	public PSSIntVal(int val, int width, boolean sign) {
+		this(BigInteger.valueOf(val), new PSSIntModel(width, sign));
+	}
+	public PSSIntVal(int val, PSSModel model) {
+		this(BigInteger.valueOf(val), model);
+	}
+	public PSSIntVal(BigInteger val) {
+		this(val, PSSIntModel.getDefaultDecimalModel());
+	}
+	public PSSIntVal(BigInteger val, int width, boolean sign) {
+		this(val, new PSSIntModel(width, sign));
+	}
+	public PSSIntVal(BigInteger val, PSSModel model) {
+		super(model);
+		m_val = val;
+		PSSIntModel int_model = (PSSIntModel)model;
+		int width = int_model.getSize();
+		if (!int_model.isSigned() && width != PSSIntModel.DEFAULT_INT_SIZE) {
+			m_val = _extract(width - 1, 0);
+		}
 	}
 
 	static PSSIntVal ONE() {
@@ -92,7 +107,7 @@ public class PSSIntVal extends PSSVal {
 	public PSSVal extract (int msb, int lsb) {
 		if (msb < lsb) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb should not small than lsb");
 		if (msb < 0 || lsb < 0) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb/lsb should be non-neg value");
-		return new PSSIntVal(_extract(msb, lsb));
+		return new PSSIntVal(_extract(msb, lsb), msb-lsb+1, false);
 	}
 	protected BigInteger _extract (int msb, int lsb) {
 		BigInteger mask = BigInteger.ONE.shiftLeft(msb - lsb + 1);

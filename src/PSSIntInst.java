@@ -13,7 +13,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
 	PSSIntDomain m_domain; // Solution domain
 
-	PSSIntVal m_BitSelect;	// Bit-selects
+	int m_BitSelect;	// Bit-selects
 
 	public PSSIntInst(String id, boolean rand, int width, boolean sign) {
 		super(id, "int", rand);
@@ -21,7 +21,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 		m_width = width;
 		m_sign = sign;
 		m_domain = new PSSIntDomain(width, sign);
-		m_BitSelect = null;
+		m_BitSelect = -1;	// clear mask
 	}
 
 	public PSSIntDomain getInitDomain() {
@@ -29,44 +29,32 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public PSSVal toVal () {
-		PSSVal ret = m_val;
-
-		if (null != m_BitSelect) {	// Bit-select
-			BigInteger bi_val = m_val.toBigInteger();
-			int i_BitSelect = m_BitSelect.toInt();
-			if (bi_val.testBit(i_BitSelect)) {
-				ret = new PSSIntVal(BigInteger.ONE);
-			} else {
-				ret = new PSSIntVal(BigInteger.ZERO);
-			}
-		} else if (m_sign == false && m_width == 1) {	// Single bit variable
-			ret = (m_val.toBool()) ? PSSBoolVal.TRUE : PSSBoolVal.FALSE;
-		}
-
-		m_BitSelect = null;	// Clear mask
+		PSSVal ret = (0 <= m_BitSelect) ? m_val.extract(m_BitSelect, m_BitSelect) : m_val;
+		m_BitSelect = -1;	// clear mask
 		return ret;
 	}
 
 	@Override
 	public PSSInst indexOf (PSSVal index) {
+		int i = index.toInt();
 		/** [9.6.1 Bit-selects]: It shall be illegal for a bit-select to access on out-of-bounds bit index. */
-		if (index.toInt() > m_width) {
+		if (i > m_width) {
 			String errObj = "'" + getHierarchyId() + "[" + index.getText() + "]" + "'";
 			String errMsg = "Bit-selects access out-of-bounds bit index.";
 			String errExt = "sizeof(" + getHierarchyId() + ") = " + m_width;
 			PSSMessage.Error("ILLEGAL USAGE", errObj + " " + errMsg + " //" + errExt);
 		}
 
-		m_BitSelect = new PSSIntVal(index.toBigInteger());
+		m_BitSelect = i;	// set mask
 		return this;
 	}
 
 	public boolean isAccessBitSelect () {
-		return (null != m_BitSelect) ? true : false;
+		return (0 <= m_BitSelect);
 	}
 
 	public PSSIntVal getBitSelect () {
-		return m_BitSelect;
+		return new PSSIntVal(m_BitSelect);
 	}
 
 	public boolean validate() {
@@ -107,20 +95,8 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
 	public void assign(PSSVal val) {
 		m_initialized = true;
-		BigInteger inVal = val.toBigInteger();
-		if (null != m_BitSelect) {
-			BigInteger bi_val = m_val.toBigInteger();
-			int i_BitSelect = m_BitSelect.toInt();
-			bi_val = bi_val.clearBit(i_BitSelect);
-			if (inVal.compareTo(BigInteger.ZERO) != 0) {
-				bi_val = bi_val.setBit(i_BitSelect);
-			}
-			m_val = new PSSIntVal(bi_val);
-		}
-		else {
-			m_val = new PSSIntVal(inVal);
-		}
-		m_BitSelect = null;	// Clear mask
+		BigInteger in_val = val.toBigInteger();
+		m_val = new PSSIntVal(in_val, m_width, m_sign);
 	}
 
 	public String toTargetCode() {
