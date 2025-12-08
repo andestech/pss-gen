@@ -48,7 +48,13 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 		/** Get LHS value for self assignment */
 		PSSVal leftVal = null;
 		if (m_op.matches("[+-<>|&]+=")) {
-			leftVal = m_ref.eval(inst);
+			if (leftInst instanceof PSSIntInst) {
+				PSSIntVal index_backup = ((PSSIntInst)leftInst).getBitSelect();
+				leftVal = m_ref.eval(inst);
+				leftInst = ((PSSIntInst)leftInst).indexOf(index_backup);
+			} else {
+				leftVal = m_ref.eval(inst);
+			}
 		}
 
 		switch(m_op) {

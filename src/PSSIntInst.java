@@ -2,9 +2,6 @@ import java.math.*;
 
 public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
-	/** the default value of bit and int types */
-	public static final PSSIntVal DEFAULT_VALUE = new PSSIntVal(0);
-
 	PSSIntVal m_val;
 
 	int m_width;
@@ -17,7 +14,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
 	public PSSIntInst(String id, boolean rand, int width, boolean sign) {
 		super(id, "int", rand);
-		m_val = DEFAULT_VALUE; // PSS v2.0 8.2.1: the default value of the bit and int types is 0
+		m_val = new PSSIntVal(0, width, sign); // PSS v2.0 8.2.1: the default value of the bit and int types is 0
 		m_width = width;
 		m_sign = sign;
 		m_domain = new PSSIntDomain(width, sign);
@@ -96,7 +93,17 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	public void assign(PSSVal val) {
 		m_initialized = true;
 		BigInteger in_val = val.toBigInteger();
-		m_val = new PSSIntVal(in_val, m_width, m_sign);
+		PSSVal result = val;
+		if (m_BitSelect != -1) {
+			if (in_val.testBit(0)) {
+				result = m_val.BitwiseOr(BigInteger.ONE.shiftLeft(m_BitSelect));
+			} else {
+				PSSVal mask = m_val.BitwiseAnd(BigInteger.ONE.shiftLeft(m_BitSelect));
+				result = m_val.BitwiseXor(mask);
+			}
+			m_BitSelect = -1;	// clear mask
+		}
+		m_val = (PSSIntVal)result;
 	}
 
 	public String toTargetCode() {
