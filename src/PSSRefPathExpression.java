@@ -116,20 +116,23 @@ public class PSSRefPathExpression extends PSSExpression {
 		PSSInst inst = getInst(var);
 
 		if (val instanceof PSSIntVal || val instanceof PSSBoolVal) {
-			PSSVal val_int = new PSSIntVal(val.toBigInteger());
 			if (m_bit_slice_from != null && m_bit_slice_to != null) {
 				int msb = m_bit_slice_to.eval(var).toInt();
 				int lsb = m_bit_slice_from.eval(var).toInt();
+
 				PSSVal ori_val = evalOriVal(var);
-				PSSVal invert_mask = ori_val.extract(msb, lsb);
+				PSSVal invert_mask = new PSSIntVal(ori_val.extract(msb, lsb).toBigInteger(), msb + 1, false);
 				invert_mask = invert_mask.LeftShift(lsb);
 				ori_val = ori_val.BitwiseXor(invert_mask);
-	
-				val_int = val_int.extract(msb-lsb,0);
-				val_int = val_int.LeftShift(lsb);
-				val_int = ori_val.BitwiseOr(val_int);
+
+				PSSVal new_val = new PSSIntVal(val.extract(msb-lsb,0).toBigInteger(), msb + 1, false);
+				new_val = new_val.LeftShift(lsb);
+				ori_val = ori_val.BitwiseOr(new_val);
+
+				inst.assign(ori_val);
+			} else {
+				inst.assign(val);
 			}
-			inst.assign(val_int);
 		} else {
 			inst.assign(val);
 		}

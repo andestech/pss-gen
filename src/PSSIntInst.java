@@ -31,6 +31,13 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 		return ret;
 	}
 
+	public void castType (PSSModel model) {
+		m_val.setTypeModel(model);
+		m_width = ((PSSIntModel)model).getSize();
+		m_sign = ((PSSIntModel)model).isSigned();
+		m_domain = new PSSIntDomain(m_width, m_sign);
+	}
+
 	@Override
 	public PSSInst indexOf (PSSVal index) {
 		int i = index.toInt();
@@ -92,10 +99,9 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 
 	public void assign(PSSVal val) {
 		m_initialized = true;
-		BigInteger in_val = val.toBigInteger();
 		PSSVal result = val;
 		if (m_BitSelect != -1) {
-			if (in_val.testBit(0)) {
+			if (val.toBigInteger().testBit(0)) {
 				result = m_val.BitwiseOr(BigInteger.ONE.shiftLeft(m_BitSelect));
 			} else {
 				PSSVal mask = m_val.BitwiseAnd(BigInteger.ONE.shiftLeft(m_BitSelect));
@@ -103,7 +109,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 			}
 			m_BitSelect = -1;	// clear mask
 		}
-		m_val = (PSSIntVal)result;
+		m_val = new PSSIntVal(result.toBigInteger(), m_width, m_sign);
 	}
 
 	public String toTargetCode() {

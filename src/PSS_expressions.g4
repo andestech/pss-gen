@@ -128,7 +128,7 @@ paren_expr
 ;
 
 cast_expression
-	: '(' casting_type ')' expression
+	: '(' casting_type ')' primary
 ;
 
 ref_path

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class PSSCastExpression extends PSSExpression {
 
@@ -11,9 +12,22 @@ public class PSSCastExpression extends PSSExpression {
 
     @Override
     public PSSVal eval (PSSInst var) {
-        PSSVal rhs_val = m_rhs_expression.eval(var);
-        rhs_val.setTypeModel(m_lhs_casting_type);
-        return rhs_val;
+        if (m_rhs_expression instanceof PSSPrimaryExpression) {
+            PSSVal val = m_rhs_expression.eval(var);
+            val.setTypeModel(m_lhs_casting_type);
+            return val;
+        }
+        ArrayList<PSSInst> insts = m_rhs_expression.getInsts(var);
+        if (insts.size() > 0) {
+            PSSInst rhs_inst = insts.get(0);
+            if (!(rhs_inst instanceof PSSIntInst)) {
+                PSSMessage.Fatal("Casting < " + rhs_inst.getClass().getSimpleName() + " > is not yet support.");
+            }
+            ((PSSIntInst)rhs_inst).castType(m_lhs_casting_type);
+            return m_rhs_expression.eval(var);
+        }
+        PSSMessage.Fatal("Casting < " + m_rhs_expression.getClass().getSimpleName() + " > ( " + m_rhs_expression.getText() + " ) is not yet support.");
+        return null;
     }
 
     @Override

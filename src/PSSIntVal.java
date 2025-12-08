@@ -290,8 +290,14 @@ public class PSSIntVal extends PSSVal {
 	}
 	@Override
 	public PSSVal LeftShift (int rhs) {
+		if (rhs < 0) PSSMessage.Error("PSS 3.0 Section 8.5.7 Shift operators", "shift operand should not be negative value: " + rhs);
+
+		PSSIntModel model = (PSSIntModel)super.getTypeModel();
+		int width = model.getSize();
+		if (width < rhs) PSSMessage.Warning("Shift left amount (" + rhs + ") larger than bit-width of LHS (" + width + ") is meanless.");
+
 		BigInteger result = m_val.shiftLeft(rhs);
-		return new PSSIntVal(result);
+		return new PSSIntVal(result, model);
 	}
 
 	@Override
@@ -301,8 +307,11 @@ public class PSSIntVal extends PSSVal {
 	}
 	@Override
 	public PSSVal RightShift (int rhs) {
+		if (rhs < 0) PSSMessage.Error("PSS 3.0 Section 8.5.7 Shift operators", "shift operand should not be negative value: " + rhs);
+
+		PSSIntModel model = (PSSIntModel)super.getTypeModel();
 		BigInteger result = m_val.shiftRight(rhs);
-		return new PSSIntVal(result);
+		return new PSSIntVal(result, model);
 	}
 
 	@Override

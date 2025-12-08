@@ -1299,7 +1299,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	@Override
 	public Integer visitCast_expression(PSSParser.Cast_expressionContext ctx) {
 		visit(ctx.casting_type());
-		visit(ctx.expression());
+		visit(ctx.primary());
 		PSSExpression rhs_exp = exp_stack.pop();
 		PSSExpression exp = new PSSCastExpression(cur_data_type, rhs_exp);
 		exp_stack.push(exp);

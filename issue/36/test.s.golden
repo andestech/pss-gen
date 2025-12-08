@@ -1,6 +1,6 @@
 
             # testBitSize
-            ans1 = 4294967296
+            ans1 = 0
             ans2 = 16
             ans3 = 0
             ans4 = 27136

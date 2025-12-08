@@ -33,7 +33,7 @@ component pss_top {
         bit [32] ans6 = 8'b11111111;
         bit [8]  src  = 8'b01101010;
         exec post_solve {
-            ans1 = 1 << 32;     // 4294967296
+            ans1 = 1 << 32;     // 0
             ans2 = 8'b10 << 3;  // 00010000
             ans3 = 8'b10 << 8;  // 0
             ans4 = ans4  << 8;  // 27136
