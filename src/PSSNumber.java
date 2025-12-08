@@ -4,6 +4,26 @@ import java.util.regex.Matcher;
 import java.math.*;
 
 public class PSSNumber {
+	public static PSSVal newBinNumber(String text) {
+		Pattern pattern = Pattern.compile("0[bB]([01_]+)");
+		Matcher m = pattern.matcher(text);
+		if (m.find()) {
+			String number_s = m.group(1).replaceAll("_", "");
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Unsized unbased hexadecimal and binary numbers shall be treated as unsigned.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = false;
+			int width = PSSIntModel.DEFAULT_INT_SIZE;
+			BigInteger val = new BigInteger(number_s, 2);
+			return new PSSIntVal(val, width, sign);
+		}
+		PSSMessage.Fatal("'" + text + "' is not binary number");
+		return null;
+	}
 	public static PSSVal newOctNumber(String text) {
 		Pattern pattern = Pattern.compile("0([0-7_]*)");
 		Matcher m = pattern.matcher(text);

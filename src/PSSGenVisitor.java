@@ -1149,7 +1149,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			exp_stack.push(new PSSPrimaryExpression(new PSSStringVal(text)));
 		} else if (ctx.number() != null) {
 			String text = ctx.getText();
-			if (ctx.number().OCT_NUMBER() != null) {
+			if (ctx.number().BIN_NUMBER() != null) {
+				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBinNumber(text)));
+			} else if (ctx.number().OCT_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newOctNumber(text)));
 			} else if (ctx.number().DEC_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newDecNumber(text)));
