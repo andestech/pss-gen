@@ -1,0 +1,27 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         XXX
+@data           YYYY/MM/DD
+@brief          Test issue XX.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        int ans = 1;
+        exec body ASM = """template: {{ans}}""";
+    }
+}
+
+/**@}*/

@@ -15,7 +15,7 @@ Portable Test and Stimulus Standard Version 2.1 <br>
 
 ### Test Command
 @code{.unparsed}
-make gentarget
+make
 @endcode
 */
 component pss_top {

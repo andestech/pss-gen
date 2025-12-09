@@ -1,0 +1,53 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/11/28
+@brief          Test issue 32.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        activity {
+            do testPartSelects;
+        }
+    }
+
+    action testPartSelects {
+        bit [8] src  = 8'b10101100;
+        bit [4] dst1 = 4'b0000;
+        bit [4] dst2 = 4'b0000;
+        bit [4] dst3 = 4'b0000;
+        bit [4] dst4 = 4'b0000;
+        bit [4] dst5 = 4'b0000;
+        exec post_solve {
+            dst1 = src[3:0];    // 1100
+            dst2 = src[4:1];    // 0110
+            dst3 = src[5:2];    // 1011
+            dst4 = src[6:3];    // 0101
+            dst5 = src[7:4];    // 1010
+        }
+        exec body ASM =
+        """
+            # testPartSelects
+            dst1 = {{dst1}}
+            dst2 = {{dst2}}
+            dst3 = {{dst3}}
+            dst4 = {{dst4}}
+            dst5 = {{dst5}}
+        """;
+    }
+}
+
+/**@}*/

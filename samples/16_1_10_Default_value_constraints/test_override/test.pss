@@ -1,0 +1,36 @@
+/*!
+@weakgroup      16_1_10_Default_value_constraints
+@{
+@file
+@author         Gemini
+@data           2025/11/25
+@brief          Verifies that a hard constraint overrides a default constraint.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        rand int data_len;
+
+        // Default looks for 64
+        constraint def_c {
+            default data_len == 64;
+        }
+
+        // Hard constraint explicitly requesting 128
+        constraint hard_c {
+            data_len == 128;
+        }
+
+        exec body ASM = """Result: {{data_len}}""";
+    }
+}

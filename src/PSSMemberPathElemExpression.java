@@ -45,6 +45,11 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         this(id, null, null);
     }
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		return getInst(var).isRandomable();
+	}
+
     /**
      * Returns the parent of this expression.
      *
@@ -237,6 +242,13 @@ public class PSSMemberPathElemExpression extends PSSExpression {
 
         return inst;
     }
+
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.add(getInst(var));
+		return ret;
+	}
 
     /**
      * Resolve the whole hierarchical reference path.

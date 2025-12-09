@@ -1,0 +1,32 @@
+/*!
+@weakgroup      16_1_10_Default_value_constraints
+@{
+@file
+@author         Gemini
+@data           2025/11/25
+@brief          Verifies that a variable takes the default value when no other constraints are present.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        rand int data_len;
+
+        // Default constraint: If nothing else interferes, data_len should be 64
+        constraint def_c {
+            default data_len == 64;
+        }
+
+        // Output the result to ASM file
+        exec body ASM = """Result: {{data_len}}""";
+    }
+}

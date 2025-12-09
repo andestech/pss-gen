@@ -1,1 +1,1 @@
-instn=vsub_vv, lmul=8
+instn=vsub_vv, lmul=4

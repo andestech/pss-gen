@@ -1,0 +1,41 @@
+/*!
+@weakgroup      16_1_10_Default_value_constraints
+@{
+@file
+@author         Gemini
+@data           2025/11/25
+@brief          Verifies that the syntax default id == constant_expression works correctly with Enum literals.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+enum color_e { RED, GREEN, BLUE };
+
+component pss_top {
+    action root_a {
+        rand color_e color_val;
+        rand int res_val;
+
+        // Default constraint on an enum
+        constraint def_color {
+            default color_val == GREEN;
+        }
+
+        // Map enum to integer for printing
+        constraint map_c {
+            if (color_val == RED)   res_val == 0;
+            if (color_val == GREEN) res_val == 1;
+            if (color_val == BLUE)  res_val == 2;
+        }
+
+        exec body ASM = """Result: {{res_val}}""";
+    }
+}

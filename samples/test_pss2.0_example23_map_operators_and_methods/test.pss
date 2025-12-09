@@ -11,7 +11,7 @@ Portable Test and Stimulus Standard Version 2.0 <br>
 
 ### Test Command
 
-    make test
+    make
 
 */
 
@@ -45,7 +45,7 @@ action D {
   exec body ASM =
   """val = {{val}}""";
 }
-  action traverse_map_a {
+  action root_a {
     rand int lower_size;
     map <string, bit[15:0]> foo_map3;
     set <string> foo_set1;

@@ -1,0 +1,43 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/12/01
+@brief          Test issue 34.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        activity {
+            do testBitSliceAssignment;
+        }
+    }
+
+    action testBitSliceAssignment {
+        bit op1 = 1'b1;
+        bit [8] ans = 8'b00000000;
+        exec post_solve {
+            ans[0:0] = 1'b1; // 00100001
+            ans[5:5] = op1;  // 00100001
+            ans[7:7] = 1'b1; // 10100001
+        }
+        exec body ASM =
+        """
+            # testBitSliceAssignment
+            ans = {{ans}}
+        """;
+    }
+}
+
+/**@}*/

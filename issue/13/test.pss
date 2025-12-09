@@ -1,0 +1,57 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/10/21
+@brief          Test issue 13.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+struct my_struct {
+    int a;
+    int b;
+}
+
+function my_struct foo(int a, int b) {
+    my_struct s;
+    s.a = a;
+    s.b = b;
+    return s;
+}
+
+component pss_top {
+    action root_a {
+        rand int m, n;
+        my_struct s1;
+        constraint {
+            m == 1;
+            n == 2;
+        }
+
+        exec post_solve {
+            s1 = foo(m, n);
+        }
+
+        activity {
+            do print with {val == s1.a;};
+            do print with {val == s1.b;};
+        }
+    }
+
+    action print {
+        rand int val;
+        exec body ASM = """val = {{val}}""";
+    }
+}
+
+/**@}*/

@@ -85,10 +85,10 @@ public class PSSDomainMap {
 		return result;
 	}
 
-	public void dump() {
+	public void dump(String indent) {
 		for (PSSInst var : m_map.keySet()) {
 			PSSDomain val = m_map.get(var);
-			PSSMessage.Debug(var.m_id + ": " + val.getText());
+			PSSMessage.Debug(indent + var.m_id + ": " + val.getText());
 		}
 	}
 }

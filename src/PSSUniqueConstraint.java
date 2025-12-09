@@ -32,6 +32,10 @@ public class PSSUniqueConstraint extends PSSConstraint {
 	}
 
 	public void dump(String indent) {
-		System.out.println(indent + "unique");
+		System.out.print(indent + "unique {");
+		for (PSSMemberPathElemExpression item : m_id_list) {
+			System.out.print(item.toString() + ',');
+		}
+		System.out.println("}");
 	}
 }

@@ -3,6 +3,7 @@ import java.util.*;
 public class PSSTraversalActivity extends PSSActivity {
 
 	public PSSConstraintList m_constraint;
+	public PSSConstraintList m_default_constraint;
 	String m_handle_id;
 	String m_type_id;
 	PSSActionInst m_handle_var;
@@ -12,10 +13,16 @@ public class PSSTraversalActivity extends PSSActivity {
 		m_handle_id = handle_id;
 		m_type_id = type_id;
 		m_constraint = new PSSConstraintList();
+		m_default_constraint = new PSSConstraintList();
 		m_handle_var = null;
 	}
 	public PSSConstraint addConstraint(PSSConstraint node) {
 		m_constraint.add(node);
+		node.m_parent = this;
+		return node;
+	}
+	public PSSConstraint addDefaultConstraint(PSSConstraint node) {
+		m_default_constraint.add(node);
 		node.m_parent = this;
 		return node;
 	}

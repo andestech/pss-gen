@@ -1,0 +1,39 @@
+/*!
+@weakgroup      16_1_10_Default_value_constraints
+@{
+@file
+@author         Gemini
+@data           2025/11/25
+@brief          Verifies that a default value on one variable (width) correctly propagates to dependent variables (area) via hard constraints.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        rand int width;
+        rand int area;
+
+        // Default width
+        constraint def_w {
+            default width == 10;
+        }
+
+        // Hard algebraic relationship
+        constraint area_calc {
+            area == width * width;
+        }
+        
+        // Expected: width=10, so area=100
+
+        exec body ASM = """Result: {{area}}""";
+    }
+}

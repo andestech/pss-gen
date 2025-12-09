@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This class models function call expressions.
@@ -36,6 +37,13 @@ public class PSSFunctionCallExpression extends PSSExpression {
 	@Override
 	public PSSVal eval(PSSInst var) {
 		return m_path.eval(var);
+	}
+
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_path.getInsts(var));
+		return ret;
 	}
 
 	@Override

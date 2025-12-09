@@ -1,0 +1,27 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/11/06
+@brief          Test issue 28.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        int val = 1;
+        exec body ASM = """val = {{val}}""";
+    }
+}
+
+/**@}*/

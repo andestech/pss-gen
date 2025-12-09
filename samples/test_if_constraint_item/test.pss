@@ -11,7 +11,7 @@ Reference to [PSSv2.0 Section 17.1.6](https://www.accellera.org/images/downloads
 
 ### Test Command
 
-    make test
+    make
 
 
 */

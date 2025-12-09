@@ -1,3 +1,5 @@
+import java.util.List;
+import java.util.ArrayList;
 
 public class PSSInExpression extends PSSExpression {
 
@@ -10,13 +12,18 @@ public class PSSInExpression extends PSSExpression {
 	}
 
 	@Override
+	public boolean isRandomable (PSSInst var) {
+		return m_left.isRandomable(var);
+	}
+
+	@Override
 	public PSSDomainMap deduceDomain(PSSInst var) {
 		PSSDomainMap map = new PSSDomainMap();
 		PSSInst leftInst = m_left.getInst(var);
 		if (leftInst != null) {
-			PSSListVal rightVal = (PSSListVal) m_right.eval(var);
+			List<PSSVal> rightList = m_right.eval(var).getValList();
 			PSSDomain left_domain = leftInst.getInitDomain();
-			left_domain = left_domain.reduceDomainIn(rightVal);
+			left_domain = left_domain.reduceDomainIn(rightList);
 			map.add(leftInst, left_domain);
 		}
 		return map;
@@ -27,6 +34,14 @@ public class PSSInExpression extends PSSExpression {
 		PSSVal leftVal = m_left.eval(var);
 		PSSVal rightVal = m_right.eval(var);
 		return rightVal.InRange(leftVal);
+	}
+
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_left.getInsts(var));
+		ret.addAll(m_right.getInsts(var));
+		return ret;
 	}
 
 	@Override

@@ -3,8 +3,8 @@
 @{
 @file
 @author         Luther Lee
-@data           2024/12/02
-@brief          Test issue 24.
+@data           2025/11/05
+@brief          Test issue 27.
 
 
 ---------------------------------------------------------------------------------------------------
@@ -16,25 +16,24 @@ make
 
 @cond
 */
+
+
+
 component pss_top {
     action root_a {
+        bit [5] root_val = 1;
         activity {
-            do print1;
-            do print1_workaround;
+            do printVal with { val in [2]; };
+            do printVal with { val in [3]; root_val > 0; };
         }
     }
 
-    action print1 {
-        rand int in [1] val;
-        exec body ASM = """print1: {{val}}""";
-    }
-
-    action print1_workaround {
+    action printVal {
         rand int val;
         constraint {
-            val in [1];
+            root_val in [0..31];
         }
-        exec body ASM = """print1_workaround: {{val}}""";
+        exec body ASM = """val = {{val}}""";
     }
 }
 

@@ -1,0 +1,53 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/11/27
+@brief          Test issue 31.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        activity {
+            do testTruePath;
+            do testFalsePath;
+        }
+    }
+
+    action testTruePath {
+        rand int value;
+        constraint {
+            if (1) {
+                default value == 1;
+            } else {
+                default value == 2;
+            }
+        }
+        exec body ASM = """testTruePath: {{value}}""";
+    }
+
+    action testFalsePath {
+        rand int value;
+        constraint {
+            if (0) {
+                default value == 1;
+            } else {
+                default value == 2;
+            }
+        }
+        exec body ASM = """testFalsePath: {{value}}""";
+    }
+}
+
+/**@}*/

@@ -11,6 +11,20 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 		m_expression = expression;
 	}
 
+	@Override
+	public void eval(PSSInst inst, PSSExecKind exec_kind) {
+		// Report warning when assign value to a random variable in pre_solve block
+		if (exec_kind == PSSExecKind.pre_solve) {
+			PSSInst leftInst = m_ref.getInst(inst);
+			if (leftInst.isRandomable()) {
+				PSSMessage.Warning("Assign to random variable in pre_solve block is meaningless: "
+						+ m_ref.getText() + m_op + m_expression.getText());
+			}
+		}
+
+		eval(inst);
+	}
+
 	public void eval(PSSInst inst) {
 		PSSVal rightVal = m_expression.eval(inst);
 		PSSInst leftInst = m_ref.getInst(inst);
@@ -30,50 +44,46 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 			}
 		}
 
-		/** Backup Bit-Select value for prevert lost after leftInst.toVal() */
-		PSSIntVal backupBitSelect = null;
-		if (leftInst instanceof PSSIntInst && ((PSSIntInst)leftInst).isAccessBitSelect()) {
-			backupBitSelect = ((PSSIntInst)leftInst).getBitSelect();
-		}
 
-		/** Get LHS value for later use */
+		/** Get LHS value for self assignment */
 		PSSVal leftVal = null;
 		if (m_op.matches("[+-<>|&]+=")) {
-			leftVal = leftInst.toVal();
-
-			/** Restore back Bit-Selects value after clear by leftInst.toVal() */
-			if (null != backupBitSelect) {
-				leftInst = leftInst.indexOf(backupBitSelect);
+			if (leftInst instanceof PSSIntInst) {
+				PSSIntVal index_backup = ((PSSIntInst)leftInst).getBitSelect();
+				leftVal = m_ref.eval(inst);
+				leftInst = ((PSSIntInst)leftInst).indexOf(index_backup);
+			} else {
+				leftVal = m_ref.eval(inst);
 			}
 		}
 
 		switch(m_op) {
 			case "=":
-				leftInst.assign(rightVal);
+				m_ref.assign(inst, rightVal);
 				break;
 
 			case "+=":
-				leftInst.assign(leftVal.Add(rightVal));
+				m_ref.assign(inst, leftVal.Add(rightVal));
 				break;
 
 			case "-=":
-				leftInst.assign(leftVal.Sub(rightVal));
+				m_ref.assign(inst, leftVal.Sub(rightVal));
 				break;
 
 			case "<<=":
-				leftInst.assign(leftVal.LeftShift(rightVal));
+				m_ref.assign(inst, leftVal.LeftShift(rightVal));
 				break;
 
 			case ">>=":
-				leftInst.assign(leftVal.RightShift(rightVal));
+				m_ref.assign(inst, leftVal.RightShift(rightVal));
 				break;
 
 			case "|=":
-				leftInst.assign(leftVal.BitwiseOr(rightVal));
+				m_ref.assign(inst, leftVal.BitwiseOr(rightVal));
 				break;
 
 			case "&=":
-				leftInst.assign(leftVal.BitwiseAnd(rightVal));
+				m_ref.assign(inst, leftVal.BitwiseAnd(rightVal));
 				break;
 
 			default:

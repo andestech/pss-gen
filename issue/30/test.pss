@@ -1,0 +1,37 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/11/11
+@brief          Test issue 30.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        activity {
+            do constraintBySet with { value in [1]; };
+        }
+    }
+
+    action constraintBySet {
+        rand int value;
+        set<int> foo = {1, 3, 5, 7};
+        constraint {
+            value in foo;
+        }
+        exec body ASM = """constraintBySet: {{value}}""";
+    }
+}
+
+/**@}*/

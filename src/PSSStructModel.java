@@ -6,12 +6,14 @@ public class PSSStructModel extends PSSModel implements PSSIAggregate {
 	PSSStructKind m_struct_kind;
 	public ArrayList<PSSAttrField> m_attrfield;
 	public PSSConstraintList m_constraint;
+	public PSSConstraintList m_default_constraint;
 
 	public PSSStructModel(PSSStructKind struct_kind, String id) {
 		super(id);
 		m_struct_kind = struct_kind;
 		m_attrfield = new ArrayList<PSSAttrField>();
 		m_constraint = new PSSConstraintList();
+		m_default_constraint = new PSSConstraintList();
 	}
 
 	@Override
@@ -39,6 +41,12 @@ public class PSSStructModel extends PSSModel implements PSSIAggregate {
 
 	public PSSConstraint addConstraint(PSSConstraint node) {
 		m_constraint.add(node);
+		node.m_parent = this;
+		return node;
+	}
+
+	public PSSConstraint addDefaultConstraint(PSSConstraint node) {
+		m_default_constraint.add(node);
 		node.m_parent = this;
 		return node;
 	}

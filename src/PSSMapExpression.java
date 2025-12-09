@@ -14,6 +14,11 @@ public class PSSMapExpression extends PSSExpression {
 	public PSSMapExpression() {
 	}
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		return false;
+	}
+
 	/**
 	 * Inserts a key-value pair to this map literal.
 	 *

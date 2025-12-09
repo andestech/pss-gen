@@ -1,0 +1,15 @@
+
+            # testSingleBit
+            default_0 = 0
+            default_1 = 0
+            default_2 = 0
+            default_3 = 0
+            default_4 = 0
+            default_5 = 0
+            check_0   = 1
+            check_1   = 1
+            check_2   = 1
+            check_3   = 1
+            check_4   = 1
+            check_5   = 1
+        

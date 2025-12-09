@@ -8,6 +8,11 @@ public class PSSPrimaryExpression extends PSSExpression {
 		m_val = val;
 	}
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		return false;
+	}
+
 	public PSSVal eval(PSSInst var) {
 		return m_val;
 	}

@@ -14,7 +14,7 @@ public class PSSGenOpt {
 	String m_output_file;
 	String m_root_action;
 	ArrayList<String> m_lib_dir;
-	int m_seed;
+	long m_seed;
 
 
 	public PSSGenOpt(String[] args) {
@@ -27,6 +27,8 @@ public class PSSGenOpt {
 		if (args.length == 0) {
 			help();
 		}
+
+		PSSMessage.Initial();
 
 		int i=0;
 		while (i < args.length) {
@@ -70,7 +72,7 @@ public class PSSGenOpt {
 				help();
 			}
 			else if (arg.equals("-seed")) {
-				m_seed = Integer.valueOf(args[i+1]);
+				m_seed = Long.valueOf(args[i+1]);
 				i+=2;
 			}
 			else {
@@ -175,7 +177,7 @@ public class PSSGenOpt {
 		System.out.println("	-info			enable display `PSS-INFO` message");
 		System.out.println("	-debug			enable display `PSS-DEBUG` message");
 		System.out.println("	-debug_random	enable display randomize sequence");
-		System.out.println("	-set_random_limit <val>		change max. iterations of randomization (default: 1000)");
+		System.out.println("	-set_random_limit <val>		change max. iterations of randomization (default: 2000)");
 		System.out.println("	-root <root_action>");
 		System.out.println("	-seed <seed>");
 		System.exit(1);

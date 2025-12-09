@@ -5,6 +5,10 @@ public class PSSProcStmt extends PSSModel {
 		super("");
 	}
 
+	public void eval(PSSInst inst, PSSExecKind exec_kind) {
+		eval(inst);
+	}
+
 	public void eval(PSSInst inst) throws PSSReturnException {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::eval is not implemented");
 	}

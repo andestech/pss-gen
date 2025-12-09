@@ -1,0 +1,37 @@
+/*!
+@weakgroup      16_1_10_Default_value_constraints
+@{
+@file
+@author         Gemini
+@data           2025/11/25
+@brief          Verifies that if a hard constraint is applied (val > 5) and the default value (10) satisfies that hard constraint, the default value is kept. The default is not "overridden" because it is consistent with the hard constraints.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        rand int packet_id;
+
+        // Default is 10
+        constraint def_val {
+            default packet_id == 10;
+        }
+
+        // Hard constraint: packet_id must be greater than 5.
+        // Since 10 > 5, the default is valid and should be preserved.
+        constraint hard_limit {
+            packet_id > 5;
+        }
+
+        exec body ASM = """Result: {{packet_id}}""";
+    }
+}

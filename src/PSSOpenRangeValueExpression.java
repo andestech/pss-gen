@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.ArrayList;
 
 public class PSSOpenRangeValueExpression extends PSSExpression {
 
@@ -23,6 +24,14 @@ public class PSSOpenRangeValueExpression extends PSSExpression {
 		else {
 			return begin_val;
 		}
+	}
+
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_begin.getInsts(var));
+		ret.addAll(m_end.getInsts(var));
+		return ret;
 	}
 
 	public String getText() {

@@ -12,7 +12,6 @@ activity_stmt
 	| action_handle_declaration
 	| activity_constraint_stmt
 	| activity_scheduling_constraint
-	| stmt_terminator
 ;
 
 labeled_activity_stmt

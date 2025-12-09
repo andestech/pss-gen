@@ -3,7 +3,7 @@ import java.util.*;
 public class PSSIntModel extends PSSModel {
 
 	/** the default bit size for data type {@code int} */
-	public static final int DEFAULT_INT_SIZE = 32;
+	public static final int DEFAULT_INT_SIZE = 65;
 
 	/** the default bit size for data type {@code bit} */
 	public static final int DEFAULT_BIT_SIZE = 1;

@@ -10,6 +10,13 @@ public class PSSLogicalAndExpression extends PSSExpression {
 		m_right = right;
 	}
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		boolean left_isRandomable = m_left.isRandomable(var);
+		boolean right_isRandomable = m_right.isRandomable(var);
+		return (left_isRandomable || right_isRandomable);
+	}
+
 	public PSSVal eval(PSSInst var) {
 		PSSVal result;
 		PSSVal leftVal = m_left.eval(var);
@@ -24,6 +31,13 @@ public class PSSLogicalAndExpression extends PSSExpression {
 		return null;
 	}
 
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_left.getInsts(var));
+		ret.addAll(m_right.getInsts(var));
+		return ret;
+	}
 
 	public String getText() {
 		return m_left.getText() + "&&" + m_right.getText();

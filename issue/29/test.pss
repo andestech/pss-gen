@@ -1,0 +1,42 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/11/11
+@brief          Test issue 29.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        rand bit a, b, c;
+        rand int val;
+        constraint {
+            unique {a, b, c};
+            if (0) {
+                val in [0];
+            } else {
+                val in [1];
+            }
+        }
+        exec body ASM =
+        """
+            a = {{a}}
+            b = {{b}}
+            c = {{c}}
+            val = {{val}}
+        """;
+    }
+}
+
+/**@}*/
