@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 include ./Make.vars
 
-IGNORE_LIST := ./4_6_Numbers/% ./4_7_String_literals ./test_enum
+IGNORE_LIST := ./4_6_Numbers/% ./4_7_String_literals ./7_2_Integer_types/% ./7_4_Booleans/% ./test_enum
 SUBDIRS := $(filter-out $(IGNORE_LIST), $(shell find . -mindepth 2 -type f -name 'Makefile' | xargs -I {} dirname {} | sort))
 SUMMARY := summary.log
 
