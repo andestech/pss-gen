@@ -1,0 +1,40 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2025/12/22
+@brief          Test issue 42.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+component pss_top {
+    action root_a {
+        rand array<int,5> val_list;
+
+        constraint {
+            foreach (val_list[i]) {
+                val_list[i] == i;
+            }
+        }
+        activity {
+            foreach (val_list[j]) {
+                do print with { value in [val_list[j]]; };
+            }
+        }
+    }
+    action print {
+        rand int value;
+        exec body ASM = """value = {{value}}""";
+    }
+}
+
+/**@}*/
