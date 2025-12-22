@@ -946,13 +946,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		exp = exp_stack.pop();
 		if (ctx.index_identifier() != null)
 			index_id = ctx.index_identifier().getText();
-		visit(ctx.constraint_set());
-
 		/* try to separate index_identifier due to grammar ambiguity */
 		if (index_id == null)
 			index_id = separate_index(exp);
 
-		constraint_list.add(new PSSForeachConstraint(iterator_id, exp, index_id, constraint_list));
+		int valid_mark = constraint_list.size();	// The contents inside the list is independent to Foreach_constraint
+		visit(ctx.constraint_set());
+		var constraint_set = constraint_list.subList(valid_mark, constraint_list.size());
+
+		PSSForeachConstraint constraint = new PSSForeachConstraint(iterator_id, exp, index_id, constraint_set);
+		constraint_set.clear();
+		constraint_list.add(constraint);
 		return 0;
 	}
 

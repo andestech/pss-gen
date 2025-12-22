@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,13 +14,13 @@ public class PSSForeachConstraint extends PSSConstraint {
 
     String m_index_identifier = null;
 
-    List<PSSConstraint> m_constraints = null;
+    ArrayList<PSSConstraint> m_constraints = null;
 
     public PSSForeachConstraint(String iterator, PSSExpression exp, String index, List<PSSConstraint> constraints) {
         m_iterator_identifier = iterator;
         m_expression = exp;
         m_index_identifier = index;
-        m_constraints = constraints;
+        m_constraints = new ArrayList<PSSConstraint>(constraints);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class PSSForeachConstraint extends PSSConstraint {
                 val_inst.assign(val);
             }
 
-            for (PSSConstraint constraint : m_constraints) {
+            for (var constraint : m_constraints) {
                 PSSDomainMap m = constraint.deduceDomain(foreach_inst);
                 if (m != null)
                     res = res.join(m);
