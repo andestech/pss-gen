@@ -124,4 +124,16 @@ public class PSSForeachConstraint extends PSSConstraint {
         return res;
     }
 
+    @Override
+    public String getText() {
+        StringBuilder sb = new StringBuilder("foreach (");
+        if (m_iterator_identifier != null && !m_iterator_identifier.equals(""))
+            sb.append(m_iterator_identifier).append(" : ");
+        sb.append(m_expression.getText());
+        if (m_index_identifier != null && !m_index_identifier.equals(""))
+            sb.append("[").append(m_index_identifier).append("]");
+        sb.append(")");
+        return sb.toString();
+    }
+
 }
