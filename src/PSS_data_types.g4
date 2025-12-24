@@ -49,9 +49,9 @@ domain_open_range_list
 ;
 
 domain_open_range_value
-	: constant_expression ('..' constant_expression)*
-	| constant_expression '..'
-	| '..' constant_expression
+	: constant_expression (RANGE constant_expression)*
+	| constant_expression RANGE
+	| RANGE constant_expression
 ;
 
 string_type

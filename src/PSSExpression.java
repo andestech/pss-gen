@@ -1,7 +1,30 @@
+import java.util.ArrayList;
 
 public class PSSExpression {
 
 	public PSSExpression() {
+	}
+
+	/**
+	 * Returns {@code true} if this instance is random variable.
+	 * Warning user if both sides of constraint expression are not random variables.
+	 *
+	 * @return {@code true} if this instance is random variable
+	 */
+	public boolean isRandomable (PSSInst var) {
+		PSSMessage.Fatal(getClass().getSimpleName() + ".isRandomable() is not implemented");
+		return false;
+	}
+
+	/**
+	 * Override left expression.
+	 * CAUTION: this API carries potential risks. Ensure you understand the implications before use.
+	 * 
+	 * @param left
+	 * @return void
+	 */
+	public void setLeftExpression (PSSExpression left) {
+		PSSMessage.Fatal(getClass().getSimpleName() + ".setLeftExpression() is not implemented");
 	}
 
 	/**
@@ -24,6 +47,18 @@ public class PSSExpression {
 	public PSSVal eval(PSSInst var) {
 		PSSMessage.Fatal(getClass().getSimpleName() + ".eval() is not implemented");
 		return null;
+	}
+
+	/**
+	 * Returns all instances from left to right (if exist) expression.
+	 *
+	 * @param var
+	 * @return all instances of the expression, or {@code null} if the expression
+	 *         is not a variable
+	 */
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		return ret;
 	}
 
 	/**

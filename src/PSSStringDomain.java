@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.List;
 
 /**
  * This class provides a domain of strings.
@@ -132,8 +133,7 @@ public class PSSStringDomain extends PSSDomain {
 	}
 
 	@Override
-	public PSSStringDomain reduceDomainIn(PSSListVal val) {
-		List<PSSVal> list = val.getValList();
+	public PSSStringDomain reduceDomainIn(List<PSSVal> list) {
 		return join(list);
 	}
 
@@ -149,7 +149,7 @@ public class PSSStringDomain extends PSSDomain {
 		if (item.isBound()) {
 			return new PSSStringVal(item.toStr());
 		} else {
-			String str = PSSRandom.nextString();
+			String str = PSSRandom.nextString(6);	// Use 6-bit chars to reduce the chance of an accidental match on the first random to about 1.9e-9%.
 			return new PSSStringVal(str);
 		}
 	}

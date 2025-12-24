@@ -1,3 +1,4 @@
+import java.util.List;
 
 /**
  * A {@code PSSDomain} represents a domain of values.
@@ -58,7 +59,7 @@ public abstract class PSSDomain {
 	 *         {@code val}
 	 */
 	public PSSDomain reduceDomainEqual(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainEqual is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainEqual is not implemented");
 		return null;
 	}
 
@@ -72,7 +73,7 @@ public abstract class PSSDomain {
 	 *         {@code val}
 	 */
 	public PSSDomain reduceDomainNotEqual(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainNotEqual is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainNotEqual is not implemented");
 		return null;
 	}
 
@@ -86,7 +87,7 @@ public abstract class PSSDomain {
 	 *         {@code val}
 	 */
 	public PSSDomain reduceDomainGreaterThan(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainGreaterThan is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainGreaterThan is not implemented");
 		return null;
 	}
 
@@ -100,7 +101,7 @@ public abstract class PSSDomain {
 	 *         or equal to {@code val}
 	 */
 	public PSSDomain reduceDomainGreaterEqual(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainGreaterEqual is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainGreaterEqual is not implemented");
 		return null;
 	}
 
@@ -113,7 +114,7 @@ public abstract class PSSDomain {
 	 *         {@code val}
 	 */
 	public PSSDomain reduceDomainLessThan(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainLessThan is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainLessThan is not implemented");
 		return null;
 	}
 
@@ -127,20 +128,20 @@ public abstract class PSSDomain {
 	 *         equal to {@code val}
 	 */
 	public PSSDomain reduceDomainLessEqual(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainLessEqual is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainLessEqual is not implemented");
 		return null;
 	}
 
 	/**
 	 * Returns a domain reduced from this one by keeping only elements in a
-	 * specified set.
+	 * specified list.
 	 *
-	 * @param val a set
+	 * @param list of PSSVal
 	 * @return a domain reduced from this one by keeping only elements in the set
 	 *         {@code val}
 	 */
-	public PSSDomain reduceDomainIn(PSSListVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainIn is not impelemented");
+	public PSSDomain reduceDomainIn(List<PSSVal> list) {
+		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainIn is not implemented");
 		return null;
 	}
 
@@ -150,7 +151,7 @@ public abstract class PSSDomain {
 	 * @return the text representation of this domain
 	 */
 	public String getText() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::getText is not impelemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::getText is not implemented");
 		return "";
 	}
 

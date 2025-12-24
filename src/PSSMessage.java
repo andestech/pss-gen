@@ -1,10 +1,14 @@
 import java.util.*;
 
 public class PSSMessage {
+	private static long startTime;
 	private static boolean b_PrintInfoEn = false;	// Control of Info function
 	private static boolean b_PrintDebugEn = false;	// Control of Debug function
 	private static boolean b_PrintRandEn = false;	// Control of print random sequence
 
+	public static void Initial () {
+		startTime = System.currentTimeMillis();
+	}
 	public static void SetPrintInfoEn (boolean val) {
 		b_PrintInfoEn = val;
 	}
@@ -32,16 +36,20 @@ public class PSSMessage {
 		System.exit(1);
 	}
 	public static void Info(String msg){
-		if (true == b_PrintInfoEn) System.out.println("PSS-INFO: " + msg);
+		double elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+		if (true == b_PrintInfoEn) System.out.printf("[%.3fs] PSS-INFO: %s\n", elapsedSeconds, msg);
 	}
 	public static void Error(String ID, String msg){
-		System.out.println("PSS-ERROR: [" + ID + "] " + msg);
+		double elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+		System.out.printf("[%.3fs] PSS-ERROR: [%s] %s\n", elapsedSeconds, ID, msg);
 		System.exit(1);
 	}
 	public static void Warning(String msg){
-		System.out.println("PSS-WARNING: " + msg);
+		double elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+		System.out.printf("[%.3fs] PSS-WARNING: %s\n", elapsedSeconds, msg);
 	}
 	public static void Debug(String msg){
-		if (true == b_PrintDebugEn) System.out.println("PSS-DEBUG: " + msg);
+		double elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
+		if (true == b_PrintDebugEn) System.out.printf("[%.3fs] PSS-DEBUG: %s\n", elapsedSeconds, msg);
 	}
 }

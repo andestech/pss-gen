@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class PSSEqualExpression extends PSSExpression {
 
@@ -7,6 +8,13 @@ public class PSSEqualExpression extends PSSExpression {
 	public PSSEqualExpression(PSSExpression left, PSSExpression right) {
 		m_left = left;
 		m_right = right;
+	}
+
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		boolean left_isRandomable = m_left.isRandomable(var);
+		boolean right_isRandomable = m_right.isRandomable(var);
+		return (left_isRandomable || right_isRandomable);
 	}
 
 	public PSSVal eval(PSSInst var) {
@@ -27,6 +35,14 @@ public class PSSEqualExpression extends PSSExpression {
 			map.add(leftInst, left_domain);
 		}
 		return map;
+	}
+
+	@Override
+	public ArrayList<PSSInst> getInsts(PSSInst var) {
+		var ret = new ArrayList<PSSInst>();
+		ret.addAll(m_left.getInsts(var));
+		ret.addAll(m_right.getInsts(var));
+		return ret;
 	}
 
 	public String getText() {

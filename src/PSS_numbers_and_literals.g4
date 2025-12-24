@@ -6,7 +6,8 @@ grammar PSS_numbers_and_literals;
 
 
 number
-	: OCT_NUMBER
+	: BIN_NUMBER
+	| OCT_NUMBER
 	| DEC_NUMBER
 	| HEX_NUMBER
 	| based_bin_number
@@ -14,6 +15,8 @@ number
 	| based_dec_number
 	| based_hex_number
 ;
+
+BIN_NUMBER: '0' [bB] [01] [01_]* ;
 
 OCT_NUMBER: '0' [0-7_]* ;
 

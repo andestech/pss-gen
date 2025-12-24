@@ -10,9 +10,19 @@ public class PSSIfConstraint extends PSSConstraint {
 		m_true = new ArrayList<PSSConstraint>();
 		m_false = new ArrayList<PSSConstraint>();
 	}
+	public void addTrueConstraint(List<PSSConstraint> c_list) {
+		for (var item : c_list) {
+			addTrueConstraint(item);
+		}
+	}
 	public void addTrueConstraint(PSSConstraint node) {
 		m_true.add(node);
 		node.m_parent = this;
+	}
+	public void addFalseConstraint(List<PSSConstraint> c_list) {
+		for (var item : c_list) {
+			addFalseConstraint(item);
+		}
 	}
 	public void addFalseConstraint(PSSConstraint node) {
 		m_false.add(node);
@@ -32,10 +42,16 @@ public class PSSIfConstraint extends PSSConstraint {
 	}
 
 	public PSSDomainMap deduceDomain(PSSInst var) {
-		PSSDomainMap true_map = deduceDomainList(m_true, var);
-		PSSDomainMap false_map = deduceDomainList(m_false, var);
+		PSSDomainMap domain_map;
 
-		return true_map.union(false_map);
+		PSSVal cond = m_cond.eval(var);
+		if (cond.toBool() == true) {
+			domain_map = deduceDomainList(m_true, var);
+		} else {
+			domain_map = deduceDomainList(m_false, var);
+		}
+
+		return domain_map;
 	}
 	private boolean validate_list(PSSInst var, ArrayList<PSSConstraint> list) {
 		for (int i=0; i<list.size(); i++) {

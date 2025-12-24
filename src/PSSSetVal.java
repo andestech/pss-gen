@@ -102,6 +102,17 @@ public class PSSSetVal extends PSSVal implements PSSICollection {
     }
 
     /**
+     * Returns the list elements.
+     *
+     * @return the list elements
+     */
+    @Override
+    public List<PSSVal> getValList() {
+        List<PSSVal> ret = new ArrayList<PSSVal>();
+        return (ret.addAll(m_set) == true) ? ret : null;
+    }
+
+    /**
      * Returns {@code true} if this set is empty.
      *
      * @return {@code true} if this set is empty

@@ -9,6 +9,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	Stack<PSSActivity> activity_stack;
 	ArrayList<PSSProcStmt> proc_stmt_list;
 	ArrayList<PSSConstraint> constraint_list;
+	ArrayList<PSSConstraint> default_constraint_list;
 	PSSModel cur_data_type;
 	PSSDataDeclModel cur_data_decl;
 	PSSVal cur_val;
@@ -24,6 +25,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		activity_stack = new Stack<PSSActivity>();
 		proc_stmt_list = new ArrayList<PSSProcStmt>();
 		constraint_list = new ArrayList<PSSConstraint>();
+		default_constraint_list = new ArrayList<PSSConstraint>();
 		function_parameter_list = new ArrayList<PSSFunctionParameter>();
 	}
 
@@ -433,10 +435,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitData_type(PSSParser.Data_typeContext ctx) {
+		Integer ret = 0;
 		if (ctx.scalar_data_type() != null) {
-			visit(ctx.scalar_data_type());
+			ret = visit(ctx.scalar_data_type());
 		} else if (ctx.collection_type() != null) {
-			visit(ctx.collection_type());
+			ret = visit(ctx.collection_type());
 		} else if (ctx.reference_type() != null) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		} else {
@@ -444,23 +447,27 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			cur_data_type = new PSSDataTypeModel(root, text);
 		}
 
-		return 0;
+		return ret;
 	}
 
 	@Override
 	public Integer visitScalar_data_type(PSSParser.Scalar_data_typeContext ctx) {
+		Integer ret = 0;
 		if (ctx.chandle_type() != null) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		} else if (ctx.integer_type() != null) {
-			visit(ctx.integer_type());
+			ret = visit(ctx.integer_type());
 		} else if (ctx.string_type() != null) {
-			visit(ctx.string_type());
+			ret = visit(ctx.string_type());
 		} else if (ctx.enum_type() != null) {
+			if (ctx.enum_type().domain_open_range_list() != null) {
+				PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.enum_type().getText() + "'");
+			}
 			String text = ctx.enum_type().getText();
 			cur_data_type = new PSSDataTypeModel(root, text);
 		}
 
-		return 0;
+		return ret;
 	}
 
 	@Override
@@ -505,17 +512,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitInteger_type(PSSParser.Integer_typeContext ctx) {
-		// bit[7] // [constant_expression]
-		// bit[3:0] // [constant_expression (':' number)? ]
-
-		if (ctx.domain_open_range_list() != null) {
-			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
-		}
-
+		Integer ret = 0;
 		String integer_atom_type = ctx.integer_atom_type().getText();
 		Integer width;
 		boolean sign = integer_atom_type.equals("int");
 
+		// bit[7] // [constant_expression]
+		// bit[3:0] // [constant_expression (':' number)? ]
 		if (ctx.number() != null) {
 			int lsb = Integer.valueOf(ctx.number().getText());
 			int msb = Integer.valueOf(ctx.constant_expression().getText());
@@ -530,13 +533,76 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			}
 		}
 
-		cur_data_type = new PSSIntModel(width, sign);
+		// in [0,1,2]	// domain_open_range_value,domain_open_range_value,domain_open_range_value
+		// in [0..2]	// constant_expression..constant_expression
+		// in [0..]		// constant_expression..
+		// in [..2]		// ..constant_expression
+		if (ctx.domain_open_range_list() != null) {
+			ret = visit(ctx.domain_open_range_list());
+		}
 
-		return 0;
+		cur_data_type = new PSSIntModel(width, sign);
+		return ret;
+	}
+
+	@Override
+	public Integer visitDomain_open_range_list(PSSParser.Domain_open_range_listContext ctx) {
+		Integer ret = 0;
+		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
+		for (int i = 0; i < ctx.domain_open_range_value().size(); i++) {
+			ret += visit(ctx.domain_open_range_value(i));
+			PSSExpression item = exp_stack.pop();
+			if (item instanceof PSSOpenRangeValueExpression) {
+				open_range_list.addOpenRangeValueExpression((PSSOpenRangeValueExpression)item);
+				ret--;
+			} else {
+				exp_stack.push(item);
+			}
+		}
+		if (ret < ctx.domain_open_range_value().size()) {
+			exp_stack.push(open_range_list);
+			ret++;
+		}
+		return ret;
+	}
+
+	@Override
+	public Integer visitDomain_open_range_value(PSSParser.Domain_open_range_valueContext ctx) {
+		if (ctx.RANGE().size() != 1 || ctx.constant_expression().size() == 0) {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
+
+		Token exp_node			= ctx.constant_expression(0).getStop();
+		TerminalNode range_node = ctx.RANGE(0);
+		int exp_position		= exp_node.getTokenIndex();
+		int range_position		= range_node.getSymbol().getTokenIndex();
+
+		if (ctx.constant_expression().size() == 2) {	// constant_expression '..' constant_expression
+			visit(ctx.constant_expression(0));
+			visit(ctx.constant_expression(1));
+			PSSExpression end = exp_stack.pop();
+			PSSExpression begin = exp_stack.pop();
+			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin, end);
+			exp_stack.push(item);
+		} else if (range_position < exp_position) {	// '..' constant_expression
+			visit(ctx.constant_expression(0));
+			PSSExpression end = exp_stack.pop();
+			PSSLessEqualExpression item = new PSSLessEqualExpression(null, end);
+			exp_stack.push(item);
+		} else {	// constant_expression ('..')?
+			visit(ctx.constant_expression(0));
+			PSSExpression begin = exp_stack.pop();
+			PSSGreaterEqualExpression item = new PSSGreaterEqualExpression(null, begin);
+			exp_stack.push(item);
+		}
+		return 1;
 	}
 
 	@Override
 	public Integer visitString_type(PSSParser.String_typeContext ctx) {
+		if (ctx.string_literal().size() != 0) {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
 		cur_data_type = PSSStringModel.getInstance();
 		return 0;
 	}
@@ -792,9 +858,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		if (ctx.inline_constraints_or_empty().constraint_set() != null) {
 			visit(ctx.inline_constraints_or_empty().constraint_set());
 
-			for (int i = 0; i < constraint_list.size(); i++) {
-				PSSConstraint c = constraint_list.get(i);
-				node.addConstraint(c);
+			for (PSSConstraint item : constraint_list) {
+				node.addConstraint(item);
 			}
 			constraint_list.clear();
 			activity_stack.push(node);
@@ -811,14 +876,51 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	}
 
 	public Integer visitConstraint_declaration(PSSParser.Constraint_declarationContext ctx) {
+		if (ctx.identifier() != null) {
+			visit(ctx.constraint_block());
+		} else {
+			visit(ctx.constraint_set());
+		}
 
-		visit(ctx.constraint_set());
-
-		for (int i = 0; i < constraint_list.size(); i++) {
-			PSSConstraint c = constraint_list.get(i);
-			root.addConstraint(c);
+		for (PSSConstraint item : constraint_list) {
+			root.addConstraint(item);
 		}
 		constraint_list.clear();
+
+		for (PSSConstraint item : default_constraint_list) {
+			root.addDefaultConstraint(item);
+		}
+		default_constraint_list.clear();
+		return 0;
+	}
+
+	@Override
+	public Integer visitConstraint_body_item(PSSParser.Constraint_body_itemContext ctx) {
+		if        (ctx.expression_constraint_item() != null) {
+			visit(ctx.expression_constraint_item());
+		} else if (ctx.foreach_constraint_item() != null) {
+			visit(ctx.foreach_constraint_item());
+		} else if (ctx.forall_constraint_item() != null) {
+			visit(ctx.forall_constraint_item());
+		} else if (ctx.if_constraint_item() != null) {
+			visit(ctx.if_constraint_item());
+		} else if (ctx.implication_constraint_item() != null) {
+			visit(ctx.implication_constraint_item());
+		} else if (ctx.unique_constraint_item() != null) {
+			visit(ctx.unique_constraint_item());
+		} else if (ctx.constant_expression() != null) {
+			// Syntax: 'default' hierarchical_id '==' constant_expression ';'
+			visit(ctx.constant_expression());
+			visit(ctx.hierarchical_id());
+			PSSExpression id = exp_stack.pop();
+			PSSExpression const_exp = exp_stack.pop();
+			PSSEqualExpression equal_exp = new PSSEqualExpression(id, const_exp);
+			PSSExpressionConstraint item = new PSSExpressionConstraint(equal_exp);
+			default_constraint_list.add(item);
+		} else if (ctx.hierarchical_id() != null) {
+			// Syntax: 'default' 'disable' hierarchical_id ';'
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
 		return 0;
 	}
 
@@ -837,7 +939,6 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	public Integer visitForeach_constraint_item(PSSParser.Foreach_constraint_itemContext ctx) {
 		String iterator_id = null;
 		PSSExpression exp = null;
-		List<PSSConstraint> constraints = new ArrayList<PSSConstraint>();
 		String index_id = null;
 		if (ctx.iterator_identifier() != null)
 			iterator_id = ctx.iterator_identifier().getText();
@@ -845,16 +946,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		exp = exp_stack.pop();
 		if (ctx.index_identifier() != null)
 			index_id = ctx.index_identifier().getText();
-		visit(ctx.constraint_set());
-		constraints.addAll(constraint_list);
-		constraint_list.clear();
-		;
-
 		/* try to separate index_identifier due to grammar ambiguity */
 		if (index_id == null)
 			index_id = separate_index(exp);
 
-		constraint_list.add(new PSSForeachConstraint(iterator_id, exp, index_id, constraints));
+		int valid_mark = constraint_list.size();	// The contents inside the list is independent to Foreach_constraint
+		visit(ctx.constraint_set());
+		var constraint_set = constraint_list.subList(valid_mark, constraint_list.size());
+
+		PSSForeachConstraint constraint = new PSSForeachConstraint(iterator_id, exp, index_id, constraint_set);
+		constraint_set.clear();
+		constraint_list.add(constraint);
 		return 0;
 	}
 
@@ -870,21 +972,18 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		PSSExpression exp = exp_stack.pop();
 		PSSIfConstraint constraint = new PSSIfConstraint(exp);
+		int valid_mark = constraint_list.size();	// The contents inside the list is independent to If_constraint
 
 		visit(ctx.constraint_set(0));
-		for (int i = 0; i < constraint_list.size(); i++) {
-			PSSConstraint c = constraint_list.get(i);
-			constraint.addTrueConstraint(c);
-		}
-		constraint_list.clear();
+		var true_constraint = constraint_list.subList(valid_mark, constraint_list.size());
+		constraint.addTrueConstraint(true_constraint);
+		true_constraint.clear();
 
 		if (ctx.constraint_set().size() > 1) {
 			visit(ctx.constraint_set(1));
-			for (int i = 0; i < constraint_list.size(); i++) {
-				PSSConstraint c = constraint_list.get(i);
-				constraint.addFalseConstraint(c);
-			}
-			constraint_list.clear();
+			var false_constraint = constraint_list.subList(valid_mark, constraint_list.size());
+			constraint.addFalseConstraint(false_constraint);
+			false_constraint.clear();
 		}
 
 		constraint_list.add(constraint);
@@ -1054,7 +1153,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			exp_stack.push(new PSSPrimaryExpression(new PSSStringVal(text)));
 		} else if (ctx.number() != null) {
 			String text = ctx.getText();
-			if (ctx.number().OCT_NUMBER() != null) {
+			if (ctx.number().BIN_NUMBER() != null) {
+				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newBinNumber(text)));
+			} else if (ctx.number().OCT_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newOctNumber(text)));
 			} else if (ctx.number().DEC_NUMBER() != null) {
 				exp_stack.push(new PSSPrimaryExpression(PSSNumber.newDecNumber(text)));
@@ -1078,6 +1179,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			visit(ctx.paren_expr().expression());
 		} else if (ctx.aggregate_literal() != null) {
 			visit(ctx.aggregate_literal());
+		} else if (ctx.cast_expression() != null) {
+			visit(ctx.cast_expression());
 		} else {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		}
@@ -1157,13 +1260,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		PSSExpression bit_slice_to = null;
 		if (ctx.bit_slice() != null) {
 			visit(ctx.bit_slice().constant_expression(0));
-			bit_slice_from = exp_stack.pop();
-			visit(ctx.bit_slice().constant_expression(1));
 			bit_slice_to = exp_stack.pop();
+			visit(ctx.bit_slice().constant_expression(1));
+			bit_slice_from = exp_stack.pop();
 		}
 
-		PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, null,
-				null);
+		PSSRefPathExpression e = new PSSRefPathExpression(type_identifier_elem, static_ref_path, bit_slice_from, bit_slice_to);
 		exp_stack.push(e);
 
 		return 0;
@@ -1201,39 +1303,61 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	}
 
 	@Override
+	public Integer visitCast_expression(PSSParser.Cast_expressionContext ctx) {
+		visit(ctx.casting_type());
+		visit(ctx.primary());
+		PSSExpression rhs_exp = exp_stack.pop();
+		PSSExpression exp = new PSSCastExpression(cur_data_type, rhs_exp);
+		exp_stack.push(exp);
+		return 0;
+	}
+
+	@Override
+	public Integer visitCasting_type(PSSParser.Casting_typeContext ctx) {
+		if (ctx.integer_type() != null) {
+			visit(ctx.integer_type());
+		} else if (ctx.bool_type() != null) {
+			PSSMessage.Fatal("Cast to bool_type is not yet supported: '" + ctx.getText() + "'");
+		} else if (ctx.enum_type() != null) {
+			PSSMessage.Fatal("Cast to enum_type is not yet supported: '" + ctx.getText() + "'");
+		} else if (ctx.type_identifier() != null) {
+			PSSMessage.Fatal("Cast to user-defined type is not yet supported: '" + ctx.getText() + "'");
+		} else {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
+		return 0;
+	}
+
+	@Override
 	public Integer visitOpen_range_list(PSSParser.Open_range_listContext ctx) {
 		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
-
 		for (int i = 0; i < ctx.open_range_value().size(); i++) {
-
 			visit(ctx.open_range_value(i));
 			PSSOpenRangeValueExpression value = (PSSOpenRangeValueExpression) exp_stack.pop();
-
 			open_range_list.addOpenRangeValueExpression(value);
-
 		}
-
 		exp_stack.push(open_range_list);
-
 		return 0;
 	}
 
 	@Override
 	public Integer visitOpen_range_value(PSSParser.Open_range_valueContext ctx) {
-		if (ctx.expression().size() == 2) {
+		if (ctx.expression().size() == 2 && ctx.RANGE() != null) {	// expression '..' expression
 			visit(ctx.expression(0));
 			visit(ctx.expression(1));
 			PSSExpression end = exp_stack.pop();
 			PSSExpression begin = exp_stack.pop();
 			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin, end);
 			exp_stack.push(item);
-		} else {
+		} else if (ctx.expression().size() == 1 && ctx.RANGE() == null) {	// expression
 			visit(ctx.expression(0));
 			PSSExpression begin = exp_stack.pop();
 			PSSOpenRangeValueExpression item = new PSSOpenRangeValueExpression(begin);
 			exp_stack.push(item);
+		} else {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+			return -1;
 		}
-
 		return 0;
 	}
 
@@ -1474,7 +1598,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitData_declaration(PSSParser.Data_declarationContext ctx) {
-		visit(ctx.data_type());
+		Integer domain_constraint = visit(ctx.data_type());
 		PSSModel data_type = cur_data_type;
 		root.addChild(data_type);
 
@@ -1495,6 +1619,22 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 				visit(data_inst.constant_expression());
 
 				const_expression = exp_stack.pop();
+			}
+
+			if (0 < domain_constraint) {
+				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id);
+				while (domain_constraint-- > 0) {
+					PSSExpression item = exp_stack.pop();
+					if (item instanceof PSSOpenRangeListExpression) {
+						item = new PSSInExpression(variable, item);
+					} else if (item instanceof PSSLessEqualExpression) {
+						item.setLeftExpression(variable);
+					} else if (item instanceof PSSGreaterEqualExpression) {
+						item.setLeftExpression(variable);
+					}
+					PSSExpressionConstraint expression_constraint = new PSSExpressionConstraint(item);
+					root.addConstraint(expression_constraint);
+				}
 			}
 
 			PSSDataInstModel inst = new PSSDataInstModel(id, array_dim, const_expression);

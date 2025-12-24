@@ -104,7 +104,7 @@ open_range_list
 ;
 
 open_range_value
-	: expression ('..' expression)?
+	: expression (RANGE expression)?
 ;
 
 collection_expression
@@ -128,7 +128,7 @@ paren_expr
 ;
 
 cast_expression
-	: '(' casting_type ')' expression
+	: '(' casting_type ')' primary
 ;
 
 ref_path

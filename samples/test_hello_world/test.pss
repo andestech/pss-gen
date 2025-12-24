@@ -11,7 +11,7 @@ component pss_top {
 	action send_a {
 		output msg_buf msg;
 	}
-	action hello_world_a {
+	action root_a {
 		send_a send1, send2;
 		display_a disp1, disp2;
 		activity {

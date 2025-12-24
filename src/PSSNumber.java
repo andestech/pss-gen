@@ -4,96 +4,189 @@ import java.util.regex.Matcher;
 import java.math.*;
 
 public class PSSNumber {
-	public static PSSVal newOctNumber(String text) {
-		BigInteger val = new BigInteger(text, 8);
-		return new PSSIntVal(val);
-	}
-	public static PSSVal newDecNumber(String text) {
-		Pattern pattern = Pattern.compile("([-]?)([0-9]?[0-9_]+)");
+	public static PSSVal newBinNumber(String text) {
+		Pattern pattern = Pattern.compile("0[bB]([01_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String sign      = m.group(1)                    ;
-			String decnumber = m.group(2).replaceAll("_", "");
-			String sign_number = sign + decnumber;
-			int val = new BigDecimal(sign_number).intValue();
-			return new PSSIntVal(val);
+			String number_s = m.group(1).replaceAll("_", "");
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Unsized unbased hexadecimal and binary numbers shall be treated as unsigned.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = false;
+			int width = PSSIntModel.DEFAULT_INT_SIZE;
+			BigInteger val = new BigInteger(number_s, 2);
+			return new PSSIntVal(val, width, sign);
 		}
+		PSSMessage.Fatal("'" + text + "' is not binary number");
+		return null;
+	}
+	public static PSSVal newOctNumber(String text) {
+		Pattern pattern = Pattern.compile("0([0-7_]*)");
+		Matcher m = pattern.matcher(text);
+		if (m.find()) {
+			String number_s = m.group(1).replaceAll("_", "");
+			if (number_s.equals("")) number_s = "0";
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Simple decimal and octal numbers without the size and the base format shall be treated as signed integers.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = true;
+			int width = PSSIntModel.DEFAULT_INT_SIZE;
+			BigInteger val = new BigInteger(number_s, 8);
+			return new PSSIntVal(val, width, sign);
+		}
+		PSSMessage.Fatal("'" + text + "' is not otcal number");
+		return null;
+	}
+	public static PSSVal newDecNumber(String text) {
+		Pattern pattern = Pattern.compile("([1-9][0-9_]*)");
+		Matcher m = pattern.matcher(text);
+		if (m.find()) {
+			String number_s = m.group(1).replaceAll("_", "");
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Simple decimal and octal numbers without the size and the base format shall be treated as signed integers.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = true;
+			int width = PSSIntModel.DEFAULT_INT_SIZE;
+			BigInteger val = new BigInteger(number_s, 10);
+			return new PSSIntVal(val, width, sign);
+		}
+		PSSMessage.Fatal("'" + text + "' is not decimal number");
 		return null;
 	}
 	public static PSSVal newHexNumber(String text) {
-		Pattern pattern = Pattern.compile("0[x,X]([0-9a-fA-F_]+)");
+		Pattern pattern = Pattern.compile("0[xX]([0-9a-fA-F_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String hexnumber = m.group(1).replaceAll("_", "");
-			BigInteger val = new BigInteger(hexnumber, 16);
-			return new PSSIntVal(val);
+			String number_s = m.group(1).replaceAll("_", "");
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Unsized unbased hexadecimal and binary numbers shall be treated as unsigned.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = false;
+			int width = PSSIntModel.DEFAULT_INT_SIZE;
+			BigInteger val = new BigInteger(number_s, 16);
+			return new PSSIntVal(val, width, sign);
 		}
-		PSSMessage.Fatal("'" + text + "' is not hex number");
+		PSSMessage.Fatal("'" + text + "' is not hexadecimal number");
 		return null;
 	}
 	public static PSSVal newBasedBinNumber(String text) {
-		Pattern pattern = Pattern.compile("([0-9]+)?'([sS]?)[bB]([01_]+)");
+		Pattern pattern = Pattern.compile("([0-9]*)'([sS]?)[bB]([01_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String numBits   = m.group(1)                    ;
-			String sign      = m.group(2)                    ;
-			String binnumber = m.group(3).replaceAll("_", "");
+			String width_s  = m.group(1)                    ;
+			String sign_s   = m.group(2)                    ;
+			String number_s = m.group(3).replaceAll("_", "");
 
-			if (sign.equals("")) {
-				BigInteger val = new BigInteger(binnumber, 2);
-				return new PSSIntVal(val);
-			}
-			else {
-				int val = new BigInteger(binnumber, 2).intValue();
-				return new PSSIntVal(val);
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Unsized unbased hexadecimal and binary numbers shall be treated as unsigned.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = (sign_s.equals("")) ? false : true;
+			int width = (width_s.equals("")) ? PSSIntModel.DEFAULT_INT_SIZE : Integer.parseUnsignedInt(width_s);
+			BigInteger val = new BigInteger(number_s, 2);
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * If the size of an unsigned number is larger than the size specified for the literal constant,
+			 * the unsigned number shall be truncated from the left.
+			 */
+			if (width < val.bitCount()) {
+				BigInteger mask = BigInteger.ONE.shiftLeft(width + 1);
+				mask = mask.subtract(BigInteger.ONE);
+				val = val.and(mask);
 			}
 
+			return new PSSIntVal(val, width, sign);
 		}
-		PSSMessage.Fatal("'" + text + "' is not base based oct number");
+		PSSMessage.Fatal("'" + text + "' is not base based binary number");
 		return null;
 	}
 	public static PSSVal newBasedOctNumber(String text) {
 		// 64'o1
 		//   'o2
-		Pattern pattern = Pattern.compile("([0-9]+)?'([sS]?)[oO]([0-7_]+)");
+		Pattern pattern = Pattern.compile("([0-9]*)'([sS]?)[oO]([0-7_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String numBits   = m.group(1)                    ;
-			String sign      = m.group(2)                    ;
-			String octnumber = m.group(3).replaceAll("_", "");
+			String width_s  = m.group(1)                    ;
+			String sign_s   = m.group(2)                    ;
+			String number_s = m.group(3).replaceAll("_", "");
 
-			if (sign.equals("")) {
-				BigInteger val = new BigInteger(octnumber, 8);
-				return new PSSIntVal(val);
-			}
-			else {
-				int val = new BigInteger(octnumber, 8).intValue();
-				return new PSSIntVal(val);
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Simple decimal and octal numbers without the size and the base format shall be treated as signed integers.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = (sign_s.equals("")) ? (width_s.equals("")) : true;
+			int width = (width_s.equals("")) ? PSSIntModel.DEFAULT_INT_SIZE : Integer.parseUnsignedInt(width_s);
+			BigInteger val = new BigInteger(number_s, 8);
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * If the size of an unsigned number is larger than the size specified for the literal constant,
+			 * the unsigned number shall be truncated from the left.
+			 */
+			if (width < val.bitCount()) {
+				BigInteger mask = BigInteger.ONE.shiftLeft(width + 1);
+				mask = mask.subtract(BigInteger.ONE);
+				val = val.and(mask);
 			}
 
+			return new PSSIntVal(val, width, sign);
 		}
-		PSSMessage.Fatal("'" + text + "' is not base based oct number");
+		PSSMessage.Fatal("'" + text + "' is not base based octal number");
 		return null;
 	}
 	public static PSSVal newBasedDecNumber(String text) {
 		// 64'd1
 		//   'd2
-		Pattern pattern = Pattern.compile("([0-9]+)?'([sS]?)[dD]([0-9_]+)");
+		Pattern pattern = Pattern.compile("([0-9]*)'([sS]?)[dD]([0-9_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String numBits   = m.group(1)                    ;
-			String sign      = m.group(2)                    ;
-			String decnumber = m.group(3).replaceAll("_", "");
+			String width_s  = m.group(1)                    ;
+			String sign_s   = m.group(2)                    ;
+			String number_s = m.group(3).replaceAll("_", "");
 
-			if (sign.equals("")) {
-				BigInteger val = new BigInteger(decnumber, 10);
-				return new PSSIntVal(val);
-			}
-			else {
-				int val = new BigInteger(decnumber, 10).intValue();
-				return new PSSIntVal(val);
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Simple decimal and octal numbers without the size and the base format shall be treated as signed integers.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = (sign_s.equals("")) ? (width_s.equals("")) : true;
+			int width = (width_s.equals("")) ? PSSIntModel.DEFAULT_INT_SIZE : Integer.parseUnsignedInt(width_s);
+			BigInteger val = new BigInteger(number_s, 10);
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * If the size of an unsigned number is larger than the size specified for the literal constant,
+			 * the unsigned number shall be truncated from the left.
+			 */
+			if (width < val.bitCount()) {
+				BigInteger mask = BigInteger.ONE.shiftLeft(width + 1);
+				mask = mask.subtract(BigInteger.ONE);
+				val = val.and(mask);
 			}
 
+			return new PSSIntVal(val, width, sign);
 		}
 		PSSMessage.Fatal("'" + text + "' is not base based decimal number");
 		return null;
@@ -101,24 +194,37 @@ public class PSSNumber {
 	public static PSSVal newBasedHexNumber(String text) {
 		// 64'h00000000E0500000
 		//   'h00000000E0500000
-		Pattern pattern = Pattern.compile("([0-9]+)?'([sS]?)[hH]([0-9a-fA-F_]+)");
+		Pattern pattern = Pattern.compile("([0-9]*)'([sS]?)[hH]([0-9a-fA-F_]+)");
 		Matcher m = pattern.matcher(text);
 		if (m.find()) {
-			String numBits   = m.group(1)                    ;
-			String sign      = m.group(2)                    ;
-			String hexnumber = m.group(3).replaceAll("_", "");
+			String width_s  = m.group(1)                    ;
+			String sign_s   = m.group(2)                    ;
+			String number_s = m.group(3).replaceAll("_", "");
 
-			if (sign.equals("")) {
-				BigInteger val = new BigInteger(hexnumber, 16);
-				return new PSSIntVal(val);
-			}
-			else {
-				int val = new BigInteger(hexnumber, 16).intValue();
-				return new PSSIntVal(val);
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * Unsized unbased hexadecimal and binary numbers shall be treated as unsigned.
+			 * Numbers specified with a base format shall be treated as signed integers only if the s designator is included.
+			 * If the s designator is no included, the number shall be treated as an unsigned integer.
+			 */
+			boolean sign = (sign_s.equals("")) ? false : true;
+			int width = (width_s.equals("")) ? PSSIntModel.DEFAULT_INT_SIZE : Integer.parseUnsignedInt(width_s);
+			BigInteger val = new BigInteger(number_s, 16);
+
+			/**
+			 * LRM 3.0 Section 4.6.1 Integer constants
+			 * If the size of an unsigned number is larger than the size specified for the literal constant,
+			 * the unsigned number shall be truncated from the left.
+			 */
+			if (width < val.bitCount()) {
+				BigInteger mask = BigInteger.ONE.shiftLeft(width + 1);
+				mask = mask.subtract(BigInteger.ONE);
+				val = val.and(mask);
 			}
 
+			return new PSSIntVal(val, width, sign);
 		}
-		PSSMessage.Fatal("'" + text + "' is not base based hex number");
+		PSSMessage.Fatal("'" + text + "' is not base based hexadecimal number");
 		return null;
 	}
 }

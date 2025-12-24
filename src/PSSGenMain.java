@@ -1,8 +1,10 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.atn.PredictionMode;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -18,24 +20,40 @@ public class PSSGenMain {
 	}
 
 	public static ArrayList<ParseTree> parseFiles(ArrayList<String> flist) throws Exception {
-		PSSMessage.Info("parseFiles");
 		ArrayList<ParseTree> tree_list = new ArrayList<ParseTree>();
 
-		for (int i = 0; i < flist.size(); i++) {
-			String file = flist.get(i);
-			PSSMessage.Info("parse file '" + file + "'");
-
-			InputStream is    = new FileInputStream(file);
-			CharStream  input = CharStreams.fromStream(is);
+		for (String file : flist) {
+			CharStream input = null;
+			ParseTree  tree  = null;
+			try {
+				PSSMessage.Info("parse file '" + file + "'");
+				input = CharStreams.fromFileName(file);
+			} catch (IOException e) {
+				PSSMessage.Error("", e.getMessage());
+			}
+			if (null == input) PSSMessage.Error("", "Fail to read '" + file + "'");
 
 			PSSLexer          lexer  = new PSSLexer          (input );
 			CommonTokenStream tokens = new CommonTokenStream (lexer );
 			PSSParser         parser = new PSSParser         (tokens);
 
-			parser.removeErrorListeners();
-			parser.addErrorListener(new VerboseListener());
+			// Enhance performance by starting with SLL then failing to combined SLL/LL (Two-Stage Parsing)
+			// See https://www.antlr.org/api/Java/org/antlr/v4/runtime/atn/ParserATNSimulator.html
+			try {
+				parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
+				parser.removeErrorListeners();
+				parser.setErrorHandler(new BailErrorStrategy());
+				tree = parser.model();
+			} catch (ParseCancellationException ex) {
+				// Retry with LL mode
+				tokens.seek(0); // rewind
+				parser.reset();
+				parser.removeErrorListeners();
+				parser.addErrorListener(new VerboseListener(file));
+				parser.getInterpreter().setPredictionMode(PredictionMode.LL);
+				tree = parser.model();
+			}
 
-			ParseTree tree = parser.model();
 			tree_list.add(tree);
 		}
 
@@ -46,16 +64,12 @@ public class PSSGenMain {
 		PSSMessage.Info("createModel");
 		PSSModel      model = new PSSModel("");
 		PSSGenVisitor eval  = new PSSGenVisitor();
+		eval.root = model;
 
 		PSSMessage.Debug("tree_list.size = " + tree_list.size());
-		for (int i = 0; i < tree_list.size(); i++) {
-			eval.root = model;
-			ParseTree tree_cur = tree_list.get(i);
-			eval.visit(tree_list.get(i));
+		for (ParseTree tree_cur : tree_list) {
+			eval.visit(tree_cur);
 		}
-
-		//model.dump("");
-		//System.exit(0);
 
 		return model;
 	}

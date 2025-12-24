@@ -8,6 +8,11 @@ public class PSSAggregateExpression extends PSSExpression {
 		m_list = new ArrayList<PSSExpression>();
 	}
 
+	@Override
+	public boolean isRandomable (PSSInst var) {
+		return false;
+	}
+
 	public void addExpression(PSSExpression item) {
 		m_list.add(item);
 	}
