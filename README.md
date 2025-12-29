@@ -5,12 +5,19 @@
 * GNU Make 3.82
 * OpenJDK Runtime Environment (build 13.0.2+8)
 * javac 13.0.2
+* GraalVM CE 17.0.9 (optional; see [Install GraalVM](#install-graalvm-optional))
 
-# Setup 
+# Setup
 ```
 $ export PSS_HOME=$PWD
-
 ```
+
+# Install GraalVM (optional)
+If you want `make bin` to build a native image, install GraalVM CE 17.0.9 with `native-image`.
+
+* Download GraalVM Community Edition from https://github.com/graalvm/graalvm-ce-builds/releases/tag/jdk-17.0.9
+* Install GraalVM elsewhere and update `GRAALVM_PATH` in `src/Makefile` to the GraalVM `bin` directory.
+* Make sure `native-image` is executable at the configured path.
 
 # Build pssgen.jar
 ```
@@ -19,11 +26,23 @@ $ make
 ```
 The **$PSS_HOME/src/pssgen_vX.X.X.jar** should generated.
 
+# Build native image (optional)
+```
+$ cd $PSS_HOME/src
+$ make bin
+```
+The executable file **$PSS_HOME/src/pssgen_vX.X.X** should generated.
 
 # Run Example
 ```
 $ cd $PSS_HOME/samples
 $ make
+```
+
+# Run Example with native image (optional)
+```
+$ cd $PSS_HOME/samples
+$ make bin
 ```
 
 You should see the following logs.

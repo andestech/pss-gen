@@ -5,13 +5,20 @@ IGNORE_LIST := ./4_6_Numbers/% ./4_7_String_literals ./7_2_Integer_types/% ./7_4
 SUBDIRS := $(filter-out $(IGNORE_LIST), $(shell find . -mindepth 2 -type f -name 'Makefile' | xargs -I {} dirname {} | sort))
 SUMMARY := summary.log
 
-.PHONY: all run-subdirs summary clean
+.PHONY: all run-subdirs summary clean bin run-subdirs-bin
 
 all: run-subdirs summary
+
+bin: run-subdirs-bin summary
 
 run-subdirs:
 	@for i in $(SUBDIRS); do \
 		$(MAKE) -C $$i || exit 1; \
+	done
+
+run-subdirs-bin:
+	@for i in $(SUBDIRS); do \
+		$(MAKE) -C $$i bin || exit 1; \
 	done
 
 $(SUMMARY):

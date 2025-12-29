@@ -21,9 +21,12 @@ endif
 PASS_FUNC = printf "$(GREEN)Test Result: PASS$(RESET)\n"; printf "$(GREEN)PASS$(RESET)\n" > $(RESULT_LOG)
 FAIL_FUNC = printf "$(RED)Test Result: FAIL$(RESET)\n"; printf "$(RED)FAIL$(RESET)\n" > $(RESULT_LOG)
 
-.PHONY: all clean check
+.PHONY: all clean check bin
 
 all: $(OUT) check
+
+bin: PSSGEN := $(PSSGEN_BIN)
+bin: all
 
 # Generic rule for .s from .pss
 %.s: %.pss
