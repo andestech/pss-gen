@@ -215,16 +215,16 @@
 		
 .text
 		main:
-	li	t1, -120567083225333455
+	li	t1, 5912793249386640788
 	li	t0, 1
 	li	t0, 2
-	li	t1, 3
-	add	x2, x16, x20
-	sub	x24, x20, x31
-	add	x30, x22, x26
-	sub	x12, x18, x6
-	add	x13, x27, x22
-	sub	x11, x7, x18
+	li	t0, 3
+	add	x20, x3, x16
+	sub	x3, x31, x15
+	add	x4, x30, x12
+	sub	x7, x12, x3
+	add	x9, x5, x8
+	sub	x1, x6, x21
 	li	a0, 0	
 	lh	t0, 0(a0)	
 	lb	t0, 0(a0)	
