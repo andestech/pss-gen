@@ -19,7 +19,7 @@ PSSGEN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
 jar: guard-PSS_HOME
 	$(ANTLR4) -no-listener -visitor PSS.g4;
 	$(JAVAC) PSS*.java
-	jar cf ${PSSGEN_NAME} *.class
+	jar --create --file ${PSSGEN_NAME} --main-class PSSGenMain -c .
 
 clean:
 	rm $(SRC_PATH)/*.class -f
