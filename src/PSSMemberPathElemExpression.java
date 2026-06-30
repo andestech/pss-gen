@@ -218,7 +218,17 @@ public class PSSMemberPathElemExpression extends PSSExpression {
                 }
                 PSSFunctionInst fi = fm.declInst(ci, actuals);
                 fi.setExecKind(k);
-                inst = fi.eval(parent);
+                try {
+                    inst = fi.eval(parent);
+                } finally {
+                    // Release the function invocation (and its local variables) once it
+                    // returns. declInst() attached fi to the calling component instance ci;
+                    // without this every call accumulates on ci for the whole generation, so
+                    // peak memory grows linearly with the call count. The return value m_res is
+                    // a parentless copy, so it survives. Mirrors PSSExecBlock.eval() cleanup.
+                    if (ci != null)
+                        ci.removeInst(fi);
+                }
             } else {
                 PSSMessage.Error("", "Function " + getUpperHierarchicalID() + " is not defined.");
             }
