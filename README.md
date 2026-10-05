@@ -3,14 +3,21 @@
 
 * bash
 * GNU Make 3.82
-* OpenJDK Runtime Environment (build 13.0.2+8)
-* javac 13.0.2
+* JDK 17 to 27 to build (the range Gradle 9.8.0 supports; tested with 17 and 26; `./gradlew` uses `JAVA_HOME`, otherwise `java` on the `PATH`)
+* Java 13 or later to run (the classes target Java 13)
+* Network access for the first build: it downloads Gradle 9.8.0 from services.gradle.org and ANTLR 4.9.3 from Maven Central. On a host without internet, build once on a connected host and copy `src/pssgen_vX.X.X.jar` and `antlr4/antlr-4.9.3-complete.jar`, or reuse a warm `GRADLE_USER_HOME`.
 * GraalVM CE 17.0.9 (optional; see [Install GraalVM](#install-graalvm-optional))
 
 # Setup
 ```
 $ export PSS_HOME=$PWD
 ```
+`PSS_HOME` is optional: the Makefiles default it to the checkout that contains them; if it is set, it must point at a checkout that contains the file `VERSION`.
+
+Behind a proxy, export `https_proxy` (and `http_proxy`) as `http://host:port`; `make` in `src/` hands host and port to Gradle, because Java ignores these variables.
+Proxy credentials and `no_proxy` are not forwarded; put them in `$GRADLE_USER_HOME/gradle.properties` (`systemProp.https.proxyUser`, `systemProp.http.nonProxyHosts`, ...).
+
+Gradle keeps its distribution and the downloaded ANTLR jar in `GRADLE_USER_HOME` (default `~/.gradle`); export it to use another directory.
 
 # Install GraalVM (optional)
 If you want `make bin` to build a native image, install GraalVM CE 17.0.9 with `native-image`.
@@ -25,6 +32,13 @@ $ cd $PSS_HOME/src
 $ make
 ```
 The **$PSS_HOME/src/pssgen_vX.X.X.jar** should generated.
+
+`make` wraps `./gradlew jar installAntlrJar` (see `build.gradle`): it generates the parser from `PSS.g4`, compiles `src/*.java` into `$PSS_HOME/build`, copies the jar to `src/` and installs the ANTLR jar as **$PSS_HOME/antlr4/antlr-4.9.3-complete.jar**.
+`make clean` removes `$PSS_HOME/build` and needs no Gradle.
+
+* The ANTLR jar and the generated parser are build outputs, not stored in git: run `make` in `src/` before running a regression.
+* Run `make clean` in `samples/` or `issue/` before re-running a regression with a new build: an existing `test.s` is not regenerated.
+* The release name `vX.X.X` comes from the file `VERSION`; bump it at each release, together with the release tag.
 
 # Build native image (optional)
 ```

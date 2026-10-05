@@ -1,0 +1,81 @@
+// PSSGen build: generates the PSS parser with ANTLR, compiles the flat source
+// directory src/ (default package) for Java 13 and packs pssgen_<version>.jar.
+// Usual entry point: "make" in src/, which runs "./gradlew jar installAntlrJar"
+// and copies the jar to src/.
+
+plugins {
+    id 'antlr'      // also applies java-library
+}
+
+// Release name, same text as the release tag (for example v1.2.3). src/Makefile,
+// samples/Make.vars and issue/Make.vars read the same file.
+version = file('VERSION').text.trim()
+if (!(version ==~ /v\d+\.\d+\.\d+\S*/)) {
+    throw new GradleException("VERSION must look like v1.2.3, found '${version}'")
+}
+
+def antlrVersion = '4.9.3'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // The "complete" jar bundles the ANTLR generator and runtime. It is the
+    // generator classpath, the compile classpath and, once installed by
+    // installAntlrJar, the runtime classpath of every documented command line.
+    antlr("org.antlr:antlr4:${antlrVersion}:complete") {
+        transitive = false
+    }
+}
+
+sourceSets {
+    main {
+        antlr {
+            // Replace the default directory: ANTLR runs once per source directory.
+            srcDirs = ['src']
+            // PSS.g4 is the only root grammar; it imports the PSS_*.g4 files.
+            include 'PSS.g4'
+        }
+        java {
+            // Add, do not assign: the antlr plugin already registered its
+            // output directory here.
+            srcDir 'src'
+            // Top-level files only; src/ may hold tool and IDE subdirectories.
+            include '*.java'
+        }
+    }
+}
+
+tasks.named('generateGrammarSource') {
+    arguments += ['-no-listener', '-visitor']
+    // Imported grammars are not compiled on their own, but editing one must
+    // regenerate the parser.
+    inputs.files(fileTree('src') { include 'PSS_*.g4' })
+        .withPropertyName('importedGrammars')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 13
+    options.encoding = 'UTF-8'
+    // Same debug information as plain javac (source file and line numbers).
+    // PSSMessage.Fatal prints the line number of its caller, so 'lines' must
+    // stay; local-variable tables would change helpful NullPointerException texts.
+    options.debugOptions.debugLevel = 'source,lines'
+}
+
+tasks.named('jar', Jar) {
+    archiveFileName = "pssgen_${project.version}.jar"
+    manifest {
+        attributes('Main-Class': 'PSSGenMain')
+    }
+}
+
+// The regression Makefiles, "make bin" and the documented command lines expect
+// the ANTLR jar at antlr4/antlr-<version>-complete.jar.
+tasks.register('installAntlrJar', Copy) {
+    from configurations.antlr
+    into 'antlr4'
+    rename { "antlr-${antlrVersion}-complete.jar" }
+}
