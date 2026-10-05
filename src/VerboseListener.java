@@ -24,7 +24,5 @@ public class VerboseListener extends BaseErrorListener {
 		//Collections.reverse(stack);
 		//System.err.println("rule stack: "+stack);
 		PSSMessage.Error("SYNTAX", this.filename + ':' + line + ':' + charPositionInLine + " : " + msg);
-
-		System.exit(1);
 	}
 }

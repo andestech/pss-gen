@@ -164,23 +164,23 @@ public class PSSGenOpt {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();			
-			System.exit(1);
+			throw PSSException.wrap(e);
 		}
 	}
 
 	void help() {
-		System.out.println("Usage: PSSGenMan [options] file...");
-		System.out.println("	-o <filename>		output file");
-		System.out.println("	-f <filename>		file list");
-		System.out.println("	-y <directory>		lib directory");
-		System.out.println("	-info			enable display `PSS-INFO` message");
-		System.out.println("	-debug			enable display `PSS-DEBUG` message");
-		System.out.println("	-debug_random	enable display randomize sequence");
-		System.out.println("	-set_random_limit <val>		change max. iterations of randomization (default: 2000)");
-		System.out.println("	-root <root_action>");
-		System.out.println("	-seed <seed>");
-		System.exit(1);
+		String nl = System.lineSeparator();
+		throw PSSException.create(null, "usage",
+			"Usage: PSSGenMan [options] file..." + nl
+			+ "	-o <filename>		output file" + nl
+			+ "	-f <filename>		file list" + nl
+			+ "	-y <directory>		lib directory" + nl
+			+ "	-info			enable display `PSS-INFO` message" + nl
+			+ "	-debug			enable display `PSS-DEBUG` message" + nl
+			+ "	-debug_random	enable display randomize sequence" + nl
+			+ "	-set_random_limit <val>		change max. iterations of randomization (default: 2000)" + nl
+			+ "	-root <root_action>" + nl
+			+ "	-seed <seed>" + nl);
 	}
 
 	public ArrayList<String> input_flist() {

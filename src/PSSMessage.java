@@ -32,8 +32,8 @@ public class PSSMessage {
 		String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
 		int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
 
-		System.out.println(className + "." + methodName + "(), Ln" + lineNumber + ": " + msg);
-		System.exit(1);
+		throw PSSException.create(null, msg,
+			className + "." + methodName + "(), Ln" + lineNumber + ": " + msg + System.lineSeparator());
 	}
 	public static void Info(String msg){
 		double elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
@@ -41,8 +41,8 @@ public class PSSMessage {
 	}
 	public static void Error(String ID, String msg){
 		double elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
-		System.out.printf("[%.3fs] PSS-ERROR: [%s] %s\n", elapsedSeconds, ID, msg);
-		System.exit(1);
+		throw PSSException.create(ID, msg,
+			String.format("[%.3fs] PSS-ERROR: [%s] %s\n", elapsedSeconds, ID, msg));
 	}
 	public static void Warning(String msg){
 		double elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000.0;

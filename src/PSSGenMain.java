@@ -7,18 +7,18 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import java.io.IOException;
 import java.util.*;
 
-
 public class PSSGenMain {
 	public static void main(String[] args) throws Exception {
-		PSSGenOpt opt = new PSSGenOpt(args);
+		try {
+			PSSGenOpt opt = new PSSGenOpt(args);
 
-		ArrayList<ParseTree> tree_list = parseFiles(opt.input_flist());
-		PSSModel             model     = createModel(tree_list);
-		PSSActionInst        inst      = traverseRootAction(model, opt.root_action());
+			ArrayList<ParseTree> tree_list = parseFiles(opt.input_flist());
+			PSSModel             model     = createModel(tree_list);
+			PSSActionInst        inst      = traverseRootAction(model, opt.root_action());
 
-		realizeTest(inst, opt.output_file());
+			realizeTest(inst, opt.output_file());
+		} catch (RuntimeException e) { if (!(e instanceof PSSException)) throw e; exit((PSSException) e); }
 	}
-
 	public static ArrayList<ParseTree> parseFiles(ArrayList<String> flist) throws Exception {
 		ArrayList<ParseTree> tree_list = new ArrayList<ParseTree>();
 
@@ -98,5 +98,16 @@ public class PSSGenMain {
 		PSSTest.open(output_file);
 		inst.execute();
 		PSSTest.close();
+	}
+
+	/**
+	 * Prints the cause's stack trace (stderr) or the report (stdout), then exits
+	 * with status 1. main catches RuntimeException, not PSSException, for the
+	 * reason given in PSSException.
+	 */
+	private static void exit(PSSException e) {
+		if (e.getCause() != null) e.getCause().printStackTrace();
+		if (e.getReport() != null) System.out.print(e.getReport());
+		System.exit(1);
 	}
 }
