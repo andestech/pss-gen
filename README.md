@@ -170,6 +170,25 @@ TOTAL=108, PASS=102, FAIL=0, SKIP=6
 --------------------------------------------------------
 ```
 
+# Continuous integration
+The GitHub Actions workflow `.github/workflows/ci.yml` runs on every push, when a pull request is opened, reopened or updated, and on demand (`workflow_dispatch`).
+Its single job runs on `ubuntu-24.04` with Temurin JDK 17.
+It builds the jar with `make -C src`, runs the regressions with `make -C samples` and `make -C issue`, and checks both `summary.log` files with `.github/scripts/check-summary.sh`.
+Its last step runs even after a failed step, unless the run is cancelled, and uploads the `summary.log` files and the per-test `run.log`, `result.log` and `diff.log` that exist as the artifact `regression-logs`.
+
+`make` in `samples/` and `issue/` exits 0 even when tests fail; it records the result of each test it runs (PASS, FAIL, NO RESULT or NO RESULT_LOG) in `summary.log`.
+`.github/scripts/check-summary.sh` turns the two `summary.log` files into the job status: it prints how many tests passed, writes an `::error::` line for every test that is not PASS, and exits 1 if there is such a test or if a `summary.log` is missing or empty.
+The job therefore fails as long as any test in `samples/summary.log` or `issue/summary.log` is not PASS.
+
+In a checkout that has already run the regressions, first run `make clean` in `samples/` and `issue/`.
+To run the build, the regressions and the check locally, from the top of the checkout:
+```
+$ make -C src
+$ make -C samples
+$ make -C issue
+$ bash .github/scripts/check-summary.sh samples issue
+```
+
 ---
 # Limitation
 #### 13.4.1 repeat(count)
