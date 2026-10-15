@@ -3,7 +3,7 @@
 
 * bash
 * GNU Make 3.82
-* JDK 17 to 27 to build (the range Gradle 9.8.0 supports; tested with 17 and 26; `./gradlew` uses `JAVA_HOME`, otherwise `java` on the `PATH`)
+* JDK 17 to 27 to build (the range Gradle 9.8.0 supports; tested with 17 and 26). `make` uses the GraalVM CE JDK when it is installed (see [Install GraalVM](#install-graalvm-optional)), otherwise `JAVA_HOME` or `java` on the `PATH`
 * Java 13 or later to run (the classes target Java 13)
 * Network access for the first build: it downloads Gradle 9.8.0 from services.gradle.org and ANTLR 4.9.3 from Maven Central. On a host without internet, build once on a connected host and copy `src/pssgen_vX.X.X.jar` and `antlr4/antlr-4.9.3-complete.jar`, or reuse a warm `GRADLE_USER_HOME`.
 * GraalVM CE 17.0.9 (optional; see [Install GraalVM](#install-graalvm-optional))
@@ -23,8 +23,11 @@ Gradle keeps its distribution and the downloaded ANTLR jar in `GRADLE_USER_HOME`
 If you want `make bin` to build a native image, install GraalVM CE 17.0.9 with `native-image`.
 
 * Download GraalVM Community Edition from https://github.com/graalvm/graalvm-ce-builds/releases/tag/jdk-17.0.9
-* Install GraalVM elsewhere and update `GRAALVM_PATH` in `src/Makefile` to the GraalVM `bin` directory.
+* Unpack it as `$PSS_HOME/graalvm-community-openjdk-17.0.9+9.1`, or anywhere else and pass `GRAALVM_PATH=<its bin directory>` to every `make`.
 * Make sure `native-image` is executable at the configured path.
+
+When GraalVM is installed, `make` in `src/`, `samples/` and `issue/` also uses its JDK to build the jar and run the regression, so the jar and the native image come from the same JDK (see `jdk.mk`).
+`make PSS_JDK=<jdk dir>` selects another JDK and `make PSS_JDK=` the default one (`JAVA_HOME` or `java` on the `PATH`); both also work as environment variables.
 
 # Build pssgen.jar
 ```

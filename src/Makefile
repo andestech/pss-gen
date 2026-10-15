@@ -1,7 +1,8 @@
 # Thin wrapper over the Gradle build in the repository root (../build.gradle):
 #   make        builds $(PSS_HOME)/src/pssgen_<version>.jar
 #   make bin    additionally builds the native image $(PSS_HOME)/src/pssgen_<version>
-# The first build downloads Gradle and ANTLR. GRADLE_USER_HOME and JAVA_HOME are honoured.
+# The first build downloads Gradle and ANTLR. GRADLE_USER_HOME is honoured; the JDK
+# is chosen in ../jdk.mk (GraalVM CE when installed, else java on PATH or JAVA_HOME).
 SHELL := /bin/bash
 
 # PSS_HOME defaults to the checkout that contains this Makefile.
@@ -15,7 +16,8 @@ $(error Cannot read $(PSS_HOME)/VERSION; check PSS_HOME)
 endif
 PSSGEN_NAME = pssgen_${TAGS}
 
-GRAALVM_PATH = ${PSS_HOME}/graalvm-community-openjdk-17.0.9+9.1/bin
+include $(PSS_HOME)/jdk.mk
+
 ANTLR4_JAR_PATH = ${PSS_HOME}/antlr4/antlr-4.9.3-complete.jar
 PSSGEN_JAR_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}.jar
 PSSGEN_BIN_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}
@@ -23,7 +25,7 @@ PSSGEN_BIN_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}
 SRC_PATH = ${PSS_HOME}/src
 
 NATIVE_IMAGE = $(GRAALVM_PATH)/native-image
-GRUN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) org.antlr.v4.gui.TestRig PSS model -gui -f
+GRUN = $(JAVA) -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) org.antlr.v4.gui.TestRig PSS model -gui -f
 
 # Java ignores http_proxy/https_proxy, so a "scheme://[user@]host:port" proxy
 # from the environment is handed to Gradle as system properties. Credentials
@@ -36,9 +38,9 @@ GRADLE_PROXY_FLAGS := $(strip $(call proxy_flags,https,$(or $(https_proxy),$(HTT
 GRADLE_FLAGS ?= --no-daemon --console=plain
 # gradlew itself downloads Gradle and reads -D options only up to the first
 # non-option argument, so the proxy flags come first and -p <dir> last.
-GRADLE = $(PSS_HOME)/gradlew $(GRADLE_PROXY_FLAGS) $(GRADLE_FLAGS) -p $(PSS_HOME)
+GRADLE = $(if $(PSS_JDK),JAVA_HOME=$(PSS_JDK)) $(PSS_HOME)/gradlew $(GRADLE_PROXY_FLAGS) $(GRADLE_FLAGS) -p $(PSS_HOME)
 
-PSSGEN_JAR = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
+PSSGEN_JAR = $(JAVA) -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
 PSSGEN_BIN = $(PSSGEN_BIN_PATH)
 PSSGEN = $(PSSGEN_JAR)
 
