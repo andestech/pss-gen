@@ -1,5 +1,5 @@
-// PSSGen build: generates the PSS parser with ANTLR, compiles the flat source
-// directory src/ (default package) for Java 13 and packs pssgen_<version>.jar.
+// PSSGen build: generates the PSS parser from src/main/antlr with ANTLR, compiles
+// src/main/java (default package) for Java 13 and packs pssgen_<version>.jar.
 // Usual entry point: "make" in src/, which runs "./gradlew jar installAntlrJar"
 // and copies the jar to src/.
 
@@ -32,17 +32,9 @@ dependencies {
 sourceSets {
     main {
         antlr {
-            // Replace the default directory: ANTLR runs once per source directory.
-            srcDirs = ['src']
-            // PSS.g4 is the only root grammar; it imports the PSS_*.g4 files.
+            // PSS.g4 is the only root grammar; the PSS_*.g4 files next to it
+            // are its imports and are not generated on their own.
             include 'PSS.g4'
-        }
-        java {
-            // Add, do not assign: the antlr plugin already registered its
-            // output directory here.
-            srcDir 'src'
-            // Top-level files only; src/ may hold tool and IDE subdirectories.
-            include '*.java'
         }
     }
 }
@@ -51,7 +43,7 @@ tasks.named('generateGrammarSource') {
     arguments += ['-no-listener', '-visitor']
     // Imported grammars are not compiled on their own, but editing one must
     // regenerate the parser.
-    inputs.files(fileTree('src') { include 'PSS_*.g4' })
+    inputs.files(fileTree('src/main/antlr') { include 'PSS_*.g4' })
         .withPropertyName('importedGrammars')
         .withPathSensitivity(PathSensitivity.RELATIVE)
 }

@@ -2,7 +2,7 @@
 #   make        builds $(PSS_HOME)/src/pssgen_<version>.jar
 #   make bin    additionally builds the native image $(PSS_HOME)/src/pssgen_<version>
 # The first build downloads Gradle and ANTLR. GRADLE_USER_HOME is honoured; the JDK
-# is chosen in ../jdk.mk (GraalVM CE when installed, else java on PATH or JAVA_HOME).
+# is chosen in ../make/jdk.mk (GraalVM CE when installed, else java on PATH or JAVA_HOME).
 SHELL := /bin/bash
 
 # PSS_HOME defaults to the checkout that contains this Makefile.
@@ -16,7 +16,7 @@ $(error Cannot read $(PSS_HOME)/VERSION; check PSS_HOME)
 endif
 PSSGEN_NAME = pssgen_${TAGS}
 
-include $(PSS_HOME)/jdk.mk
+include $(PSS_HOME)/make/jdk.mk
 
 ANTLR4_JAR_PATH = ${PSS_HOME}/antlr4/antlr-4.9.3-complete.jar
 PSSGEN_JAR_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}.jar

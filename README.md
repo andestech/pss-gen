@@ -26,8 +26,16 @@ If you want `make bin` to build a native image, install GraalVM CE 17.0.9 with `
 * Unpack it as `$PSS_HOME/graalvm-community-openjdk-17.0.9+9.1`, or anywhere else and pass `GRAALVM_PATH=<its bin directory>` to every `make`.
 * Make sure `native-image` is executable at the configured path.
 
-When GraalVM is installed, `make` in `src/`, `samples/` and `issue/` also uses its JDK to build the jar and run the regression, so the jar and the native image come from the same JDK (see `jdk.mk`).
+When GraalVM is installed, `make` in `src/`, `samples/` and `issue/` also uses its JDK to build the jar and run the regression, so the jar and the native image come from the same JDK (see `make/jdk.mk`).
 `make PSS_JDK=<jdk dir>` selects another JDK and `make PSS_JDK=` the default one (`JAVA_HOME` or `java` on the `PATH`); both also work as environment variables.
+
+# Source layout
+* `src/main/java`: PSSGen sources (default package, entry point `PSSGenMain`)
+* `src/main/antlr`: the grammar `PSS.g4` and the `PSS_*.g4` files it imports
+* `src/Makefile`: the `make` and `make bin` entry points; the jar and the native image are installed next to it
+* `make/jdk.mk`: JDK selection shared by `src/`, `samples/` and `issue/`
+* `samples/`, `issue/`: regression tests (`test.pss` and the expected `test.s.golden`)
+* `docs/Doxyfile`: API documentation; `mkdir -p build && doxygen docs/Doxyfile`, run from the repository root, writes `build/doxygen`
 
 # Build pssgen.jar
 ```
@@ -36,7 +44,7 @@ $ make
 ```
 The **$PSS_HOME/src/pssgen_vX.X.X.jar** should generated.
 
-`make` wraps `./gradlew jar installAntlrJar` (see `build.gradle`): it generates the parser from `PSS.g4`, compiles `src/*.java` into `$PSS_HOME/build`, copies the jar to `src/` and installs the ANTLR jar as **$PSS_HOME/antlr4/antlr-4.9.3-complete.jar**.
+`make` wraps `./gradlew jar installAntlrJar` (see `build.gradle`): it generates the parser from `src/main/antlr/PSS.g4`, compiles `src/main/java` into `$PSS_HOME/build`, copies the jar to `src/` and installs the ANTLR jar as **$PSS_HOME/antlr4/antlr-4.9.3-complete.jar**.
 `make clean` removes `$PSS_HOME/build` and needs no Gradle.
 
 * The ANTLR jar and the generated parser are build outputs, not stored in git: run `make` in `src/` before running a regression.
