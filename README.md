@@ -23,7 +23,7 @@ Gradle keeps its distribution and the downloaded ANTLR jar in `GRADLE_USER_HOME`
 If you want `make bin` to build a native image, install GraalVM CE 17.0.9 with `native-image`.
 
 * Download GraalVM Community Edition from https://github.com/graalvm/graalvm-ce-builds/releases/tag/jdk-17.0.9
-* Unpack it as `$PSS_HOME/graalvm-community-openjdk-17.0.9+9.1`, or anywhere else and pass `GRAALVM_PATH=<its bin directory>` to every `make`.
+* Unpack it as `$PSS_HOME/tools/graalvm-community-openjdk-17.0.9+9.1`, or anywhere else and pass `GRAALVM_PATH=<its bin directory>` to every `make`.
 * Make sure `native-image` is executable at the configured path.
 
 When GraalVM is installed, `make` in `src/`, `samples/` and `issue/` also uses its JDK to build the jar and run the regression, so the jar and the native image come from the same JDK (see `make/jdk.mk`).
@@ -35,6 +35,7 @@ When GraalVM is installed, `make` in `src/`, `samples/` and `issue/` also uses i
 * `src/Makefile`: the `make` and `make bin` entry points; the jar and the native image are installed next to it
 * `make/jdk.mk`: JDK selection shared by `src/`, `samples/` and `issue/`
 * `samples/`, `issue/`: regression tests (`test.pss` and the expected `test.s.golden`)
+* `tools/`: local toolchains that are not stored in git (GraalVM)
 * `docs/Doxyfile`: API documentation; `mkdir -p build && doxygen docs/Doxyfile`, run from the repository root, writes `build/doxygen`
 
 # Build pssgen.jar

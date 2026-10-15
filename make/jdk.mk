@@ -11,7 +11,7 @@
 #   PSS_JDK=             use java on PATH even when GraalVM is installed
 #   GRAALVM_PATH=<dir>   bin directory of GraalVM (command line)
 
-GRAALVM_PATH = $(PSS_HOME)/graalvm-community-openjdk-17.0.9+9.1/bin
+GRAALVM_PATH = $(PSS_HOME)/tools/graalvm-community-openjdk-17.0.9+9.1/bin
 
 PSS_JDK ?= $(if $(wildcard $(GRAALVM_PATH)/java),$(abspath $(GRAALVM_PATH)/..))
 
