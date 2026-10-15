@@ -29,7 +29,7 @@ public class PSSGenMain {
 				PSSMessage.Info("parse file '" + file + "'");
 				input = CharStreams.fromFileName(file);
 			} catch (IOException e) {
-				PSSMessage.Error("", e.getMessage());
+				PSSMessage.Error("INPUT", "cannot read input file '" + file + "'");
 			}
 			if (null == input) PSSMessage.Error("", "Fail to read '" + file + "'");
 
@@ -76,10 +76,10 @@ public class PSSGenMain {
 
 	public static PSSActionInst traverseRootAction(PSSModel model, String root_action) {
 		PSSMessage.Info("traverseRootAction");
-		PSSActionModel action_model = (PSSActionModel) model.findObject(root_action);
-		if (action_model == null) {
-			PSSMessage.Error("MAIN-0001", "Cannot find root action '" + root_action + "'");
-		}
+		PSSModel root = model.findObject(root_action);
+		if (root == null) PSSMessage.Error("MAIN-0001", "Cannot find root action '" + root_action + "'");
+		if (!(root instanceof PSSActionModel)) PSSMessage.Error("MAIN-0002", "Root '" + root_action + "' is not an action");
+		PSSActionModel action_model = (PSSActionModel) root;
 
 		PSSComponentModel comp_model = action_model.getComp();
 		PSSComponentInst  solution   = comp_model.declInst(true);
@@ -102,12 +102,12 @@ public class PSSGenMain {
 
 	/**
 	 * Prints the cause's stack trace (stderr) or the report (stdout), then exits
-	 * with status 1. main catches RuntimeException, not PSSException, for the
-	 * reason given in PSSException.
+	 * with the exception's status. main catches RuntimeException, not PSSException,
+	 * for the reason given in PSSException.
 	 */
 	private static void exit(PSSException e) {
 		if (e.getCause() != null) e.getCause().printStackTrace();
 		if (e.getReport() != null) System.out.print(e.getReport());
-		System.exit(1);
+		System.exit(e.getStatus());
 	}
 }

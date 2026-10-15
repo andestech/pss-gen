@@ -25,7 +25,7 @@ public class PSSGenOpt {
 		m_seed = 1234;
 
 		if (args.length == 0) {
-			help();
+			help(false);
 		}
 
 		PSSMessage.Initial();
@@ -35,16 +35,16 @@ public class PSSGenOpt {
 			String arg = args[i];
 
 			if (arg.equals("-o")) {
-				m_output_file = args[i+1];
+				m_output_file = value(args, i);
 				i+=2;
 			}
 			else if (arg.equals("-f")) {
-				String flist = args[i+1];
+				String flist = value(args, i);
 				readFlist(flist);
 				i+=2;
 			}
 			else if (arg.equals("-y")) {
-				m_lib_dir.add(args[i+1]);
+				m_lib_dir.add(value(args, i));
 				i+=2;
 			}
 			else if (arg.equals("-info")) {
@@ -61,19 +61,26 @@ public class PSSGenOpt {
 				i++;
 			}
 			else if (arg.equals("-set_random_limit")) {
-				PSSRandom.setRetryLimit(Integer.valueOf(args[i+1]));
+				int limit = intValue(arg, value(args, i));
+				if (limit < 1) {
+					PSSMessage.Error("OPT", "invalid value '" + args[i+1] + "' for option '" + arg + "': expected an integer greater than 0");
+				}
+				PSSRandom.setRetryLimit(limit);
 				i+=2;
 			}
 			else if (arg.equals("-root")) {
-				m_root_action = args[i+1];
+				m_root_action = value(args, i);
 				i+=2;
 			}
 			else if (arg.equals("-help")) {
-				help();
+				help(true);
 			}
 			else if (arg.equals("-seed")) {
-				m_seed = Long.valueOf(args[i+1]);
+				m_seed = longValue(arg, value(args, i));
 				i+=2;
+			}
+			else if (arg.startsWith("-")) {
+				PSSMessage.Error("OPT", "unknown option '" + arg + "'");
 			}
 			else {
 				m_input_flist.add(arg);
@@ -94,6 +101,55 @@ public class PSSGenOpt {
 		}
 	}
 
+	/** The value that follows the option args[i]; an error when the option is the last argument. */
+	private static String value(String[] args, int i) {
+		if (i + 1 >= args.length) {
+			PSSMessage.Error("OPT", "option '" + args[i] + "' needs a value");
+		}
+		return args[i + 1];
+	}
+
+	private static long longValue(String opt, String text) {
+		if (!isDecimal(text, "9223372036854775807", "9223372036854775808")) {
+			PSSMessage.Error("OPT", "invalid value '" + text + "' for option '" + opt + "': expected an integer");
+		}
+		return Long.parseLong(text);
+	}
+
+	private static int intValue(String opt, String text) {
+		if (!isDecimal(text, "2147483647", "2147483648")) {
+			PSSMessage.Error("OPT", "invalid value '" + text + "' for option '" + opt + "': expected an integer");
+		}
+		return Integer.parseInt(text);
+	}
+
+	/**
+	 * True when Long.parseLong / Integer.parseInt accept text: an optional sign and
+	 * decimal digits whose magnitude is at most maxPositive, or maxNegative after a
+	 * '-'. Checked by hand so that a valid value never involves NumberFormatException,
+	 * which a run that succeeds does not otherwise load (see PSSException).
+	 */
+	private static boolean isDecimal(String text, String maxPositive, String maxNegative) {
+		boolean negative = text.startsWith("-");
+		int start = (negative || text.startsWith("+")) ? 1 : 0;
+		StringBuilder digits = new StringBuilder();
+		for (int k = start; k < text.length(); k++) {
+			int d = Character.digit(text.charAt(k), 10);
+			if (d < 0) {
+				return false;
+			}
+			if (digits.length() > 0 || d != 0) {
+				digits.append((char) ('0' + d));
+			}
+		}
+		if (start == text.length()) {
+			return false;
+		}
+		String max = negative ? maxNegative : maxPositive;
+		return digits.length() < max.length()
+			|| (digits.length() == max.length() && digits.toString().compareTo(max) <= 0);
+	}
+
 	private void addLibFile(String lib_dir) {
 		File dir = new File(lib_dir);
 		FileFilter filter = new FileFilter() {
@@ -103,6 +159,9 @@ public class PSSGenOpt {
 			}
 		};
 		File[] files = dir.listFiles(filter);
+		if (files == null) {
+			PSSMessage.Error("OPT", "cannot read library directory '" + lib_dir + "'");
+		}
 		for (int i = 0; i < files.length; i++) {
 			m_input_flist.add(files[i].getAbsolutePath());
 		}
@@ -151,6 +210,9 @@ public class PSSGenOpt {
 
 	public void readFlist(String flist) {
 	        File fh = new File(flist);
+		if (!fh.isFile() || !fh.canRead()) {
+			PSSMessage.Error("FLIST", "cannot read file list '" + flist + "'");
+		}
 
 		try {
 			Scanner scan = new Scanner(fh);
@@ -168,10 +230,11 @@ public class PSSGenOpt {
 		}
 	}
 
-	void help() {
+	/** Ends the run with the usage text: status 0 when -help asked for it, 1 when no argument was given. */
+	void help(boolean requested) {
 		String nl = System.lineSeparator();
-		throw PSSException.create(null, "usage",
-			"Usage: PSSGenMan [options] file..." + nl
+		String usage =
+			"Usage: PSSGenMain [options] file..." + nl
 			+ "	-o <filename>		output file" + nl
 			+ "	-f <filename>		file list" + nl
 			+ "	-y <directory>		lib directory" + nl
@@ -180,7 +243,9 @@ public class PSSGenOpt {
 			+ "	-debug_random	enable display randomize sequence" + nl
 			+ "	-set_random_limit <val>		change max. iterations of randomization (default: 2000)" + nl
 			+ "	-root <root_action>" + nl
-			+ "	-seed <seed>" + nl);
+			+ "	-seed <seed>" + nl
+			+ "	-help			print this text and exit" + nl;
+		throw requested ? PSSException.stop(usage) : PSSException.create(null, "usage", usage);
 	}
 
 	public ArrayList<String> input_flist() {
