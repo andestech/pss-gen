@@ -4,12 +4,10 @@ src/PSS.tokens
 src/PSSLexer.interp
 src/PSSLexer.tokens
 src/*.jar
-samples/**/*.log
-samples/**/test.s
 /.gradle/
 /build/
 /antlr4/antlr-*-complete.jar
 /src/pssgen_v*
-issue/**/*.log
-issue/**/test.s
+tests/**/*.log
+tests/**/test.s
 /tools/graalvm-community-openjdk-*/

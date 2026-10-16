@@ -33,15 +33,13 @@ jobs:
       - name: Build
         run: make -C src
 
-      - name: Regression (samples)
-        run: make -C samples
+      - name: Regression
+        run: make -C tests
 
-      - name: Regression (issue)
-        run: make -C issue
-
-      # "make" exits 0 even when tests fail; this step turns the summaries into the job status.
-      - name: Fail if any test did not pass
-        run: bash .github/scripts/check-summary.sh samples issue
+      # Annotates the tests that did not pass; it also runs when the regression failed.
+      - name: Report test results
+        if: ${{ !cancelled() }}
+        run: bash .github/scripts/check-summary.sh tests/samples tests/issues
 
       - name: Upload regression logs
         if: ${{ !cancelled() }}
@@ -50,11 +48,7 @@ jobs:
           name: regression-logs
           if-no-files-found: warn
           path: |
-            samples/summary.log
-            issue/summary.log
-            samples/**/run.log
-            samples/**/result.log
-            samples/**/diff.log
-            issue/**/run.log
-            issue/**/result.log
-            issue/**/diff.log
+            tests/*/summary.log
+            tests/**/run.log
+            tests/**/result.log
+            tests/**/diff.log

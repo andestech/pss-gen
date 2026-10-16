@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Pass/fail gate for the regression. "make" in samples/ and issue/ exits 0 even
-# when tests fail and records each test's result (PASS, FAIL, NO RESULT or
-# NO RESULT_LOG) in summary.log, so CI needs this check.
-# Usage: check-summary.sh <dir>...        (each <dir> contains summary.log)
+# Reports the results that tests/run-tests.sh wrote to summary.log: the counts per
+# suite, and one "::error::" line (a GitHub annotation) per test that did not pass.
+# Exits 1 if a test failed or a summary.log is missing or empty; SKIP is not a failure.
+# Usage: check-summary.sh <suite dir>...
 set -euo pipefail
 
 if [[ $# -eq 0 ]]; then
-    echo "usage: $0 <dir>..." >&2
+    echo "usage: $0 <suite dir>..." >&2
     exit 2
 fi
 
@@ -14,21 +14,22 @@ rc=0
 for dir in "$@"; do
     log="$dir/summary.log"
     if [[ ! -s "$log" ]]; then
-        echo "::error::$log is missing or empty; the regression did not complete"
+        echo "::error::$log is missing or empty; the suite did not run"
         rc=1
         continue
     fi
-    # Lines look like "./test_x: <ESC>[32mPASS<ESC>[00m"; drop the colour codes.
-    plain=$(sed -e "s/\x1b\[[0-9;]*m//g" "$log")
     total=$(grep -c "" "$log")
-    pass=$(grep -c ": PASS\$" <<<"$plain" || true)
-    echo "$dir: $pass of $total tests passed"
+    pass=$(grep -c ": PASS\$" "$log" || true)
+    skip=$(grep -c ": SKIP\$" "$log" || true)
+    line="$dir: $pass of $total tests passed, $skip skipped"
+    echo "$line"
     if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-        echo "- $dir: $pass of $total tests passed" >>"$GITHUB_STEP_SUMMARY"
+        echo "- $line" >>"$GITHUB_STEP_SUMMARY"
     fi
-    if [[ "$pass" -ne "$total" ]]; then
-        grep -v ": PASS\$" <<<"$plain" | while IFS= read -r line; do
-            echo "::error::$dir: $line"
+    if [[ $((pass + skip)) -ne "$total" ]]; then
+        grep -v -E ": (PASS|SKIP)\$" "$log" | while IFS= read -r test; do
+            reason=$(sed -n 's/^FAIL: //p' "$dir/${test%: *}/result.log" 2>/dev/null || true)
+            echo "::error::$dir: $test${reason:+ ($reason)}"
         done
         rc=1
     fi

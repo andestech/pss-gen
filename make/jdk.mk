@@ -1,5 +1,5 @@
-# JDK that src/Makefile, samples/ and issue/ use to build, test and run PSSGen.
-# Included after PSS_HOME is set.
+# JDK that src/Makefile and tests/Makefile use to build, test and run PSSGen.
+# Included by common.mk after PSS_HOME is set.
 #
 # When GraalVM CE is installed at GRAALVM_PATH, its JDK is the default, so the
 # jar, the regression runs and the native image of "make bin" all come from one

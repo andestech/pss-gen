@@ -5,22 +5,8 @@
 # is chosen in ../make/jdk.mk (GraalVM CE when installed, else java on PATH or JAVA_HOME).
 SHELL := /bin/bash
 
-# PSS_HOME defaults to the checkout that contains this Makefile.
-ifndef PSS_HOME
-PSS_HOME := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))..)
-endif
-
-TAGS := $(strip $(shell cat $(PSS_HOME)/VERSION 2>/dev/null))
-ifeq ($(strip $(TAGS)),)
-$(error Cannot read $(PSS_HOME)/VERSION; check PSS_HOME)
-endif
-PSSGEN_NAME = pssgen_${TAGS}
-
-include $(PSS_HOME)/make/jdk.mk
-
-ANTLR4_JAR_PATH = ${PSS_HOME}/antlr4/antlr-4.9.3-complete.jar
-PSSGEN_JAR_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}.jar
-PSSGEN_BIN_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}
+# PSS_HOME, PSSGEN_NAME, the jar, native image and ANTLR jar paths, and JAVA.
+include $(dir $(lastword $(MAKEFILE_LIST)))../make/common.mk
 
 SRC_PATH = ${PSS_HOME}/src
 

@@ -7,8 +7,8 @@ plugins {
     id 'antlr'      // also applies java-library
 }
 
-// Release name, same text as the release tag (for example v1.2.3). src/Makefile,
-// samples/Make.vars and issue/Make.vars read the same file.
+// Release name, same text as the release tag (for example v1.2.3). make/common.mk
+// reads the same file for src/Makefile and tests/Makefile.
 version = file('VERSION').text.trim()
 if (!(version ==~ /v\d+\.\d+\.\d+\S*/)) {
     throw new GradleException("VERSION must look like v1.2.3, found '${version}'")

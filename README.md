@@ -26,14 +26,14 @@ executable built with GraalVM.
 $ git clone https://github.com/andestech/pss-gen.git
 $ cd pss-gen
 $ make -C src                    # builds src/pssgen_<version>.jar
-$ make -C samples                # runs the sample regression
+$ make -C tests                  # runs the regression tests
 ```
 
 Generate a test from a PSS file:
 
 ```
 $ java -classpath src/pssgen_v2.4.1.jar:antlr4/antlr-4.9.3-complete.jar \
-       PSSGenMain samples/test_hello_world/test.pss -o test.s -root pss_top::root_a
+       PSSGenMain tests/samples/test_hello_world/test.pss -o test.s -root pss_top::root_a
 ```
 
 ## Requirements
@@ -76,7 +76,7 @@ not found, `make bin` prints `Skipping native-image` and builds the jar only.
 
 ### Selecting the JDK
 
-The Makefiles in `src/`, `samples/` and `issue/` choose the JDK in `make/jdk.mk`:
+`src/Makefile` and `tests/Makefile` choose the JDK in `make/jdk.mk`:
 
 1. `PSS_JDK=<jdk directory>` on the command line or in the environment, if given;
 2. otherwise GraalVM, when it is installed at `tools/graalvm-community-openjdk-17.0.9+9.1`
@@ -173,47 +173,63 @@ text the command line would print and `getStatus()` its exit status.
 
 ## Testing
 
-The regression tests live in `samples/` (language features) and `issue/` (reproductions
-of reported issues). Each test is a directory with
-
-- a `Makefile` that runs PSSGen on `test.pss` (or on the file list `pss.f`);
-- `test.s.golden`, the expected output. A test without a golden file passes when PSSGen
-  writes no output file.
-
-Build the jar first, then run a suite from a clean state:
+The regression tests live in `tests/`, in two suites: `samples/` (language features) and
+`issues/` (reproductions of reported issues). A test is a directory that holds
+`test.pss` and, for a test that must produce output, the expected output
+`test.s.golden`.
 
 ```
-$ make -C src
-$ make -C samples clean && make -C samples
-$ make -C issue clean && make -C issue
+$ make -C src                                 # build the jar first
+$ make -C tests                               # every suite
+$ make -C tests SUITES=issues                 # one suite
+$ make -C tests TESTS=samples/test_hello_world   # one test
+$ make -C tests bin                           # with the native executable (make -C src bin)
+$ make -C tests clean                         # remove the test outputs
 ```
 
-`make bin` instead of `make` runs the native executable. Each suite prints one line per
-test and writes them to `summary.log`, followed by a total:
+`tests/run-tests.sh` runs PSSGen in the test directory as
+`-info test.pss -o test.s -root pss_top::root_a` and writes its output to `run.log`. The
+test passes when
+
+- the exit status is 0 for a test with `test.s.golden`, or 1 for a test without one;
+- `test.s` equals `test.s.golden` (the differences go to `diff.log`), or no `test.s` is
+  written when there is no golden file.
+
+A test can change this in an optional `test.cfg`:
+
+```
+# PSSGen arguments, split at white space
+args   = -info test.pss -o test.s lib.pss -root pss_top::root_a -seed 7
+# expected exit status
+status = 1
+# text that run.log must contain; may be repeated
+expect = PSS-ERROR: [OPT] option '-o' needs a value
+# do not run the test, with the reason
+skip   = PSSGen exits with an error
+```
+
+Each suite prints one line per test, writes them to `<suite>/summary.log` and ends with
+the totals:
 
 ```
 ./test_hello_world: PASS
 ...
-TOTAL=<n>, PASS=<n>, FAIL=<n>, SKIP=<n>
+samples: TOTAL=<n>, PASS=<n>, FAIL=<n>, SKIP=<n>
 ```
 
-Tests listed in `IGNORE_LIST` in `samples/Makefile` or `issue/Makefile` are skipped. A
-suite's `make` exits 0 even when a test fails; use the check script to get a status:
+`make -C tests` fails when a test fails. `.github/scripts/check-summary.sh tests/samples
+tests/issues` prints the counts and one line per test that did not pass.
 
-```
-$ bash .github/scripts/check-summary.sh samples issue
-```
-
-It exits 1 if a test is not PASS or a `summary.log` is missing. Run `make clean` before
-running a suite again: an existing `test.s` is not regenerated.
+To add a test, create a directory in a suite with `test.pss`, check the output of
+`make -C tests TESTS=<suite>/<test>`, and save the reviewed `test.s` as `test.s.golden`.
 
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on every push, on pull requests and on demand. Its job
-runs on `ubuntu-24.04` with Temurin JDK 17: it builds the jar, runs both suites, fails
-when `check-summary.sh` reports a test that is not PASS, and uploads `summary.log` and the
-per-test `run.log`, `result.log` and `diff.log` as the artifact `regression-logs`, also
-after a failure.
+runs on `ubuntu-24.04` with Temurin JDK 17: it builds the jar, runs `make -C tests`,
+annotates the tests that did not pass with `check-summary.sh`, and uploads the
+`summary.log` files and the per-test `run.log`, `result.log` and `diff.log` as the
+artifact `regression-logs`, also after a failure.
 
 ## Project layout
 
@@ -222,8 +238,8 @@ after a failure.
 | `src/main/java/` | PSSGen sources (default package; entry point `PSSGenMain`) |
 | `src/main/antlr/` | Grammar: `PSS.g4` and the `PSS_*.g4` files it imports |
 | `src/Makefile` | `make` and `make bin`; the jar and the native executable are installed next to it |
-| `make/jdk.mk` | JDK selection shared by `src/`, `samples/` and `issue/` |
-| `samples/`, `issue/` | Regression tests |
+| `make/common.mk`, `make/jdk.mk` | Settings shared by `src/Makefile` and `tests/Makefile`: paths, version, JDK |
+| `tests/` | Regression tests (`samples/`, `issues/`) and their runner `run-tests.sh` |
 | `antlr4/` | License of ANTLR; `make -C src` installs the ANTLR jar here |
 | `docs/Doxyfile` | API documentation: `mkdir -p build && doxygen docs/Doxyfile` writes `build/doxygen/` |
 | `build.gradle`, `settings.gradle`, `gradlew`, `gradle/` | Gradle build and wrapper |
@@ -234,7 +250,7 @@ after a failure.
 ## Releasing
 
 1. Set the new version, for example `v2.4.2`, in `VERSION`.
-2. Build and test: `make -C src bin`, then both suites with `make` and `make bin`.
+2. Build and test: `make -C src bin`, `make -C tests` and `make -C tests bin`.
 3. Commit, tag the commit with the same version, and publish
    `src/pssgen_<version>.jar` and `src/pssgen_<version>`.
 
