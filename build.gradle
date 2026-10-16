@@ -62,7 +62,7 @@ tasks.withType(JavaCompile).configureEach {
 tasks.named('jar', Jar) {
     archiveFileName = "pssgen_${project.version}.jar"
     manifest {
-        attributes('Main-Class': 'pssgen.PSSGenMain')
+        attributes('Main-Class': 'pssgen.cli.PSSGenMain')
     }
 }
 

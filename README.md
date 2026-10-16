@@ -167,8 +167,8 @@ After an error, the output file may be missing or incomplete.
 
 ### Using PSSGen as a library
 
-`pssgen.PSSGenMain` exposes the stages `parseFiles`, `createModel`, `traverseRootAction`
-and `realizeTest`. A failure inside them throws `pssgen.PSSException` (a
+`pssgen.cli.PSSGenMain` exposes the stages `parseFiles`, `createModel`, `traverseRootAction`
+and `realizeTest`. A failure inside them throws `pssgen.util.PSSException` (a
 `RuntimeException`) instead of ending the JVM: `getID()` is the error ID, `getMessage()`
 the message, `getReport()` the text the command line would print and `getStatus()` its
 exit status.
@@ -237,7 +237,7 @@ artifact `regression-logs`, also after a failure.
 
 | Path | Content |
 |---|---|
-| `src/main/java/pssgen/` | PSSGen sources, package `pssgen`; entry point `pssgen.PSSGenMain` |
+| `src/main/java/pssgen/` | PSSGen sources, one directory per package (see below) |
 | `src/main/java/PSSGenMain.java` | Launcher that keeps the command name `PSSGenMain` |
 | `src/main/antlr/` | Grammar: `PSS.g4` and the `PSS_*.g4` files it imports |
 | `src/Makefile` | `make` and `make bin`; the jar and the native executable are installed next to it |
@@ -249,6 +249,22 @@ artifact `regression-logs`, also after a failure.
 | `.github/` | CI workflow, its check script and the issue templates |
 | `tools/` | Local toolchains such as GraalVM; not stored in git |
 | `build/` | Build output; not stored in git |
+
+PSSGen packages, in pipeline order:
+
+| Package | Content |
+|---|---|
+| `pssgen.cli` | Entry point `PSSGenMain` and the command-line options `PSSGenOpt` |
+| `pssgen.parser` | Lexer, parser and visitor interfaces generated from `PSS.g4` (in `build/` only) |
+| `pssgen.frontend` | `PSSGenVisitor`, which turns parse trees into the model, and the syntax-error listener |
+| `pssgen.model` | Type model: packages, components, actions, structs, data types, functions |
+| `pssgen.activity` | Activities, traversals and action inference |
+| `pssgen.inst` | Instances created when the root action is traversed, and the collection interfaces |
+| `pssgen.expr` | Expressions |
+| `pssgen.value` | Values that expressions evaluate to, and number literals |
+| `pssgen.solver` | Constraints, domains and the solver |
+| `pssgen.proc` | Procedural statements, exec blocks and target code |
+| `pssgen.util` | Messages, `PSSException`, the random generator and the output file |
 
 ## Releasing
 
