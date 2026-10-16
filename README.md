@@ -58,7 +58,8 @@ $ make -C src
 ```
 
 `make` runs `./gradlew jar installAntlrJar` (see `build.gradle`). It generates the parser
-from `src/main/antlr/PSS.g4`, compiles `src/main/java` into `build/`, and installs
+(package `pssgen.parser`) from `src/main/antlr/PSS.g4`, compiles `src/main/java` into
+`build/`, and installs
 
 - `src/pssgen_<version>.jar`: PSSGen, without its dependencies;
 - `antlr4/antlr-4.9.3-complete.jar`: the ANTLR runtime that the jar needs on the classpath.
@@ -166,10 +167,11 @@ After an error, the output file may be missing or incomplete.
 
 ### Using PSSGen as a library
 
-`PSSGenMain` exposes the stages `parseFiles`, `createModel`, `traverseRootAction` and
-`realizeTest`. A failure inside them throws `PSSException` (a `RuntimeException`) instead
-of ending the JVM: `getID()` is the error ID, `getMessage()` the message, `getReport()` the
-text the command line would print and `getStatus()` its exit status.
+`pssgen.PSSGenMain` exposes the stages `parseFiles`, `createModel`, `traverseRootAction`
+and `realizeTest`. A failure inside them throws `pssgen.PSSException` (a
+`RuntimeException`) instead of ending the JVM: `getID()` is the error ID, `getMessage()`
+the message, `getReport()` the text the command line would print and `getStatus()` its
+exit status.
 
 ## Testing
 
@@ -235,7 +237,8 @@ artifact `regression-logs`, also after a failure.
 
 | Path | Content |
 |---|---|
-| `src/main/java/` | PSSGen sources (default package; entry point `PSSGenMain`) |
+| `src/main/java/pssgen/` | PSSGen sources, package `pssgen`; entry point `pssgen.PSSGenMain` |
+| `src/main/java/PSSGenMain.java` | Launcher that keeps the command name `PSSGenMain` |
 | `src/main/antlr/` | Grammar: `PSS.g4` and the `PSS_*.g4` files it imports |
 | `src/Makefile` | `make` and `make bin`; the jar and the native executable are installed next to it |
 | `make/common.mk`, `make/jdk.mk` | Settings shared by `src/Makefile` and `tests/Makefile`: paths, version, JDK |

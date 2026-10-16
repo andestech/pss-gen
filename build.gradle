@@ -1,5 +1,5 @@
-// PSSGen build: generates the PSS parser from src/main/antlr with ANTLR, compiles
-// src/main/java (default package) for Java 13 and packs pssgen_<version>.jar.
+// PSSGen build: generates the PSS parser (package pssgen.parser) from src/main/antlr
+// with ANTLR, compiles src/main/java for Java 13 and packs pssgen_<version>.jar.
 // Usual entry point: "make" in src/, which runs "./gradlew jar installAntlrJar"
 // and copies the jar to src/.
 
@@ -40,6 +40,8 @@ sourceSets {
 }
 
 tasks.named('generateGrammarSource') {
+    // Also selects the output directory pssgen/parser/ under the generated sources.
+    packageName = 'pssgen.parser'
     arguments += ['-no-listener', '-visitor']
     // Imported grammars are not compiled on their own, but editing one must
     // regenerate the parser.
@@ -60,7 +62,7 @@ tasks.withType(JavaCompile).configureEach {
 tasks.named('jar', Jar) {
     archiveFileName = "pssgen_${project.version}.jar"
     manifest {
-        attributes('Main-Class': 'PSSGenMain')
+        attributes('Main-Class': 'pssgen.PSSGenMain')
     }
 }
 
