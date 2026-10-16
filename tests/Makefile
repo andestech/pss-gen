@@ -11,7 +11,7 @@ TESTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 include $(TESTS_DIR)/../make/common.mk
 
-SUITES ?= samples issues
+SUITES ?= samples issues cli
 TESTS  ?= $(SUITES)
 
 RUN_TESTS = $(TESTS_DIR)/run-tests.sh
