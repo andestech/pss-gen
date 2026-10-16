@@ -130,8 +130,7 @@ public class PSSGenOpt {
 	/**
 	 * True when Long.parseLong / Integer.parseInt accept text: an optional sign and
 	 * decimal digits whose magnitude is at most maxPositive, or maxNegative after a
-	 * '-'. Checked by hand so that a valid value never involves NumberFormatException,
-	 * which a run that succeeds does not otherwise load (see PSSException).
+	 * '-'.
 	 */
 	private static boolean isDecimal(String text, String maxPositive, String maxNegative) {
 		boolean negative = text.startsWith("-");

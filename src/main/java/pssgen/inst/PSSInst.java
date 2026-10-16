@@ -115,10 +115,11 @@ public class PSSInst {
 	/**
 	 * Returns the descendants of this instance.
 	 *
-	 * @return the descendants of this instance
+	 * @return the descendants of this instance: the children in declaration
+	 *         order, then the descendants of each child in the same order
 	 */
 	public Set<PSSInst> getDescendants() {
-		Set<PSSInst> res = new HashSet<PSSInst>();
+		Set<PSSInst> res = new LinkedHashSet<PSSInst>();
 		res.addAll(m_insts);
 		for (PSSInst child : m_insts) {
 			res.addAll(child.getDescendants());

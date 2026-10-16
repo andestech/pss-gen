@@ -1,7 +1,7 @@
 package pssgen.solver;
 
 import java.util.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import pssgen.expr.PSSEqualExpression;
 import pssgen.inst.PSSFlowRefInst;
@@ -12,12 +12,15 @@ import pssgen.util.PSSRandom;
 
 public class PSSSolver {
 	PSSInst m_inst;
-	public HashMap<PSSInst, PSSConstraintList> m_inst_list;
-	public HashMap<PSSInst, PSSConstraintList> m_default_constraint_list;
+	// PSSInst keys hash by identity. Insertion order keeps the order of the
+	// -info domain lines and the variable that OVERCONSTRAINT names the same
+	// on every JVM and every run.
+	public LinkedHashMap<PSSInst, PSSConstraintList> m_inst_list;
+	public LinkedHashMap<PSSInst, PSSConstraintList> m_default_constraint_list;
 
 	public PSSSolver(PSSInst inst) {
-		m_inst_list = new HashMap<PSSInst, PSSConstraintList>();
-		m_default_constraint_list = new HashMap<PSSInst, PSSConstraintList>();
+		m_inst_list = new LinkedHashMap<PSSInst, PSSConstraintList>();
+		m_default_constraint_list = new LinkedHashMap<PSSInst, PSSConstraintList>();
 		m_inst = inst;
 	}
 
@@ -108,7 +111,7 @@ public class PSSSolver {
 
 		}
 
-		HashMap<PSSInst, PSSDomain> map = result.getMap();
+		LinkedHashMap<PSSInst, PSSDomain> map = result.getMap();
 		for (PSSInst var : map.keySet()) {
 			PSSDomain domain = map.get(var);
 			var.assignDomain(domain);

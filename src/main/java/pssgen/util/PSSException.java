@@ -5,13 +5,6 @@ package pssgen.util;
  * is the only place that reports it and ends the process, with getStatus() as the
  * exit status, so the rest of the code can be driven in-process without the JVM
  * exiting.
- *
- * A run that succeeds must not load this class: each class read from the jar
- * uses up identity hash codes, and PSSSolver.reduceDomain walks a HashMap keyed
- * by identity (the -info domain lines and the variable an OVERCONSTRAINT error
- * names follow its order). PSSGen code therefore gets it only from create() and
- * wrap(), typed RuntimeException, and never catches it by name or uses a value
- * typed PSSException where a wider type is expected (the verifier would load it).
  */
 public class PSSException extends RuntimeException {
 

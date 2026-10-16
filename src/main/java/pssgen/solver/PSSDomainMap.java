@@ -1,19 +1,20 @@
 package pssgen.solver;
 
 import java.util.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import pssgen.inst.PSSInst;
 import pssgen.util.PSSMessage;
 
 public class PSSDomainMap {
-	public HashMap<PSSInst, PSSDomain> m_map;	
+	/** insertion-ordered, because PSSInst keys hash by identity (see PSSSolver) */
+	public LinkedHashMap<PSSInst, PSSDomain> m_map;
 
 	public PSSDomainMap() {
-		m_map = new HashMap<PSSInst, PSSDomain>();
+		m_map = new LinkedHashMap<PSSInst, PSSDomain>();
 	}
 
-	public HashMap<PSSInst, PSSDomain> getMap() {
+	public LinkedHashMap<PSSInst, PSSDomain> getMap() {
 		return m_map;
 	}
 
@@ -26,7 +27,7 @@ public class PSSDomainMap {
 		 */
 		PSSDomainMap result = new PSSDomainMap();
 
-		HashMap<PSSInst, PSSDomain> dom_map = dom.getMap();
+		LinkedHashMap<PSSInst, PSSDomain> dom_map = dom.getMap();
 
 		for (PSSInst var0: m_map.keySet()) {
 			PSSDomain dom0 = m_map.get(var0);
@@ -60,7 +61,7 @@ public class PSSDomainMap {
 		 */
 		PSSDomainMap result = new PSSDomainMap();
 
-		HashMap<PSSInst , PSSDomain> dom_map = dom.getMap();
+		LinkedHashMap<PSSInst , PSSDomain> dom_map = dom.getMap();
 
 		for (PSSInst var0: m_map.keySet()) {
 			PSSDomain dom0 = m_map.get(var0);
