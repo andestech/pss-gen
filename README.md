@@ -228,10 +228,16 @@ To add a test, create a directory in a suite with `test.pss`, check the output o
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on every push, on pull requests and on demand. Its job
-runs on `ubuntu-24.04` with Temurin JDK 17: it builds the jar, runs `make -C tests`,
+runs on `ubuntu-24.04` with Temurin JDK 17: it checks that `gradle/wrapper/gradle-wrapper.jar`
+is the wrapper of an official Gradle release, builds the jar, runs `make -C tests`,
 annotates the tests that did not pass with `check-summary.sh`, and uploads the
 `summary.log` files and the per-test `run.log`, `result.log` and `diff.log` as the
 artifact `regression-logs`, also after a failure.
+
+The actions it uses are pinned to full commit SHAs, with the release in a comment. To
+update one, take the commit of the new release tag from the action's own repository, for
+example `git ls-remote https://github.com/actions/checkout 'refs/tags/v7*'` (for an
+annotated tag, the `^{}` line), and replace both the SHA and the comment.
 
 ## Project layout
 
