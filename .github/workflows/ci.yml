@@ -54,6 +54,8 @@ jobs:
         with:
           name: regression-logs
           if-no-files-found: warn
+          # An existing artifact of the same name is replaced, not an error.
+          overwrite: true
           path: |
             tests/*/summary.log
             tests/**/run.log
