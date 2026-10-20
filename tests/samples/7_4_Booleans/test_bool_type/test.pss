@@ -1,0 +1,14 @@
+// bool fields declared after a field of another type are bool, not that type:
+// a bool is printed as true or false and a rand bool takes only those values.
+component pss_top {
+	action root_a {
+		bit [4] nibble = 9;
+		bool flag = true;
+		rand bool pick;
+		rand bool forced;
+		constraint {
+			forced == false;
+		}
+		exec body ASM = """nibble = {{nibble}}, flag = {{flag}}, pick = {{pick}}, forced = {{forced}}""";
+	}
+}

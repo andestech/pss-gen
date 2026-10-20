@@ -564,6 +564,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			ret = visit(ctx.integer_type());
 		} else if (ctx.string_type() != null) {
 			ret = visit(ctx.string_type());
+		} else if (ctx.bool_type() != null) {
+			ret = visit(ctx.bool_type());
 		} else if (ctx.enum_type() != null) {
 			if (ctx.enum_type().domain_open_range_list() != null) {
 				PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.enum_type().getText() + "'");

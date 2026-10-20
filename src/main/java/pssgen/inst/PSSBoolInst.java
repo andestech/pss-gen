@@ -1,5 +1,7 @@
 package pssgen.inst;
 
+import pssgen.solver.PSSDomain;
+import pssgen.solver.PSSIntDomain;
 import pssgen.util.PSSMessage;
 import pssgen.util.PSSRandom;
 import pssgen.value.PSSBoolVal;
@@ -8,8 +10,27 @@ import pssgen.value.PSSVal;
 public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
 	public boolean m_val;
 
+	/** solution domain over 0 (false) and 1 (true), as for a bit field */
+	PSSIntDomain m_domain;
+
 	public PSSBoolInst(String id, boolean rand) {
 		super(id, "bool", rand);
+		m_domain = getInitDomain();
+	}
+
+	public PSSIntDomain getInitDomain() {
+		return new PSSIntDomain(1, false);
+	}
+
+	public void assignDomain(PSSDomain domain) {
+		m_domain = (PSSIntDomain) domain;
+		if (m_domain.isEmpty()) {
+			PSSMessage.Error("OVERCONSTRAINT", "'" + getHierarchyId() + "' is over-constrained");
+		}
+	}
+
+	public boolean validate() {
+		return m_domain.InRange(toVal()).toBool();
 	}
 
 	public PSSVal toVal() {
@@ -18,8 +39,11 @@ public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
 
 	public void randomize() {
 		if (m_rand) {
-			int rand_int = PSSRandom.nextInt(0, 1);
-			m_val = (rand_int == 1);
+			int retry = 0;
+			do {
+				PSSRandom.limitRetry(retry++);
+				m_val = m_domain.random().toBigInteger().signum() != 0;
+			} while (!validate());
 			m_initialized = true;
 		}
 	}
