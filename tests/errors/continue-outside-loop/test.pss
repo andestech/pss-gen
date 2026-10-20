@@ -1,0 +1,15 @@
+// A continue in a function body that is not inside a loop statement, called
+// from a loop: it must not continue the caller's loop.
+component pss_top {
+	function void skip_one() {
+		continue;
+	}
+
+	action root_a {
+		exec pre_solve {
+			repeat (2) {
+				skip_one();
+			}
+		}
+	}
+}

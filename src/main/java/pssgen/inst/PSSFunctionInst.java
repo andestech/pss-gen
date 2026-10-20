@@ -12,6 +12,8 @@ import pssgen.model.PSSFunctionReturnType;
 import pssgen.model.PSSModel;
 import pssgen.model.PSSRefModel;
 import pssgen.model.PSSTypeCategory;
+import pssgen.proc.PSSBreakException;
+import pssgen.proc.PSSContinueException;
 import pssgen.proc.PSSExecKind;
 import pssgen.proc.PSSProcStmt;
 import pssgen.proc.PSSReturnException;
@@ -157,6 +159,10 @@ public class PSSFunctionInst extends PSSInst implements PSSIScope {
         } catch (PSSReturnException e) {
             if (m_res != null)
                 m_res.assign(e.getReturnValue());
+        } catch (PSSBreakException e) {
+            PSSProcStmt.outsideLoop("break");
+        } catch (PSSContinueException e) {
+            PSSProcStmt.outsideLoop("continue");
         }
 
         return m_res;

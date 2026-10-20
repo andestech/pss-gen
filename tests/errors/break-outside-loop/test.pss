@@ -1,0 +1,8 @@
+// A break that is not inside a repeat, repeat-while or foreach statement.
+component pss_top {
+	action root_a {
+		exec pre_solve {
+			break;
+		}
+	}
+}

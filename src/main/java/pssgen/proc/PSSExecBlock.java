@@ -42,6 +42,10 @@ public class PSSExecBlock extends PSSModel {
 				stmt.eval(block_inst, getKind());
 			}
 		} catch (PSSReturnException e) {
+		} catch (PSSBreakException e) {
+			PSSProcStmt.outsideLoop("break");
+		} catch (PSSContinueException e) {
+			PSSProcStmt.outsideLoop("continue");
 		}
 		inst.removeInst(block_inst);
 	}
