@@ -47,7 +47,10 @@ $ java -classpath src/pssgen_v2.4.1.jar:antlr4/antlr-4.9.3-complete.jar \
 
 Gradle is not installed separately: the wrapper `./gradlew` downloads the pinned version,
 verifies its checksum and keeps it in the Gradle user home (`~/.gradle` unless
-`GRADLE_USER_HOME` is set), together with the ANTLR jar.
+`GRADLE_USER_HOME` is set), together with the ANTLR jar. Every downloaded dependency is
+checked against the sha256 in `gradle/verification-metadata.xml`; after changing a
+dependency, regenerate the file with `./gradlew --write-verification-metadata sha256 jar`
+and compare the new checksums with the ones the repository publishes.
 
 ## Building
 

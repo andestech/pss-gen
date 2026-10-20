@@ -11,7 +11,7 @@ include $(dir $(lastword $(MAKEFILE_LIST)))../make/common.mk
 SRC_PATH = ${PSS_HOME}/src
 
 NATIVE_IMAGE = $(GRAALVM_PATH)/native-image
-GRUN = $(JAVA) -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) org.antlr.v4.gui.TestRig pssgen.parser.PSS model -gui -f
+GRUN = $(JAVA) -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) org.antlr.v4.gui.TestRig pssgen.parser.PSS model -gui
 
 # Java ignores http_proxy/https_proxy, so a "scheme://[user@]host:port" proxy
 # from the environment is handed to Gradle as system properties. Credentials

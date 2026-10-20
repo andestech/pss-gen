@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<verification-metadata xmlns="https://schema.gradle.org/dependency-verification" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://schema.gradle.org/dependency-verification https://schema.gradle.org/dependency-verification/dependency-verification-1.4.xsd">
+   <configuration>
+      <verify-metadata>true</verify-metadata>
+      <verify-signatures>false</verify-signatures>
+   </configuration>
+   <components>
+      <component group="org.antlr" name="antlr4" version="4.9.3">
+         <artifact name="antlr4-4.9.3-complete.jar">
+            <sha256 value="afcd40946d3de4d81e28d7c88d467289e0587285d27adb172aecc5494a17df36" origin="Maven Central, sha1 equal to the published .sha1"/>
+         </artifact>
+         <artifact name="antlr4-4.9.3.pom">
+            <sha256 value="b2a17f1e183c7fff8efa998d1036de956f41ab9fd31ef363460dc0917739f161" origin="Maven Central, sha1 equal to the published .sha1"/>
+         </artifact>
+      </component>
+      <component group="org.antlr" name="antlr4-master" version="4.9.3">
+         <artifact name="antlr4-master-4.9.3.pom">
+            <sha256 value="565cc054d3badf50ca0a0717dae311268a2d6709fdddc90ac4a43c62d01935b9" origin="Maven Central, sha1 equal to the published .sha1"/>
+         </artifact>
+      </component>
+      <component group="org.sonatype.oss" name="oss-parent" version="9">
+         <artifact name="oss-parent-9.pom">
+            <sha256 value="fb40265f982548212ff82e362e59732b2187ec6f0d80182885c14ef1f982827a" origin="Maven Central, sha1 equal to the published .sha1"/>
+         </artifact>
+      </component>
+   </components>
+</verification-metadata>
