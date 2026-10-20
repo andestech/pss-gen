@@ -1,0 +1,6 @@
+// Text after the last complete declaration of the file.
+component pss_top {
+	action root_a {
+	}
+}
+) ) )

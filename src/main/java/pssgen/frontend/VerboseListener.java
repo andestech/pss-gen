@@ -7,14 +7,27 @@ import java.util.*;
 import pssgen.util.PSSMessage;
 
 public class VerboseListener extends BaseErrorListener {
-	static String filename;
+	private final String filename;
+
+	/** true: report a PSS-WARNING and let the recognizer continue */
+	private final boolean warn;
 
 	public VerboseListener() {
-		this.filename = "<RefPath>";
+		this("<RefPath>");
 	}
 
 	public VerboseListener(String filename) {
+		this(filename, false);
+	}
+
+	private VerboseListener(String filename, boolean warn) {
 		this.filename = filename;
+		this.warn = warn;
+	}
+
+	/** A listener that reports each error as a PSS-WARNING instead of a PSS-ERROR. */
+	public static VerboseListener warning(String filename) {
+		return new VerboseListener(filename, true);
 	}
 
 	@Override
@@ -27,6 +40,11 @@ public class VerboseListener extends BaseErrorListener {
 		//List<String> stack = ((Parser)recognizer).getRuleInvocationStack();
 		//Collections.reverse(stack);
 		//System.err.println("rule stack: "+stack);
-		PSSMessage.Error("SYNTAX", this.filename + ':' + line + ':' + charPositionInLine + " : " + msg);
+		String where = this.filename + ':' + line + ':' + charPositionInLine + " : " + msg;
+		if (warn) {
+			PSSMessage.Warning("[SYNTAX] " + where + "; the character is ignored");
+		} else {
+			PSSMessage.Error("SYNTAX", where);
+		}
 	}
 }

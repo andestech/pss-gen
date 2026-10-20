@@ -1,0 +1,7 @@
+// A template reference with text after the field name, which is ignored.
+component pss_top {
+	action root_a {
+		int a = 1;
+		exec body ASM = """a = {{a]}}""";
+	}
+}

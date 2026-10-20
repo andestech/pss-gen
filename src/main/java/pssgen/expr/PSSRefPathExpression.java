@@ -81,12 +81,19 @@ public class PSSRefPathExpression extends PSSExpression {
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			PSSParser parser = new PSSParser(tokens);
 
+			lexer.removeErrorListeners();
+			lexer.addErrorListener(VerboseListener.warning("<RefPath>"));
 			parser.removeErrorListeners();
 			parser.addErrorListener(new VerboseListener());
 
+			ParseTree ref_path = parser.ref_path();
+			if (tokens.LA(1) != Token.EOF) {
+				PSSMessage.Warning("[SYNTAX] <RefPath> : text after the reference is ignored, from '"
+					+ tokens.LT(1).getText() + "' in '" + str + "'");
+			}
 			PSSGenVisitor eval = new PSSGenVisitor();
 			eval.root = root;
-			eval.visit(parser.ref_path());
+			eval.visit(ref_path);
 			res = (PSSRefPathExpression) eval.exp_stack.pop();
 		} catch (IOException e) {
 			PSSMessage.Fatal("Failed parsing " + str);

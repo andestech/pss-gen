@@ -31,7 +31,7 @@ public class PSSGenMain {
 			PSSActionInst        inst      = traverseRootAction(model, opt.root_action());
 
 			realizeTest(inst, opt.output_file());
-		} catch (RuntimeException e) { if (!(e instanceof PSSException)) throw e; exit((PSSException) e); }
+		} catch (PSSException e) { exit(e); }
 	}
 	public static ArrayList<ParseTree> parseFiles(ArrayList<String> flist) throws Exception {
 		ArrayList<ParseTree> tree_list = new ArrayList<ParseTree>();
@@ -51,6 +51,10 @@ public class PSSGenMain {
 			CommonTokenStream tokens = new CommonTokenStream (lexer );
 			PSSParser         parser = new PSSParser         (tokens);
 
+			// A character the lexer cannot match is dropped with a PSS-WARNING.
+			lexer.removeErrorListeners();
+			lexer.addErrorListener(VerboseListener.warning(file));
+
 			// Enhance performance by starting with SLL then failing to combined SLL/LL (Two-Stage Parsing)
 			// See https://www.antlr.org/api/Java/org/antlr/v4/runtime/atn/ParserATNSimulator.html
 			try {
@@ -64,8 +68,18 @@ public class PSSGenMain {
 				parser.reset();
 				parser.removeErrorListeners();
 				parser.addErrorListener(new VerboseListener(file));
+				// The default strategy reports every error to the listener; BailErrorStrategy
+				// would end a token mismatch with an unreported ParseCancellationException.
+				parser.setErrorHandler(new DefaultErrorStrategy());
 				parser.getInterpreter().setPredictionMode(PredictionMode.LL);
 				tree = parser.model();
+			}
+			// Parsing stops after the last complete declaration; what follows is ignored,
+			// which existing patterns rely on (a stray closing brace, for example).
+			Token rest = tokens.LT(1);
+			if (rest.getType() != Token.EOF) {
+				PSSMessage.Warning("[SYNTAX] " + file + ":" + rest.getLine() + ":" + rest.getCharPositionInLine()
+					+ " : text after the last declaration is ignored, from '" + rest.getText() + "'");
 			}
 
 			tree_list.add(tree);
@@ -116,8 +130,7 @@ public class PSSGenMain {
 
 	/**
 	 * Prints the cause's stack trace (stderr) or the report (stdout), then exits
-	 * with the exception's status. main catches RuntimeException, not PSSException,
-	 * for the reason given in PSSException.
+	 * with the exception's status.
 	 */
 	private static void exit(PSSException e) {
 		if (e.getCause() != null) e.getCause().printStackTrace();

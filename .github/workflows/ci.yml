@@ -46,7 +46,7 @@ jobs:
       # Annotates the tests that did not pass; it also runs when the regression failed.
       - name: Report test results
         if: ${{ !cancelled() }}
-        run: bash .github/scripts/check-summary.sh tests/samples tests/issues tests/cli
+        run: bash .github/scripts/check-summary.sh tests/samples tests/issues tests/cli tests/errors
 
       - name: Upload regression logs
         if: ${{ !cancelled() }}

@@ -175,10 +175,11 @@ exit status.
 
 ## Testing
 
-The regression tests live in `tests/`, in three suites: `samples/` (language features),
-`issues/` (reproductions of reported issues) and `cli/` (command-line options, error
-messages and exit status). A test is a directory that holds `test.pss` and, for a test
-that must produce output, the expected output `test.s.golden`.
+The regression tests live in `tests/`, in four suites: `samples/` (language features),
+`issues/` (reproductions of reported issues), `cli/` (command-line options, error
+messages and exit status) and `errors/` (the messages reported for invalid PSS input). A
+test is a directory that holds `test.pss` and, for a test that must produce output, the
+expected output `test.s.golden`.
 
 ```
 $ make -C src                                 # build the jar first
@@ -220,7 +221,8 @@ samples: TOTAL=<n>, PASS=<n>, FAIL=<n>, SKIP=<n>
 ```
 
 `make -C tests` fails when a test fails. `.github/scripts/check-summary.sh tests/samples
-tests/issues tests/cli` prints the counts and one line per test that did not pass.
+tests/issues tests/cli tests/errors` prints the counts and one line per test that did not
+pass.
 
 To add a test, create a directory in a suite with `test.pss`, check the output of
 `make -C tests TESTS=<suite>/<test>`, and save the reviewed `test.s` as `test.s.golden`.
@@ -248,7 +250,7 @@ annotated tag, the `^{}` line), and replace both the SHA and the comment.
 | `src/main/antlr/` | Grammar: `PSS.g4` and the `PSS_*.g4` files it imports |
 | `src/Makefile` | `make` and `make bin`; the jar and the native executable are installed next to it |
 | `make/common.mk`, `make/jdk.mk` | Settings shared by `src/Makefile` and `tests/Makefile`: paths, version, JDK |
-| `tests/` | Regression tests (`samples/`, `issues/`, `cli/`) and their runner `run-tests.sh` |
+| `tests/` | Regression tests (`samples/`, `issues/`, `cli/`, `errors/`) and their runner `run-tests.sh` |
 | `antlr4/` | License of ANTLR; `make -C src` installs the ANTLR jar here |
 | `docs/Doxyfile` | API documentation: `mkdir -p build && doxygen docs/Doxyfile` writes `build/doxygen/` |
 | `build.gradle`, `settings.gradle`, `gradlew`, `gradle/` | Gradle build and wrapper |

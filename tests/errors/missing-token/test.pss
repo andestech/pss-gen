@@ -1,0 +1,2 @@
+// The enum declaration is not closed.
+enum e_t { A, B
