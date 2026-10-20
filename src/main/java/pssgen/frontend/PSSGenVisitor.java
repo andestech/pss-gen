@@ -1677,6 +1677,22 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		return 0;
 	}
 
+	// Every activity statement must push exactly one node on activity_stack, which
+	// its parent pops; the alternatives that would push none are rejected here.
+	@Override
+	public Integer visitActivity_stmt(PSSParser.Activity_stmtContext ctx) {
+		if (ctx.labeled_activity_stmt() == null && ctx.activity_bind_stmt() == null) {
+			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		}
+		return visitChildren(ctx);
+	}
+
+	@Override
+	public Integer visitSymbol_call(PSSParser.Symbol_callContext ctx) {
+		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		return 0;
+	}
+
 	@Override
 	public Integer visitActivity_replicate_stmt(PSSParser.Activity_replicate_stmtContext ctx) {
 		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
