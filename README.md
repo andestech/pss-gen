@@ -49,7 +49,7 @@ Gradle is not installed separately: the wrapper `./gradlew` downloads the pinned
 verifies its checksum and keeps it in the Gradle user home (`~/.gradle` unless
 `GRADLE_USER_HOME` is set), together with the ANTLR jar. Every downloaded dependency is
 checked against the sha256 in `gradle/verification-metadata.xml`; after changing a
-dependency, regenerate the file with `./gradlew --write-verification-metadata sha256 jar`
+dependency, regenerate the file with `./gradlew --write-verification-metadata sha256 jar test`
 and compare the new checksums with the ones the repository publishes.
 
 ## Building
@@ -178,6 +178,19 @@ exit status.
 
 ## Testing
 
+### Unit tests
+
+```
+$ make -C src unit-test
+```
+
+runs the JUnit 5 tests in `src/test/java` with `./gradlew test`; the report is
+`build/reports/tests/test/index.html`. They pin the behaviour of single classes (values,
+domains, the random source) and run whole generations in one JVM. Some of them record
+known bugs as the current behaviour; their comments name the bug.
+
+### Regression tests
+
 The regression tests live in `tests/`, in four suites: `samples/` (language features),
 `issues/` (reproductions of reported issues), `cli/` (command-line options, error
 messages and exit status) and `errors/` (the messages reported for invalid PSS input). A
@@ -235,9 +248,10 @@ To add a test, create a directory in a suite with `test.pss`, check the output o
 `.github/workflows/ci.yml` runs on every push, on pull requests and on demand. Its job
 runs on `ubuntu-24.04` with Temurin JDK 17: it checks that `gradle/wrapper/gradle-wrapper.jar`
 is the wrapper of an official Gradle release, builds the jar, runs `make -C tests`,
-annotates the tests that did not pass with `check-summary.sh`, and uploads the
-`summary.log` files and the per-test `run.log`, `result.log` and `diff.log` as the
-artifact `regression-logs`, also after a failure.
+annotates the tests that did not pass with `check-summary.sh`, runs the unit tests (also
+after a failed regression), and uploads the `summary.log` files, the per-test `run.log`,
+`result.log` and `diff.log` and the unit test reports as the artifact `regression-logs`,
+also after a failure.
 
 The actions it uses are pinned to full commit SHAs, with the release in a comment. To
 update one, take the commit of the new release tag from the action's own repository, for
@@ -251,7 +265,8 @@ annotated tag, the `^{}` line), and replace both the SHA and the comment.
 | `src/main/java/pssgen/` | PSSGen sources, one directory per package (see below) |
 | `src/main/java/PSSGenMain.java` | Launcher that keeps the command name `PSSGenMain` |
 | `src/main/antlr/` | Grammar: `PSS.g4` and the `PSS_*.g4` files it imports |
-| `src/Makefile` | `make` and `make bin`; the jar and the native executable are installed next to it |
+| `src/test/java/` | Unit tests (JUnit 5), run by `make -C src unit-test` |
+| `src/Makefile` | `make`, `make bin` and `make unit-test`; the jar and the native executable are installed next to it |
 | `make/common.mk`, `make/jdk.mk` | Settings shared by `src/Makefile` and `tests/Makefile`: paths, version, JDK |
 | `tests/` | Regression tests (`samples/`, `issues/`, `cli/`, `errors/`) and their runner `run-tests.sh` |
 | `antlr4/` | License of ANTLR; `make -C src` installs the ANTLR jar here |
@@ -280,7 +295,7 @@ PSSGen packages, in pipeline order:
 ## Releasing
 
 1. Set the new version, for example `v2.4.2`, in `VERSION`.
-2. Build and test: `make -C src bin`, `make -C tests` and `make -C tests bin`.
+2. Build and test: `make -C src bin`, `make -C src unit-test`, `make -C tests` and `make -C tests bin`.
 3. Commit, tag the commit with the same version, and publish
    `src/pssgen_<version>.jar` and `src/pssgen_<version>`.
 

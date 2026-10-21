@@ -1,6 +1,7 @@
 # Thin wrapper over the Gradle build in the repository root (../build.gradle):
 #   make        builds $(PSS_HOME)/src/pssgen_<version>.jar
 #   make bin    additionally builds the native image $(PSS_HOME)/src/pssgen_<version>
+#   make unit-test  runs the unit tests (src/test/java); reports in $(PSS_HOME)/build/reports/tests
 # The first build downloads Gradle and ANTLR. GRADLE_USER_HOME is honoured; the JDK
 # is chosen in ../make/jdk.mk (GraalVM CE when installed, else java on PATH or JAVA_HOME).
 SHELL := /bin/bash
@@ -30,11 +31,14 @@ PSSGEN_JAR = $(JAVA) -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
 PSSGEN_BIN = $(PSSGEN_BIN_PATH)
 PSSGEN = $(PSSGEN_JAR)
 
-.PHONY: jar bin clean hello_world test test2 test3 grun
+.PHONY: jar bin unit-test clean hello_world test test2 test3 grun
 
 jar:
 	$(GRADLE) jar installAntlrJar
 	cp -f $(PSS_HOME)/build/libs/$(PSSGEN_NAME).jar $(PSSGEN_JAR_PATH)
+
+unit-test:
+	$(GRADLE) test
 
 bin: jar
 	if [ -x "$(NATIVE_IMAGE)" ]; then \
