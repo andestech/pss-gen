@@ -279,6 +279,7 @@ annotated tag, the `^{}` line), and replace both the SHA and the comment.
 | `make/common.mk`, `make/jdk.mk` | Settings shared by `src/Makefile` and `tests/Makefile`: paths, version, JDK |
 | `tests/` | Regression tests (`samples/`, `issues/`, `cli/`, `errors/`) and their runner `run-tests.sh` |
 | `antlr4/` | License of ANTLR; `make -C src` installs the ANTLR jar here |
+| `docs/SUPPORT.md` | Support matrix: LRM sections, their status, messages and tests |
 | `docs/Doxyfile` | API documentation: `mkdir -p build && doxygen docs/Doxyfile` writes `build/doxygen/` |
 | `build.gradle`, `settings.gradle`, `gradlew`, `gradle/` | Gradle build and wrapper |
 | `.github/` | CI workflow, its check script and the issue templates |
@@ -309,6 +310,9 @@ PSSGen packages, in pipeline order:
    `src/pssgen_<version>.jar` and `src/pssgen_<version>`.
 
 ## Known limitations
+
+`docs/SUPPORT.md` lists, per section of the LRM, which constructs PSSGen supports, which it
+accepts with a deviation, and the message it stops with for the others.
 
 ### `repeat (index : count)` and `this`
 
