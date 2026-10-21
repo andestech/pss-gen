@@ -47,6 +47,18 @@ public class PSSBoolVal extends PSSVal {
 		return Boolean.parseBoolean(text) ? TRUE : FALSE;
 	}
 
+	/**
+	 * Returns a new value for a Boolean literal, as {@link #valueOf(String)} reads it.
+	 * A cast changes the type of the literal's value, so a literal must not be
+	 * {@link #TRUE} or {@link #FALSE}.
+	 *
+	 * @param text the literal
+	 * @return a new value, {@code true} if {@code text} equals "true" ignoring case
+	 */
+	public static PSSBoolVal literal(String text) {
+		return new PSSBoolVal(Boolean.parseBoolean(text));
+	}
+
 	@Override
 	public String getText() {
 		return String.valueOf(m_val);

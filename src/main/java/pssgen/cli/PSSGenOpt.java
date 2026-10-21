@@ -192,7 +192,7 @@ public class PSSGenOpt {
 		}
 	}
 
-	private static Map<String, String> envMap = System.getenv();
+	private static final Map<String, String> envMap = System.getenv();
 
 	private String substEnv(String text) {
 		Pattern pattern = Pattern.compile(".*\\$([0-9a-zA-Z_]+).*");

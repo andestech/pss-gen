@@ -4,14 +4,16 @@ import pssgen.inst.PSSBoolInst;
 import pssgen.inst.PSSInst;
 
 /**
- * A {@code PSSBoolModel} is a singleton type model for Booleans. Use
- * {@link PSSBoolModel#getModel()} to obtain the instance.
+ * A {@code PSSBoolModel} is the type model for Booleans. {@link #getInstance()} is
+ * the type of every Boolean value; each run's frontend declares fields with a model
+ * of its own, because declaring a field adds its type model to the declaring scope.
  */
 public class PSSBoolModel extends PSSModel {
 
-	private static PSSBoolModel m_model = null;
+	/** never added to a model tree or otherwise modified, so all runs can share it */
+	private static final PSSBoolModel VALUE_TYPE = new PSSBoolModel();
 
-	private PSSBoolModel() {
+	public PSSBoolModel() {
 		super("bool");
 	}
 
@@ -32,14 +34,12 @@ public class PSSBoolModel extends PSSModel {
 	}
 
 	/**
-	 * Returns the singleton instance of {@code PSSBoolModel} (not thread safe).
+	 * Returns the type model of Boolean values.
 	 *
-	 * @return the singleton instance of {@code PSSBoolModel}
+	 * @return the type model of Boolean values
 	 */
 	public static PSSBoolModel getInstance() {
-		if (m_model == null)
-			m_model = new PSSBoolModel();
-		return m_model;
+		return VALUE_TYPE;
 	}
 
 	@Override

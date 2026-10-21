@@ -28,8 +28,8 @@ public class PSSIntModel extends PSSModel {
 	/** the signedness */
 	boolean m_sign;
 
-	/** the default type model for unsized unbased decimal numbers */
-	private static PSSIntModel m_default_dec_model = null;
+	/** the default type model for unsized unbased decimal numbers; never modified */
+	private static final PSSIntModel DEFAULT_DEC_MODEL = new PSSIntModel(DEFAULT_INT_SIZE, true);
 
 	public PSSIntModel(int width, boolean sign) {
 		super(sign ? "int[" + width + "]" : "bit[" + width + "]");
@@ -84,9 +84,7 @@ public class PSSIntModel extends PSSModel {
 	 * @return the default model for decimal integers
 	 */
 	public static PSSIntModel getDefaultDecimalModel() {
-		if (m_default_dec_model == null)
-			m_default_dec_model = new PSSIntModel(DEFAULT_INT_SIZE, true);
-		return m_default_dec_model;
+		return DEFAULT_DEC_MODEL;
 	}
 
 	@Override

@@ -124,6 +124,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	PSSStructKind cur_struct_kind;
 	PSSTypeCategory cur_type_category;
 	List<PSSFunctionParameter> function_parameter_list;
+	// The type models of every bool and every string declaration of this visitor's
+	// model: declaring a field adds its type model to the declaring scope, so the
+	// shared value types (PSSBoolModel.getInstance(), ...) are not used here.
+	private final PSSBoolModel m_bool_type = new PSSBoolModel();
+	private final PSSStringModel m_string_type = new PSSStringModel();
 
 	public PSSGenVisitor() {
 		exp_stack = new Stack<PSSExpression>();
@@ -710,13 +715,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		if (ctx.string_literal().size() != 0) {
 			PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		}
-		cur_data_type = PSSStringModel.getInstance();
+		cur_data_type = m_string_type;
 		return 0;
 	}
 
 	@Override
 	public Integer visitBool_type(PSSParser.Bool_typeContext ctx) {
-		cur_data_type = PSSBoolModel.getInstance();
+		cur_data_type = m_bool_type;
 		return 0;
 	}
 
@@ -1279,7 +1284,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			}
 		} else if (ctx.bool_literal() != null) {
 			String text = ctx.getText();
-			exp_stack.push(new PSSPrimaryExpression(PSSBoolVal.valueOf(text)));
+			exp_stack.push(new PSSPrimaryExpression(PSSBoolVal.literal(text)));
 		} else if (ctx.ref_path() != null) {
 			visit(ctx.ref_path());
 		} else if (ctx.paren_expr() != null) {

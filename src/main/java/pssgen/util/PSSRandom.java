@@ -12,7 +12,7 @@ public class PSSRandom {
 		i_RetryLimit = val;
 	}
 
-	static String m_alphabet = "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	static final String m_alphabet = "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	static Random m_rand;
 	static long m_seed;
 	public static void initRandom(long seed) {

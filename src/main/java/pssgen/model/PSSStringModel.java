@@ -3,11 +3,17 @@ package pssgen.model;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSStringInst;
 
+/**
+ * A {@code PSSStringModel} is the type model for strings. {@link #getInstance()} is
+ * the type of every string value; each run's frontend declares fields with a model
+ * of its own, because declaring a field adds its type model to the declaring scope.
+ */
 public class PSSStringModel extends PSSModel {
 
-	private static PSSStringModel m_model = null;
+	/** never added to a model tree or otherwise modified, so all runs can share it */
+	private static final PSSStringModel VALUE_TYPE = new PSSStringModel();
 
-	private PSSStringModel() {
+	public PSSStringModel() {
 		super("string");
 	}
 
@@ -28,14 +34,12 @@ public class PSSStringModel extends PSSModel {
 	}
 
 	/**
-	 * Returns the singleton instanceof {@code PSSStringModel} (not thread safe).
+	 * Returns the type model of string values.
 	 *
-	 * @return the singleton instanceof {@code PSSStringModel} (not thread safe)
+	 * @return the type model of string values
 	 */
 	public static PSSStringModel getInstance() {
-		if (m_model == null)
-			m_model = new PSSStringModel();
-		return m_model;
+		return VALUE_TYPE;
 	}
 
 	@Override
