@@ -1,0 +1,10 @@
+component pss_top {
+    action sub_a { }
+    action root_a {
+        activity {
+            replicate (2) {
+                do sub_a;
+            }
+        }
+    }
+}

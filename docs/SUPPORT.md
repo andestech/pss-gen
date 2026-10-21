@@ -36,8 +36,8 @@ Message column:
 * A parse error is `[SYNTAX] '...'`, where the text gives file, line, column
   and the parser's reason.
 
-PSSGen stops at the first such message. A file with several unsupported
-constructs reports only the first one it meets.
+PSSGen stops at the first such message, except for the constructs listed in
+[Inputs with several unsupported constructs](#inputs-with-several-unsupported-constructs).
 
 Test column: a directory under `tests/` whose `test.pss` uses the construct.
 "(skipped)" marks a test whose `test.cfg` has a `skip =` line; the harness does
@@ -223,3 +223,42 @@ branches of `PSSGenVisitor.visitCasting_type()` and
 `PSSGenVisitor.visitOpen_range_value()` that no parse reaches, are internal:
 no PSS construct is known to reach them. Reaching one is a PSSGen bug; please
 report it with the input that caused it.
+
+## Inputs with several unsupported constructs
+
+Before it builds the model, PSSGen looks for the following constructs in all
+input files. Each is rejected wherever it appears, so their presence alone
+decides that the input cannot be generated:
+
+| Construct | Message of a single occurrence |
+|---|---|
+| `extend` | `PSSGenVisitor.visitExtend_stmt()` |
+| `override` block | `PSSGenVisitor.visitOverride_declaration()` |
+| `pool` declaration | `PSSGenVisitor.visitComponent_pool_declaration()` |
+| `covergroup` declaration | `PSSGenVisitor.visitCovergroup_declaration()` |
+| `typedef` | `PSSGenVisitor.visitTypedef_declaration()` |
+| `super;` in an exec block | `PSSGenVisitor.visitExec_super_stmt()` |
+| `symbol` declaration | `PSSGenVisitor.visitSymbol_declaration()` |
+| `default disable x;` | `PSSGenVisitor.visitConstraint_body_item()` |
+| `forall` | `PSSGenVisitor.visitForall_constraint_item()` |
+| Implication `a -> b` | `PSSGenVisitor.visitImplication_constraint_item()` |
+| `parallel` | `PSSGenVisitor.visitActivity_parallel_stmt()` |
+| Handle, data field, `constraint` or scheduling constraint in an activity | `PSSGenVisitor.visitActivity_stmt()` |
+| Symbol call | `PSSGenVisitor.visitSymbol_call()` |
+| `replicate` | `PSSGenVisitor.visitActivity_replicate_stmt()` |
+| `super;` in an activity | `PSSGenVisitor.visitActivity_super_stmt()` |
+
+All carry the text `Syntax is not yet supported: '...'`. An input with one of
+them stops with that Fatal message, as for any other unsupported construct.
+An input with two or more stops once, with one PSS-ERROR that lists every
+occurrence in file order, without the occurrences nested inside another one:
+
+```
+[0.123s] PSS-ERROR: [UNSUPPORTED] 2 unsupported constructs:
+test.pss:2:4: PSSGenVisitor.visitTypedef_declaration(): Syntax is not yet supported: 'typedefbit[8]byte_t;'
+test.pss:6:12: PSSGenVisitor.visitActivity_parallel_stmt(): Syntax is not yet supported: 'parallel{dosub_a;dosub_a;}'
+```
+
+Each line gives file, line and column (counted from 0) of the construct. The
+exit status is 1. tests/errors/unsupported-several and
+tests/errors/unsupported-several-files show the message.

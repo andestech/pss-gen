@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.util.*;
 
 import pssgen.frontend.PSSGenVisitor;
+import pssgen.frontend.PSSUnsupportedScan;
 import pssgen.frontend.VerboseListener;
 import pssgen.inst.PSSActionInst;
 import pssgen.inst.PSSComponentInst;
@@ -126,6 +127,16 @@ public class PSSGenMain {
 		eval.root = model;
 
 		run.log().Debug("tree_list.size = " + tree_list.size());
+		// With one such construct the visitor reports it as before; with several, all
+		// of them are reported at once.
+		List<PSSUnsupportedScan.Finding> unsupported = PSSUnsupportedScan.scan(tree_list);
+		if (unsupported.size() > 1) {
+			StringBuilder msg = new StringBuilder(unsupported.size() + " unsupported constructs:");
+			for (PSSUnsupportedScan.Finding f : unsupported) {
+				msg.append("\n").append(f);
+			}
+			PSSMessage.Error("UNSUPPORTED", msg.toString());
+		}
 		for (ParseTree tree_cur : tree_list) {
 			eval.visit(tree_cur);
 		}
