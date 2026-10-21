@@ -9,6 +9,7 @@ public final class PSSOptions {
 	private String m_output_file = "";
 	private String m_root_action = "pss_top::root_a";
 	private long m_seed = 1234;
+	private String m_solver = "retry";
 
 	/** the input files, in command-line order; library files are appended last */
 	public ArrayList<String> inputFiles() {
@@ -35,5 +36,12 @@ public final class PSSOptions {
 	}
 	public void setSeed(long seed) {
 		m_seed = seed;
+	}
+	/** "retry" (default) or "propagate"; see PSSSolver.solve and solvePropagate */
+	public String solver() {
+		return m_solver;
+	}
+	public void setSolver(String solver) {
+		m_solver = solver;
 	}
 }

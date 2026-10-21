@@ -4,10 +4,15 @@ import java.util.*;
 import java.util.LinkedHashMap;
 
 import pssgen.expr.PSSEqualExpression;
+import pssgen.inst.PSSActionInst;
+import pssgen.inst.PSSBoolInst;
 import pssgen.inst.PSSFlowRefInst;
+import pssgen.inst.PSSIScalarInst;
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSIntInst;
 import pssgen.inst.PSSStructInst;
 import pssgen.util.PSSMessage;
+import pssgen.util.PSSRun;
 
 public class PSSSolver {
 	PSSInst m_inst;
@@ -158,6 +163,171 @@ public class PSSSolver {
 		} while (validate() == false);
 
 		return retry;
+	}
+
+	/**
+	 * Solves with -solver propagate: narrows the domains of the variables of linear
+	 * comparisons (PSSPropagator) before the first draw, draws them one by one from
+	 * what the values drawn so far leave, and after a failed check re-draws only the
+	 * variables of the violated constraints.
+	 *
+	 * @return the number of draws
+	 */
+	public int solvePropagate() {
+		PSSRun run = m_inst.run();
+
+		// Default value constraints, as solve() applies them; a variable that a hard
+		// comparison names starts from its full domain instead, as validate() then
+		// ignores its default.
+		reduceDefaultDomain();
+
+		PSSPropagator prop = new PSSPropagator(m_inst_list, this::isDrawnScalar);
+		LinkedHashMap<PSSInst, PSSIntDomain> base = new LinkedHashMap<PSSInst, PSSIntDomain>();
+		for (PSSInst v : prop.variables()) {
+			base.put(v, (PSSIntDomain) v.getInitDomain());
+		}
+		if (!prop.narrow(base)) {
+			prop.emptyVariable().assignDomain(new PSSIntDomain());	// reports OVERCONSTRAINT
+		}
+		for (PSSInst v : prop.variables()) {
+			v.assignDomain(base.get(v));
+			run.log().Info(v.m_id + " domain: " + base.get(v).getText());
+		}
+
+		int retry = 0;
+		Set<PSSInst> redraw = null;	// null: everything
+		do {
+			run.random().limitRetry(++retry);
+			if (redraw == null) {
+				m_inst.randomize();
+			}
+			// Fields that are not variables (in other actions, flow objects) count with
+			// their current values, which a full draw may have changed.
+			draw(new PSSPropagator(m_inst_list, this::isDrawnScalar), base, redraw);
+			redraw = violatedVariables();
+			if (redraw == null || !redraw.isEmpty()) {
+				deduceOtherDomains(prop.variables());
+			}
+		} while (redraw == null || !redraw.isEmpty());
+
+		for (PSSInst v : prop.variables()) {
+			v.assignDomain(base.get(v));
+		}
+		return retry;
+	}
+
+	/**
+	 * Draws the variables of redraw (all when null): those of the comparisons in their
+	 * order, each from its base domain narrowed by the values of the variables before
+	 * it and of the variables that keep their value; the others with randomize().
+	 */
+	private void draw(PSSPropagator prop, Map<PSSInst, PSSIntDomain> base, Set<PSSInst> redraw) {
+		LinkedHashMap<PSSInst, PSSIntDomain> dom = new LinkedHashMap<PSSInst, PSSIntDomain>();
+		for (PSSInst v : prop.variables()) {
+			boolean keep = redraw != null && !redraw.contains(v);
+			dom.put(v, keep ? PSSPropagator.single(v.toVal().toBigInteger()) : base.get(v));
+		}
+		boolean open = prop.narrow(dom);
+		for (PSSInst v : prop.variables()) {
+			if (redraw != null && !redraw.contains(v)) {
+				continue;
+			}
+			// After a dead end the remaining variables come from their base domains;
+			// the check then fails and the next round draws them again.
+			v.assignDomain(open ? dom.get(v) : base.get(v));
+			v.randomize();
+			if (open) {
+				dom.put(v, PSSPropagator.single(v.toVal().toBigInteger()));
+				open = prop.narrow(dom);
+			}
+		}
+		if (redraw != null) {
+			for (PSSInst v : redraw) {
+				if (!prop.variables().contains(v)) {
+					v.randomize();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Gives the variables that PSSPropagator does not handle (strings, enums, fields
+	 * only in if or foreach constraints, ...) the domains that the constraints leave
+	 * with the values drawn so far, as solve() does for every variable.
+	 */
+	private void deduceOtherDomains(List<PSSInst> propagated) {
+		PSSDomainMap result = new PSSDomainMap();
+		for (PSSInst inst : m_inst_list.keySet()) {
+			PSSConstraintList c_list = m_inst_list.get(inst);
+			for (int i = 0; i < c_list.size(); i++) {
+				PSSDomainMap d_map = c_list.get(i).deduceDomain(inst);
+				if (d_map != null) {
+					result = result.join(d_map);
+				}
+			}
+		}
+		for (Map.Entry<PSSInst, PSSDomain> e : result.getMap().entrySet()) {
+			if (!propagated.contains(e.getKey())) {
+				e.getKey().assignDomain(e.getValue());
+			}
+		}
+	}
+
+	/**
+	 * The variables of the constraints that do not hold: empty when all hold, null
+	 * when a violated constraint names no variable that can be drawn alone.
+	 */
+	private Set<PSSInst> violatedVariables() {
+		Set<PSSInst> res = new LinkedHashSet<PSSInst>();
+		for (PSSInst item : m_default_constraint_list.keySet()) {
+			PSSConstraintList def_c_list = m_default_constraint_list.get(item);
+			PSSConstraintList c_list = m_inst_list.get(item);
+			for (var i = 0; i < def_c_list.size(); i++) {
+				PSSExpressionConstraint def_c = (PSSExpressionConstraint) def_c_list.get(i);
+				PSSInst def_inst = ((PSSEqualExpression) def_c.getExpression()).getInsts(item).get(0);
+				if (c_list != null && c_list.containsInst(item, def_inst)) continue;
+				if (!def_c.validate(item)) res.add(def_inst);
+			}
+		}
+		for (PSSInst item : m_inst_list.keySet()) {
+			PSSConstraintList c_list = m_inst_list.get(item);
+			for (int i = 0; i < c_list.size(); i++) {
+				PSSConstraint c = c_list.get(i);
+				if (c.validate(item)) continue;
+				if (!(c instanceof PSSExpressionConstraint)) return null;
+				boolean any = false;
+				for (PSSInst v : ((PSSExpressionConstraint) c).getExpression().getInsts(item)) {
+					if (isDrawn(v)) {
+						res.add(v);
+						any = true;
+					}
+				}
+				if (!any) return null;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * True when m_inst.randomize() draws v: a random scalar whose containers up to the
+	 * solved action are random too (a field of a non-random struct keeps its value,
+	 * a field of a sub-action is drawn when that action is solved).
+	 */
+	private boolean isDrawn(PSSInst v) {
+		if (!(v instanceof PSSIScalarInst) || !v.isRandomable())
+			return false;
+		for (PSSInst p = v.m_parent; p != null; p = p.m_parent) {
+			if (p == m_inst)
+				return true;
+			if (p instanceof PSSActionInst || !p.isRandomable())
+				return false;
+		}
+		return false;
+	}
+
+	/** isDrawn for the int, bit and bool fields, the variables of PSSPropagator */
+	private boolean isDrawnScalar(PSSInst v) {
+		return (v instanceof PSSIntInst || v instanceof PSSBoolInst) && isDrawn(v);
 	}
 
 }

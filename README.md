@@ -125,6 +125,7 @@ pssgen_<version> [options] file...
 | `-root <action>` | Root action, as a qualified name. Default: `pss_top::root_a`. |
 | `-seed <integer>` | Seed of the random generator (64-bit). Default: `1234`. |
 | `-set_random_limit <integer>` | Maximum number of attempts per randomization. Default: `2000`. |
+| `-solver <name>` | Constraint solver: `retry` (default) or `propagate` (see below). |
 | `-info` | Print `PSS-INFO` messages. |
 | `-debug` | Print `PSS-DEBUG` messages. |
 | `-debug_random` | Print the randomization sequence; implies `-debug`. |
@@ -132,6 +133,23 @@ pssgen_<version> [options] file...
 
 Every other argument is an input file. For a given set of input files, options and seed,
 the output file is the same on every run.
+
+### Constraint solvers
+
+`-solver retry`, the default, draws every random field of an action, narrows the domains
+of fields compared with a value, and draws again until all constraints hold or
+`-set_random_limit` draws have failed. Its random sequence decides the output of every
+existing test and pattern for a given seed.
+
+`-solver propagate` first narrows the domains of the int, bit and bool fields of linear
+comparisons (`==`, `!=`, `<`, `<=`, `>`, `>=` over sums of fields times constants, and
+`in` with constant values) until no domain changes, and reports an over-constrained field
+before any draw. It then draws these fields one by one from what the earlier values leave,
+and when a constraint does not hold it draws only the fields of the violated constraints
+again. Fields it does not narrow (strings, enums, fields in `if` or `foreach`
+constraints) get their domains as with the default solver. It solves constraints such as
+`a == b` or `a + b == 1000` on wide fields, on which the default solver can use up
+`-set_random_limit`; for a given seed it produces other values than the default solver.
 
 ### File list
 

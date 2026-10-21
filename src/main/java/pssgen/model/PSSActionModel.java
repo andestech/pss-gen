@@ -178,7 +178,7 @@ public class PSSActionModel extends PSSModel {
 
 		// solve
 		log.Info("solve action '" + inst.m_type+ "'");
-		int interation = solver.solve();
+		int interation = inst.run().options().solver().equals("propagate") ? solver.solvePropagate() : solver.solve();
 		log.Debug("solve iteration: " + String.valueOf(interation));
 
 		// post_solve

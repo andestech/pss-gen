@@ -78,6 +78,14 @@ public class PSSGenOpt {
 			else if (arg.equals("-help")) {
 				help(true);
 			}
+			else if (arg.equals("-solver")) {
+				String solver = value(args, i);
+				if (!solver.equals("retry") && !solver.equals("propagate")) {
+					PSSMessage.Error("OPT", "invalid value '" + solver + "' for option '" + arg + "': expected retry or propagate");
+				}
+				m_opt.setSolver(solver);
+				i+=2;
+			}
 			else if (arg.equals("-seed")) {
 				m_opt.setSeed(longValue(arg, value(args, i)));
 				i+=2;
@@ -246,6 +254,7 @@ public class PSSGenOpt {
 			+ "	-set_random_limit <val>		change max. iterations of randomization (default: 2000)" + nl
 			+ "	-root <root_action>" + nl
 			+ "	-seed <seed>" + nl
+			+ "	-solver <name>		constraint solver: retry (default) or propagate" + nl
 			+ "	-help			print this text and exit" + nl;
 		throw requested ? PSSException.stop(usage) : PSSException.create(null, "usage", usage);
 	}
