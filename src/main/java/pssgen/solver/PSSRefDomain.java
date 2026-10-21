@@ -48,11 +48,11 @@ public class PSSRefDomain extends PSSDomain {
     }
 
     @Override
-    public PSSRefVal random() {
+    public PSSRefVal random(PSSRandom random) {
         if (isEmpty())
             return null;
 
-        return m_refs.values().toArray(new PSSRefVal[0])[PSSRandom.nextInt(0, m_refs.size() - 1)];
+        return m_refs.values().toArray(new PSSRefVal[0])[random.nextInt(0, m_refs.size() - 1)];
     }
 
     @Override

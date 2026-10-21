@@ -120,6 +120,7 @@ public class PSSRefInst extends PSSInst {
             // Create a new reference
             PSSModel m = val.getTypeModel();
             PSSInst inst = m.declInst("", false);
+            inst.setOwner(this);
             inst.assign(val);
             m_ref = new PSSRefVal(new PSSRefModel(m), inst);
         }

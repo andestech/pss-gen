@@ -1,0 +1,10 @@
+// Run C of TwoRunsTest: fails with a PSS-ERROR while it writes the output file.
+component pss_top {
+    action root_a {
+        rand bit [8] v;
+        exec body ASM = """
+C v={{v}}
+C missing={{missing}}
+""";
+    }
+}

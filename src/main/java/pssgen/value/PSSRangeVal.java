@@ -144,8 +144,8 @@ public class PSSRangeVal extends PSSVal {
 	}
 
 	@Override
-	public PSSIntVal randomIn() {
-		BigInteger rand_val = PSSRandom.nextBigInteger(m_min, m_max);
+	public PSSIntVal randomIn(PSSRandom random) {
+		BigInteger rand_val = random.nextBigInteger(m_min, m_max);
 		return new PSSIntVal(rand_val);
 	}
 	// public PSSVal randomString() {

@@ -15,6 +15,7 @@ import pssgen.inst.PSSInst;
 import pssgen.model.PSSModel;
 import pssgen.parser.PSSLexer;
 import pssgen.parser.PSSParser;
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSBoolVal;
 import pssgen.value.PSSIntVal;
@@ -71,7 +72,7 @@ public class PSSRefPathExpression extends PSSExpression {
 	 * @param str  a string to be parsed
 	 * @return the reference denoted by the string
 	 */
-	public static PSSRefPathExpression fromString(PSSModel root, String str) {
+	public static PSSRefPathExpression fromString(PSSModel root, String str, PSSLog log) {
 		PSSRefPathExpression res = null;
 
 		try {
@@ -82,16 +83,16 @@ public class PSSRefPathExpression extends PSSExpression {
 			PSSParser parser = new PSSParser(tokens);
 
 			lexer.removeErrorListeners();
-			lexer.addErrorListener(VerboseListener.warning("<RefPath>"));
+			lexer.addErrorListener(VerboseListener.warning("<RefPath>", log));
 			parser.removeErrorListeners();
-			parser.addErrorListener(new VerboseListener());
+			parser.addErrorListener(new VerboseListener("<RefPath>", log));
 
 			ParseTree ref_path = parser.ref_path();
 			if (tokens.LA(1) != Token.EOF) {
-				PSSMessage.Warning("[SYNTAX] <RefPath> : text after the reference is ignored, from '"
+				log.Warning("[SYNTAX] <RefPath> : text after the reference is ignored, from '"
 					+ tokens.LT(1).getText() + "' in '" + str + "'");
 			}
-			PSSGenVisitor eval = new PSSGenVisitor();
+			PSSGenVisitor eval = new PSSGenVisitor(log);
 			eval.root = root;
 			eval.visit(ref_path);
 			res = (PSSRefPathExpression) eval.exp_stack.pop();
@@ -127,7 +128,7 @@ public class PSSRefPathExpression extends PSSExpression {
 		if (m_bit_slice_from != null && m_bit_slice_to != null) {
 			int msb = m_bit_slice_to.eval(var).toInt();
 			int lsb = m_bit_slice_from.eval(var).toInt();
-			res = res.extract(msb, lsb);
+			res = res.extract(msb, lsb, var.run().log());
 		}
 		return res;
 	}
@@ -141,11 +142,11 @@ public class PSSRefPathExpression extends PSSExpression {
 				int lsb = m_bit_slice_from.eval(var).toInt();
 
 				PSSVal ori_val = evalOriVal(var);
-				PSSVal invert_mask = new PSSIntVal(ori_val.extract(msb, lsb).toBigInteger(), msb + 1, false);
+				PSSVal invert_mask = new PSSIntVal(ori_val.extract(msb, lsb, var.run().log()).toBigInteger(), msb + 1, false);
 				invert_mask = invert_mask.LeftShift(lsb);
 				ori_val = ori_val.BitwiseXor(invert_mask);
 
-				PSSVal new_val = new PSSIntVal(val.extract(msb-lsb,0).toBigInteger(), msb + 1, false);
+				PSSVal new_val = new PSSIntVal(val.extract(msb-lsb,0, var.run().log()).toBigInteger(), msb + 1, false);
 				new_val = new_val.LeftShift(lsb);
 				ori_val = ori_val.BitwiseOr(new_val);
 

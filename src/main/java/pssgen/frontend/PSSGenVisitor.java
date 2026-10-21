@@ -102,6 +102,7 @@ import pssgen.solver.PSSExpressionConstraint;
 import pssgen.solver.PSSForeachConstraint;
 import pssgen.solver.PSSIfConstraint;
 import pssgen.solver.PSSUniqueConstraint;
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSBoolVal;
 import pssgen.value.PSSNumber;
@@ -129,8 +130,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	// shared value types (PSSBoolModel.getInstance(), ...) are not used here.
 	private final PSSBoolModel m_bool_type = new PSSBoolModel();
 	private final PSSStringModel m_string_type = new PSSStringModel();
+	/** the run's messages */
+	private final PSSLog m_log;
 
-	public PSSGenVisitor() {
+	public PSSGenVisitor(PSSLog log) {
+		m_log = log;
 		exp_stack = new Stack<PSSExpression>();
 		activity_stack = new Stack<PSSActivity>();
 		proc_stmt_list = new ArrayList<PSSProcStmt>();
@@ -488,7 +492,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			block.addStmt(stmt);
 		}
 
-		root.addExecBlock(block);
+		root.addExecBlock(block, m_log);
 
 		return 0;
 

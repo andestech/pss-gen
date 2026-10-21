@@ -235,6 +235,9 @@ public class PSSMemberPathElemExpression extends PSSExpression {
                     }
                 }
                 PSSFunctionInst fi = fm.declInst(ci, actuals);
+                // A package function has no component instance to belong to.
+                if (ci == null)
+                    fi.setRun(ctx.run());
                 fi.setExecKind(k);
                 try {
                     inst = fi.eval(parent);

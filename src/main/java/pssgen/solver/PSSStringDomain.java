@@ -146,18 +146,18 @@ public class PSSStringDomain extends PSSDomain {
 	}
 
 	@Override
-	public PSSStringVal random() {
+	public PSSStringVal random(PSSRandom random) {
 		if (isEmpty())
 			return null;
 
 		int size = m_list.size();
-		int randi = PSSRandom.nextInt(0, size - 1);
+		int randi = random.nextInt(0, size - 1);
 		PSSVal item = m_list.get(randi);
 
 		if (item.isBound()) {
 			return new PSSStringVal(item.toStr());
 		} else {
-			String str = PSSRandom.nextString(6);	// Use 6-bit chars to reduce the chance of an accidental match on the first random to about 1.9e-9%.
+			String str = random.nextString(6);	// Use 6-bit chars to reduce the chance of an accidental match on the first random to about 1.9e-9%.
 			return new PSSStringVal(str);
 		}
 	}

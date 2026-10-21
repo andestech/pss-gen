@@ -4,7 +4,6 @@ import java.util.*;
 
 import pssgen.inst.PSSInst;
 import pssgen.solver.PSSDomainMap;
-import pssgen.util.PSSMessage;
 import pssgen.value.PSSVal;
 
 public class PSSLogicalOrExpression extends PSSExpression {
@@ -33,7 +32,7 @@ public class PSSLogicalOrExpression extends PSSExpression {
 	}
 
 	public PSSDomainMap deduceDomain(PSSInst var) {
-		PSSMessage.Warning("Domain deduction is not not implementation for '" + getText() + "'");
+		var.run().log().Warning("Domain deduction is not not implementation for '" + getText() + "'");
 		return null;
 	}
 

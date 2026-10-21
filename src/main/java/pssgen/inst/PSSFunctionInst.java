@@ -97,6 +97,7 @@ public class PSSFunctionInst extends PSSInst implements PSSIScope {
         else {
             PSSModel dr = resolve(rt.getDataType());
             m_res = dr.declInst("<" + m.getPrototype().getID() + ":return>", false);
+            m_res.setOwner(this);
         }
     }
 

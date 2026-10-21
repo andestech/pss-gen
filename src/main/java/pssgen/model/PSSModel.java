@@ -9,6 +9,7 @@ import pssgen.proc.PSSExecBlock;
 import pssgen.proc.PSSExecKind;
 import pssgen.solver.PSSConstraint;
 import pssgen.solver.PSSConstraintList;
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
 
 public class PSSModel {
@@ -94,7 +95,7 @@ public class PSSModel {
 		return null;
 	}
 
-	public void addExecBlock(PSSExecBlock block) {
+	public void addExecBlock(PSSExecBlock block, PSSLog log) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::addExecBlock is not implemented");
 	}
 

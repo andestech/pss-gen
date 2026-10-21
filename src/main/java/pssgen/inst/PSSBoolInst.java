@@ -41,8 +41,9 @@ public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
 		if (m_rand) {
 			int retry = 0;
 			do {
-				PSSRandom.limitRetry(retry++);
-				m_val = m_domain.random().toBigInteger().signum() != 0;
+				PSSRandom random = run().random();
+				random.limitRetry(retry++);
+				m_val = m_domain.random(random).toBigInteger().signum() != 0;
 			} while (!validate());
 			m_initialized = true;
 		}

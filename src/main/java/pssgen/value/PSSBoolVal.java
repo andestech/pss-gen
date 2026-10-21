@@ -3,6 +3,7 @@ package pssgen.value;
 import java.math.*;
 
 import pssgen.model.PSSBoolModel;
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
 
 /**
@@ -104,11 +105,18 @@ public class PSSBoolVal extends PSSVal {
 	}
 
 	@Override
+	public PSSVal extract (int msb, int lsb, PSSLog log) {
+		if (msb < lsb) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb should not small than lsb");
+		if (msb < 0 || lsb < 0) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb/lsb should be non-neg value");
+		if (msb != lsb) log.Warning("Extract more than 1 bit from boolean-type is meanless");
+		if (lsb > 0) log.Warning("Extract other than index 0 from boolean-type is meanless");
+		return extract(msb, lsb);
+	}
+
+	@Override
 	public PSSVal extract (int msb, int lsb) {
 		if (msb < lsb) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb should not small than lsb");
 		if (msb < 0 || lsb < 0) PSSMessage.Fatal(getClass().getSimpleName() + "::extract(msb,lsb): msb/lsb should be non-neg value");
-		if (msb != lsb) PSSMessage.Warning("Extract more than 1 bit from boolean-type is meanless");
-		if (lsb > 0) PSSMessage.Warning("Extract other than index 0 from boolean-type is meanless");
 
 		return (lsb == 0 && m_val) ? TRUE : FALSE;
 	}

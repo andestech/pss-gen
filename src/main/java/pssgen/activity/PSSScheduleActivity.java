@@ -3,7 +3,6 @@ package pssgen.activity;
 import java.util.*;
 
 import pssgen.inst.PSSInst;
-import pssgen.util.PSSRandom;
 
 public class PSSScheduleActivity extends PSSActivity {
 
@@ -19,7 +18,7 @@ public class PSSScheduleActivity extends PSSActivity {
 	}
 
 	public void evalActivity(PSSInst inst) {
-		ArrayList<Integer> schedule = PSSRandom.nextSchedule(m_list.size());
+		ArrayList<Integer> schedule = inst.run().random().nextSchedule(m_list.size());
 
 		for (int i=0; i<m_list.size(); i++) {
 			int index = schedule.get(i);

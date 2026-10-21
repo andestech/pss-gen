@@ -27,7 +27,7 @@ public class PSSLeftShiftExpression extends PSSExpression {
 		PSSVal leftVal = m_left.eval(var);
 		PSSVal rightVal = m_right.eval(var);
 
-		return leftVal.LeftShift(rightVal);
+		return leftVal.LeftShift(rightVal, var.run().log());
 	}
 
 	@Override

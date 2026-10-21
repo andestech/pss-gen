@@ -9,37 +9,36 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import pssgen.util.PSSException;
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
-import pssgen.util.PSSRandom;
+import pssgen.util.PSSOptions;
+import pssgen.util.PSSRun;
 
 
+/**
+ * Reads the command line into the options of a run and sets up the run's messages
+ * and random source as it goes, so an option takes effect from its position on
+ * (-info before -set_random_limit prints the change of the limit).
+ */
 public class PSSGenOpt {
-	ArrayList<String> m_input_flist;
-	String m_output_file;
-	String m_root_action;
-	ArrayList<String> m_lib_dir;
-	long m_seed;
+	private final PSSOptions m_opt;
 
-
-	public PSSGenOpt(String[] args) {
-		m_input_flist = new ArrayList<String>();
-		m_output_file = "";
-		m_lib_dir = new ArrayList<String>();
-		m_root_action = "pss_top::root_a";
-		m_seed = 1234;
+	public PSSGenOpt(String[] args, PSSRun run) {
+		m_opt = run.options();
+		PSSLog log = run.log();
 
 		if (args.length == 0) {
 			help(false);
 		}
 
-		PSSMessage.Initial();
+		log.start();
 
 		int i=0;
 		while (i < args.length) {
 			String arg = args[i];
 
 			if (arg.equals("-o")) {
-				m_output_file = value(args, i);
+				m_opt.setOutputFile(value(args, i));
 				i+=2;
 			}
 			else if (arg.equals("-f")) {
@@ -48,20 +47,20 @@ public class PSSGenOpt {
 				i+=2;
 			}
 			else if (arg.equals("-y")) {
-				m_lib_dir.add(value(args, i));
+				m_opt.libDirs().add(value(args, i));
 				i+=2;
 			}
 			else if (arg.equals("-info")) {
-				PSSMessage.SetPrintInfoEn(true);
+				log.SetPrintInfoEn(true);
 				i++;
 			}
 			else if (arg.equals("-debug")) {
-				PSSMessage.SetPrintDebugEn(true);
+				log.SetPrintDebugEn(true);
 				i++;
 			}
 			else if (arg.equals("-debug_random")) {
-				PSSMessage.SetPrintDebugEn(true);
-				PSSMessage.SetPrintRandEn(true);
+				log.SetPrintDebugEn(true);
+				log.SetPrintRandEn(true);
 				i++;
 			}
 			else if (arg.equals("-set_random_limit")) {
@@ -69,39 +68,39 @@ public class PSSGenOpt {
 				if (limit < 1) {
 					PSSMessage.Error("OPT", "invalid value '" + args[i+1] + "' for option '" + arg + "': expected an integer greater than 0");
 				}
-				PSSRandom.setRetryLimit(limit);
+				run.random().setRetryLimit(limit);
 				i+=2;
 			}
 			else if (arg.equals("-root")) {
-				m_root_action = value(args, i);
+				m_opt.setRootAction(value(args, i));
 				i+=2;
 			}
 			else if (arg.equals("-help")) {
 				help(true);
 			}
 			else if (arg.equals("-seed")) {
-				m_seed = longValue(arg, value(args, i));
+				m_opt.setSeed(longValue(arg, value(args, i)));
 				i+=2;
 			}
 			else if (arg.startsWith("-")) {
 				PSSMessage.Error("OPT", "unknown option '" + arg + "'");
 			}
 			else {
-				m_input_flist.add(arg);
+				m_opt.inputFiles().add(arg);
 				i++;
 			}
 
 		}
 
-		PSSRandom.initRandom(m_seed);
+		run.random().initRandom(m_opt.seed());
 
-		if (m_output_file.equals("")) {
+		if (m_opt.outputFile().equals("")) {
 			PSSMessage.Error("OPT", "output file is not specified");
 		}
 
-		for (int dir = 0; dir < m_lib_dir.size(); dir++)
+		for (int dir = 0; dir < m_opt.libDirs().size(); dir++)
 		{
-			addLibFile(m_lib_dir.get(dir));
+			addLibFile(m_opt.libDirs().get(dir));
 		}
 	}
 
@@ -166,7 +165,7 @@ public class PSSGenOpt {
 			PSSMessage.Error("OPT", "cannot read library directory '" + lib_dir + "'");
 		}
 		for (int i = 0; i < files.length; i++) {
-			m_input_flist.add(files[i].getAbsolutePath());
+			m_opt.inputFiles().add(files[i].getAbsolutePath());
 		}
 	}
 
@@ -175,20 +174,20 @@ public class PSSGenOpt {
 		if (tokens.length >= 2) {
 			String arg = tokens[0];
 			if (arg.equals("-o")) {
-				m_output_file = tokens[1];
+				m_opt.setOutputFile(tokens[1]);
 			}
 			else if (arg.equals("-y")) {
-				m_lib_dir.add(tokens[1]);
+				m_opt.libDirs().add(tokens[1]);
 			}
 			else if (arg.equals("-root")) {
-				m_root_action = tokens[1];
+				m_opt.setRootAction(tokens[1]);
 			}
 			else {
 				PSSMessage.Error("FLIST", "unknown option '" + text + "'");
 			}
 		}
 		else {
-			m_input_flist.add(tokens[0]);
+			m_opt.inputFiles().add(tokens[0]);
 		}
 	}
 
@@ -252,12 +251,12 @@ public class PSSGenOpt {
 	}
 
 	public ArrayList<String> input_flist() {
-		return m_input_flist;
+		return m_opt.inputFiles();
 	}
 	public String output_file() {
-		return m_output_file;
+		return m_opt.outputFile();
 	}
 	public String root_action() {
-		return m_root_action;
+		return m_opt.rootAction();
 	}
 }

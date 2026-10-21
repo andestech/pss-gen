@@ -1,0 +1,35 @@
+// Run B of TwoRunsTest: bool and string fields, a bool literal in a constraint,
+// random arrays of scalars and of structs, repeat, no cast.
+component pss_top {
+    struct pair_s {
+        rand bit [4] x;
+        rand bit [4] y;
+        constraint x < y;
+    }
+    action root_a {
+        rand bool b1;
+        rand bool b2;
+        rand string name;
+        rand bit [4] n;
+        rand bit [4] arr[3];
+        rand pair_s ps[2];
+        constraint b1 == true;
+        constraint n < 10;
+        constraint unique {arr};
+        activity {
+            repeat (3) {
+                do leaf;
+            }
+        }
+        exec body ASM = """
+B b1={{b1}} b2={{b2}} name={{name}} n={{n}} arr={{arr[0]}},{{arr[1]}},{{arr[2]}} ps={{ps[0].x}}<{{ps[0].y}},{{ps[1].x}}<{{ps[1].y}}
+""";
+    }
+    action leaf {
+        rand bit [8] z;
+        constraint z != 0;
+        exec body ASM = """
+B leaf {{z}}
+""";
+    }
+}

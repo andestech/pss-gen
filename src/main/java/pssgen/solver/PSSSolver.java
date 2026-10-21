@@ -8,7 +8,6 @@ import pssgen.inst.PSSFlowRefInst;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSStructInst;
 import pssgen.util.PSSMessage;
-import pssgen.util.PSSRandom;
 
 public class PSSSolver {
 	PSSInst m_inst;
@@ -115,7 +114,7 @@ public class PSSSolver {
 		for (PSSInst var : map.keySet()) {
 			PSSDomain domain = map.get(var);
 			var.assignDomain(domain);
-			PSSMessage.Info(var.m_id + " domain: " + domain.getText());
+			m_inst.run().log().Info(var.m_id + " domain: " + domain.getText());
 		}
 	}
 
@@ -155,7 +154,7 @@ public class PSSSolver {
 		do {
 			m_inst.randomize();
 			reduceDomain();	// reduce domain with constraints
-			PSSRandom.limitRetry(++retry);
+			m_inst.run().random().limitRetry(++retry);
 		} while (validate() == false);
 
 		return retry;

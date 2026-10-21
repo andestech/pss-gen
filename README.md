@@ -170,11 +170,20 @@ After an error, the output file may be missing or incomplete.
 
 ### Using PSSGen as a library
 
-`pssgen.cli.PSSGenMain` exposes the stages `parseFiles`, `createModel`, `traverseRootAction`
-and `realizeTest`. A failure inside them throws `pssgen.util.PSSException` (a
-`RuntimeException`) instead of ending the JVM: `getID()` is the error ID, `getMessage()`
-the message, `getReport()` the text the command line would print and `getStatus()` its
-exit status.
+`pssgen.cli.PSSGenMain.run(String[] args, PrintStream out, PrintStream err)` runs one
+generation with command-line arguments in the calling JVM and returns the exit status the
+command line would have; messages and error reports go to `out`, the stack trace of a
+wrapped exception to `err`. It never ends the JVM, and generations run this way one after
+the other give the same output as separate command lines: everything a run owns (options,
+messages, random source, output file) is in a `pssgen.util.PSSRun` object, not in static
+fields.
+
+The stages `parseFiles`, `createModel`, `traverseRootAction` and `realizeTest` take the
+`PSSRun` as their first argument; `new PSSGenOpt(args, run)` reads the options into it. A
+failure inside them throws `pssgen.util.PSSException` (a `RuntimeException`): `getID()` is
+the error ID, `getMessage()` the message, `getStatus()` the exit status and `getReport()`
+the text the command line would print, once `setStartTime(run.log().startTime())` has given
+a PSS-ERROR the start time its elapsed-time prefix counts from.
 
 ## Testing
 

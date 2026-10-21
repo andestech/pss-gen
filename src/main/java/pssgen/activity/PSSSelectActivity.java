@@ -3,7 +3,6 @@ package pssgen.activity;
 import java.util.*;
 
 import pssgen.inst.PSSInst;
-import pssgen.util.PSSRandom;
 
 public class PSSSelectActivity extends PSSActivity {
 
@@ -26,7 +25,7 @@ public class PSSSelectActivity extends PSSActivity {
 			weight_list.add(weight);
 		}
 
-		int rand_weight = PSSRandom.nextInt(0, total_weight-1);
+		int rand_weight = inst.run().random().nextInt(0, total_weight-1);
 
 		total_weight = 0;
 

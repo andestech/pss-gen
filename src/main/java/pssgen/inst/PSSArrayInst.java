@@ -69,6 +69,7 @@ public class PSSArrayInst extends PSSInst implements PSSIAggregate {
 
         for (int i = 0; i < m_dim; i++) {
             PSSInst inst = m_elem_type_model.declInst(id + "[" + i + "]", m_rand);
+            inst.setOwner(this);
             m_array.add(inst);
         }
 

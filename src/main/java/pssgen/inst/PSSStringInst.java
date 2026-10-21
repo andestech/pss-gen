@@ -3,7 +3,6 @@ package pssgen.inst;
 import pssgen.solver.PSSDomain;
 import pssgen.solver.PSSStringDomain;
 import pssgen.util.PSSMessage;
-import pssgen.util.PSSRandom;
 import pssgen.value.PSSStringVal;
 import pssgen.value.PSSVal;
 
@@ -45,7 +44,7 @@ public class PSSStringInst extends PSSInst implements PSSIScalarInst {
 		return true;
 	}
 	public void randomize_one() {
-		m_str = m_domain.random().toStr();
+		m_str = m_domain.random(run().random()).toStr();
 		//PSSMessage.Debug("randomize_one: str = " + m_str);
 	}
 	public void randomize() {
@@ -54,7 +53,7 @@ public class PSSStringInst extends PSSInst implements PSSIScalarInst {
 			int retry = 0;
 
 			while (!validated) {
-				PSSRandom.limitRetry(retry);
+				run().random().limitRetry(retry);
 				randomize_one();
 				validated = validate();
 				retry ++;

@@ -4,6 +4,7 @@ import java.math.*;
 
 import pssgen.model.PSSIntModel;
 import pssgen.model.PSSModel;
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
 
 public class PSSIntVal extends PSSVal {
@@ -294,13 +295,23 @@ public class PSSIntVal extends PSSVal {
 		int rhs_int = rhs.toInt();
 		return LeftShift(rhs_int);
 	}
+	/** Without the width warning, for a shift amount that is below the width. */
 	@Override
 	public PSSVal LeftShift (int rhs) {
+		return shiftLeft(rhs, null);
+	}
+	@Override
+	public PSSVal LeftShift (PSSVal rhs, PSSLog log) {
+		int rhs_int = rhs.toInt();
+		return shiftLeft(rhs_int, log);
+	}
+	/** log: where the width warning goes; null for no warning */
+	private PSSVal shiftLeft (int rhs, PSSLog log) {
 		if (rhs < 0) PSSMessage.Error("PSS 3.0 Section 8.5.7 Shift operators", "shift operand should not be negative value: " + rhs);
 
 		PSSIntModel model = (PSSIntModel)super.getTypeModel();
 		int width = model.getSize();
-		if (width < rhs) PSSMessage.Warning("Shift left amount (" + rhs + ") larger than bit-width of LHS (" + width + ") is meanless.");
+		if (log != null && width < rhs) log.Warning("Shift left amount (" + rhs + ") larger than bit-width of LHS (" + width + ") is meanless.");
 
 		BigInteger result = m_val.shiftLeft(rhs);
 		return new PSSIntVal(result, model);

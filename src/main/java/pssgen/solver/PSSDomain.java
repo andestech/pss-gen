@@ -3,6 +3,7 @@ package pssgen.solver;
 import java.util.List;
 
 import pssgen.util.PSSMessage;
+import pssgen.util.PSSRandom;
 import pssgen.value.PSSBoolVal;
 import pssgen.value.PSSVal;
 
@@ -27,10 +28,11 @@ public abstract class PSSDomain {
 	/**
 	 * Returns a random element in this domain.
 	 *
+	 * @param random the random source of the run
 	 * @return a random element in this domain, or {@code null} if this domain is
 	 *         empty
 	 */
-	public abstract PSSVal random();
+	public abstract PSSVal random(PSSRandom random);
 
 	/**
 	 * Returns {@code true} if a specified value is in this domain.

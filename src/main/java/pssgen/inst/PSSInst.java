@@ -8,6 +8,7 @@ import pssgen.solver.PSSConstraintList;
 import pssgen.solver.PSSDomain;
 import pssgen.solver.PSSSolver;
 import pssgen.util.PSSMessage;
+import pssgen.util.PSSRun;
 import pssgen.value.PSSVal;
 
 public class PSSInst {
@@ -57,6 +58,15 @@ public class PSSInst {
 
 	/** {@code true} if this instance is read-only */
 	boolean m_readonly;
+
+	/** the run of a root instance (see {@link #run()}); null below the root */
+	private PSSRun m_run;
+
+	/**
+	 * the instance that holds this one without being its parent: the array, list,
+	 * set or map of an element, the function invocation of a return value
+	 */
+	private PSSInst m_owner;
 
 	// buildin type
 	public PSSInst(String id, String type, boolean rand) {
@@ -110,6 +120,43 @@ public class PSSInst {
 		while (root.m_parent != null)
 			root = root.m_parent;
 		return root;
+	}
+
+	/**
+	 * Returns the run this instance belongs to: the run set on the nearest instance
+	 * on the way to the root, which goes to the parent, or to the owner of an
+	 * instance without a parent.
+	 *
+	 * @return the run of this instance
+	 * @throws IllegalStateException if neither this instance nor an instance
+	 *                               containing it has a run
+	 */
+	public PSSRun run() {
+		for (PSSInst i = this; i != null; i = i.m_parent != null ? i.m_parent : i.m_owner) {
+			if (i.m_run != null)
+				return i.m_run;
+		}
+		throw new IllegalStateException("instance '" + m_id + "' belongs to no run");
+	}
+
+	/**
+	 * Sets the run of a root instance, or of an instance that has no parent while it
+	 * is in use (a function invocation of a package function).
+	 *
+	 * @param run the run
+	 */
+	public void setRun(PSSRun run) {
+		m_run = run;
+	}
+
+	/**
+	 * Sets the instance that holds this one without being its parent (see
+	 * {@link #run()}).
+	 *
+	 * @param owner the holding instance
+	 */
+	public void setOwner(PSSInst owner) {
+		m_owner = owner;
 	}
 
 	/**

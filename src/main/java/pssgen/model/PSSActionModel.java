@@ -13,6 +13,7 @@ import pssgen.proc.PSSTargetCodeList;
 import pssgen.solver.PSSConstraint;
 import pssgen.solver.PSSConstraintList;
 import pssgen.solver.PSSSolver;
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
 
 public class PSSActionModel extends PSSModel {
@@ -87,7 +88,7 @@ public class PSSActionModel extends PSSModel {
 		m_target_code.add(node);
 		return node;
 	}
-	public void addExecBlock (PSSExecBlock block) {
+	public void addExecBlock (PSSExecBlock block, PSSLog log) {
 		PSSExecKind kind = block.getKind();
 		if (kind.equals(PSSExecKind.header) || kind.equals(PSSExecKind.declaration) || kind.equals(PSSExecKind.body)) {
 		}
@@ -113,7 +114,7 @@ public class PSSActionModel extends PSSModel {
 	}
 
 	public void evalPreSolve(PSSInst inst) {
-		if (m_exec_list.size() > 0) PSSMessage.Info("pre_solve action '" + inst.m_type+ "'");
+		if (m_exec_list.size() > 0) inst.run().log().Info("pre_solve action '" + inst.m_type+ "'");
 		for (int i = 0; i < m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
 			if (block.getKind().equals(PSSExecKind.pre_solve)) {
@@ -123,7 +124,7 @@ public class PSSActionModel extends PSSModel {
 	}
 
 	public void evalPostSolve(PSSInst inst) {
-		if (m_exec_list.size() > 0) PSSMessage.Info("post_solve action '" + inst.m_type+ "'");
+		if (m_exec_list.size() > 0) inst.run().log().Info("post_solve action '" + inst.m_type+ "'");
 		for (int i = 0; i < m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
 			if (block.getKind().equals(PSSExecKind.post_solve)) {
@@ -161,7 +162,8 @@ public class PSSActionModel extends PSSModel {
 		}
 		inst.setTraversed();
 
-		PSSMessage.Info("traverse action '" + inst.m_type+ "'");
+		PSSLog log = inst.run().log();
+		log.Info("traverse action '" + inst.m_type+ "'");
 
 		// Create solver
 		PSSSolver solver = createSolver(inst);
@@ -175,9 +177,9 @@ public class PSSActionModel extends PSSModel {
 		evalPreSolve(inst);
 
 		// solve
-		PSSMessage.Info("solve action '" + inst.m_type+ "'");
+		log.Info("solve action '" + inst.m_type+ "'");
 		int interation = solver.solve();
-		PSSMessage.Debug("solve iteration: " + String.valueOf(interation));
+		log.Debug("solve iteration: " + String.valueOf(interation));
 
 		// post_solve
 		evalPostSolve(inst);

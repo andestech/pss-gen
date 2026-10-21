@@ -33,7 +33,7 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 		if (exec_kind == PSSExecKind.pre_solve) {
 			PSSInst leftInst = m_ref.getInst(inst);
 			if (leftInst.isRandomable()) {
-				PSSMessage.Warning("Assign to random variable in pre_solve block is meaningless: "
+				inst.run().log().Warning("Assign to random variable in pre_solve block is meaningless: "
 						+ m_ref.getText() + m_op + m_expression.getText());
 			}
 		}
@@ -87,7 +87,7 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 				break;
 
 			case "<<=":
-				m_ref.assign(inst, leftVal.LeftShift(rightVal));
+				m_ref.assign(inst, leftVal.LeftShift(rightVal, inst.run().log()));
 				break;
 
 			case ">>=":

@@ -9,14 +9,16 @@ import pssgen.model.PSSActionModel;
 import pssgen.model.PSSModel;
 import pssgen.proc.PSSExecKind;
 import pssgen.util.PSSMessage;
-import pssgen.util.PSSRandom;
 
 public class PSSTraversalList {
 	ArrayList <PSSTraversal> m_list;
 	boolean contain_flow_action;
+	/** the action instance whose sub-actions these are */
+	private final PSSActionInst m_owner;
 
-	public PSSTraversalList() {
+	public PSSTraversalList(PSSActionInst owner) {
 		m_list = new ArrayList <PSSTraversal>();
+		m_owner = owner;
 	}
 
 	public void add(PSSTraversal t) {
@@ -61,7 +63,7 @@ public class PSSTraversalList {
 			return candidate.get(0);
 		}
 		else {
-			int idx = PSSRandom.nextInt(0, candidate.size()-1);
+			int idx = m_owner.run().random().nextInt(0, candidate.size()-1);
 			return candidate.get(idx);
 		}
 
@@ -119,7 +121,7 @@ public class PSSTraversalList {
 		PSSInferredAction item
 	) {
 		PSSActionModel action_model = item.getAction();
-		PSSMessage.Info("Infer action: " + action_model.getId());
+		parent_inst.run().log().Info("Infer action: " + action_model.getId());
 
 		PSSModel type_model = uref.getTypeModel();
 
@@ -130,6 +132,8 @@ public class PSSTraversalList {
 		uref.bind(flowobj);
 
 		PSSActionInst inferred_inst = action_model.declInst(true);
+		// An inferred action is traversed without being a child of parent_inst.
+		inferred_inst.setRun(parent_inst.run());
 		PSSTraversal inferred_t = new PSSTraversal(inferred_inst);
 		m_list.add(inferred_t);
 
@@ -147,7 +151,7 @@ public class PSSTraversalList {
 	public void inferAction(PSSActionInst parent_inst, PSSTraversal t, PSSUnboundRef uref) {
 		PSSInferredActionList list = parent_inst.getInferredAction(!uref.isOutput(), uref.getTypeId());
 		if (list.size() > 0) {
-			int idx = PSSRandom.nextInt(0, list.size()-1);
+			int idx = parent_inst.run().random().nextInt(0, list.size()-1);
 			PSSInferredAction item = list.get(idx);
 			declInferredAction(parent_inst, t, uref, item);
 		}

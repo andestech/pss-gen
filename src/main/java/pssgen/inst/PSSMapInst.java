@@ -146,8 +146,10 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
         PSSInst vi = m_values.get(key);
         if (vi == null) {
             PSSInst ki = map_type.getKeyType().declInst("", false);
+            ki.setOwner(this);
             ki.assign(key);
             vi = map_type.getValueType().declInst("", false);
+            vi.setOwner(this);
             m_keys.put(key, ki);
             m_values.put(key, vi);
         }
@@ -215,8 +217,10 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
         PSSInst vi = m_values.get(k);
         if (vi == null) {
             PSSInst ki = map_type.getKeyType().declInst("", false);
+            ki.setOwner(this);
             ki.assign(k);
             vi = map_type.getValueType().declInst("", false);
+            vi.setOwner(this);
             m_keys.put(k, ki);
             m_values.put(k, vi);
         }

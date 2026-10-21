@@ -7,7 +7,7 @@ import pssgen.model.PSSModel;
 import pssgen.solver.PSSDomain;
 import pssgen.solver.PSSIntDomain;
 import pssgen.util.PSSMessage;
-import pssgen.util.PSSRandom;
+import pssgen.util.PSSRun;
 import pssgen.value.PSSIntVal;
 import pssgen.value.PSSVal;
 
@@ -85,7 +85,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 			int retry = 0;
 
 			while (!validated) {
-				PSSRandom.limitRetry(retry);
+				run().random().limitRetry(retry);
 				randomize_one();
 				validated = validate();
 				retry++;
@@ -96,9 +96,10 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public void randomize_one() {
-		BigInteger rand_val = m_domain.random().toBigInteger();
+		PSSRun run = run();
+		BigInteger rand_val = m_domain.random(run.random()).toBigInteger();
 		m_val = new PSSIntVal(rand_val);
-		if (PSSMessage.isPrintRandEn()) PSSMessage.Debug("randomize_one: '" + getHierarchyId() + "' = " + m_val.toInt());
+		if (run.log().isPrintRandEn()) run.log().Debug("randomize_one: '" + getHierarchyId() + "' = " + m_val.toInt());
 	}
 
 	public void assignDomain(PSSDomain domain) {

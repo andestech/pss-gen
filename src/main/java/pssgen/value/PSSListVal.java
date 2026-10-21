@@ -183,13 +183,13 @@ public class PSSListVal extends PSSVal implements PSSICollection {
     }
 
     @Override
-    public PSSVal randomIn() {
+    public PSSVal randomIn(PSSRandom random) {
         int size = m_list.size();
-        int randi = PSSRandom.nextInt(0, size - 1);
+        int randi = random.nextInt(0, size - 1);
         PSSVal item = m_list.get(randi);
 
         if (item.isRangeVal())
-            return item.randomIn();
+            return item.randomIn(random);
         return item;
     }
 

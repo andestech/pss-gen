@@ -4,7 +4,9 @@ import java.math.*;
 import java.util.List;
 
 import pssgen.model.PSSModel;
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
+import pssgen.util.PSSRandom;
 
 /**
  * This class provides a default implementation of values. All operations are
@@ -122,6 +124,16 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 		return null;
 	}
 
+	/**
+	 * Extract part from value, with the warnings of this value type.
+	 *
+	 * @param log the run's messages
+	 * @return the part of value
+	 */
+	public PSSVal extract (int msb, int lsb, PSSLog log) {
+		return extract(msb, lsb);
+	}
+
     /**
      * Returns the list elements.
      *
@@ -135,9 +147,10 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	/**
 	 * Returns a random value in this range.
 	 *
+	 * @param random the random source of the run
 	 * @return a random value in this range
 	 */
-	public PSSVal randomIn() {
+	public PSSVal randomIn(PSSRandom random) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::randomIn is not implemented");
 		return null;
 	}
@@ -322,6 +335,10 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	public PSSVal LeftShift (int rhs) {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::LeftShift is not implemented");
 		return null;
+	}
+	/** "<<" operator with the warnings of this value type, which go to log */
+	public PSSVal LeftShift (PSSVal rhs, PSSLog log) {
+		return LeftShift(rhs);
 	}
 
 	/**

@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.*;
 
+import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
 
 public class VerboseListener extends BaseErrorListener {
@@ -12,22 +13,22 @@ public class VerboseListener extends BaseErrorListener {
 	/** true: report a PSS-WARNING and let the recognizer continue */
 	private final boolean warn;
 
-	public VerboseListener() {
-		this("<RefPath>");
+	/** where the PSS-WARNINGs go */
+	private final PSSLog log;
+
+	public VerboseListener(String filename, PSSLog log) {
+		this(filename, false, log);
 	}
 
-	public VerboseListener(String filename) {
-		this(filename, false);
-	}
-
-	private VerboseListener(String filename, boolean warn) {
+	private VerboseListener(String filename, boolean warn, PSSLog log) {
 		this.filename = filename;
 		this.warn = warn;
+		this.log = log;
 	}
 
 	/** A listener that reports each error as a PSS-WARNING instead of a PSS-ERROR. */
-	public static VerboseListener warning(String filename) {
-		return new VerboseListener(filename, true);
+	public static VerboseListener warning(String filename, PSSLog log) {
+		return new VerboseListener(filename, true, log);
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class VerboseListener extends BaseErrorListener {
 		//System.err.println("rule stack: "+stack);
 		String where = this.filename + ':' + line + ':' + charPositionInLine + " : " + msg;
 		if (warn) {
-			PSSMessage.Warning("[SYNTAX] " + where + "; the character is ignored");
+			log.Warning("[SYNTAX] " + where + "; the character is ignored");
 		} else {
 			PSSMessage.Error("SYNTAX", where);
 		}

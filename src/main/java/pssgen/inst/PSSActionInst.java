@@ -26,7 +26,7 @@ public class PSSActionInst extends PSSInst {
 
 	public PSSActionInst(String id, String type, PSSModel type_decl) {
 		super(id, type, type_decl, false);
-		m_sub_list = new PSSTraversalList();
+		m_sub_list = new PSSTraversalList(this);
 		m_c_list = new PSSConstraintList();
 
 		// Declare the built-in field "comp" associated with an action. The field comp

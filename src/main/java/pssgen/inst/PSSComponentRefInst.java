@@ -57,7 +57,7 @@ public class PSSComponentRefInst extends PSSRefInst {
             PSSInst comp = findComponentInst();
             setReference(comp);
         } else {
-            m_ref = m_domain.random();
+            m_ref = m_domain.random(run().random());
         }
     }
 

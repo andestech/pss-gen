@@ -1,43 +1,53 @@
 package pssgen.util;
 
 import java.util.*;
-//import java.nio.charset.Charset;
 import java.math.*;
 
-public class PSSRandom {
-	private static int i_RetryLimit = 2000;	// Max. iteration of randomization
-	public static void setRetryLimit (int val) {
+/** The random source of one run: the seed, its java.util.Random and the retry limit. */
+public final class PSSRandom {
+	// Without 'z'. The alphabet decides every random string and the rest of the
+	// stream after it, so a corrected alphabet changes the output of every pattern
+	// that draws a string.
+	private static final String m_alphabet = "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+	private final PSSLog m_log;
+	private int i_RetryLimit = 2000;	// Max. iteration of randomization
+	private Random m_rand;
+	private long m_seed;
+
+	public PSSRandom(PSSLog log) {
+		m_log = log;
+	}
+
+	public void setRetryLimit (int val) {
 		if (val < 1) PSSMessage.Fatal("RetryLimit must greater than 0: value = " + String.valueOf(val));
-		PSSMessage.Info("Change retry limit: " + String.valueOf(i_RetryLimit) + " -> " + String.valueOf(val));
+		m_log.Info("Change retry limit: " + String.valueOf(i_RetryLimit) + " -> " + String.valueOf(val));
 		i_RetryLimit = val;
 	}
 
-	static final String m_alphabet = "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	static Random m_rand;
-	static long m_seed;
-	public static void initRandom(long seed) {
-		PSSMessage.Info("random seed is " + String.valueOf(seed));
+	public void initRandom(long seed) {
+		m_log.Info("random seed is " + String.valueOf(seed));
 		m_seed = seed;
 		m_rand = new Random(seed);
 	}
-	public static long getSeed() {
+	public long getSeed() {
 		return m_seed;
 	}
-	public static Random getRandomObj() {
+	public Random getRandomObj() {
 		return m_rand;
 	}
-	public static String nextString(int len) {
+	public String nextString(int len) {
 		String str = "";
 		for (int i=0; i<len; i++) {
 			str = str + m_alphabet.charAt(m_rand.nextInt(m_alphabet.length()));
 		}
 		return str;
 	}
-	public static String nextString() {
+	public String nextString() {
 		int len = nextInt(1, 16);
 		return nextString(len);
 	}
-	public static ArrayList<Integer> nextSchedule(int size) {
+	public ArrayList<Integer> nextSchedule(int size) {
 		ArrayList<Integer> schedule = new ArrayList<Integer>();
 
 		for (int i=0; i<size; i++) {
@@ -52,15 +62,15 @@ public class PSSRandom {
 		}
 		return schedule;
 	}
-	public static void limitRetry(int retry) {
+	public void limitRetry(int retry) {
 		if (retry > i_RetryLimit) {
 			PSSMessage.Fatal("randomize fail");
 		}
 	}
-	public static int nextInt() {
+	public int nextInt() {
 		return m_rand.nextInt();
 	}
-	public static BigInteger nextBigInteger(int numBits, boolean sign) {
+	public BigInteger nextBigInteger(int numBits, boolean sign) {
 		BigInteger rand_val = new BigInteger(numBits, m_rand);	// range 0 to (2^numBits - 1)
 		if (sign) {
 			BigInteger bias = BigInteger.ONE.shiftLeft(numBits-1);
@@ -68,7 +78,7 @@ public class PSSRandom {
 		}
 		return rand_val;
 	}
-	public static BigInteger nextBigInteger(BigInteger min, BigInteger max) {
+	public BigInteger nextBigInteger(BigInteger min, BigInteger max) {
 		if(max.compareTo(min) < 0) {
 			BigInteger tmp = min;
 			min = max;
@@ -89,7 +99,7 @@ public class PSSRandom {
 		return result;
 	}
 
-	public static BigInteger nextBigInteger(int numBits, boolean sign, BigInteger min, BigInteger max) {
+	public BigInteger nextBigInteger(int numBits, boolean sign, BigInteger min, BigInteger max) {
 		BigInteger rand_val = new BigInteger(numBits, m_rand);	// range 0 to (2^numBits - 1)
 		if (sign) {
 			BigInteger bias = BigInteger.ONE.shiftLeft(numBits-1);
@@ -97,7 +107,7 @@ public class PSSRandom {
 		}
 		return rand_val;
 	}
-	public static int nextInt(int min, int max) {
+	public int nextInt(int min, int max) {
 		return m_rand.nextInt(max-min+1) + min;
 	}
 }

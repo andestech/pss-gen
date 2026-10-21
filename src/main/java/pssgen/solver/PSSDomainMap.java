@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.LinkedHashMap;
 
 import pssgen.inst.PSSInst;
-import pssgen.util.PSSMessage;
+import pssgen.util.PSSLog;
 
 public class PSSDomainMap {
 	/** insertion-ordered, because PSSInst keys hash by identity (see PSSSolver) */
@@ -91,10 +91,10 @@ public class PSSDomainMap {
 		return result;
 	}
 
-	public void dump(String indent) {
+	public void dump(String indent, PSSLog log) {
 		for (PSSInst var : m_map.keySet()) {
 			PSSDomain val = m_map.get(var);
-			PSSMessage.Debug(indent + var.m_id + ": " + val.getText());
+			log.Debug(indent + var.m_id + ": " + val.getText());
 		}
 	}
 }

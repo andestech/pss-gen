@@ -6,7 +6,6 @@ import pssgen.model.PSSIntModel;
 import pssgen.model.PSSListModel;
 import pssgen.model.PSSModel;
 import pssgen.util.PSSMessage;
-import pssgen.util.PSSRandom;
 import pssgen.value.PSSIntVal;
 import pssgen.value.PSSListVal;
 import pssgen.value.PSSRefVal;
@@ -137,6 +136,7 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
 
     private PSSInst getNewElementInst(PSSVal element) {
         PSSInst elemInst = m_elem_type_model.declInst("", false);
+        elemInst.setOwner(this);
         elemInst.assign(element);
         return elemInst;
     }
@@ -384,7 +384,7 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
      * @note Support after PSSv2.1
      */
     public void shuffle() {
-        Random rnd = PSSRandom.getRandomObj();
+        Random rnd = run().random().getRandomObj();
         Collections.shuffle(m_list, rnd);
     }
 

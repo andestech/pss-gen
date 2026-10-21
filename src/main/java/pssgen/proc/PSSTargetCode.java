@@ -8,7 +8,6 @@ import pssgen.expr.PSSRefPathExpression;
 import pssgen.inst.PSSInst;
 import pssgen.model.PSSModel;
 import pssgen.util.PSSMessage;
-import pssgen.util.PSSTest;
 
 public class PSSTargetCode extends PSSModel {
 
@@ -48,7 +47,7 @@ public class PSSTargetCode extends PSSModel {
 				String prefix = residual.substring(0, start);
 				String ref = m.group(1);
 
-				PSSRefPathExpression ref_exp = PSSRefPathExpression.fromString(m_root, ref);
+				PSSRefPathExpression ref_exp = PSSRefPathExpression.fromString(m_root, ref, inst.run().log());
 
 				PSSInst var = ref_exp.getInst(inst);
 
@@ -69,7 +68,7 @@ public class PSSTargetCode extends PSSModel {
 		}
 
 		if (result.length() > 0) {
-			PSSTest.println(result);
+			inst.run().test().println(result);
 		}
 
 	}
