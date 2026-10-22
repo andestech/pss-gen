@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/** Characterization of PSSRandom, including two known bugs that are kept on purpose. */
+/** Characterization of PSSRandom, including a known bug that is kept on purpose. */
 class PSSRandomTest {
 
 	private final PSSRandom random = new PSSRandom(new PSSLog(System.out));
@@ -113,27 +113,5 @@ class PSSRandomTest {
 		assertEquals(-1, s.indexOf('z'));
 		assertEquals(61, s.chars().distinct().count());
 		assertTrue(s.indexOf('y') >= 0 && s.indexOf('Z') >= 0 && s.indexOf('9') >= 0);
-	}
-
-	/**
-	 * Known bug: nextBigInteger(numBits, sign, min, max) ignores min and max and
-	 * returns what nextBigInteger(numBits, sign) returns. Not fixed: honouring the
-	 * bounds changes the random stream for callers of the four-argument form.
-	 */
-	@Test
-	void knownBugFourArgNextBigIntegerIgnoresMinMax() {
-		BigInteger min = BigInteger.valueOf(100), max = BigInteger.valueOf(101);
-		random.initRandom(11);
-		List<BigInteger> four = new ArrayList<>();
-		for (int i = 0; i < 50; i++) {
-			four.add(random.nextBigInteger(16, false, min, max));
-		}
-		random.initRandom(11);
-		List<BigInteger> two = new ArrayList<>();
-		for (int i = 0; i < 50; i++) {
-			two.add(random.nextBigInteger(16, false));
-		}
-		assertEquals(two, four);
-		assertTrue(four.stream().anyMatch(x -> x.compareTo(min) < 0 || x.compareTo(max) > 0));
 	}
 }

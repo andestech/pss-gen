@@ -98,15 +98,6 @@ public final class PSSRandom {
 		result = result.add(min);
 		return result;
 	}
-
-	public BigInteger nextBigInteger(int numBits, boolean sign, BigInteger min, BigInteger max) {
-		BigInteger rand_val = new BigInteger(numBits, m_rand);	// range 0 to (2^numBits - 1)
-		if (sign) {
-			BigInteger bias = BigInteger.ONE.shiftLeft(numBits-1);
-			rand_val = rand_val.subtract(bias);
-		}
-		return rand_val;
-	}
 	public int nextInt(int min, int max) {
 		return m_rand.nextInt(max-min+1) + min;
 	}
