@@ -404,7 +404,7 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 	 * @return
 	 */
 	public PSSBoolVal LogicalNot() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalOr is not implemented");
+		PSSMessage.Fatal(getClass().getSimpleName() + "::LogicalNot is not implemented");
 		return null;
 	}
 

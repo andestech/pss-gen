@@ -167,4 +167,10 @@ class PSSIntValTest {
 		assertNull(new PSSIntVal(6).join(r));
 		assertNull(new PSSIntVal(6).join(new PSSIntVal(7)));
 	}
+
+	@Test
+	void logicalNotOfAnIntIsNotImplemented() {
+		RuntimeException e = assertThrows(RuntimeException.class, () -> new PSSIntVal(1).LogicalNot());
+		assertEquals("PSSIntVal::LogicalNot is not implemented", e.getMessage());
+	}
 }
