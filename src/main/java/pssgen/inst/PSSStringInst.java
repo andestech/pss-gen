@@ -24,6 +24,14 @@ public class PSSStringInst extends PSSInst implements PSSIScalarInst {
 			PSSMessage.Error("OVERCONSTRAINT", "'" + getHierarchyId() + "' is over-constrained");
 		}
 	}
+	@Override
+	public PSSDomain getDomain() {
+		return m_domain;
+	}
+	@Override
+	public void restoreDomain(PSSDomain domain) {
+		m_domain = (PSSStringDomain) domain;
+	}
 	public PSSVal toVal() {
 		if (!m_initialized) {
 			PSSMessage.Error("StringInst", "'" + getHierarchyId()+ "' is not initialized");

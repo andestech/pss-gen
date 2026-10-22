@@ -109,6 +109,16 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 		}
 	}
 
+	@Override
+	public PSSDomain getDomain() {
+		return m_domain;
+	}
+
+	@Override
+	public void restoreDomain(PSSDomain domain) {
+		m_domain = (PSSIntDomain) domain;
+	}
+
 	public void assign(PSSVal val) {
 		m_initialized = true;
 		PSSVal result = val;

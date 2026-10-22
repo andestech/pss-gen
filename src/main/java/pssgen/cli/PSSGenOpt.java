@@ -254,7 +254,7 @@ public class PSSGenOpt {
 			+ "	-set_random_limit <val>		change max. iterations of randomization (default: 2000)" + nl
 			+ "	-root <root_action>" + nl
 			+ "	-seed <seed>" + nl
-			+ "	-solver <name>		constraint solver: retry (default) or propagate" + nl
+			+ "	-solver <name>		constraint solver: retry (default, then propagate when retry fails) or propagate" + nl
 			+ "	-help			print this text and exit" + nl;
 		throw requested ? PSSException.stop(usage) : PSSException.create(null, "usage", usage);
 	}

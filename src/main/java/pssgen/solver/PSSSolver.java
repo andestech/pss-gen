@@ -11,6 +11,7 @@ import pssgen.inst.PSSIScalarInst;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSIntInst;
 import pssgen.inst.PSSStructInst;
+import pssgen.util.PSSException;
 import pssgen.util.PSSMessage;
 import pssgen.util.PSSRun;
 
@@ -21,6 +22,9 @@ public class PSSSolver {
 	// on every JVM and every run.
 	public LinkedHashMap<PSSInst, PSSConstraintList> m_inst_list;
 	public LinkedHashMap<PSSInst, PSSConstraintList> m_default_constraint_list;
+	// The domain each field had before the solver first narrowed it, for
+	// solveRetryThenPropagate to start solvePropagate from the state before solve().
+	private final LinkedHashMap<PSSInst, PSSDomain> m_saved_domains = new LinkedHashMap<PSSInst, PSSDomain>();
 
 	public PSSSolver(PSSInst inst) {
 		m_inst_list = new LinkedHashMap<PSSInst, PSSConstraintList>();
@@ -93,6 +97,7 @@ public class PSSSolver {
 				// Assign domain of the random variable as default constraint
 				PSSDomainMap def_map = def_c.deduceDomain(item);
 				PSSDomain def_domain = def_map.getMap().get(def_inst);
+				saveDomain(def_inst);
 				def_inst.assignDomain(def_domain);
 			}
 		}
@@ -118,6 +123,7 @@ public class PSSSolver {
 		LinkedHashMap<PSSInst, PSSDomain> map = result.getMap();
 		for (PSSInst var : map.keySet()) {
 			PSSDomain domain = map.get(var);
+			saveDomain(var);
 			var.assignDomain(domain);
 			m_inst.run().log().Info(var.m_id + " domain: " + domain.getText());
 		}
@@ -163,6 +169,47 @@ public class PSSSolver {
 		} while (validate() == false);
 
 		return retry;
+	}
+
+	private void saveDomain(PSSInst inst) {
+		if (!m_saved_domains.containsKey(inst)) {
+			m_saved_domains.put(inst, inst.getDomain());
+		}
+	}
+
+	/**
+	 * The default solver: solve(), and when it gives up (randomize fail or an empty
+	 * domain), solvePropagate() from the domains the fields had before solve(). A model
+	 * that solve() solves gets exactly the output of solve(). When both give up, the
+	 * failure of solve() is reported.
+	 *
+	 * @return the number of draws of the solver that succeeded
+	 */
+	public int solveRetryThenPropagate() {
+		try {
+			return solve();
+		} catch (PSSException e) {
+			if (!givesUp(e))
+				throw e;
+			for (Map.Entry<PSSInst, PSSDomain> d : m_saved_domains.entrySet()) {
+				d.getKey().restoreDomain(d.getValue());
+			}
+			m_inst.run().log().Info("retry solver: " + e.getMessage() + "; solving again with -solver propagate");
+			try {
+				return solvePropagate();
+			} catch (PSSException e2) {
+				if (!givesUp(e2))
+					throw e2;
+				// A PSS-ERROR is stamped now, so that its time follows the messages of
+				// the second attempt.
+				throw e.getID() == null ? e : PSSException.error(e.getID(), e.getMessage(), System.currentTimeMillis());
+			}
+		}
+	}
+
+	/** True for the failures that end a solver without a fault in the model: no value found. */
+	private static boolean givesUp(PSSException e) {
+		return "OVERCONSTRAINT".equals(e.getID()) || (e.getID() == null && "randomize fail".equals(e.getMessage()));
 	}
 
 	/**

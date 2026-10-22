@@ -84,4 +84,14 @@ public class PSSComponentRefInst extends PSSRefInst {
             m_domain = (PSSRefDomain) domain;
     }
 
+    @Override
+    public PSSDomain getDomain() {
+        return m_domain;
+    }
+
+    @Override
+    public void restoreDomain(PSSDomain domain) {
+        m_domain = (PSSRefDomain) domain;
+    }
+
 }

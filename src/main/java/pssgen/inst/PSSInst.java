@@ -371,6 +371,18 @@ public class PSSInst {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::assignDomain is not implemented");
 	}
 
+	/** The current solution domain of a scalar field; null for an instance without one. */
+	public PSSDomain getDomain() {
+		return null;
+	}
+
+	/**
+	 * Puts back a domain that getDomain() returned. Unlike assignDomain it reports no
+	 * empty domain: the domain held before was a valid state.
+	 */
+	public void restoreDomain(PSSDomain domain) {
+	}
+
 	public void randomize() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::randomize is not implemented");
 	}

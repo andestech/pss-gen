@@ -29,6 +29,16 @@ public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
 		}
 	}
 
+	@Override
+	public PSSDomain getDomain() {
+		return m_domain;
+	}
+
+	@Override
+	public void restoreDomain(PSSDomain domain) {
+		m_domain = (PSSIntDomain) domain;
+	}
+
 	public boolean validate() {
 		return m_domain.InRange(toVal()).toBool();
 	}

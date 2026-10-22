@@ -37,7 +37,7 @@ public final class PSSOptions {
 	public void setSeed(long seed) {
 		m_seed = seed;
 	}
-	/** "retry" (default) or "propagate"; see PSSSolver.solve and solvePropagate */
+	/** "retry" (default) or "propagate"; see PSSSolver.solveRetryThenPropagate and solvePropagate */
 	public String solver() {
 		return m_solver;
 	}
