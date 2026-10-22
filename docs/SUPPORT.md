@@ -115,6 +115,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 10 / 9 | Integer field with a value domain in a component, e.g. `bit[4] in [1..2] x;` | unsupported | `PSSModel.addConstraint()`: `PSSComponentModel::addConstraint is not implemented` | | A package-level `const` field with a domain stops the same way, naming its scope's class. |
 | 11.3.1, 11.3.2 / 10.2.1, 10.2.2 | Atomic actions with `exec body`; compound actions with `activity`; rand fields; root action from `-root` | supported | | tests/samples/test_demo | |
 | 11.1 / 10.1 | Compound action that also has an `exec body` | partial | | tests/issues/17 (skipped) | Accepted; the LRM forbids it. The test's model is also illegal by name resolution. It is skipped because the expected output needs an activity `foreach` to see a list element that an earlier sub-action's `post_solve` appends, and PSSGen expands the `foreach` first. |
+| 11.3.3 / 10.2.3 | `abstract action` | unsupported | `PSSGenVisitor.visitAbstract_action_declaration()`: `Syntax is not yet supported: '...'` | tests/errors/inheritance | An abstract action is only usable as a base type, and inheritance is not supported. |
 | 4.2, 21.3 / 4.2, 20.3 | Two fields with the same name in one type | partial | | tests/samples/PSSv2.1_7.9_Collections/maps/test_map_initialization_assignment | #48: not reported. |
 
 ## Activities
@@ -176,6 +177,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 
 | LRM (2.0 / 2.1) | Construct | Status | Message | Test | Notes |
 |---|---|---|---|---|---|
+| 20.1 / 19.1 | Base type `: base` of a component, action, struct, flow object or resource | unsupported | `PSSGenVisitor.visitComponent_super_spec()`, `PSSGenVisitor.visitAction_super_spec()`, `PSSGenVisitor.visitStruct_super_spec()`: `Syntax is not yet supported: ':...'` | tests/errors/inheritance, tests/errors/inheritance-action | Flow objects and resources use the struct message. |
 | 20.1 / 19.1 | `super.x` in an expression or in a template `{{super.x}}` | unsupported | `PSSGenVisitor.visitRef_path()`: `super in ref_path is not implemented` | | In a template the message comes while the output file is written. |
 | 20.2 / 19.2 | `extend` of any type, enum extension included | unsupported | `PSSGenVisitor.visitExtend_stmt()`: `Syntax is not yet supported: '...'` | | |
 | 20.5 / 19.5 | `override` block | unsupported | `PSSGenVisitor.visitOverride_declaration()`: `Syntax is not yet supported: '...'` | | |
@@ -237,6 +239,10 @@ decides that the input cannot be generated:
 | `pool` declaration | `PSSGenVisitor.visitComponent_pool_declaration()` |
 | `covergroup` declaration | `PSSGenVisitor.visitCovergroup_declaration()` |
 | `typedef` | `PSSGenVisitor.visitTypedef_declaration()` |
+| Base type `: base` of a component | `PSSGenVisitor.visitComponent_super_spec()` |
+| Base type `: base` of an action | `PSSGenVisitor.visitAction_super_spec()` |
+| Base type `: base` of a struct, flow object or resource | `PSSGenVisitor.visitStruct_super_spec()` |
+| `abstract action` | `PSSGenVisitor.visitAbstract_action_declaration()` |
 | `super;` in an exec block | `PSSGenVisitor.visitExec_super_stmt()` |
 | `symbol` declaration | `PSSGenVisitor.visitSymbol_declaration()` |
 | `default disable x;` | `PSSGenVisitor.visitConstraint_body_item()` |

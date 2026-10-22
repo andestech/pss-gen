@@ -94,6 +94,14 @@ public final class PSSUnsupportedScan {
 			return "visitCovergroup_declaration";
 		if (ctx instanceof PSSParser.Typedef_declarationContext)
 			return "visitTypedef_declaration";
+		if (ctx instanceof PSSParser.Component_super_specContext)
+			return "visitComponent_super_spec";
+		if (ctx instanceof PSSParser.Action_super_specContext)
+			return "visitAction_super_spec";
+		if (ctx instanceof PSSParser.Struct_super_specContext)
+			return "visitStruct_super_spec";
+		if (ctx instanceof PSSParser.Abstract_action_declarationContext)
+			return "visitAbstract_action_declaration";
 		if (ctx instanceof PSSParser.Exec_super_stmtContext)
 			return "visitExec_super_stmt";
 		if (ctx instanceof PSSParser.Symbol_declarationContext)

@@ -83,4 +83,31 @@ class PSSUnsupportedScanTest {
 			+ "            parallel { parallel { do sub_a; } }\n            replicate (2) { do sub_a; }\n        }\n    }\n}\n");
 		assertTrue(text.startsWith("[T] PSS-ERROR: [UNSUPPORTED] 2 unsupported constructs:\n"), text);
 	}
+
+	@Test
+	void inheritanceAndAbstractActionsReportedTogether() throws Exception {
+		assertEquals("[T] PSS-ERROR: [UNSUPPORTED] 3 unsupported constructs:\n"
+			+ "f0.pss:1:18: PSSGenVisitor.visitComponent_super_spec(): Syntax is not yet supported: ':base_c'\n"
+			+ "f0.pss:2:4: PSSGenVisitor.visitAbstract_action_declaration(): Syntax is not yet supported: 'abstractactionbase_a{}'\n"
+			+ "f0.pss:3:17: PSSGenVisitor.visitStruct_super_spec(): Syntax is not yet supported: ':base_s'\n",
+			run("component pss_top : base_c {\n    abstract action base_a { }\n    buffer der_b : base_s { }\n"
+				+ "    struct base_s { }\n    action root_a { }\n}\ncomponent base_c { }\n"));
+	}
+
+	@Test
+	void eachInheritanceConstructAloneKeepsTheVisitorMessage() throws Exception {
+		String[][] cases = {
+			{ "component base_c { }\ncomponent pss_top : base_c {\n    action root_a { }\n}\n", "visitComponent_super_spec", ":base_c" },
+			{ "component pss_top {\n    action base_a { }\n    action root_a : base_a { }\n}\n", "visitAction_super_spec", ":base_a" },
+			{ "component pss_top {\n    struct base_s { }\n    struct der_s : base_s { }\n    action root_a { }\n}\n",
+				"visitStruct_super_spec", ":base_s" },
+			{ "component pss_top {\n    abstract action base_a { }\n    action root_a { }\n}\n",
+				"visitAbstract_action_declaration", "abstractactionbase_a{}" },
+		};
+		for (String[] c : cases) {
+			String text = run(c[0]);
+			assertEquals("PSSGenVisitor." + c[1] + "(), Ln" + text.replaceAll("(?s)^.*\\(\\), Ln(\\d+):.*$", "$1")
+				+ ": Syntax is not yet supported: '" + c[2] + "'\n", text);
+		}
+	}
 }

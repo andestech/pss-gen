@@ -1,0 +1,13 @@
+component base_c {
+}
+component pss_top : base_c {
+    struct base_s {
+        rand bit [4] i;
+    }
+    struct der_s : base_s {
+    }
+    abstract action base_a {
+    }
+    action root_a : base_a {
+    }
+}

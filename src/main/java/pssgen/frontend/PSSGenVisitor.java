@@ -177,6 +177,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitComponent_declaration(PSSParser.Component_declarationContext ctx) {
+		if (ctx.component_super_spec() != null)
+			visit(ctx.component_super_spec());
 		String id = ctx.component_identifier().getText();
 
 		PSSComponentModel node = new PSSComponentModel(id);
@@ -433,6 +435,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitAction_declaration(PSSParser.Action_declarationContext ctx) {
+		if (ctx.action_super_spec() != null)
+			visit(ctx.action_super_spec());
 		String id = ctx.action_identifier().getText();
 
 		PSSActionModel node = new PSSActionModel(id);
@@ -462,6 +466,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitStruct_declaration(PSSParser.Struct_declarationContext ctx) {
+		if (ctx.struct_super_spec() != null)
+			visit(ctx.struct_super_spec());
 		visit(ctx.struct_kind());
 		PSSStructKind kind = cur_struct_kind;
 		String id = ctx.struct_identifier().getText();
@@ -508,6 +514,33 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		}
 
+		return 0;
+	}
+
+	// Type inheritance (LRM 19.1) is not modeled: a derived type would silently miss
+	// the fields, constraints, exec blocks and activity of its base type.
+	@Override
+	public Integer visitComponent_super_spec(PSSParser.Component_super_specContext ctx) {
+		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		return 0;
+	}
+
+	@Override
+	public Integer visitAction_super_spec(PSSParser.Action_super_specContext ctx) {
+		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		return 0;
+	}
+
+	@Override
+	public Integer visitStruct_super_spec(PSSParser.Struct_super_specContext ctx) {
+		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
+		return 0;
+	}
+
+	// An abstract action is only usable as a base type, and may not be traversed.
+	@Override
+	public Integer visitAbstract_action_declaration(PSSParser.Abstract_action_declarationContext ctx) {
+		PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
 	}
 
