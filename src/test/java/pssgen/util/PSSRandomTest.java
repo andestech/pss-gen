@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/** Characterization of PSSRandom, including a known bug that is kept on purpose. */
+/** Characterization of PSSRandom. */
 class PSSRandomTest {
 
 	private final PSSRandom random = new PSSRandom(new PSSLog(System.out));
@@ -101,17 +101,11 @@ class PSSRandomTest {
 		assertThrows(RuntimeException.class, () -> random.setRetryLimit(0));
 	}
 
-	/**
-	 * Known bug: the alphabet of nextString has 61 characters and no lowercase 'z'.
-	 * Not fixed: a 62-character alphabet changes every random string, and the stream
-	 * after it, of every pattern that draws a string.
-	 */
 	@Test
-	void knownBugAlphabetLacksLowercaseZ() {
+	void nextStringDrawsFromAllLettersAndDigits() {
 		random.initRandom(3);
 		String s = random.nextString(20000);
-		assertEquals(-1, s.indexOf('z'));
-		assertEquals(61, s.chars().distinct().count());
-		assertTrue(s.indexOf('y') >= 0 && s.indexOf('Z') >= 0 && s.indexOf('9') >= 0);
+		assertEquals(62, s.chars().distinct().count());
+		assertTrue(s.chars().allMatch(c -> Character.isLetterOrDigit(c) && c < 128));
 	}
 }

@@ -213,8 +213,7 @@ $ make -C src unit-test
 
 runs the JUnit 5 tests in `src/test/java` with `./gradlew test`; the report is
 `build/reports/tests/test/index.html`. They pin the behaviour of single classes (values,
-domains, the random source) and run whole generations in one JVM. Some of them record
-known bugs as the current behaviour; their comments name the bug.
+domains, the random source) and run whole generations in one JVM.
 
 ### Regression tests
 

@@ -5,10 +5,7 @@ import java.math.*;
 
 /** The random source of one run: the seed, its java.util.Random and the retry limit. */
 public final class PSSRandom {
-	// Without 'z'. The alphabet decides every random string and the rest of the
-	// stream after it, so a corrected alphabet changes the output of every pattern
-	// that draws a string.
-	private static final String m_alphabet = "abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	private static final String m_alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	private final PSSLog m_log;
 	private int i_RetryLimit = 2000;	// Max. iteration of randomization

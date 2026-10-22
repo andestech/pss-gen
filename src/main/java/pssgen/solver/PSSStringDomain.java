@@ -157,7 +157,7 @@ public class PSSStringDomain extends PSSDomain {
 		if (item.isBound()) {
 			return new PSSStringVal(item.toStr());
 		} else {
-			String str = random.nextString(6);	// Use 6-bit chars to reduce the chance of an accidental match on the first random to about 1.9e-9%.
+			String str = random.nextString(6);	// Use 6-bit chars to reduce the chance of an accidental match on the first random to about 1.8e-9%.
 			return new PSSStringVal(str);
 		}
 	}
