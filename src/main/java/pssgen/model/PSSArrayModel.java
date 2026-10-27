@@ -66,7 +66,7 @@ public class PSSArrayModel extends PSSModel implements PSSIAggregate {
 
 	@Override
 	public String getText() {
-		return m_id;
+		return getId();
 	}
 
 	@Override

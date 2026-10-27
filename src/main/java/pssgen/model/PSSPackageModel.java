@@ -10,10 +10,10 @@ public class PSSPackageModel extends PSSModel {
 
 	public void dump (String indent) {
 		
-		System.out.println(indent + "package " +  m_id + "{");
+		System.out.println(indent + "package " +  getId() + "{");
 
-		for (int i=0; i<children.size(); i++) {
-			PSSModel node = children.get(i);
+		for (int i=0; i<getChildren().size(); i++) {
+			PSSModel node = getChildren().get(i);
 			node.dump(indent + "\t");
 		}
 		System.out.println(indent + "}");

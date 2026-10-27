@@ -30,7 +30,7 @@ public class PSSForeachActivity extends PSSActivity {
         m_expression = exp;
         m_index_identifier = index;
         m_activity_stmt = stmt;
-        m_activity_stmt.m_parent = this;
+        m_activity_stmt.setParent(this);
     }
 
     @Override

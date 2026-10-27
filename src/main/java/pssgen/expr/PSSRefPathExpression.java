@@ -15,16 +15,16 @@ import pssgen.value.PSSVal;
 public class PSSRefPathExpression extends PSSExpression {
 
 	/** the optional type identifier */
-	public String m_type_identifier_elems;
+	private String m_type_identifier_elems;
 
 	/** the static_ref_path plus an optional hierarchical_id */
-	public PSSMemberPathElemExpression m_ref_path;
+	private PSSMemberPathElemExpression m_ref_path;
 
 	/** the optional beginning index of bit slice */
-	public PSSExpression m_bit_slice_from = null;
+	private PSSExpression m_bit_slice_from = null;
 
 	/** the optional ending index of bit slice */
-	public PSSExpression m_bit_slice_to = null;
+	private PSSExpression m_bit_slice_to = null;
 
 	/**
 	 * Constructs this reference.
@@ -133,4 +133,19 @@ public class PSSRefPathExpression extends PSSExpression {
 		return res;
 	}
 
+	public final String getTypeIdentifierElems() {
+		return m_type_identifier_elems;
+	}
+
+	public final PSSMemberPathElemExpression getRefPath() {
+		return m_ref_path;
+	}
+
+	public final PSSExpression getBitSliceFrom() {
+		return m_bit_slice_from;
+	}
+
+	public final PSSExpression getBitSliceTo() {
+		return m_bit_slice_to;
+	}
 }

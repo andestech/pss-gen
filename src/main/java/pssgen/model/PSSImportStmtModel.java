@@ -20,7 +20,7 @@ public class PSSImportStmtModel extends PSSModel {
 
 	}
 	public PSSModel findDeclaration(String id) {
-		PSSModel package_decl = m_parent.findPackageDeclaration(m_type_id);;
+		PSSModel package_decl = getParent().findPackageDeclaration(m_type_id);;
 
 		if (package_decl == null) {
 			PSSMessage.Error("IMPORT", "cannot not find package '" + m_type_id + "'");

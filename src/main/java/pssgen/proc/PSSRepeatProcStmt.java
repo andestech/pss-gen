@@ -33,7 +33,7 @@ public class PSSRepeatProcStmt extends PSSProcStmt {
         m_index_identifier = index;
         m_count = count;
         m_stmt = stmt;
-        m_stmt.m_parent = this;
+        m_stmt.setParent(this);
     }
 
     @Override

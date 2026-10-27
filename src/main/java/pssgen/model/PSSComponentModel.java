@@ -11,7 +11,7 @@ import pssgen.util.PSSMessage;
 public class PSSComponentModel extends PSSModel {
 
 	PSSComponentDataDeclListModel m_data_list;
-	public ArrayList<PSSExecBlock> m_exec_list;
+	private ArrayList<PSSExecBlock> m_exec_list;
 
 	public PSSComponentModel(String id) {
 		super(id);
@@ -36,7 +36,7 @@ public class PSSComponentModel extends PSSModel {
 		PSSExecKind kind = block.getKind();
 		if (kind.equals(PSSExecKind.init_up) || kind.equals(PSSExecKind.init_down)) {
 			m_exec_list.add(block);
-			block.m_parent = this;
+			block.setParent(this);
 		} else if (kind.equals(PSSExecKind.header) || kind.equals(PSSExecKind.declaration)
 				|| kind.equals(PSSExecKind.body)) {
 			PSSMessage.Error("ACTION", kind + " is only valid in action");
@@ -47,7 +47,7 @@ public class PSSComponentModel extends PSSModel {
 		} else if (kind.equals(PSSExecKind.init)) {
 			log.Warning("The exec kind " + kind + " is deprecated. Use " + PSSExecKind.init_up + " instead.");
 			m_exec_list.add(block);
-			block.m_parent = this;
+			block.setParent(this);
 		}
 	}
 
@@ -58,7 +58,7 @@ public class PSSComponentModel extends PSSModel {
 
 	@Override
 	public PSSComponentInst declInst(String id, boolean rand) {
-		PSSComponentInst comp = new PSSComponentInst(id, m_id, this);
+		PSSComponentInst comp = new PSSComponentInst(id, getId(), this);
 
 		m_data_list.declInst(comp);
 		declEnumInst(comp);
@@ -88,15 +88,18 @@ public class PSSComponentModel extends PSSModel {
 
 	@Override
 	public void dump(String indent) {
-		System.out.println(indent + "component " + m_id + "{");
+		System.out.println(indent + "component " + getId() + "{");
 
 		m_data_list.dump(indent + "\t");
 
-		for (int i = 0; i < children.size(); i++) {
-			PSSModel node = children.get(i);
+		for (int i = 0; i < getChildren().size(); i++) {
+			PSSModel node = getChildren().get(i);
 			node.dump(indent + "\t");
 		}
 		System.out.println(indent + "}");
 	}
 
+	public final ArrayList<PSSExecBlock> getExecList() {
+		return m_exec_list;
+	}
 }

@@ -17,7 +17,7 @@ public class PSSSetModel extends PSSModel implements PSSIAggregate {
      * @param data_type the type of set elements
      */
     public PSSSetModel(PSSModel data_type) {
-        super("set<" + data_type.m_id + ">");
+        super("set<" + data_type.getId() + ">");
         m_elem_data_type = data_type;
     }
 
@@ -37,7 +37,7 @@ public class PSSSetModel extends PSSModel implements PSSIAggregate {
 
     @Override
     public String getText() {
-        return m_id;
+        return getId();
     }
 
     @Override

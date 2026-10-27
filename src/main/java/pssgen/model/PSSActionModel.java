@@ -17,13 +17,13 @@ import pssgen.util.PSSMessage;
 
 public class PSSActionModel extends PSSModel {
 
-	public ArrayList<PSSFlowRefModel> m_flowref;
-	public ArrayList<PSSAttrField> m_attrfield;
-	public ArrayList<PSSActivity> m_activity;
-	public PSSConstraintList m_constraint;
-	public PSSConstraintList m_default_constraint;
-	public ArrayList<PSSExecBlock> m_exec_list;
-	public PSSTargetCodeList m_target_code;
+	private ArrayList<PSSFlowRefModel> m_flowref;
+	private ArrayList<PSSAttrField> m_attrfield;
+	private ArrayList<PSSActivity> m_activity;
+	private PSSConstraintList m_constraint;
+	private PSSConstraintList m_default_constraint;
+	private ArrayList<PSSExecBlock> m_exec_list;
+	private PSSTargetCodeList m_target_code;
 
 	public PSSActionModel(String id) {
 		super(id);
@@ -42,13 +42,13 @@ public class PSSActionModel extends PSSModel {
 	}
 
 	public PSSActionInst declInst(String id, boolean rand) {
-		PSSActionInst inst = new PSSActionInst(id, m_id, this);
+		PSSActionInst inst = new PSSActionInst(id, getId(), this);
 		for (int i=0; i<m_flowref.size(); i++) {
 			PSSFlowRefModel node = m_flowref.get(i);
 
-			PSSModel type_model = findDeclaration(node.m_type);
+			PSSModel type_model = findDeclaration(node.getType());
 			if (type_model == null) {
-				PSSMessage.Error("ACTION", "Cannot find type declaration " + node.m_type);
+				PSSMessage.Error("ACTION", "Cannot find type declaration " + node.getType());
 			}
 
 			// Declare Reference Inst
@@ -59,27 +59,27 @@ public class PSSActionModel extends PSSModel {
 	}
 	public void addActivityStmt (PSSActivity node) {
 		m_activity.add(node);
-		node.m_parent = this;
+		node.setParent(this);
 	}
 	public PSSFlowRefModel addFlowRef (PSSFlowRefModel node) {
 		m_flowref.add(node);
-		node.m_parent = this;
+		node.setParent(this);
 		return node;
 	}
 	public PSSAttrField addAttrField (PSSAttrField node) {
 		m_attrfield.add(node);
-		node.m_parent = this;
+		node.setParent(this);
 		return node;
 	}
 	public PSSConstraint addConstraint(PSSConstraint node) {
 		m_constraint.add(node);
-		node.m_parent = this;
+		node.setParent(this);
 		return node;
 	}
 
 	public PSSConstraint addDefaultConstraint (PSSConstraint node) {
 		m_default_constraint.add(node);
-		node.m_parent = this;
+		node.setParent(this);
 		return node;
 	}
 
@@ -101,7 +101,7 @@ public class PSSActionModel extends PSSModel {
 			PSSMessage.Error("ACTION", kind + " is not yet supported");
 		}
 		m_exec_list.add(block);
-		block.m_parent = this;
+		block.setParent(this);
 	}
 
 	private Integer evalAttrField(PSSInst inst) {
@@ -113,7 +113,7 @@ public class PSSActionModel extends PSSModel {
 	}
 
 	public void evalPreSolve(PSSInst inst) {
-		if (m_exec_list.size() > 0) inst.run().log().Info("pre_solve action '" + inst.m_type+ "'");
+		if (m_exec_list.size() > 0) inst.run().log().Info("pre_solve action '" + inst.getType()+ "'");
 		for (int i = 0; i < m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
 			if (block.getKind().equals(PSSExecKind.pre_solve)) {
@@ -123,7 +123,7 @@ public class PSSActionModel extends PSSModel {
 	}
 
 	public void evalPostSolve(PSSInst inst) {
-		if (m_exec_list.size() > 0) inst.run().log().Info("post_solve action '" + inst.m_type+ "'");
+		if (m_exec_list.size() > 0) inst.run().log().Info("post_solve action '" + inst.getType()+ "'");
 		for (int i = 0; i < m_exec_list.size(); i++) {
 			PSSExecBlock block = m_exec_list.get(i);
 			if (block.getKind().equals(PSSExecKind.post_solve)) {
@@ -162,13 +162,13 @@ public class PSSActionModel extends PSSModel {
 		inst.setTraversed();
 
 		PSSLog log = inst.run().log();
-		log.Info("traverse action '" + inst.m_type+ "'");
+		log.Info("traverse action '" + inst.getType()+ "'");
 
 		// Create solver
 		PSSSolver solver = createSolver(inst);
 
 		evalAttrField(inst);
-		inst.m_initialized = true;
+		inst.setInitialized(true);
 
 		inst.collectConstraint(solver);
 
@@ -176,7 +176,7 @@ public class PSSActionModel extends PSSModel {
 		evalPreSolve(inst);
 
 		// solve
-		log.Info("solve action '" + inst.m_type+ "'");
+		log.Info("solve action '" + inst.getType()+ "'");
 		int interation = inst.run().options().solver().equals("propagate") ? solver.solvePropagate() : solver.solveRetryThenPropagate();
 		log.Debug("solve iteration: " + String.valueOf(interation));
 
@@ -234,7 +234,7 @@ public class PSSActionModel extends PSSModel {
 	}
 	public void dump (String indent) {
 
-		System.out.println(indent + "action " +  m_id + " {");
+		System.out.println(indent + "action " +  getId() + " {");
 
 		for (int i=0; i<m_flowref.size(); i++) {
 			PSSModel node = m_flowref.get(i);
@@ -254,5 +254,33 @@ public class PSSActionModel extends PSSModel {
 		m_target_code.dump(indent + "\t");
 
 		System.out.println(indent + "}");
+	}
+
+	public final ArrayList<PSSFlowRefModel> getFlowref() {
+		return m_flowref;
+	}
+
+	public final ArrayList<PSSAttrField> getAttrfield() {
+		return m_attrfield;
+	}
+
+	public final ArrayList<PSSActivity> getActivity() {
+		return m_activity;
+	}
+
+	public final PSSConstraintList getConstraint() {
+		return m_constraint;
+	}
+
+	public final PSSConstraintList getDefaultConstraint() {
+		return m_default_constraint;
+	}
+
+	public final ArrayList<PSSExecBlock> getExecList() {
+		return m_exec_list;
+	}
+
+	public final PSSTargetCodeList getTargetCode() {
+		return m_target_code;
 	}
 }

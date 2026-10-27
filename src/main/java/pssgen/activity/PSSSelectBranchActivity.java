@@ -15,7 +15,7 @@ public class PSSSelectBranchActivity extends PSSActivity {
 		m_cond = cond;
 		m_weight = weight;
 		m_stmt = stmt;
-		m_stmt.m_parent = this;
+		m_stmt.setParent(this);
 	}
 
 	public void evalActivity(PSSInst inst) {

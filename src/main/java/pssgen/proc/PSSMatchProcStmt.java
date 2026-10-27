@@ -10,10 +10,10 @@ import pssgen.value.PSSVal;
 
 public class PSSMatchProcStmt extends PSSProcStmt {
 
-    public PSSExpression m_cond;
-    public List<PSSExpression> m_ranges;
-    public List<PSSProcStmt> m_stmts;
-    public PSSProcStmt d_stmt;
+    private PSSExpression m_cond;
+    private List<PSSExpression> m_ranges;
+    private List<PSSProcStmt> m_stmts;
+    private PSSProcStmt d_stmt;
 
     public PSSMatchProcStmt(PSSExpression cond, List<PSSExpression> ranges,
                             List<PSSProcStmt> stmts, PSSProcStmt stmt) {
@@ -74,4 +74,19 @@ public class PSSMatchProcStmt extends PSSProcStmt {
         System.out.println(indent + "}");
     }
 
+	public final PSSExpression getCond() {
+		return m_cond;
+	}
+
+	public final List<PSSExpression> getRanges() {
+		return m_ranges;
+	}
+
+	public final List<PSSProcStmt> getStmts() {
+		return m_stmts;
+	}
+
+	public final PSSProcStmt getDefaultStmt() {
+		return d_stmt;
+	}
 }

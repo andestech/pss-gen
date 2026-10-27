@@ -24,7 +24,7 @@ public class PSSExecBlock extends PSSModel {
 
 	public void addStmt(PSSProcStmt stmt) {
 		m_list.add(stmt);
-		stmt.m_parent = this;
+		stmt.setParent(this);
 	}
 
 	@Override

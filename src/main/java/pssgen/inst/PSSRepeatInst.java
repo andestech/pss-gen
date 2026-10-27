@@ -9,10 +9,10 @@ public class PSSRepeatInst extends PSSInst {
 	}
 
 	public void addTraversal(PSSActionInst t) {
-		m_parent.addTraversal(t);
+		getParent().addTraversal(t);
 	}
 	public void addSequentialTraversal(PSSActionInst t) {
-		m_parent.addSequentialTraversal(t);
+		getParent().addSequentialTraversal(t);
 	}
 }
 

@@ -24,12 +24,12 @@ public class PSSMatchActivity extends PSSActivity {
 
     public void addChoice(PSSExpression r, PSSActivity s) {
         m_ranges.add(r);
-        s.m_parent = this;
+        s.setParent(this);
         m_stmts.add(s);
     }
     public void addDefaultChoice(PSSActivity s) {
         m_default = s;
-        m_default.m_parent = this;
+        m_default.setParent(this);
     }
     public void evalActivity(PSSInst inst) {
         boolean matched = false;

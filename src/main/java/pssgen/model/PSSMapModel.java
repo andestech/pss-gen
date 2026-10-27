@@ -21,7 +21,7 @@ public class PSSMapModel extends PSSModel implements PSSIAggregate {
      * @param val_type_model the value type
      */
     public PSSMapModel(PSSModel key_type_model, PSSModel val_type_model) {
-        super("map<" + key_type_model.m_id + "," + val_type_model.m_id + ">");
+        super("map<" + key_type_model.getId() + "," + val_type_model.getId() + ">");
 
         m_key_type_model = key_type_model;
         m_val_type_model = val_type_model;
@@ -52,7 +52,7 @@ public class PSSMapModel extends PSSModel implements PSSIAggregate {
 
     @Override
     public String getText() {
-        return m_id;
+        return getId();
     }
 
     @Override

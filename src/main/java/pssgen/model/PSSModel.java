@@ -13,10 +13,10 @@ import pssgen.util.PSSMessage;
 
 public class PSSModel {
 
-	public ArrayList<PSSModel> children;
-	public PSSModel m_parent;
-	public String m_id;
-	public String m_hierarchy_id;
+	private ArrayList<PSSModel> children;
+	private PSSModel m_parent;
+	private String m_id;
+	private String m_hierarchy_id;
 
 	List<PSSInst> m_static_insts;
 
@@ -57,7 +57,7 @@ public class PSSModel {
 	public PSSInst findStaticInst(String id) {
 		// static instances in this model
 		for (PSSInst inst : m_static_insts) {
-			if (inst.m_id.equals(id))
+			if (inst.getId().equals(id))
 				return inst;
 		}
 		// enum items in this model
@@ -316,5 +316,21 @@ public class PSSModel {
 			PSSModel node = children.get(i);
 			node.dump(indent);
 		}
+	}
+
+	public final ArrayList<PSSModel> getChildren() {
+		return children;
+	}
+
+	public final PSSModel getParent() {
+		return m_parent;
+	}
+
+	public final void setParent(PSSModel m_parent) {
+		this.m_parent = m_parent;
+	}
+
+	public final String getHierarchyId() {
+		return m_hierarchy_id;
 	}
 }

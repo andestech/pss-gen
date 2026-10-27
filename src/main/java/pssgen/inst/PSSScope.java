@@ -120,8 +120,8 @@ public final class PSSScope {
 			inst = action.findChild("comp");
 		} else if (steps.contains(Step.KEYWORD_PSS_TOP) && "pss_top".equals(tokens[0])) {
 			PSSInst top = start;
-			while (top != null && !top.m_id.equals("pss_top"))
-				top = top.m_parent;
+			while (top != null && !top.getId().equals("pss_top"))
+				top = top.getParent();
 			inst = top;
 		} else if (steps.contains(Step.ENCLOSING_SCOPES)) {
 			inst = enclosingScopes(start, tokens[0], steps);
@@ -142,7 +142,7 @@ public final class PSSScope {
 	 */
 	private static PSSInst thisAction(PSSInst start) {
 		PSSInst action_inner = nearestAction(start);
-		PSSInst action_outer = action_inner == null ? null : nearestAction(action_inner.m_parent);
+		PSSInst action_outer = action_inner == null ? null : nearestAction(action_inner.getParent());
 		if (action_outer != null)
 			return action_outer;
 		if (action_inner != null)
@@ -154,7 +154,7 @@ public final class PSSScope {
 	/** The nearest action instance at or above inst, or null. */
 	private static PSSInst nearestAction(PSSInst inst) {
 		while (!(inst instanceof PSSActionInst) && inst != null)
-			inst = inst.m_parent;
+			inst = inst.getParent();
 		return inst;
 	}
 
@@ -174,7 +174,7 @@ public final class PSSScope {
 					break;
 				PSSInst tmp = base;
 				while (tmp != null) {
-					tmp = tmp.m_parent;
+					tmp = tmp.getParent();
 					if (tmp instanceof PSSComponentInst)
 						base = tmp;
 				}
@@ -182,11 +182,11 @@ public final class PSSScope {
 
 			// An action reaches component data through "comp.", "this." or "pss_top.".
 			if (base instanceof PSSActionInst) {
-				if (!steps.contains(Step.TRAVERSING_ACTIONS) || nearestAction(base.m_parent) == null)
+				if (!steps.contains(Step.TRAVERSING_ACTIONS) || nearestAction(base.getParent()) == null)
 					break;
 			}
 
-			base = base.m_parent;
+			base = base.getParent();
 		}
 		return inst;
 	}

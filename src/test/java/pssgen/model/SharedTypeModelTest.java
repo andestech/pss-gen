@@ -29,10 +29,10 @@ class SharedTypeModelTest {
 	void boolAndStringDeclarationsDoNotTouchTheValueTypes() throws Exception {
 		generate("component pss_top { action root_a { bool b = true; string s = \"x\"; "
 			+ "exec body ASM = \"\"\"{{b}} {{s}}\"\"\"; } }");
-		assertNull(PSSBoolModel.getInstance().m_parent);
-		assertNull(PSSStringModel.getInstance().m_parent);
-		assertTrue(PSSBoolModel.getInstance().children.isEmpty());
-		assertEquals("bool", PSSBoolModel.getInstance().m_hierarchy_id);
+		assertNull(PSSBoolModel.getInstance().getParent());
+		assertNull(PSSStringModel.getInstance().getParent());
+		assertTrue(PSSBoolModel.getInstance().getChildren().isEmpty());
+		assertEquals("bool", PSSBoolModel.getInstance().getHierarchyId());
 		assertSame(PSSBoolModel.getInstance(), PSSBoolVal.TRUE.getTypeModel());
 		assertSame(PSSStringModel.getInstance(), new PSSStringVal("y").getTypeModel());
 	}

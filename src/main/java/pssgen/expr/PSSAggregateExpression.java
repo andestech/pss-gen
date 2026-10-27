@@ -8,7 +8,7 @@ import pssgen.value.PSSVal;
 
 public class PSSAggregateExpression extends PSSExpression {
 
-	public ArrayList<PSSExpression> m_list;
+	private ArrayList<PSSExpression> m_list;
 
 	public PSSAggregateExpression() {
 		m_list = new ArrayList<PSSExpression>();
@@ -62,4 +62,7 @@ public class PSSAggregateExpression extends PSSExpression {
 		return "{ " + text + " }";
 	}
 
+	public final ArrayList<PSSExpression> getList() {
+		return m_list;
+	}
 }

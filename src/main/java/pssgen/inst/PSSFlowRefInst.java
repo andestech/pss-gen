@@ -6,8 +6,8 @@ import pssgen.model.PSSModel;
 import pssgen.util.PSSMessage;
 
 public class PSSFlowRefInst extends PSSInst {
-	public PSSInst m_var;
-	public boolean m_output;
+	private PSSInst m_var;
+	private boolean m_output;
 
 	public PSSFlowRefInst(String id, String type, PSSModel type_decl, boolean output) {
 		super(id, type, type_decl, false);
@@ -18,7 +18,7 @@ public class PSSFlowRefInst extends PSSInst {
 		m_var = inst;
 	}
 	public PSSModel getTypeModel() {
-		return m_type_decl;
+		return getTypeDecl();
 	}
 	public boolean isOutput() {
 		return m_output;
@@ -56,7 +56,11 @@ public class PSSFlowRefInst extends PSSInst {
 			m_var.dump(indent);
 		}
 		else {
-			System.out.println(indent + m_id + " <" + m_type + ">");
+			System.out.println(indent + getId() + " <" + getType() + ">");
 		}
+	}
+
+	public final PSSInst getVar() {
+		return m_var;
 	}
 }

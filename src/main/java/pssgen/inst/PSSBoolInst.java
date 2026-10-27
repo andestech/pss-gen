@@ -8,7 +8,7 @@ import pssgen.value.PSSBoolVal;
 import pssgen.value.PSSVal;
 
 public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
-	public boolean m_val;
+	private boolean m_val;
 
 	/** solution domain over 0 (false) and 1 (true), as for a bit field */
 	PSSIntDomain m_domain;
@@ -48,14 +48,14 @@ public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public void randomize() {
-		if (m_rand) {
+		if (isRand()) {
 			int retry = 0;
 			do {
 				PSSRandom random = run().random();
 				random.limitRetry(retry++);
 				m_val = m_domain.random(random).toBigInteger().signum() != 0;
 			} while (!validate());
-			m_initialized = true;
+			setInitialized(true);
 		}
 	}
 
@@ -64,19 +64,22 @@ public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public void assign(PSSVal val) {
-		m_initialized = true;
+		setInitialized(true);
 		m_val = val.toBool();
 	}
 
 	public String toTargetCode() {
-		if (!m_initialized) {
-			PSSMessage.Error("INTVAR-0001", "variable '" + m_id + "' is not initialized");
+		if (!isInitialized()) {
+			PSSMessage.Error("INTVAR-0001", "variable '" + getId() + "' is not initialized");
 		}
 		return String.valueOf(m_val);
 	}
 
 	public void dump(String indent) {
-		System.out.println(indent + m_id + " <" + m_type + ">" + "\"" + m_val + "\"");
+		System.out.println(indent + getId() + " <" + getType() + ">" + "\"" + m_val + "\"");
 	}
 
+	public final boolean isVal() {
+		return m_val;
+	}
 }

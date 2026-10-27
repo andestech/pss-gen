@@ -44,16 +44,16 @@ public class PSSInst {
 
 	}
 
-	public String m_id;
-	public PSSInst m_parent;
-	public String m_type;
-	public PSSModel m_type_decl;
-	public boolean m_constant;
-	public boolean m_rand;
-	public boolean m_initialized;
+	private String m_id;
+	private PSSInst m_parent;
+	private String m_type;
+	private PSSModel m_type_decl;
+	private boolean m_constant;
+	private boolean m_rand;
+	private boolean m_initialized;
 
 	private boolean m_traversed;
-	public ArrayList<PSSInst> m_insts;
+	private ArrayList<PSSInst> m_insts;
 	Map<String, NativeMethod> m_native_methods = new HashMap<String, NativeMethod>();
 
 	/** {@code true} if this instance is read-only */
@@ -239,7 +239,7 @@ public class PSSInst {
 			res = m.findStaticInst(hierarchiy_id);
 			if (res != null)
 				break;
-			m = m.m_parent;
+			m = m.getParent();
 		}
 		return res;
 	}
@@ -415,4 +415,39 @@ public class PSSInst {
 		}
 	}
 
+	public final String getId() {
+		return m_id;
+	}
+
+	public final PSSInst getParent() {
+		return m_parent;
+	}
+
+	public final String getType() {
+		return m_type;
+	}
+
+	public final PSSModel getTypeDecl() {
+		return m_type_decl;
+	}
+
+	public final boolean isConstant() {
+		return m_constant;
+	}
+
+	public final boolean isRand() {
+		return m_rand;
+	}
+
+	public final boolean isInitialized() {
+		return m_initialized;
+	}
+
+	public final void setInitialized(boolean m_initialized) {
+		this.m_initialized = m_initialized;
+	}
+
+	public final ArrayList<PSSInst> getInsts() {
+		return m_insts;
+	}
 }

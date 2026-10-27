@@ -20,8 +20,8 @@ public class PSSSolver {
 	// PSSInst keys hash by identity. Insertion order keeps the order of the
 	// -info domain lines and the variable that OVERCONSTRAINT names the same
 	// on every JVM and every run.
-	public LinkedHashMap<PSSInst, PSSConstraintList> m_inst_list;
-	public LinkedHashMap<PSSInst, PSSConstraintList> m_default_constraint_list;
+	private LinkedHashMap<PSSInst, PSSConstraintList> m_inst_list;
+	private LinkedHashMap<PSSInst, PSSConstraintList> m_default_constraint_list;
 	// The domain each field had before the solver first narrowed it, for
 	// solveRetryThenPropagate to start solvePropagate from the state before solve().
 	private final LinkedHashMap<PSSInst, PSSDomain> m_saved_domains = new LinkedHashMap<PSSInst, PSSDomain>();
@@ -125,7 +125,7 @@ public class PSSSolver {
 			PSSDomain domain = map.get(var);
 			saveDomain(var);
 			var.assignDomain(domain);
-			m_inst.run().log().Info(var.m_id + " domain: " + domain.getText());
+			m_inst.run().log().Info(var.getId() + " domain: " + domain.getText());
 		}
 	}
 
@@ -238,7 +238,7 @@ public class PSSSolver {
 		}
 		for (PSSInst v : prop.variables()) {
 			v.assignDomain(base.get(v));
-			run.log().Info(v.m_id + " domain: " + base.get(v).getText());
+			run.log().Info(v.getId() + " domain: " + base.get(v).getText());
 		}
 
 		int retry = 0;
@@ -363,7 +363,7 @@ public class PSSSolver {
 	private boolean isDrawn(PSSInst v) {
 		if (!(v instanceof PSSIScalarInst) || !v.isRandomable())
 			return false;
-		for (PSSInst p = v.m_parent; p != null; p = p.m_parent) {
+		for (PSSInst p = v.getParent(); p != null; p = p.getParent()) {
 			if (p == m_inst)
 				return true;
 			if (p instanceof PSSActionInst || !p.isRandomable())
@@ -377,4 +377,11 @@ public class PSSSolver {
 		return (v instanceof PSSIntInst || v instanceof PSSBoolInst) && isDrawn(v);
 	}
 
+	public final LinkedHashMap<PSSInst, PSSConstraintList> getInstList() {
+		return m_inst_list;
+	}
+
+	public final LinkedHashMap<PSSInst, PSSConstraintList> getDefaultConstraintList() {
+		return m_default_constraint_list;
+	}
 }

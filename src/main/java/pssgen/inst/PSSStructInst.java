@@ -21,9 +21,9 @@ public class PSSStructInst extends PSSInst implements PSSIAggregate {
 	}
 
 	public void randomize() {
-		if (m_rand) {
-			for (int i = 0; i < m_insts.size(); i++) {
-				PSSInst inst = m_insts.get(i);
+		if (isRand()) {
+			for (int i = 0; i < getInsts().size(); i++) {
+				PSSInst inst = getInsts().get(i);
 				inst.randomize();
 			}
 		}

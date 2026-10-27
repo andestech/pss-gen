@@ -43,7 +43,7 @@ public class PSSSelectActivity extends PSSActivity {
 
 	public void addBranch(PSSSelectBranchActivity branch) {
 		m_list.add(branch);
-		branch.m_parent = this;
+		branch.setParent(this);
 	}
 
 	public void dump(String indent) {

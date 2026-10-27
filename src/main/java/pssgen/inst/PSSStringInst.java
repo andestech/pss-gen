@@ -7,7 +7,7 @@ import pssgen.value.PSSStringVal;
 import pssgen.value.PSSVal;
 
 public class PSSStringInst extends PSSInst implements PSSIScalarInst {
-	public String m_str;
+	private String m_str;
 
 	PSSStringDomain m_domain;
 
@@ -33,13 +33,13 @@ public class PSSStringInst extends PSSInst implements PSSIScalarInst {
 		m_domain = (PSSStringDomain) domain;
 	}
 	public PSSVal toVal() {
-		if (!m_initialized) {
+		if (!isInitialized()) {
 			PSSMessage.Error("StringInst", "'" + getHierarchyId()+ "' is not initialized");
 		}
 		return new PSSStringVal(m_str);
 	}
 	public String toTargetCode() {
-		if (!m_initialized) {
+		if (!isInitialized()) {
 			PSSMessage.Error("StringInst", "'" + getHierarchyId() + "' is not initialized");
 		}
 		return m_str;
@@ -56,7 +56,7 @@ public class PSSStringInst extends PSSInst implements PSSIScalarInst {
 		//PSSMessage.Debug("randomize_one: str = " + m_str);
 	}
 	public void randomize() {
-		if (m_rand) {
+		if (isRand()) {
 			boolean validated = false;
 			int retry = 0;
 
@@ -66,16 +66,19 @@ public class PSSStringInst extends PSSInst implements PSSIScalarInst {
 				validated = validate();
 				retry ++;
 			}
-			m_initialized = true;
+			setInitialized(true);
 		}
 	}
 	public void assign(PSSVal val) {
 		m_str = val.toStr();
-		m_initialized = true;
+		setInitialized(true);
 	}
 
 	public void dump(String indent) {
-		System.out.println(indent + m_id + " <" + m_type + ">" + "\"" + m_str + "\"");
+		System.out.println(indent + getId() + " <" + getType() + ">" + "\"" + m_str + "\"");
 	}
 
+	public final String getStr() {
+		return m_str;
+	}
 }

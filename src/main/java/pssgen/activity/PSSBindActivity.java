@@ -11,7 +11,7 @@ import pssgen.util.PSSMessage;
 public class PSSBindActivity extends PSSActivity {
 
 	String m_bind_id;
-	public ArrayList<String> m_items;
+	private ArrayList<String> m_items;
 
 
 	public PSSBindActivity(String bind_id) {
@@ -53,5 +53,9 @@ public class PSSBindActivity extends PSSActivity {
 			String item = m_items.get(i);
 			System.out.println(indent + "bind " +  m_bind_id + " " + item);
 		}
+	}
+
+	public final ArrayList<String> getItems() {
+		return m_items;
 	}
 }

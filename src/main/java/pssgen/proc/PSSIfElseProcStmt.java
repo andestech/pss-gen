@@ -9,9 +9,9 @@ import pssgen.value.PSSVal;
 
 public class PSSIfElseProcStmt extends PSSProcStmt {
 
-	public PSSExpression m_cond;
-	public PSSProcStmt m_true_stmt;
-	public PSSProcStmt m_false_stmt;
+	private PSSExpression m_cond;
+	private PSSProcStmt m_true_stmt;
+	private PSSProcStmt m_false_stmt;
 
 	public PSSIfElseProcStmt(PSSExpression cond, PSSProcStmt true_stmt, PSSProcStmt false_stmt) {
 		m_cond = cond;
@@ -55,4 +55,15 @@ public class PSSIfElseProcStmt extends PSSProcStmt {
 		}
 	}
 
+	public final PSSExpression getCond() {
+		return m_cond;
+	}
+
+	public final PSSProcStmt getTrueStmt() {
+		return m_true_stmt;
+	}
+
+	public final PSSProcStmt getFalseStmt() {
+		return m_false_stmt;
+	}
 }

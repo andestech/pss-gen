@@ -6,7 +6,7 @@ import pssgen.inst.PSSInst;
 
 public class PSSDataDeclModel extends PSSModel {
 
-	public PSSModel m_type;
+	private PSSModel m_type;
 	PSSDataInstListModel m_inst_list;
 
 	public PSSDataDeclModel(PSSModel type) {
@@ -42,5 +42,9 @@ public class PSSDataDeclModel extends PSSModel {
 
 	public void dump (String indent) {
 		System.out.println(indent + getText());
+	}
+
+	public final PSSModel getType() {
+		return m_type;
 	}
 }

@@ -59,7 +59,7 @@ public class PSSArrayInst extends PSSInst implements PSSIAggregate {
      * @param rand       {@code true} if this array can be randomized
      */
     public PSSArrayInst(String id, PSSArrayModel type_model, boolean rand) {
-        super(id, type_model.m_id, type_model, rand);
+        super(id, type_model.getId(), type_model, rand);
 
         m_elem_type_model = type_model.getElementTypeModel();
         m_dim = type_model.getArraySize();
@@ -68,7 +68,7 @@ public class PSSArrayInst extends PSSInst implements PSSIAggregate {
             PSSMessage.Error("ArrayInst", "'" + id + "' is a zero-length array.");
 
         for (int i = 0; i < m_dim; i++) {
-            PSSInst inst = m_elem_type_model.declInst(id + "[" + i + "]", m_rand);
+            PSSInst inst = m_elem_type_model.declInst(id + "[" + i + "]", isRand());
             inst.setOwner(this);
             m_array.add(inst);
         }
@@ -124,7 +124,7 @@ public class PSSArrayInst extends PSSInst implements PSSIAggregate {
         if (!m_elem_type_model.isCompatible(arrayVal.getElementTypeModel()))
             PSSMessage.Error("ArrayInst", "The element type " +
                     arrayVal.getTypeModel().getText() + " of " +
-                    arrayVal.getText() + " is incompatible with array " + m_id);
+                    arrayVal.getText() + " is incompatible with array " + getId());
 
         if (arrayVal.size() != m_dim)
             PSSMessage.Error("ArrayInst", "The size of the array is " +
@@ -139,7 +139,7 @@ public class PSSArrayInst extends PSSInst implements PSSIAggregate {
 
     @Override
     public void randomize() {
-        if (m_rand) {
+        if (isRand()) {
             for (PSSInst elem : m_array)
                 elem.randomize();
         }

@@ -8,8 +8,8 @@ import pssgen.inst.PSSNamespaceInst;
 
 public class PSSWhileProcStmt extends PSSProcStmt {
 
-	public PSSExpression m_cond;
-	public PSSProcStmt m_stmt;
+	private PSSExpression m_cond;
+	private PSSProcStmt m_stmt;
 
 	public PSSWhileProcStmt(PSSExpression cond, PSSProcStmt stmt) {
 		m_cond = cond;
@@ -39,5 +39,13 @@ public class PSSWhileProcStmt extends PSSProcStmt {
 		m_stmt.dump(indent + "\t");
 		System.out.println(indent + "}");
 
+	}
+
+	public final PSSExpression getCond() {
+		return m_cond;
+	}
+
+	public final PSSProcStmt getStmt() {
+		return m_stmt;
 	}
 }

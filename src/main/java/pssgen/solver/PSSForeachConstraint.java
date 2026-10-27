@@ -77,7 +77,7 @@ public class PSSForeachConstraint extends PSSConstraint {
                     res = res.join(m);
             }
 
-            var.m_insts.remove(foreach_inst);
+            var.getInsts().remove(foreach_inst);
         }
 
         return res;
@@ -128,7 +128,7 @@ public class PSSForeachConstraint extends PSSConstraint {
                 }
             }
 
-            var.m_insts.remove(foreach_inst);
+            var.getInsts().remove(foreach_inst);
 
         }
         return res;

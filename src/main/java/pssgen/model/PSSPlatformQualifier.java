@@ -57,7 +57,7 @@ public enum PSSPlatformQualifier {
                     return false;
             }
 
-            inst = inst.m_parent;
+            inst = inst.getParent();
         }
         return true;
     }

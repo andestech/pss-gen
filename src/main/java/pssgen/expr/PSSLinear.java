@@ -108,7 +108,7 @@ public final class PSSLinear {
 		}
 		if (e instanceof PSSRefPathExpression) {
 			PSSRefPathExpression r = (PSSRefPathExpression) e;
-			if (r.m_bit_slice_from != null || r.m_bit_slice_to != null) {
+			if (r.getBitSliceFrom() != null || r.getBitSliceTo() != null) {
 				return null;
 			}
 			return ofVariable(r.getInst(scope), isVariable);

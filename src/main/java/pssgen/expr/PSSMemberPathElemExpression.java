@@ -39,7 +39,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     List<PSSExpression> m_function_parameter_list;
 
     /** the optional index */
-    public PSSExpression m_index;
+    private PSSExpression m_index;
 
     /** where the path is written, which decides how its first element is resolved */
     private final PSSScope.Context m_context;
@@ -169,7 +169,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             if (inst instanceof PSSFunctionInst) {
                 return ((PSSFunctionInst) inst).getExecKind();
             }
-            inst = inst.m_parent;
+            inst = inst.getParent();
         }
         return null;
     }
@@ -387,4 +387,11 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         return getText();
     }
 
+	public final PSSExpression getIndex() {
+		return m_index;
+	}
+
+	public final void setIndex(PSSExpression m_index) {
+		this.m_index = m_index;
+	}
 }

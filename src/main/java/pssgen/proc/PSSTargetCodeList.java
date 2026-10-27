@@ -6,7 +6,7 @@ import pssgen.inst.PSSInst;
 import pssgen.model.PSSExecKind;
 
 public class PSSTargetCodeList {
-	public ArrayList<PSSTargetCode> m_list;
+	private ArrayList<PSSTargetCode> m_list;
 
 	public PSSTargetCodeList() {
 		m_list = new ArrayList<PSSTargetCode>();
@@ -28,5 +28,8 @@ public class PSSTargetCodeList {
 			target_code.dump(indent);
 		}
 	}
-}
 
+	public final ArrayList<PSSTargetCode> getList() {
+		return m_list;
+	}
+}

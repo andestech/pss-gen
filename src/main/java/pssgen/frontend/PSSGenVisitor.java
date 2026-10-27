@@ -205,7 +205,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			visit(ctx.package_body_item(i));
 		}
 
-		root = node.m_parent;
+		root = node.getParent();
 
 		return node;
 	}
@@ -241,7 +241,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			visit(ctx.component_body_item(i));
 		}
 
-		root = node.m_parent;
+		root = node.getParent();
 
 		return node;
 	}
@@ -280,7 +280,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			visit(ctx.enum_item(i));
 		}
 
-		root = node.m_parent;
+		root = node.getParent();
 		return node;
 	}
 
@@ -401,7 +401,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		if (m instanceof PSSFunctionModel) {
 			PSSFunctionModel fm = (PSSFunctionModel) m;
 
-			if (root == fm.m_parent)
+			if (root == fm.getParent())
 				PSSMessage.Error("", "Redeclaring function " + prototype.getID());
 
 			fm.redeclare(f);
@@ -442,7 +442,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			// This is the first definition
 			root.addChild(f);
 		} else {
-			if (root == fm.m_parent) {
+			if (root == fm.getParent()) {
 				// Both functions are in the same model
 				if (fm.getStatements() == null) {
 					fm.define(stmts);
@@ -485,7 +485,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			visit(ctx.action_body_item(i));
 		}
 
-		root = node.m_parent;
+		root = node.getParent();
 
 		return node;
 	}
@@ -517,7 +517,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			visit(ctx.struct_body_item(i));
 		}
 
-		root = node.m_parent;
+		root = node.getParent();
 
 		return node;
 	}
@@ -856,23 +856,23 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 		PSSRefPathExpression e = (PSSRefPathExpression) exp;
 
-		if (e.m_bit_slice_from != null || e.m_bit_slice_to != null)
+		if (e.getBitSliceFrom() != null || e.getBitSliceTo() != null)
 			return null;
 
 		// Find the last member path element
-		PSSMemberPathElemExpression me = e.m_ref_path;
+		PSSMemberPathElemExpression me = e.getRefPath();
 		while (me.getChild() != null)
 			me = me.getChild();
 
 		String index = null;
-		if (me.m_index != null && me.m_index instanceof PSSRefPathExpression) {
-			PSSRefPathExpression index_exp = (PSSRefPathExpression) me.m_index;
-			if ((index_exp.m_type_identifier_elems == null || index_exp.m_type_identifier_elems.equals(""))
-					&& index_exp.m_bit_slice_from == null
-					&& index_exp.m_bit_slice_to == null
-					&& index_exp.m_ref_path.getChild() == null) {
+		if (me.getIndex() != null && me.getIndex() instanceof PSSRefPathExpression) {
+			PSSRefPathExpression index_exp = (PSSRefPathExpression) me.getIndex();
+			if ((index_exp.getTypeIdentifierElems() == null || index_exp.getTypeIdentifierElems().equals(""))
+					&& index_exp.getBitSliceFrom() == null
+					&& index_exp.getBitSliceTo() == null
+					&& index_exp.getRefPath().getChild() == null) {
 				index = index_exp.getText();
-				me.m_index = null;
+				me.setIndex(null);
 			}
 		}
 

@@ -51,7 +51,7 @@ public class PSSEnumModel extends PSSModel {
 	}
 
 	public PSSEnumInst declInst(String id, boolean rand) {
-		PSSEnumInst enum_var = new PSSEnumInst(id, m_id, this, rand);
+		PSSEnumInst enum_var = new PSSEnumInst(id, getId(), this, rand);
 		return enum_var;
 	}
 
@@ -71,7 +71,7 @@ public class PSSEnumModel extends PSSModel {
 	@Override
 	public void dump(String indent) {
 
-		System.out.println(indent + "enum " + m_id + " {");
+		System.out.println(indent + "enum " + getId() + " {");
 
 		m_items.forEach((key, v) -> {
 			System.out.println(indent + key + "=" + v);

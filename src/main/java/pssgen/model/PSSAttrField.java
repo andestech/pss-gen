@@ -6,7 +6,7 @@ import pssgen.inst.PSSInst;
 
 public class PSSAttrField extends PSSModel {
 
-	public boolean m_rand;
+	private boolean m_rand;
 
 	PSSDataDeclModel m_data_decl;
 
@@ -40,5 +40,9 @@ public class PSSAttrField extends PSSModel {
 
 	public void dump (String indent) {
 		System.out.println(indent + getText());
+	}
+
+	public final boolean isRand() {
+		return m_rand;
 	}
 }

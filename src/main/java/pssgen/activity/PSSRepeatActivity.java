@@ -12,15 +12,15 @@ import pssgen.value.PSSVal;
 
 public class PSSRepeatActivity extends PSSActivity {
 
-	public PSSExpression m_count;
-	public PSSActivity m_stmt;
-	public String m_index_id;
+	private PSSExpression m_count;
+	private PSSActivity m_stmt;
+	private String m_index_id;
 
 	public PSSRepeatActivity(PSSExpression count, PSSActivity stmt, String index_id) {
 		m_count = count;
 		m_stmt = stmt;
 		m_index_id = index_id;
-		m_stmt.m_parent = this;
+		m_stmt.setParent(this);
 	}
 
 	public void evalActivity(PSSInst inst) {
@@ -57,5 +57,17 @@ public class PSSRepeatActivity extends PSSActivity {
 		m_stmt.dump(indent + "\t");
 		System.out.println(indent + "}");
 
+	}
+
+	public final PSSExpression getCount() {
+		return m_count;
+	}
+
+	public final PSSActivity getStmt() {
+		return m_stmt;
+	}
+
+	public final String getIndexId() {
+		return m_index_id;
 	}
 }

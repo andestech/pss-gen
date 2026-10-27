@@ -94,7 +94,7 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
      * @param type_model the data type of this list elements
      */
     public PSSListInst(String id, PSSListModel type_model) {
-        super(id, "list<" + type_model.m_id + ">", type_model, false);
+        super(id, "list<" + type_model.getId() + ">", type_model, false);
         m_elem_type_model = type_model.getElementTypeModel();
 
         addNativeMethod(m_method_size);
@@ -253,14 +253,14 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
         if (!m_elem_type_model.isCompatible(element.getTypeModel()))
             PSSMessage.Error("ListInst", "The element type " +
                     element.getTypeModel().getText() + " of " +
-                    element.toVal().getText() + " is incompatible with list " + m_id);
+                    element.toVal().getText() + " is incompatible with list " + getId());
 
         try {
             m_list.add(index, element);
         } catch (IndexOutOfBoundsException e) {
             PSSMessage.Error("ListInst", "Set.Insert() is illegal because " +
                     "the index " + index + " is greater than the " +
-                    "size of " + m_id);
+                    "size of " + getId());
         }
     }
 
@@ -274,14 +274,14 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
         if (!m_elem_type_model.isCompatible(element.getTypeModel()))
             PSSMessage.Error("ListInst", "The element type " +
                     element.getTypeModel().getText() + " of " +
-                    element.getText() + " is incompatible with list " + m_id);
+                    element.getText() + " is incompatible with list " + getId());
 
         try {
             m_list.add(index, getNewElementInst(element));
         } catch (IndexOutOfBoundsException e) {
             PSSMessage.Error("ListInst", "List.insert() is illegal because " +
                     "the index " + index + " is greater than the " +
-                    "size of " + m_id);
+                    "size of " + getId());
         }
     }
 

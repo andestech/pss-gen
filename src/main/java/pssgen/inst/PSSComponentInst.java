@@ -20,8 +20,8 @@ public class PSSComponentInst extends PSSInst implements PSSIScope {
 	@Override
 	public void init_up() {
 		PSSModel comp = getTypeModel();
-		for (int i = 0; i < m_insts.size(); i++) {
-			PSSInst inst = m_insts.get(i);
+		for (int i = 0; i < getInsts().size(); i++) {
+			PSSInst inst = getInsts().get(i);
 			if (inst.isComponent()) {
 				inst.init_up();
 			}
@@ -33,8 +33,8 @@ public class PSSComponentInst extends PSSInst implements PSSIScope {
 	public void init_down() {
 		PSSModel comp = getTypeModel();
 		comp.init_down(this);
-		for (int i = 0; i < m_insts.size(); i++) {
-			PSSInst inst = m_insts.get(i);
+		for (int i = 0; i < getInsts().size(); i++) {
+			PSSInst inst = getInsts().get(i);
 			if (inst.isComponent()) {
 				inst.init_down();
 			}

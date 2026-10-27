@@ -65,7 +65,7 @@ public class PSSSetInst extends PSSInst implements PSSIAggregate {
      * @param type_model the data type of this set
      */
     public PSSSetInst(String id, PSSSetModel type_model) {
-        super(id, "set<" + type_model.m_id + ">", type_model, false);
+        super(id, "set<" + type_model.getId() + ">", type_model, false);
         m_elem_type_model = type_model.getElementTypeModel();
 
         /* register native methods */
@@ -161,7 +161,7 @@ public class PSSSetInst extends PSSInst implements PSSIAggregate {
     public void delete(PSSVal elem) {
         if (m_set.remove(elem) == null)
             PSSMessage.Error("SetInst", "Deleting \"" + elem.getText() + "\" " +
-                    "is illegal because it does not exist in \"" + m_id + "\".");
+                    "is illegal because it does not exist in \"" + getId() + "\".");
     }
 
     /**

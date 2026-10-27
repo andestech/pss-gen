@@ -23,7 +23,7 @@ public class PSSRefInst extends PSSInst {
      * @param type_decl the model of this reference
      */
     public PSSRefInst(String id, PSSRefModel type_decl) {
-        super(id, type_decl.m_id, type_decl, false);
+        super(id, type_decl.getId(), type_decl, false);
         m_ref = null;
     }
 
@@ -113,8 +113,8 @@ public class PSSRefInst extends PSSInst {
             PSSRefModel m = getTypeModel();
             if (!m.isCompatible(r.getTypeModel()))
                 PSSMessage.Error("PSSRefInst",
-                        "The types of " + m_id + " (" + m.m_id + ") and the type of " + val.getText()
-                                + " (" + val.getTypeModel().m_id + ") are incompatible.");
+                        "The types of " + getId() + " (" + m.getId() + ") and the type of " + val.getText()
+                                + " (" + val.getTypeModel().getId() + ") are incompatible.");
             m_ref = r;
         } else {
             // Create a new reference

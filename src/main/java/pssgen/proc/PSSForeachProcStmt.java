@@ -30,7 +30,7 @@ public class PSSForeachProcStmt extends PSSProcStmt {
         m_expression = exp;
         m_index_identifier = index;
         m_proc_stmt = stmt;
-        m_proc_stmt.m_parent = this;
+        m_proc_stmt.setParent(this);
     }
 
     @Override

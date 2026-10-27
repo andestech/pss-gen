@@ -58,14 +58,14 @@ public class PSSActionInst extends PSSInst {
 	}
 
 	public PSSInferredActionList getInferredAction(boolean output, String flow_data_type) {
-		return m_type_decl.getInferredAction(output, flow_data_type);
+		return getTypeDecl().getInferredAction(output, flow_data_type);
 	}
 
 	public PSSUnboundRefList getUnboundRefList() {
 		PSSUnboundRefList list = new PSSUnboundRefList();
 
-		for (int i = 0; i < m_insts.size(); i++) {
-			PSSInst inst = m_insts.get(i);
+		for (int i = 0; i < getInsts().size(); i++) {
+			PSSInst inst = getInsts().get(i);
 			if (inst instanceof PSSFlowRefInst) {
 				PSSFlowRefInst ref = (PSSFlowRefInst) inst;
 				if (!ref.isBound()) {
@@ -81,8 +81,8 @@ public class PSSActionInst extends PSSInst {
 	@Override
 	public void collectConstraint(PSSSolver solver) {
 		// Child
-		for (int i = 0; i < m_insts.size(); i++) {
-			PSSInst inst = m_insts.get(i);
+		for (int i = 0; i < getInsts().size(); i++) {
+			PSSInst inst = getInsts().get(i);
 			solver.add(inst);
 		}
 	}
@@ -101,7 +101,7 @@ public class PSSActionInst extends PSSInst {
 
 	@Override
 	public void execute_kind(PSSExecKind kind) {
-		m_type_decl.getTargetCode(this, kind);
+		getTypeDecl().getTargetCode(this, kind);
 		m_sub_list.execute_kind(kind);
 	}
 
@@ -114,8 +114,8 @@ public class PSSActionInst extends PSSInst {
 
 	@Override
 	public void randomize() {
-		for (int i = 0; i < m_insts.size(); i++) {
-			PSSInst var = m_insts.get(i);
+		for (int i = 0; i < getInsts().size(); i++) {
+			PSSInst var = getInsts().get(i);
 
 			if (var instanceof PSSActionInst) {
 				; // Sub-action is randomized when it is to be traversed

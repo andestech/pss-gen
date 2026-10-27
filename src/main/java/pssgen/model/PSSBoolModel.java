@@ -30,7 +30,7 @@ public class PSSBoolModel extends PSSModel {
 
 	@Override
 	public String getText() {
-		return m_id;
+		return getId();
 	}
 
 	/**

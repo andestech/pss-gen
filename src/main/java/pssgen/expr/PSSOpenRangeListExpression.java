@@ -8,7 +8,7 @@ import pssgen.value.PSSVal;
 
 public class PSSOpenRangeListExpression extends PSSExpression {
 
-	public ArrayList<PSSOpenRangeValueExpression> m_list;
+	private ArrayList<PSSOpenRangeValueExpression> m_list;
 
 
 	public PSSOpenRangeListExpression() {
@@ -50,4 +50,7 @@ public class PSSOpenRangeListExpression extends PSSExpression {
 		return "[ " + text + " ]";
 	}
 
+	public final ArrayList<PSSOpenRangeValueExpression> getList() {
+		return m_list;
+	}
 }

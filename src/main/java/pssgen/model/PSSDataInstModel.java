@@ -10,8 +10,8 @@ import pssgen.value.PSSVal;
 public class PSSDataInstModel extends PSSModel {
 
 	//public String m_id;
-	public PSSExpression m_dim_exp;	// array dimension
-	public PSSExpression m_init_exp;
+	private PSSExpression m_dim_exp;	// array dimension
+	private PSSExpression m_init_exp;
 
 	public PSSDataInstModel(String id, PSSExpression dim_exp, PSSExpression init_exp) {
 		super(id);
@@ -23,11 +23,11 @@ public class PSSDataInstModel extends PSSModel {
 		PSSInst inst;
 
 		if (m_dim_exp == null) {
-			inst = type.declInst(m_id, rand);
+			inst = type.declInst(getId(), rand);
 		}
 		else {
 			PSSVal dim_val = m_dim_exp.eval(parent_inst);
-			inst = PSSArrayInst.ofElementDataType(m_id, type, dim_val.toInt(), rand);
+			inst = PSSArrayInst.ofElementDataType(getId(), type, dim_val.toInt(), rand);
 		}
 		parent_inst.addInst(inst);
 
@@ -38,7 +38,7 @@ public class PSSDataInstModel extends PSSModel {
 	}
 
 	public String getText() {
-		String result = m_id;
+		String result = getId();
 		if (m_dim_exp != null) {
 			result = result.concat("[" + m_dim_exp.getText() + "]");
 		}
@@ -50,5 +50,13 @@ public class PSSDataInstModel extends PSSModel {
 
 	public void dump () {
 		System.out.println("PSSDataInstModel");
+	}
+
+	public final PSSExpression getDimExp() {
+		return m_dim_exp;
+	}
+
+	public final PSSExpression getInitExp() {
+		return m_init_exp;
 	}
 }

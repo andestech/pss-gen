@@ -23,7 +23,7 @@ public class PSSIfConstraint extends PSSConstraint {
 	}
 	public void addTrueConstraint(PSSConstraint node) {
 		m_true.add(node);
-		node.m_parent = this;
+		node.setParent(this);
 	}
 	public void addFalseConstraint(List<PSSConstraint> c_list) {
 		for (var item : c_list) {
@@ -32,7 +32,7 @@ public class PSSIfConstraint extends PSSConstraint {
 	}
 	public void addFalseConstraint(PSSConstraint node) {
 		m_false.add(node);
-		node.m_parent = this;
+		node.setParent(this);
 	}
 
 	public PSSDomainMap deduceDomainList(ArrayList<PSSConstraint> list, PSSInst var) {

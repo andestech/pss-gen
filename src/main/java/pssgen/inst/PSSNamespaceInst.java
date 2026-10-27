@@ -11,12 +11,12 @@ public class PSSNamespaceInst extends PSSInst implements PSSIScope {
 
 	@Override
 	public void addTraversal(PSSActionInst t) {
-		m_parent.addTraversal(t);
+		getParent().addTraversal(t);
 	}
 
 	@Override
 	public void addSequentialTraversal(PSSActionInst t) {
-		m_parent.addSequentialTraversal(t);
+		getParent().addSequentialTraversal(t);
 	}
 
 }

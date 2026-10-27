@@ -80,7 +80,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public void randomize() {
-		if (m_rand) {
+		if (isRand()) {
 			boolean validated = false;
 			int retry = 0;
 
@@ -91,7 +91,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 				retry++;
 			}
 			// PSSMessage.Debug("randomize iteration: " + getHierarchyId() + " = " + String.valueOf(retry));
-			m_initialized = true;
+			setInitialized(true);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public void assign(PSSVal val) {
-		m_initialized = true;
+		setInitialized(true);
 		PSSVal result = val;
 		if (m_BitSelect != -1) {
 			if (val.toBigInteger().testBit(0)) {
@@ -135,7 +135,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public String toTargetCode() {
-		if (!m_initialized) {
+		if (!isInitialized()) {
 			PSSMessage.Error("INTVAR-0001", "variable '" + getHierarchyId() + "' is not initialized");
 		}
 		PSSVal val = toVal();
@@ -144,7 +144,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public void dump(String indent) {
-		System.out.println(indent + m_id + " <" + m_type + ">" + "\"" + m_val.getText() + "\"");
+		System.out.println(indent + getId() + " <" + getType() + ">" + "\"" + m_val.getText() + "\"");
 	}
 
 }

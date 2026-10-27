@@ -28,9 +28,9 @@ public class PSSComponentRefInst extends PSSRefInst {
 
     private PSSInst findComponentInst() {
         // Find the default component instance when there is no constraint.
-        PSSInst action = m_parent;
+        PSSInst action = getParent();
         while (!(action instanceof PSSActionInst) && action != null) {
-            action = action.m_parent;
+            action = action.getParent();
         }
         if (action != null) {
             PSSInst comp = action.getComponentInst();

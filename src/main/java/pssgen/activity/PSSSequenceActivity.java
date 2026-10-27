@@ -14,7 +14,7 @@ public class PSSSequenceActivity extends PSSActivity {
 
 	public void addActivity(PSSActivity stmt) {
 		m_list.add(stmt);
-		stmt.m_parent = this;
+		stmt.setParent(this);
 	}
 
 	public void evalActivity(PSSInst inst) {

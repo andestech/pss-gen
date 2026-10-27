@@ -31,7 +31,7 @@ public class PSSRefModel extends PSSModel {
      * @param data_model a plain data type
      */
     public PSSRefModel(PSSModel data_model) {
-        super("ref " + data_model.m_id);
+        super("ref " + data_model.getId());
         m_type_category = null;
         m_data_model = data_model;
     }

@@ -71,7 +71,7 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
      * @param val_type the value type
      */
     public PSSMapInst(String id, PSSMapModel map_type) {
-        super(id, "map<" + map_type.getKeyType().m_id + ", " + map_type.getValueType().m_id + ">", map_type, false);
+        super(id, "map<" + map_type.getKeyType().getId() + ", " + map_type.getValueType().getId() + ">", map_type, false);
 
         /* register native methods */
         addNativeMethod(m_method_size);
@@ -141,7 +141,7 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
 
         if (!map_type.getKeyType().isCompatible(key.getTypeModel()))
             PSSMessage.Error("", "The key type " + key.getTypeModel().getText() + " of " + key.getText()
-                    + " is incompatible with map " + m_id);
+                    + " is incompatible with map " + getId());
 
         PSSInst vi = m_values.get(key);
         if (vi == null) {
@@ -189,12 +189,12 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
 
         if (!map_type.getKeyType().isCompatible(key.getTypeModel()))
             PSSMessage.Error("", "The key type " + key.getTypeModel().getText() + " of " + key.getText()
-                    + " is incompatible with map " + m_id);
+                    + " is incompatible with map " + getId());
 
         m_keys.remove(key);
         PSSInst vi = m_values.remove(key);
         if (vi == null)
-            PSSMessage.Fatal("Accessing a non-existing key " + key.getText() + " of map " + m_id);
+            PSSMessage.Fatal("Accessing a non-existing key " + key.getText() + " of map " + getId());
         return vi;
     }
 
@@ -209,10 +209,10 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
 
         if (!map_type.getKeyType().isCompatible(k.getTypeModel()))
             PSSMessage.Error("", "The key type " + k.getTypeModel().getText() + " of " + k.getText()
-                    + " is incompatible with map " + m_id);
+                    + " is incompatible with map " + getId());
         if (!map_type.getValueType().isCompatible(v.getTypeModel()))
             PSSMessage.Error("", "The value type " + v.getTypeModel().getText() + " of " + v.getText()
-                    + " is incompatible with map " + m_id);
+                    + " is incompatible with map " + getId());
 
         PSSInst vi = m_values.get(k);
         if (vi == null) {

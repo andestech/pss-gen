@@ -17,7 +17,7 @@ public class PSSListModel extends PSSModel implements PSSIAggregate {
 	 * @param type_model the data type of list elements
 	 */
 	public PSSListModel(PSSModel type_model) {
-		super("list<" + type_model.m_id + ">");
+		super("list<" + type_model.getId() + ">");
 		m_elem_type_model = type_model;
 	}
 
@@ -37,7 +37,7 @@ public class PSSListModel extends PSSModel implements PSSIAggregate {
 
 	@Override
 	public String getText() {
-		return m_id;
+		return getId();
 	}
 
 	@Override
