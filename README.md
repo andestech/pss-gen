@@ -220,6 +220,17 @@ runs the JUnit 5 tests in `src/test/java` with `./gradlew test`; the report is
 `build/reports/tests/test/index.html`. They pin the behaviour of single classes (values,
 domains, the random source) and run whole generations in one JVM.
 
+`PackageLayeringTest` reads the compiled classes with `jdeps` and fails when a package
+depends on one the layering does not allow: `cli` and `frontend` sit on top, the core
+packages (`model`, `inst`, `value`, `expr`, `solver`, `activity`, `proc`) depend only on
+each other and on `util`, and neither the core nor `util` uses the parser. The test's
+class comment lists the allowed edges and explains them.
+
+`ModelDumpTest` compares the model that the frontend builds for a set of inputs with the
+text in `src/test/resources/pssgen/frontend/model_dump/`. After a change that is meant to
+alter the model, `PSSGEN_UPDATE_DUMPS=1 make -C src unit-test` rewrites those files, and
+the diff shows what changed.
+
 ### Regression tests
 
 The regression tests live in `tests/`, in four suites: `samples/` (language features),
