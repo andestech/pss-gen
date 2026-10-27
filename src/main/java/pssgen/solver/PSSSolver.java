@@ -157,7 +157,7 @@ public class PSSSolver {
 		return true;
 	}
 
-	public int solve() {
+	int solve() {
 		int retry = 0;
 
 		reduceDefaultDomain();
