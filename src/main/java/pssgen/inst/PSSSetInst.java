@@ -223,4 +223,8 @@ public class PSSSetInst extends PSSInst implements PSSIAggregate {
         // The set collection type is not randomizable.
     }
 
+    @Override
+    public PSSVal emptyCollectionVal() {
+        return new PSSSetVal(null);
+    }
 }

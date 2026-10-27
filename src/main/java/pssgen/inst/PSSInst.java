@@ -106,6 +106,14 @@ public class PSSInst {
 		return false;
 	}
 
+	/**
+	 * Returns the value an empty aggregate literal assigns to this instance, or null
+	 * when this instance is not a list, set or map.
+	 */
+	public PSSVal emptyCollectionVal() {
+		return null;
+	}
+
 	public void setTraversed() {
 		m_traversed = true;
 	}
@@ -201,10 +209,9 @@ public class PSSInst {
 		return null;
 	}
 
+	/** Returns the nearest component instance at or above this one, or null. */
 	public PSSInst getComponentInst() {
-		if (this instanceof PSSComponentInst) {
-			return this;
-		} else if (m_parent != null) {
+		if (m_parent != null) {
 			return m_parent.getComponentInst();
 		}
 		return null;

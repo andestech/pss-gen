@@ -277,4 +277,8 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
         // The map collection type is not randomizable.
     }
 
+    @Override
+    public PSSVal emptyCollectionVal() {
+        return new PSSMapVal(null);
+    }
 }

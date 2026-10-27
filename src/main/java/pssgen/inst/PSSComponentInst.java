@@ -18,6 +18,11 @@ public class PSSComponentInst extends PSSInst implements PSSIScope {
 	}
 
 	@Override
+	public PSSInst getComponentInst() {
+		return this;
+	}
+
+	@Override
 	public void init_up() {
 		PSSModel comp = getTypeModel();
 		for (int i = 0; i < getInsts().size(); i++) {

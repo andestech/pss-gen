@@ -5,15 +5,9 @@ import pssgen.expr.PSSExpression;
 import pssgen.expr.PSSRefPathExpression;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSIntInst;
-import pssgen.inst.PSSListInst;
-import pssgen.inst.PSSMapInst;
-import pssgen.inst.PSSSetInst;
 import pssgen.model.PSSExecKind;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSIntVal;
-import pssgen.value.PSSListVal;
-import pssgen.value.PSSMapVal;
-import pssgen.value.PSSSetVal;
 import pssgen.value.PSSVal;
 
 public class PSSAssignProcStmt extends PSSProcStmt {
@@ -52,12 +46,9 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 		/* Special treatment of empty aggregate literal */
 		if (m_expression instanceof PSSAggregateExpression
 				&& ((PSSAggregateExpression) m_expression).isEmpty()) {
-			if (leftInst instanceof PSSListInst) {
-				rightVal = new PSSListVal(null);
-			} else if (leftInst instanceof PSSSetInst) {
-				rightVal = new PSSSetVal(null);
-			} else if (leftInst instanceof PSSMapInst) {
-				rightVal = new PSSMapVal(null);
+			PSSVal empty = leftInst.emptyCollectionVal();
+			if (empty != null) {
+				rightVal = empty;
 			}
 		}
 

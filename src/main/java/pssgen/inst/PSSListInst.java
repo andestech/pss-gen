@@ -388,4 +388,8 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
         Collections.shuffle(m_list, rnd);
     }
 
+    @Override
+    public PSSVal emptyCollectionVal() {
+        return new PSSListVal(null);
+    }
 };
