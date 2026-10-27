@@ -66,10 +66,7 @@ public abstract class PSSDomain {
 	 * @return a domain reduced from this one by keeping only elements equal to
 	 *         {@code val}
 	 */
-	public PSSDomain reduceDomainEqual(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainEqual is not implemented");
-		return null;
-	}
+	public abstract PSSDomain reduceDomainEqual(PSSVal val);
 
 	/**
 	 * Returns a domain reduced from this one by keeping only elements not equal to
@@ -80,10 +77,7 @@ public abstract class PSSDomain {
 	 * @return a domain reduced from this one by keeping only elements not equal to
 	 *         {@code val}
 	 */
-	public PSSDomain reduceDomainNotEqual(PSSVal val) {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::reduceDomainNotEqual is not implemented");
-		return null;
-	}
+	public abstract PSSDomain reduceDomainNotEqual(PSSVal val);
 
 	/**
 	 * Returns a domain reduced from this one by keeping only elements greater than
@@ -158,9 +152,6 @@ public abstract class PSSDomain {
 	 *
 	 * @return the text representation of this domain
 	 */
-	public String getText() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::getText is not implemented");
-		return "";
-	}
+	public abstract String getText();
 
 }

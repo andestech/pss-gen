@@ -43,10 +43,7 @@ public abstract class PSSVal implements Comparable<PSSVal> {
 		m_type = type;
 	}
 
-	public String getText() {
-		PSSMessage.Fatal(getClass().getSimpleName() + "::getText is not implemented");
-		return "";
-	}
+	public abstract String getText();
 
 	public String toTargetCode() {
 		PSSMessage.Fatal(getClass().getSimpleName() + "::toTargetCode is not implemented");
