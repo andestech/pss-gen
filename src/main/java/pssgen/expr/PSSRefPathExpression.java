@@ -93,10 +93,8 @@ public class PSSRefPathExpression extends PSSExpression {
 				log.Warning("[SYNTAX] <RefPath> : text after the reference is ignored, from '"
 					+ tokens.LT(1).getText() + "' in '" + str + "'");
 			}
-			PSSGenVisitor eval = new PSSGenVisitor(log, PSSScope.Context.TEMPLATE);
-			eval.root = root;
-			eval.visit(ref_path);
-			res = (PSSRefPathExpression) eval.exp_stack.pop();
+			PSSGenVisitor eval = new PSSGenVisitor(log, root, PSSScope.Context.TEMPLATE);
+			res = (PSSRefPathExpression) eval.visit(ref_path);
 		} catch (IOException e) {
 			PSSMessage.Fatal("Failed parsing " + str);
 		}

@@ -123,8 +123,7 @@ public class PSSGenMain {
 	public static PSSModel createModel(PSSRun run, ArrayList<ParseTree> tree_list) {
 		run.log().Info("createModel");
 		PSSModel      model = new PSSModel("");
-		PSSGenVisitor eval  = new PSSGenVisitor(run.log());
-		eval.root = model;
+		PSSGenVisitor eval  = new PSSGenVisitor(run.log(), model);
 
 		run.log().Debug("tree_list.size = " + tree_list.size());
 		// With one such construct the visitor reports it as before; with several, all
