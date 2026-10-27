@@ -1,0 +1,12 @@
+// An enum item named with its package and enum type, from another package's component.
+package p {
+    enum mode_e { M0 = 1, M1 = 2 };
+}
+component pss_top {
+    import p::*;
+    action root_a {
+        rand mode_e m;
+        constraint m == p::mode_e::M1;
+        exec body ASM = """m={{m}}""";
+    }
+}

@@ -1,0 +1,16 @@
+// #49: a member constraint of sub_a resolves a field of root_a, the action that traverses it.
+component pss_top {
+    action root_a {
+        bit[5] root_val = 7;
+        activity {
+            do sub_a;
+        }
+    }
+    action sub_a {
+        rand int val;
+        constraint {
+            val == root_val;
+        }
+        exec body ASM = """val={{val}}""";
+    }
+}

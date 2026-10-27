@@ -1,0 +1,9 @@
+// A component field named without "comp." in an action.
+component pss_top {
+    bit[4] cv = 6;
+    action root_a {
+        rand bit[4] x;
+        constraint x == cv;
+        exec body ASM = """x={{x}}""";
+    }
+}

@@ -1,0 +1,15 @@
+// A local of a function takes the name of a component field.
+component pss_top {
+    bit[8] cv = 3;
+    function bit[8] g() {
+        bit[8] cv = 1;
+        return cv;
+    }
+    action root_a {
+        bit[8] r = 0;
+        exec post_solve {
+            r = g();
+        }
+        exec body ASM = """r={{r}}""";
+    }
+}

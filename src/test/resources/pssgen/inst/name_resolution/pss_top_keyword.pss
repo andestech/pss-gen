@@ -1,0 +1,9 @@
+// "pss_top" is the top component instance.
+component pss_top {
+    bit[4] tv = 11;
+    action root_a {
+        rand bit[4] x;
+        constraint x == pss_top.tv;
+        exec body ASM = """x={{x}} tv={{pss_top.tv}}""";
+    }
+}

@@ -1,0 +1,14 @@
+// "this" in a component function names no action.
+component pss_top {
+    bit[4] cv = 2;
+    function bit[4] f() {
+        return this.cv;
+    }
+    action root_a {
+        bit[4] r = 0;
+        exec post_solve {
+            r = f();
+        }
+        exec body ASM = """r={{r}}""";
+    }
+}

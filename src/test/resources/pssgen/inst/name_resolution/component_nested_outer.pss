@@ -1,0 +1,11 @@
+// A field initializer of a nested component names a field of the enclosing component.
+component sub_c {
+    bit[4] c = tv;
+}
+component pss_top {
+    bit[4] tv = 5;
+    sub_c s;
+    action root_a {
+        exec body ASM = """c={{comp.s.c}}""";
+    }
+}

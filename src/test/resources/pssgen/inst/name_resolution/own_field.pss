@@ -1,0 +1,12 @@
+// A field of the action itself, from a member constraint, an exec block and a template.
+component pss_top {
+    action root_a {
+        rand bit[4] x;
+        bit[4] y = 3;
+        constraint x == y + 1;
+        exec post_solve {
+            y = x + 1;
+        }
+        exec body ASM = """x={{x}} y={{y}}""";
+    }
+}

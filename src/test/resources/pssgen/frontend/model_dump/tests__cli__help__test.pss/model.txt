@@ -1,0 +1,318 @@
+--- messages
+--- model
+#1 PSSModel
+  children: #2 ArrayList[1]
+    - #3 PSSComponentModel
+      children: #4 ArrayList[4]
+        - #5 PSSStructModel
+          children: #6 ArrayList[1]
+            - #7 PSSStringModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::msg_buf::string"
+              m_id: "string"
+              m_parent: @5
+              m_static_insts: ArrayList[0]
+          m_hierarchy_id: "pss_top::msg_buf"
+          m_id: "msg_buf"
+          m_parent: @3
+          m_static_insts: ArrayList[0]
+          m_attrfield: #8 ArrayList[1]
+            - #9 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @5
+              m_static_insts: ArrayList[0]
+              m_data_decl: #10 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #11 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #12 ArrayList[1]
+                    - #13 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "s"
+                      m_id: "s"
+                      m_static_insts: ArrayList[0]
+                m_type: @7
+              m_rand: true
+          m_constraint: #14 PSSConstraintList
+            m_list: ArrayList[0]
+          m_default_constraint: #15 PSSConstraintList
+            m_list: ArrayList[0]
+          m_struct_kind: #16 PSSStructKind
+            m_object_kind: PSSObjectKind.buffer
+        - #17 PSSActionModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::display_a"
+          m_id: "display_a"
+          m_parent: @3
+          m_static_insts: ArrayList[0]
+          m_activity: ArrayList[0]
+          m_attrfield: ArrayList[0]
+          m_constraint: #18 PSSConstraintList
+            m_list: ArrayList[0]
+          m_default_constraint: #19 PSSConstraintList
+            m_list: ArrayList[0]
+          m_exec_list: ArrayList[0]
+          m_flowref: #20 ArrayList[1]
+            - #21 PSSFlowRefModel
+              children: ArrayList[0]
+              m_hierarchy_id: "msg"
+              m_id: "msg"
+              m_parent: @17
+              m_static_insts: ArrayList[0]
+              m_output: false
+              m_type: "msg_buf"
+          m_target_code: #22 PSSTargetCodeList
+            m_list: #23 ArrayList[1]
+              - #24 PSSTargetCode
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_code: "\n\t\t\t$display(\"{{msg.s}}\");\n\t\t"
+                m_exec_kind: PSSExecKind.body
+                m_language: "SV"
+                m_root: @17
+        - #25 PSSActionModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::send_a"
+          m_id: "send_a"
+          m_parent: @3
+          m_static_insts: ArrayList[0]
+          m_activity: ArrayList[0]
+          m_attrfield: ArrayList[0]
+          m_constraint: #26 PSSConstraintList
+            m_list: ArrayList[0]
+          m_default_constraint: #27 PSSConstraintList
+            m_list: ArrayList[0]
+          m_exec_list: ArrayList[0]
+          m_flowref: #28 ArrayList[1]
+            - #29 PSSFlowRefModel
+              children: ArrayList[0]
+              m_hierarchy_id: "msg"
+              m_id: "msg"
+              m_parent: @25
+              m_static_insts: ArrayList[0]
+              m_output: true
+              m_type: "msg_buf"
+          m_target_code: #30 PSSTargetCodeList
+            m_list: ArrayList[0]
+        - #31 PSSActionModel
+          children: #32 ArrayList[2]
+            - #33 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::root_a::"
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_location: @31
+              m_type: "send_a"
+            - #34 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::root_a::"
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_location: @31
+              m_type: "display_a"
+          m_hierarchy_id: "pss_top::root_a"
+          m_id: "root_a"
+          m_parent: @3
+          m_static_insts: ArrayList[0]
+          m_activity: #35 ArrayList[6]
+            - #36 PSSTraversalActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_constraint: #37 PSSConstraintList
+                m_list: ArrayList[0]
+              m_default_constraint: #38 PSSConstraintList
+                m_list: ArrayList[0]
+              m_handle_id: "send1"
+              m_type_id: ""
+            - #39 PSSTraversalActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_constraint: #40 PSSConstraintList
+                m_list: #41 ArrayList[1]
+                  - #42 PSSExpressionConstraint
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_parent: @39
+                    m_static_insts: ArrayList[0]
+                    m_expression: #43 PSSEqualExpression
+                      m_left: #44 PSSRefPathExpression
+                        m_ref_path: #45 PSSMemberPathElemExpression
+                          m_child: #46 PSSMemberPathElemExpression
+                            m_id: "s"
+                            m_parent: @45
+                          m_id: "msg"
+                        m_type_identifier_elems: ""
+                      m_right: #47 PSSPrimaryExpression
+                        m_val: #48 PSSStringVal
+                          m_type: #49 PSSStringModel
+                            children: ArrayList[0]
+                            m_hierarchy_id: "string"
+                            m_id: "string"
+                            m_static_insts: ArrayList[0]
+                          m_bound: true
+                          m_str: "Hello "
+              m_default_constraint: #50 PSSConstraintList
+                m_list: ArrayList[0]
+              m_handle_id: "disp1"
+              m_type_id: ""
+            - #51 PSSTraversalActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_constraint: #52 PSSConstraintList
+                m_list: ArrayList[0]
+              m_default_constraint: #53 PSSConstraintList
+                m_list: ArrayList[0]
+              m_handle_id: "send2"
+              m_type_id: ""
+            - #54 PSSTraversalActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_constraint: #55 PSSConstraintList
+                m_list: #56 ArrayList[1]
+                  - #57 PSSExpressionConstraint
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_parent: @54
+                    m_static_insts: ArrayList[0]
+                    m_expression: #58 PSSEqualExpression
+                      m_left: #59 PSSRefPathExpression
+                        m_ref_path: #60 PSSMemberPathElemExpression
+                          m_child: #61 PSSMemberPathElemExpression
+                            m_id: "s"
+                            m_parent: @60
+                          m_id: "msg"
+                        m_type_identifier_elems: ""
+                      m_right: #62 PSSPrimaryExpression
+                        m_val: #63 PSSStringVal
+                          m_type: @49
+                          m_bound: true
+                          m_str: "World "
+              m_default_constraint: #64 PSSConstraintList
+                m_list: ArrayList[0]
+              m_handle_id: "disp2"
+              m_type_id: ""
+            - #65 PSSBindActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_bind_id: "send1.msg"
+              m_items: #66 ArrayList[1]
+                - "disp1.msg"
+            - #67 PSSBindActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_bind_id: "send2.msg"
+              m_items: #68 ArrayList[1]
+                - "disp2.msg"
+          m_attrfield: #69 ArrayList[2]
+            - #70 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_data_decl: #71 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #72 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #73 ArrayList[2]
+                    - #74 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "send1"
+                      m_id: "send1"
+                      m_static_insts: ArrayList[0]
+                    - #75 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "send2"
+                      m_id: "send2"
+                      m_static_insts: ArrayList[0]
+                m_type: @33
+              m_rand: false
+            - #76 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @31
+              m_static_insts: ArrayList[0]
+              m_data_decl: #77 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #78 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #79 ArrayList[2]
+                    - #80 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "disp1"
+                      m_id: "disp1"
+                      m_static_insts: ArrayList[0]
+                    - #81 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "disp2"
+                      m_id: "disp2"
+                      m_static_insts: ArrayList[0]
+                m_type: @34
+              m_rand: false
+          m_constraint: #82 PSSConstraintList
+            m_list: ArrayList[0]
+          m_default_constraint: #83 PSSConstraintList
+            m_list: ArrayList[0]
+          m_exec_list: ArrayList[0]
+          m_flowref: ArrayList[0]
+          m_target_code: #84 PSSTargetCodeList
+            m_list: ArrayList[0]
+      m_hierarchy_id: "pss_top"
+      m_id: "pss_top"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_data_list: #85 PSSComponentDataDeclListModel
+        children: ArrayList[0]
+        m_hierarchy_id: ""
+        m_id: ""
+        m_static_insts: ArrayList[0]
+        m_list: ArrayList[0]
+      m_exec_list: ArrayList[0]
+  m_hierarchy_id: ""
+  m_id: ""
+  m_static_insts: ArrayList[0]

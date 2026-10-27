@@ -1,0 +1,12 @@
+// An enum item of an imported package, unqualified.
+package p {
+    enum mode_e { M0 = 1, M1 = 2 };
+}
+component pss_top {
+    import p::*;
+    action root_a {
+        rand mode_e n;
+        constraint n == M0;
+        exec body ASM = """n={{n}}""";
+    }
+}

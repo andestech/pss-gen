@@ -1,0 +1,24 @@
+# Repository test inputs whose parse trees, with the synthetic cases, contain every
+# parser rule shape that occurs in two or more places of the repository inputs.
+tests/errors/inheritance/test.pss
+tests/samples/test_ref_function_parameters/test.pss
+tests/samples/test_enum/test.pss
+tests/errors/unsupported-several/test.pss
+tests/cli/help/test.pss
+tests/samples/test_demo/test.pss
+tests/samples/test_aggregate_function_parameters/test.pss
+tests/errors/activity-handle-declaration/test.pss
+tests/samples/test_break/test.pss
+tests/samples/test_function_chaining/test.pss
+tests/samples/9_6_Primary_expressions/test_indexing_array/test.pss
+tests/errors/unsupported-several-files/test.pss
+tests/issues/18/test.pss
+tests/samples/test_collection_lists/test.pss
+tests/samples/7_2_Integer_types/test_multi_bit/test.pss
+tests/samples/test_init_up/test.pss
+tests/issues/42/test.pss
+tests/samples/16_1_10_Default_value_constraints/test_enum_default/test.pss
+tests/samples/test_pss2.0_example315_parameter_passing_semantics/test.pss
+tests/samples/test_native_functions/test.pss
+tests/samples/test_match/test.pss
+tests/samples/test_repeat_count/test.pss

@@ -1,0 +1,12 @@
+// A local of an exec block takes the name of an enum item.
+enum color_e { RED, GREEN };
+component pss_top {
+    action root_a {
+        bit[4] r = 0;
+        exec post_solve {
+            bit[4] RED = 1;
+            r = RED;
+        }
+        exec body ASM = """r={{r}}""";
+    }
+}

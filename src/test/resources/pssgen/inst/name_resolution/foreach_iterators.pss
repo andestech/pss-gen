@@ -1,0 +1,27 @@
+// foreach in a constraint, an exec block and an activity names its iterator and index.
+component pss_top {
+    action root_a {
+        rand bit[4] arr[3];
+        bit[8] sum = 0;
+        constraint {
+            foreach (e : arr[i]) {
+                e == i + 1;
+            }
+        }
+        exec post_solve {
+            foreach (e : arr[i]) {
+                sum = sum + e * i;
+            }
+        }
+        activity {
+            foreach (e : arr[i]) {
+                do sub_a with { val == e + i; };
+            }
+        }
+        exec body ASM = """sum={{sum}}""";
+    }
+    action sub_a {
+        rand bit[4] val;
+        exec body ASM = """val={{val}}""";
+    }
+}

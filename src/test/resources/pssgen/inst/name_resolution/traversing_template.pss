@@ -1,0 +1,12 @@
+// A target template of sub_a resolves a field of root_a, the action that traverses it.
+component pss_top {
+    action root_a {
+        bit[5] root_val = 7;
+        activity {
+            do sub_a;
+        }
+    }
+    action sub_a {
+        exec body ASM = """root_val={{root_val}}""";
+    }
+}
