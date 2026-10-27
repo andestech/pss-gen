@@ -64,10 +64,12 @@
           m_expression: #17 PSSAddExpression
             m_left: #18 PSSRefPathExpression
               m_ref_path: #19 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
                 m_id: "a"
               m_type_identifier_elems: ""
             m_right: #20 PSSRefPathExpression
               m_ref_path: #21 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
                 m_id: "b"
               m_type_identifier_elems: ""
     - #22 PSSFunctionModel
@@ -110,6 +112,7 @@
           m_expression: #31 PSSMulExpression
             m_left: #32 PSSRefPathExpression
               m_ref_path: #33 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
                 m_id: "a"
               m_type_identifier_elems: ""
             m_right: #34 PSSPrimaryExpression
@@ -525,6 +528,7 @@
                   m_op: "="
                   m_ref: #131 PSSRefPathExpression
                     m_ref_path: #132 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "l"
                     m_type_identifier_elems: ""
                 - #133 PSSAssignProcStmt
@@ -578,6 +582,7 @@
                   m_op: "="
                   m_ref: #148 PSSRefPathExpression
                     m_ref_path: #149 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "m"
                     m_type_identifier_elems: ""
                 - #150 PSSAssignProcStmt
@@ -611,6 +616,7 @@
                   m_op: "="
                   m_ref: #159 PSSRefPathExpression
                     m_ref_path: #160 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "s"
                     m_type_identifier_elems: ""
             - #161 PSSExecBlock
@@ -692,6 +698,7 @@
                   m_op: "+="
                   m_ref: #179 PSSRefPathExpression
                     m_ref_path: #180 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "t"
                     m_type_identifier_elems: ""
                 - #181 PSSAssignProcStmt
@@ -834,6 +841,7 @@
                   m_op: "="
                   m_ref: #229 PSSRefPathExpression
                     m_ref_path: #230 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "u"
                     m_type_identifier_elems: ""
                 - #231 PSSAssignProcStmt
@@ -855,6 +863,7 @@
                         m_lhs_casting_type: @233
                         m_rhs_expression: #236 PSSRefPathExpression
                           m_ref_path: #237 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "x"
                           m_type_identifier_elems: ""
                       m_right: #238 PSSPrimaryExpression
@@ -870,6 +879,7 @@
                   m_op: "="
                   m_ref: #241 PSSRefPathExpression
                     m_ref_path: #242 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #243 PSSIfElseProcStmt
@@ -881,6 +891,7 @@
                   m_cond: #244 PSSGreaterThanExpression
                     m_left: #245 PSSRefPathExpression
                       m_ref_path: #246 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "t"
                       m_type_identifier_elems: ""
                     m_right: #247 PSSPrimaryExpression
@@ -911,6 +922,7 @@
                     m_op: "="
                     m_ref: #254 PSSRefPathExpression
                       m_ref_path: #255 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "x"
                       m_type_identifier_elems: ""
                   m_true_stmt: #256 PSSAssignProcStmt
@@ -931,6 +943,7 @@
                     m_op: "="
                     m_ref: #260 PSSRefPathExpression
                       m_ref_path: #261 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "x"
                       m_type_identifier_elems: ""
                 - #262 PSSRepeatProcStmt
@@ -964,6 +977,7 @@
                         m_expression: #269 PSSAddExpression
                           m_left: #270 PSSRefPathExpression
                             m_ref_path: #271 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           m_right: #272 PSSPrimaryExpression
@@ -979,6 +993,7 @@
                         m_op: "="
                         m_ref: #275 PSSRefPathExpression
                           m_ref_path: #276 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "x"
                           m_type_identifier_elems: ""
                 - #277 PSSRepeatProcStmt
@@ -1007,15 +1022,18 @@
                     m_expression: #282 PSSAddExpression
                       m_left: #283 PSSRefPathExpression
                         m_ref_path: #284 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #285 PSSRefPathExpression
                         m_ref_path: #286 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "j"
                         m_type_identifier_elems: ""
                     m_op: "="
                     m_ref: #287 PSSRefPathExpression
                       m_ref_path: #288 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "x"
                       m_type_identifier_elems: ""
                 - #289 PSSRepeatWhileProcStmt
@@ -1027,6 +1045,7 @@
                   m_cond: #290 PSSLessThanExpression
                     m_left: #291 PSSRefPathExpression
                       m_ref_path: #292 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "x"
                       m_type_identifier_elems: ""
                     m_right: #293 PSSPrimaryExpression
@@ -1053,6 +1072,7 @@
                         m_expression: #299 PSSAddExpression
                           m_left: #300 PSSRefPathExpression
                             m_ref_path: #301 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           m_right: #302 PSSPrimaryExpression
@@ -1068,6 +1088,7 @@
                         m_op: "="
                         m_ref: #305 PSSRefPathExpression
                           m_ref_path: #306 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "x"
                           m_type_identifier_elems: ""
                 - #307 PSSWhileProcStmt
@@ -1079,6 +1100,7 @@
                   m_cond: #308 PSSLessThanExpression
                     m_left: #309 PSSRefPathExpression
                       m_ref_path: #310 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "x"
                       m_type_identifier_elems: ""
                     m_right: #311 PSSPrimaryExpression
@@ -1105,6 +1127,7 @@
                         m_expression: #317 PSSAddExpression
                           m_left: #318 PSSRefPathExpression
                             m_ref_path: #319 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           m_right: #320 PSSPrimaryExpression
@@ -1120,6 +1143,7 @@
                         m_op: "="
                         m_ref: #323 PSSRefPathExpression
                           m_ref_path: #324 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "x"
                           m_type_identifier_elems: ""
                       - #325 PSSIfElseProcStmt
@@ -1130,6 +1154,7 @@
                         m_cond: #326 PSSEqualExpression
                           m_left: #327 PSSRefPathExpression
                             m_ref_path: #328 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           m_right: #329 PSSPrimaryExpression
@@ -1160,6 +1185,7 @@
                   m_static_insts: ArrayList[0]
                   m_expression: #335 PSSRefPathExpression
                     m_ref_path: #336 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "l"
                     m_type_identifier_elems: ""
                   m_index_identifier: "i"
@@ -1179,20 +1205,24 @@
                         m_expression: #340 PSSAddExpression
                           m_left: #341 PSSRefPathExpression
                             m_ref_path: #342 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           m_right: #343 PSSMulExpression
                             m_left: #344 PSSRefPathExpression
                               m_ref_path: #345 PSSMemberPathElemExpression
+                                m_context: Context.EXEC_BLOCK
                                 m_id: "e"
                               m_type_identifier_elems: ""
                             m_right: #346 PSSRefPathExpression
                               m_ref_path: #347 PSSMemberPathElemExpression
+                                m_context: Context.EXEC_BLOCK
                                 m_id: "i"
                               m_type_identifier_elems: ""
                         m_op: "="
                         m_ref: #348 PSSRefPathExpression
                           m_ref_path: #349 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "x"
                           m_type_identifier_elems: ""
                 - #350 PSSForeachProcStmt
@@ -1203,6 +1233,7 @@
                   m_static_insts: ArrayList[0]
                   m_expression: #351 PSSRefPathExpression
                     m_ref_path: #352 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "l"
                     m_type_identifier_elems: ""
                   m_proc_stmt: #353 PSSSequenceProcStmt
@@ -1236,10 +1267,12 @@
                     m_op: "="
                     m_ref: #359 PSSRefPathExpression
                       m_ref_path: #360 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "x"
                       m_type_identifier_elems: ""
                   m_cond: #361 PSSRefPathExpression
                     m_ref_path: #362 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                   m_ranges: #363 ArrayList[2]
@@ -1309,6 +1342,7 @@
                       m_op: "="
                       m_ref: #388 PSSRefPathExpression
                         m_ref_path: #389 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                     - #390 PSSSequenceProcStmt
@@ -1335,6 +1369,7 @@
                           m_op: "="
                           m_ref: #396 PSSRefPathExpression
                             m_ref_path: #397 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                 - #398 PSSAssignProcStmt
@@ -1345,9 +1380,11 @@
                   m_static_insts: ArrayList[0]
                   m_expression: #399 PSSRefPathExpression
                     m_ref_path: #400 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_function_parameter_list: #401 ArrayList[1]
                         - #402 PSSRefPathExpression
                           m_ref_path: #403 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "x"
                           m_type_identifier_elems: ""
                       m_id: "add"
@@ -1355,6 +1392,7 @@
                   m_op: "="
                   m_ref: #404 PSSRefPathExpression
                     m_ref_path: #405 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #406 PSSAssignProcStmt
@@ -1366,18 +1404,22 @@
                   m_expression: #407 PSSAddExpression
                     m_left: #408 PSSRefPathExpression
                       m_ref_path: #409 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_function_parameter_list: #410 ArrayList[1]
                           - #411 PSSRefPathExpression
                             m_ref_path: #412 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                         m_id: "twice"
                       m_type_identifier_elems: ""
                     m_right: #413 PSSRefPathExpression
                       m_ref_path: #414 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_function_parameter_list: #415 ArrayList[2]
                           - #416 PSSRefPathExpression
                             m_ref_path: #417 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           - #418 PSSPrimaryExpression
@@ -1395,6 +1437,7 @@
                   m_op: "="
                   m_ref: #421 PSSRefPathExpression
                     m_ref_path: #422 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #423 PSSAssignProcStmt
@@ -1413,11 +1456,13 @@
                       m_width: 4
                     m_rhs_expression: #426 PSSRefPathExpression
                       m_ref_path: #427 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "x"
                       m_type_identifier_elems: ""
                   m_op: "="
                   m_ref: #428 PSSRefPathExpression
                     m_ref_path: #429 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #430 PSSAssignProcStmt
@@ -1459,6 +1504,7 @@
                           m_width: 65
                         m_val: 3
                     m_ref_path: #441 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #442 PSSAssignProcStmt
@@ -1471,16 +1517,19 @@
                     m_left: #444 PSSUnaryMinusExpression
                       m_exp: #445 PSSRefPathExpression
                         m_ref_path: #446 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                     m_right: #447 PSSBitwiseNotExpression
                       m_exp: #448 PSSRefPathExpression
                         m_ref_path: #449 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                   m_op: "="
                   m_ref: #450 PSSRefPathExpression
                     m_ref_path: #451 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #452 PSSAssignProcStmt
@@ -1494,12 +1543,14 @@
                       m_left: #455 PSSLogicalNotExpression
                         m_exp: #456 PSSRefPathExpression
                           m_ref_path: #457 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "ok"
                           m_type_identifier_elems: ""
                       m_right: #458 PSSLogicalOrExpression
                         m_left: #459 PSSGreaterEqualExpression
                           m_left: #460 PSSRefPathExpression
                             m_ref_path: #461 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           m_right: #462 PSSPrimaryExpression
@@ -1515,6 +1566,7 @@
                         m_right: #465 PSSLessEqualExpression
                           m_left: #466 PSSRefPathExpression
                             m_ref_path: #467 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           m_right: #468 PSSPrimaryExpression
@@ -1530,6 +1582,7 @@
                     m_right: #471 PSSNotEqualExpression
                       m_left: #472 PSSRefPathExpression
                         m_ref_path: #473 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #474 PSSPrimaryExpression
@@ -1545,6 +1598,7 @@
                   m_op: "="
                   m_ref: #477 PSSRefPathExpression
                     m_ref_path: #478 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "ok"
                     m_type_identifier_elems: ""
                 - #479 PSSAssignProcStmt
@@ -1557,6 +1611,7 @@
                     m_left: #481 PSSLeftShiftExpression
                       m_left: #482 PSSRefPathExpression
                         m_ref_path: #483 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #484 PSSPrimaryExpression
@@ -1582,6 +1637,7 @@
                   m_op: "="
                   m_ref: #490 PSSRefPathExpression
                     m_ref_path: #491 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #492 PSSAssignProcStmt
@@ -1594,6 +1650,7 @@
                     m_left: #494 PSSBitwiseAndExpression
                       m_left: #495 PSSRefPathExpression
                         m_ref_path: #496 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #497 PSSPrimaryExpression
@@ -1609,6 +1666,7 @@
                     m_right: #500 PSSBitwiseXorExpression
                       m_left: #501 PSSRefPathExpression
                         m_ref_path: #502 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #503 PSSPrimaryExpression
@@ -1624,6 +1682,7 @@
                   m_op: "="
                   m_ref: #506 PSSRefPathExpression
                     m_ref_path: #507 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #508 PSSAssignProcStmt
@@ -1638,6 +1697,7 @@
                         m_left: #512 PSSModExpression
                           m_left: #513 PSSRefPathExpression
                             m_ref_path: #514 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                           m_right: #515 PSSPrimaryExpression
@@ -1683,6 +1743,7 @@
                   m_op: "="
                   m_ref: #527 PSSRefPathExpression
                     m_ref_path: #528 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #529 PSSAssignProcStmt
@@ -1694,6 +1755,7 @@
                   m_expression: #530 PSSInExpression
                     m_left: #531 PSSRefPathExpression
                       m_ref_path: #532 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "x"
                       m_type_identifier_elems: ""
                     m_right: #533 PSSOpenRangeListExpression
@@ -1733,6 +1795,7 @@
                   m_op: "="
                   m_ref: #546 PSSRefPathExpression
                     m_ref_path: #547 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "ok"
                     m_type_identifier_elems: ""
                 - #548 PSSAssignProcStmt
@@ -1754,11 +1817,13 @@
                         m_val: 3
                     m_right: #553 PSSRefPathExpression
                       m_ref_path: #554 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l"
                       m_type_identifier_elems: ""
                   m_op: "="
                   m_ref: #555 PSSRefPathExpression
                     m_ref_path: #556 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "ok"
                     m_type_identifier_elems: ""
                 - #557 PSSAssignProcStmt
@@ -1770,6 +1835,7 @@
                   m_expression: #558 PSSEqualExpression
                     m_left: #559 PSSRefPathExpression
                       m_ref_path: #560 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "str"
                       m_type_identifier_elems: ""
                     m_right: #561 PSSPrimaryExpression
@@ -1780,6 +1846,7 @@
                   m_op: "="
                   m_ref: #563 PSSRefPathExpression
                     m_ref_path: #564 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "ok"
                     m_type_identifier_elems: ""
                 - #565 PSSVoidFunctionCallProcStmt
@@ -1790,6 +1857,7 @@
                   m_static_insts: ArrayList[0]
                   func: #566 PSSFunctionCallExpression
                     m_path: #567 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_function_parameter_list: #568 ArrayList[2]
                         - #569 PSSPrimaryExpression
                           m_val: #570 PSSIntVal
@@ -1821,13 +1889,16 @@
                   func: #576 PSSFunctionCallExpression
                     m_path: #577 PSSMemberPathElemExpression
                       m_child: #578 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_function_parameter_list: #579 ArrayList[1]
                           - #580 PSSRefPathExpression
                             m_ref_path: #581 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_id: "x"
                             m_type_identifier_elems: ""
                         m_id: "push_back"
                         m_parent: @577
+                      m_context: Context.EXEC_BLOCK
                       m_id: "l"
                 - #582 PSSAssignProcStmt
                   children: ArrayList[0]
@@ -1838,14 +1909,17 @@
                   m_expression: #583 PSSRefPathExpression
                     m_ref_path: #584 PSSMemberPathElemExpression
                       m_child: #585 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_function_parameter_list: ArrayList[0]
                         m_id: "size"
                         m_parent: @584
+                      m_context: Context.EXEC_BLOCK
                       m_id: "l"
                     m_type_identifier_elems: ""
                   m_op: "="
                   m_ref: #586 PSSRefPathExpression
                     m_ref_path: #587 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "x"
                     m_type_identifier_elems: ""
                 - #588 PSSSequenceProcStmt
@@ -1873,6 +1947,7 @@
                       m_op: "="
                       m_ref: #594 PSSRefPathExpression
                         m_ref_path: #595 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
                 - #596 PSSSequenceProcStmt
@@ -1900,6 +1975,7 @@
                       m_op: "="
                       m_ref: #602 PSSRefPathExpression
                         m_ref_path: #603 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "x"
                         m_type_identifier_elems: ""
           m_flowref: ArrayList[0]

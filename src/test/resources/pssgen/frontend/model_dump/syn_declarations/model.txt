@@ -76,6 +76,7 @@
                 m_expression: #21 PSSLessThanExpression
                   m_left: #22 PSSRefPathExpression
                     m_ref_path: #23 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "f"
                     m_type_identifier_elems: ""
                   m_right: #24 PSSPrimaryExpression
@@ -651,10 +652,12 @@
                 m_expression: #159 PSSEqualExpression
                   m_left: #160 PSSRefPathExpression
                     m_ref_path: #161 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "v"
                     m_type_identifier_elems: ""
                   m_right: #162 PSSRefPathExpression
                     m_ref_path: #163 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "A"
                     m_type_identifier_elems: ""
               - #164 PSSExpressionConstraint
@@ -666,10 +669,12 @@
                 m_expression: #165 PSSEqualExpression
                   m_left: #166 PSSRefPathExpression
                     m_ref_path: #167 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "v"
                     m_type_identifier_elems: ""
                   m_right: #168 PSSRefPathExpression
                     m_ref_path: #169 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "C"
                     m_type_identifier_elems: ""
           m_default_constraint: #170 PSSConstraintList

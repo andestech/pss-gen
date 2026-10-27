@@ -101,10 +101,12 @@
                 m_cond: #25 PSSEqualExpression
                   m_left: #26 PSSRefPathExpression
                     m_ref_path: #27 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "color_val"
                     m_type_identifier_elems: ""
                   m_right: #28 PSSRefPathExpression
                     m_ref_path: #29 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "RED"
                     m_type_identifier_elems: ""
                 m_false: ArrayList[0]
@@ -118,6 +120,7 @@
                     m_expression: #32 PSSEqualExpression
                       m_left: #33 PSSRefPathExpression
                         m_ref_path: #34 PSSMemberPathElemExpression
+                          m_context: Context.MEMBER_CONSTRAINT
                           m_id: "res_val"
                         m_type_identifier_elems: ""
                       m_right: #35 PSSPrimaryExpression
@@ -139,10 +142,12 @@
                 m_cond: #39 PSSEqualExpression
                   m_left: #40 PSSRefPathExpression
                     m_ref_path: #41 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "color_val"
                     m_type_identifier_elems: ""
                   m_right: #42 PSSRefPathExpression
                     m_ref_path: #43 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "GREEN"
                     m_type_identifier_elems: ""
                 m_false: ArrayList[0]
@@ -156,6 +161,7 @@
                     m_expression: #46 PSSEqualExpression
                       m_left: #47 PSSRefPathExpression
                         m_ref_path: #48 PSSMemberPathElemExpression
+                          m_context: Context.MEMBER_CONSTRAINT
                           m_id: "res_val"
                         m_type_identifier_elems: ""
                       m_right: #49 PSSPrimaryExpression
@@ -177,10 +183,12 @@
                 m_cond: #53 PSSEqualExpression
                   m_left: #54 PSSRefPathExpression
                     m_ref_path: #55 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "color_val"
                     m_type_identifier_elems: ""
                   m_right: #56 PSSRefPathExpression
                     m_ref_path: #57 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "BLUE"
                     m_type_identifier_elems: ""
                 m_false: ArrayList[0]
@@ -194,6 +202,7 @@
                     m_expression: #60 PSSEqualExpression
                       m_left: #61 PSSRefPathExpression
                         m_ref_path: #62 PSSMemberPathElemExpression
+                          m_context: Context.MEMBER_CONSTRAINT
                           m_id: "res_val"
                         m_type_identifier_elems: ""
                       m_right: #63 PSSPrimaryExpression
@@ -216,9 +225,11 @@
                 m_static_insts: ArrayList[0]
                 m_expression: #69 PSSEqualExpression
                   m_left: #70 PSSMemberPathElemExpression
+                    m_context: Context.MEMBER_CONSTRAINT
                     m_id: "color_val"
                   m_right: #71 PSSRefPathExpression
                     m_ref_path: #72 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "GREEN"
                     m_type_identifier_elems: ""
           m_exec_list: ArrayList[0]

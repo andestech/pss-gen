@@ -5,6 +5,7 @@ import java.util.*;
 import pssgen.inst.PSSActionInst;
 import pssgen.inst.PSSFlowRefInst;
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSScope;
 import pssgen.model.PSSActionModel;
 import pssgen.model.PSSModel;
 import pssgen.proc.PSSExecKind;
@@ -137,7 +138,7 @@ public class PSSTraversalList {
 		PSSTraversal inferred_t = new PSSTraversal(inferred_inst);
 		m_list.add(inferred_t);
 
-		PSSFlowRefInst uref2 = (PSSFlowRefInst) inferred_inst.findInstance(item.getRefId());
+		PSSFlowRefInst uref2 = (PSSFlowRefInst) inferred_inst.findInstance(item.getRefId(), PSSScope.Context.FLOW_REF);
 		uref2.bind(flowobj);
 
 		if (uref.isOutput()) {

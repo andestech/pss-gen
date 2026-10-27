@@ -124,10 +124,12 @@
                           m_expression: #32 PSSEqualExpression
                             m_left: #33 PSSRefPathExpression
                               m_ref_path: #34 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "out"
                               m_type_identifier_elems: ""
                             m_right: #35 PSSRefPathExpression
                               m_ref_path: #36 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                     m_default_constraint: #37 PSSConstraintList
@@ -137,8 +139,10 @@
               m_expression: #38 PSSRefPathExpression
                 m_ref_path: #39 PSSMemberPathElemExpression
                   m_child: #40 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "l"
                     m_parent: @39
+                  m_context: Context.ACTIVITY
                   m_id: "pss_top"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -279,13 +283,16 @@
                     func: #73 PSSFunctionCallExpression
                       m_path: #74 PSSMemberPathElemExpression
                         m_child: #75 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_function_parameter_list: #76 ArrayList[1]
                             - #77 PSSRefPathExpression
                               m_ref_path: #78 PSSMemberPathElemExpression
+                                m_context: Context.EXEC_BLOCK
                                 m_id: "i"
                               m_type_identifier_elems: ""
                           m_id: "push_back"
                           m_parent: @74
+                        m_context: Context.EXEC_BLOCK
                         m_id: "suffix"
                   - #79 PSSAssignProcStmt
                     children: ArrayList[0]
@@ -295,6 +302,7 @@
                     m_expression: #80 PSSAddExpression
                       m_left: #81 PSSRefPathExpression
                         m_ref_path: #82 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "i"
                         m_type_identifier_elems: ""
                       m_right: #83 PSSPrimaryExpression
@@ -310,6 +318,7 @@
                     m_op: "="
                     m_ref: #86 PSSRefPathExpression
                       m_ref_path: #87 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "i"
                       m_type_identifier_elems: ""
         - #88 PSSExecBlock
@@ -381,6 +390,7 @@
                     m_expression: #104 PSSAddExpression
                       m_left: #105 PSSRefPathExpression
                         m_ref_path: #106 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "i"
                         m_type_identifier_elems: ""
                       m_right: #107 PSSPrimaryExpression
@@ -396,6 +406,7 @@
                     m_op: "="
                     m_ref: #110 PSSRefPathExpression
                       m_ref_path: #111 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "i"
                       m_type_identifier_elems: ""
                   - #112 PSSIfElseProcStmt
@@ -407,6 +418,7 @@
                       m_left: #114 PSSModExpression
                         m_left: #115 PSSRefPathExpression
                           m_ref_path: #116 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "i"
                           m_type_identifier_elems: ""
                         m_right: #117 PSSPrimaryExpression
@@ -442,13 +454,16 @@
                     func: #125 PSSFunctionCallExpression
                       m_path: #126 PSSMemberPathElemExpression
                         m_child: #127 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_function_parameter_list: #128 ArrayList[1]
                             - #129 PSSRefPathExpression
                               m_ref_path: #130 PSSMemberPathElemExpression
+                                m_context: Context.EXEC_BLOCK
                                 m_id: "i"
                               m_type_identifier_elems: ""
                           m_id: "push_back"
                           m_parent: @126
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l"
             - #131 PSSWhileProcStmt
               children: ArrayList[0]
@@ -459,6 +474,7 @@
               m_cond: #132 PSSLessThanExpression
                 m_left: #133 PSSRefPathExpression
                   m_ref_path: #134 PSSMemberPathElemExpression
+                    m_context: Context.EXEC_BLOCK
                     m_id: "i"
                   m_type_identifier_elems: ""
                 m_right: #135 PSSPrimaryExpression
@@ -485,6 +501,7 @@
                     m_expression: #141 PSSAddExpression
                       m_left: #142 PSSRefPathExpression
                         m_ref_path: #143 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "i"
                         m_type_identifier_elems: ""
                       m_right: #144 PSSPrimaryExpression
@@ -500,6 +517,7 @@
                     m_op: "="
                     m_ref: #147 PSSRefPathExpression
                       m_ref_path: #148 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "i"
                       m_type_identifier_elems: ""
                   - #149 PSSIfElseProcStmt
@@ -511,6 +529,7 @@
                       m_left: #151 PSSModExpression
                         m_left: #152 PSSRefPathExpression
                           m_ref_path: #153 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "i"
                           m_type_identifier_elems: ""
                         m_right: #154 PSSPrimaryExpression
@@ -546,13 +565,16 @@
                     func: #162 PSSFunctionCallExpression
                       m_path: #163 PSSMemberPathElemExpression
                         m_child: #164 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_function_parameter_list: #165 ArrayList[1]
                             - #166 PSSRefPathExpression
                               m_ref_path: #167 PSSMemberPathElemExpression
+                                m_context: Context.EXEC_BLOCK
                                 m_id: "i"
                               m_type_identifier_elems: ""
                           m_id: "push_back"
                           m_parent: @163
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l"
             - #168 PSSRepeatWhileProcStmt
               children: ArrayList[0]
@@ -563,6 +585,7 @@
               m_cond: #169 PSSLessThanExpression
                 m_left: #170 PSSRefPathExpression
                   m_ref_path: #171 PSSMemberPathElemExpression
+                    m_context: Context.EXEC_BLOCK
                     m_id: "i"
                   m_type_identifier_elems: ""
                 m_right: #172 PSSPrimaryExpression
@@ -589,6 +612,7 @@
                     m_expression: #178 PSSAddExpression
                       m_left: #179 PSSRefPathExpression
                         m_ref_path: #180 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "i"
                         m_type_identifier_elems: ""
                       m_right: #181 PSSPrimaryExpression
@@ -604,6 +628,7 @@
                     m_op: "="
                     m_ref: #184 PSSRefPathExpression
                       m_ref_path: #185 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "i"
                       m_type_identifier_elems: ""
                   - #186 PSSIfElseProcStmt
@@ -615,6 +640,7 @@
                       m_left: #188 PSSModExpression
                         m_left: #189 PSSRefPathExpression
                           m_ref_path: #190 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "i"
                           m_type_identifier_elems: ""
                         m_right: #191 PSSPrimaryExpression
@@ -650,13 +676,16 @@
                     func: #199 PSSFunctionCallExpression
                       m_path: #200 PSSMemberPathElemExpression
                         m_child: #201 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_function_parameter_list: #202 ArrayList[1]
                             - #203 PSSRefPathExpression
                               m_ref_path: #204 PSSMemberPathElemExpression
+                                m_context: Context.EXEC_BLOCK
                                 m_id: "i"
                               m_type_identifier_elems: ""
                           m_id: "push_back"
                           m_parent: @200
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l"
             - #205 PSSForeachProcStmt
               children: ArrayList[0]
@@ -666,6 +695,7 @@
               m_static_insts: ArrayList[0]
               m_expression: #206 PSSRefPathExpression
                 m_ref_path: #207 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "suffix"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "s"
@@ -684,6 +714,7 @@
                     m_expression: #211 PSSAddExpression
                       m_left: #212 PSSRefPathExpression
                         m_ref_path: #213 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "i"
                         m_type_identifier_elems: ""
                       m_right: #214 PSSPrimaryExpression
@@ -699,6 +730,7 @@
                     m_op: "="
                     m_ref: #217 PSSRefPathExpression
                       m_ref_path: #218 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "i"
                       m_type_identifier_elems: ""
                   - #219 PSSIfElseProcStmt
@@ -709,6 +741,7 @@
                     m_cond: #220 PSSGreaterThanExpression
                       m_left: #221 PSSRefPathExpression
                         m_ref_path: #222 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "i"
                         m_type_identifier_elems: ""
                       m_right: #223 PSSPrimaryExpression
@@ -734,13 +767,16 @@
                     func: #228 PSSFunctionCallExpression
                       m_path: #229 PSSMemberPathElemExpression
                         m_child: #230 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_function_parameter_list: #231 ArrayList[1]
                             - #232 PSSRefPathExpression
                               m_ref_path: #233 PSSMemberPathElemExpression
+                                m_context: Context.EXEC_BLOCK
                                 m_id: "s"
                               m_type_identifier_elems: ""
                           m_id: "push_back"
                           m_parent: @229
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l"
   m_hierarchy_id: ""
   m_id: ""

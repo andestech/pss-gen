@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSScope;
 import pssgen.value.PSSVal;
 
 /**
@@ -17,27 +18,20 @@ public class PSSFunctionCallExpression extends PSSExpression {
 	/**
 	 * Constructs a function call expression.
 	 *
-	 * @param path a path to an instance
-	 * @param id   a method name of the instance
-	 * @param args the arguments for the method call
+	 * @param path    a path to an instance
+	 * @param id      a method name of the instance
+	 * @param args    the arguments for the method call
+	 * @param context where the call is written
 	 */
-	public PSSFunctionCallExpression(PSSMemberPathElemExpression path, String id, List<PSSExpression> args) {
-		m_path = new PSSMemberPathElemExpression(id, args, null);
+	public PSSFunctionCallExpression(PSSMemberPathElemExpression path, String id, List<PSSExpression> args,
+			PSSScope.Context context) {
+		m_path = new PSSMemberPathElemExpression(id, args, null, context);
 		if (path != null) {
 			path.appendLeaf(m_path);
 			m_path = path;
 		}
 	}
 
-	/**
-	 * Constructs a function call expression.
-	 *
-	 * @param id   a method name
-	 * @param args the arguments for the method call
-	 */
-	PSSFunctionCallExpression(String id, List<PSSExpression> args) {
-		this(null, id, args);
-	}
 
 	@Override
 	public PSSVal eval(PSSInst var) {

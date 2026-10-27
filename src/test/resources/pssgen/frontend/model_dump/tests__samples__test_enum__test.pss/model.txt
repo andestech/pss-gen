@@ -146,6 +146,7 @@
                       m_static_insts: ArrayList[0]
                       m_init_exp: #27 PSSRefPathExpression
                         m_ref_path: #28 PSSMemberPathElemExpression
+                          m_context: Context.DECLARATION
                           m_id: "IN_NEG"
                         m_type_identifier_elems: ""
                 m_type: @12
@@ -174,6 +175,7 @@
                       m_static_insts: ArrayList[0]
                       m_init_exp: #34 PSSRefPathExpression
                         m_ref_path: #35 PSSMemberPathElemExpression
+                          m_context: Context.DECLARATION
                           m_id: "SAME_NAME"
                         m_type_identifier_elems: ""
                 m_type: @13
@@ -202,6 +204,7 @@
                       m_static_insts: ArrayList[0]
                       m_init_exp: #41 PSSRefPathExpression
                         m_ref_path: #42 PSSMemberPathElemExpression
+                          m_context: Context.DECLARATION
                           m_id: "OUT_4"
                         m_type_identifier_elems: ""
                 m_type: @14
@@ -230,6 +233,7 @@
                       m_static_insts: ArrayList[0]
                       m_init_exp: #48 PSSRefPathExpression
                         m_ref_path: #49 PSSMemberPathElemExpression
+                          m_context: Context.DECLARATION
                           m_id: "SAME_NAME"
                         m_type_identifier_elems: "out_e"
                 m_type: @15
@@ -334,6 +338,7 @@
                 m_expression: #73 PSSInExpression
                   m_left: #74 PSSRefPathExpression
                     m_ref_path: #75 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "inVal"
                     m_type_identifier_elems: ""
                   m_right: #76 PSSOpenRangeListExpression
@@ -410,10 +415,12 @@
                     m_expression: #98 PSSEqualExpression
                       m_left: #99 PSSRefPathExpression
                         m_ref_path: #100 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "outVal"
                         m_type_identifier_elems: ""
                       m_right: #101 PSSRefPathExpression
                         m_ref_path: #102 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "OUT_3"
                         m_type_identifier_elems: ""
                   - #103 PSSExpressionConstraint
@@ -425,10 +432,12 @@
                     m_expression: #104 PSSEqualExpression
                       m_left: #105 PSSRefPathExpression
                         m_ref_path: #106 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "inVal"
                         m_type_identifier_elems: ""
                       m_right: #107 PSSRefPathExpression
                         m_ref_path: #108 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "IN_4"
                         m_type_identifier_elems: ""
               m_default_constraint: #109 PSSConstraintList
@@ -452,6 +461,7 @@
                     m_expression: #114 PSSInExpression
                       m_left: #115 PSSRefPathExpression
                         m_ref_path: #116 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "outVal"
                         m_type_identifier_elems: ""
                       m_right: #117 PSSOpenRangeListExpression
@@ -459,6 +469,7 @@
                           - #119 PSSOpenRangeValueExpression
                             m_begin: #120 PSSRefPathExpression
                               m_ref_path: #121 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "OUT_4"
                               m_type_identifier_elems: ""
                   - #122 PSSExpressionConstraint
@@ -470,10 +481,12 @@
                     m_expression: #123 PSSLessThanExpression
                       m_left: #124 PSSRefPathExpression
                         m_ref_path: #125 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "inVal"
                         m_type_identifier_elems: ""
                       m_right: #126 PSSRefPathExpression
                         m_ref_path: #127 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "IN_3"
                         m_type_identifier_elems: ""
               m_default_constraint: #128 PSSConstraintList

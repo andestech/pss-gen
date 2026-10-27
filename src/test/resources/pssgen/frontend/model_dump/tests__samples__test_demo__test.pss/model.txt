@@ -128,6 +128,7 @@
                     m_expression: #35 PSSEqualExpression
                       m_left: #36 PSSRefPathExpression
                         m_ref_path: #37 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "imm"
                         m_type_identifier_elems: ""
                       m_right: #38 PSSPrimaryExpression
@@ -153,6 +154,7 @@
               m_cond: #43 PSSLessThanExpression
                 m_left: #44 PSSRefPathExpression
                   m_ref_path: #45 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "icount"
                   m_type_identifier_elems: ""
                 m_right: #46 PSSPrimaryExpression
@@ -189,6 +191,7 @@
                           m_expression: #55 PSSEqualExpression
                             m_left: #56 PSSRefPathExpression
                               m_ref_path: #57 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "imm"
                               m_type_identifier_elems: ""
                             m_right: #58 PSSPrimaryExpression
@@ -222,6 +225,7 @@
                           m_expression: #66 PSSEqualExpression
                             m_left: #67 PSSRefPathExpression
                               m_ref_path: #68 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "imm"
                               m_type_identifier_elems: ""
                             m_right: #69 PSSPrimaryExpression
@@ -262,6 +266,7 @@
                           m_expression: #79 PSSEqualExpression
                             m_left: #80 PSSRefPathExpression
                               m_ref_path: #81 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "imm"
                               m_type_identifier_elems: ""
                             m_right: #82 PSSPrimaryExpression
@@ -517,6 +522,7 @@
                         m_cond: #145 PSSEqualExpression
                           m_left: #146 PSSRefPathExpression
                             m_ref_path: #147 PSSMemberPathElemExpression
+                              m_context: Context.ACTIVITY
                               m_id: "xlen"
                             m_type_identifier_elems: ""
                           m_right: #148 PSSPrimaryExpression
@@ -650,6 +656,7 @@
                 m_expression: #179 PSSInExpression
                   m_left: #180 PSSRefPathExpression
                     m_ref_path: #181 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "icount"
                     m_type_identifier_elems: ""
                   m_right: #182 PSSOpenRangeListExpression
@@ -717,6 +724,7 @@
                   m_op: "="
                   m_ref: #204 PSSRefPathExpression
                     m_ref_path: #205 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "xlen"
                     m_type_identifier_elems: ""
           m_flowref: ArrayList[0]
@@ -792,6 +800,7 @@
                 m_expression: #223 PSSInExpression
                   m_left: #224 PSSRefPathExpression
                     m_ref_path: #225 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "rs1"
                     m_type_identifier_elems: ""
                   m_right: #226 PSSOpenRangeListExpression
@@ -826,6 +835,7 @@
                 m_expression: #236 PSSInExpression
                   m_left: #237 PSSRefPathExpression
                     m_ref_path: #238 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "rs2"
                     m_type_identifier_elems: ""
                   m_right: #239 PSSOpenRangeListExpression
@@ -860,6 +870,7 @@
                 m_expression: #249 PSSInExpression
                   m_left: #250 PSSRefPathExpression
                     m_ref_path: #251 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "rd"
                     m_type_identifier_elems: ""
                   m_right: #252 PSSOpenRangeListExpression
@@ -961,6 +972,7 @@
                 m_expression: #279 PSSInExpression
                   m_left: #280 PSSRefPathExpression
                     m_ref_path: #281 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "rs1"
                     m_type_identifier_elems: ""
                   m_right: #282 PSSOpenRangeListExpression
@@ -995,6 +1007,7 @@
                 m_expression: #292 PSSInExpression
                   m_left: #293 PSSRefPathExpression
                     m_ref_path: #294 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "rs2"
                     m_type_identifier_elems: ""
                   m_right: #295 PSSOpenRangeListExpression
@@ -1029,6 +1042,7 @@
                 m_expression: #305 PSSInExpression
                   m_left: #306 PSSRefPathExpression
                     m_ref_path: #307 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "rd"
                     m_type_identifier_elems: ""
                   m_right: #308 PSSOpenRangeListExpression
@@ -1150,6 +1164,7 @@
                 m_expression: #339 PSSInExpression
                   m_left: #340 PSSRefPathExpression
                     m_ref_path: #341 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
                       m_id: "rd"
                     m_type_identifier_elems: ""
                   m_right: #342 PSSOpenRangeListExpression

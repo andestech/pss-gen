@@ -157,8 +157,10 @@
                       m_left: #44 PSSRefPathExpression
                         m_ref_path: #45 PSSMemberPathElemExpression
                           m_child: #46 PSSMemberPathElemExpression
+                            m_context: Context.INLINE_CONSTRAINT
                             m_id: "s"
                             m_parent: @45
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "msg"
                         m_type_identifier_elems: ""
                       m_right: #47 PSSPrimaryExpression
@@ -204,8 +206,10 @@
                       m_left: #59 PSSRefPathExpression
                         m_ref_path: #60 PSSMemberPathElemExpression
                           m_child: #61 PSSMemberPathElemExpression
+                            m_context: Context.INLINE_CONSTRAINT
                             m_id: "s"
                             m_parent: @60
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "msg"
                         m_type_identifier_elems: ""
                       m_right: #62 PSSPrimaryExpression

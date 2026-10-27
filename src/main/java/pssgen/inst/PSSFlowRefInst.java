@@ -33,11 +33,11 @@ public class PSSFlowRefInst extends PSSInst {
 	}
 
 	@Override
-	public PSSInst findInstance(String hierarchy_id) {
+	public PSSInst findInstance(String hierarchy_id, PSSScope.Context context) {
 		if (m_var == null) {
 			PSSMessage.Error("REF", "'" + getHierarchyId() + "' is not bound");
 		}
-		return m_var.findInstance(hierarchy_id);
+		return m_var.findInstance(hierarchy_id, context);
 	}
 
 	public boolean isBound() {

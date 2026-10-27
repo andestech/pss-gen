@@ -7,6 +7,7 @@ import pssgen.inst.PSSICollection;
 import pssgen.inst.PSSIIterator;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSNamespaceInst;
+import pssgen.inst.PSSScope;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSVal;
 
@@ -59,7 +60,7 @@ public class PSSForeachProcStmt extends PSSProcStmt {
                     PSSMessage.Error("", "Expression " + m_expression.getText() + " does not have index variables");
                 if (key_inst == null) {
                     key.getTypeModel().declInst(foreach_inst, m_index_identifier, false);
-                    key_inst = foreach_inst.findInstance(m_index_identifier);
+                    key_inst = foreach_inst.findInstance(m_index_identifier, PSSScope.Context.ITERATOR);
                     key_inst.setReadOnly(true);
                 }
                 key_inst.assign(key);
@@ -67,7 +68,7 @@ public class PSSForeachProcStmt extends PSSProcStmt {
             if (m_iterator_identifier != null) {
                 if (val_inst == null) {
                     val.getTypeModel().declInst(foreach_inst, m_iterator_identifier, false);
-                    val_inst = foreach_inst.findInstance(m_iterator_identifier);
+                    val_inst = foreach_inst.findInstance(m_iterator_identifier, PSSScope.Context.ITERATOR);
                     val_inst.setReadOnly(true);
                 }
                 val_inst.assign(val);

@@ -9,6 +9,7 @@ import pssgen.inst.PSSICollection;
 import pssgen.inst.PSSIIterator;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSNamespaceInst;
+import pssgen.inst.PSSScope;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSVal;
 
@@ -59,13 +60,13 @@ public class PSSForeachConstraint extends PSSConstraint {
                     PSSMessage.Error("", "Expression " + m_expression.getText() + " does not have index variables");
 
                 key.getTypeModel().declInst(foreach_inst, m_index_identifier, false);
-                PSSInst key_inst = foreach_inst.findInstance(m_index_identifier);
+                PSSInst key_inst = foreach_inst.findInstance(m_index_identifier, PSSScope.Context.ITERATOR);
                 key_inst.setReadOnly(true);
                 key_inst.assign(key);
             }
             if (m_iterator_identifier != null) {
                 val.getTypeModel().declInst(foreach_inst, m_iterator_identifier, false);
-                PSSInst val_inst = foreach_inst.findInstance(m_iterator_identifier);
+                PSSInst val_inst = foreach_inst.findInstance(m_iterator_identifier, PSSScope.Context.ITERATOR);
                 val_inst.setReadOnly(true);
                 val_inst.assign(val);
             }
@@ -109,13 +110,13 @@ public class PSSForeachConstraint extends PSSConstraint {
                     PSSMessage.Error("", "Expression " + m_expression.getText() + " does not have index variables");
 
                 key.getTypeModel().declInst(foreach_inst, m_index_identifier, false);
-                PSSInst key_inst = foreach_inst.findInstance(m_index_identifier);
+                PSSInst key_inst = foreach_inst.findInstance(m_index_identifier, PSSScope.Context.ITERATOR);
                 key_inst.setReadOnly(true);
                 key_inst.assign(key);
             }
             if (m_iterator_identifier != null) {
                 val.getTypeModel().declInst(foreach_inst, m_iterator_identifier, false);
-                PSSInst val_inst = foreach_inst.findInstance(m_iterator_identifier);
+                PSSInst val_inst = foreach_inst.findInstance(m_iterator_identifier, PSSScope.Context.ITERATOR);
                 val_inst.setReadOnly(true);
                 val_inst.assign(val);
             }

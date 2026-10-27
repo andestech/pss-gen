@@ -3,6 +3,7 @@ package pssgen.proc;
 import java.util.ArrayList;
 
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSScope;
 import pssgen.model.PSSModel;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSVal;
@@ -23,7 +24,7 @@ public class PSSDataDeclProcStmt extends PSSProcStmt {
 			PSSDataInstProcStmt item = m_list.get(i);
 
 			// Check if item.m_id is already declared in the same scope.
-			if (inst.findInstance(item.m_id, true) != null) {
+			if (PSSScope.resolve(inst, item.m_id, PSSScope.Context.LOCAL_REDECLARATION) != null) {
 				PSSMessage.Error("PSSDataDeclProcStmt", item.m_id + " is redeclared in the same scope.");
 			}
 

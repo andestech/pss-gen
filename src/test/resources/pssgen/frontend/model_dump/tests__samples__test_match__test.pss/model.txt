@@ -123,10 +123,12 @@
                           m_expression: #33 PSSEqualExpression
                             m_left: #34 PSSRefPathExpression
                               m_ref_path: #35 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "out"
                               m_type_identifier_elems: ""
                             m_right: #36 PSSRefPathExpression
                               m_ref_path: #37 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                     m_default_constraint: #38 PSSConstraintList
@@ -136,8 +138,10 @@
               m_expression: #39 PSSRefPathExpression
                 m_ref_path: #40 PSSMemberPathElemExpression
                   m_child: #41 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "out"
                     m_parent: @40
+                  m_context: Context.ACTIVITY
                   m_id: "pss_top"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -162,6 +166,7 @@
                     m_static_insts: ArrayList[0]
                     m_cond: #46 PSSRefPathExpression
                       m_ref_path: #47 PSSMemberPathElemExpression
+                        m_context: Context.ACTIVITY
                         m_id: "t"
                       m_type_identifier_elems: ""
                     m_default: #48 PSSTraversalActivity
@@ -181,6 +186,7 @@
                             m_expression: #52 PSSEqualExpression
                               m_left: #53 PSSRefPathExpression
                                 m_ref_path: #54 PSSMemberPathElemExpression
+                                  m_context: Context.INLINE_CONSTRAINT
                                   m_id: "out"
                                 m_type_identifier_elems: ""
                               m_right: #55 PSSPrimaryExpression
@@ -274,6 +280,7 @@
                               m_expression: #89 PSSEqualExpression
                                 m_left: #90 PSSRefPathExpression
                                   m_ref_path: #91 PSSMemberPathElemExpression
+                                    m_context: Context.INLINE_CONSTRAINT
                                     m_id: "out"
                                   m_type_identifier_elems: ""
                                 m_right: #92 PSSPrimaryExpression
@@ -302,6 +309,7 @@
                               m_expression: #99 PSSEqualExpression
                                 m_left: #100 PSSRefPathExpression
                                   m_ref_path: #101 PSSMemberPathElemExpression
+                                    m_context: Context.INLINE_CONSTRAINT
                                     m_id: "out"
                                   m_type_identifier_elems: ""
                                 m_right: #102 PSSPrimaryExpression
@@ -316,8 +324,10 @@
               m_expression: #105 PSSRefPathExpression
                 m_ref_path: #106 PSSMemberPathElemExpression
                   m_child: #107 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "test"
                     m_parent: @106
+                  m_context: Context.ACTIVITY
                   m_id: "pss_top"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "t"
@@ -342,6 +352,7 @@
                     m_static_insts: ArrayList[0]
                     m_cond: #112 PSSRefPathExpression
                       m_ref_path: #113 PSSMemberPathElemExpression
+                        m_context: Context.ACTIVITY
                         m_id: "t"
                       m_type_identifier_elems: ""
                     m_default: #114 PSSTraversalActivity
@@ -361,6 +372,7 @@
                             m_expression: #118 PSSEqualExpression
                               m_left: #119 PSSRefPathExpression
                                 m_ref_path: #120 PSSMemberPathElemExpression
+                                  m_context: Context.INLINE_CONSTRAINT
                                   m_id: "out"
                                 m_type_identifier_elems: ""
                               m_right: #121 PSSPrimaryExpression
@@ -414,6 +426,7 @@
                               m_expression: #139 PSSEqualExpression
                                 m_left: #140 PSSRefPathExpression
                                   m_ref_path: #141 PSSMemberPathElemExpression
+                                    m_context: Context.INLINE_CONSTRAINT
                                     m_id: "out"
                                   m_type_identifier_elems: ""
                                 m_right: #142 PSSPrimaryExpression
@@ -428,8 +441,10 @@
               m_expression: #145 PSSRefPathExpression
                 m_ref_path: #146 PSSMemberPathElemExpression
                   m_child: #147 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "test"
                     m_parent: @146
+                  m_context: Context.ACTIVITY
                   m_id: "pss_top"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "t"
@@ -613,6 +628,7 @@
               m_static_insts: ArrayList[0]
               m_expression: #196 PSSRefPathExpression
                 m_ref_path: #197 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "test"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "t"
@@ -636,6 +652,7 @@
                       func: #202 PSSFunctionCallExpression
                         m_path: #203 PSSMemberPathElemExpression
                           m_child: #204 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_function_parameter_list: #205 ArrayList[1]
                               - #206 PSSPrimaryExpression
                                 m_val: #207 PSSStringVal
@@ -644,9 +661,11 @@
                                   m_str: "doh"
                             m_id: "push_back"
                             m_parent: @203
+                          m_context: Context.EXEC_BLOCK
                           m_id: "out"
                     m_cond: #208 PSSRefPathExpression
                       m_ref_path: #209 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "t"
                       m_type_identifier_elems: ""
                     m_ranges: #210 ArrayList[2]
@@ -718,6 +737,7 @@
                         func: #237 PSSFunctionCallExpression
                           m_path: #238 PSSMemberPathElemExpression
                             m_child: #239 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_function_parameter_list: #240 ArrayList[1]
                                 - #241 PSSPrimaryExpression
                                   m_val: #242 PSSStringVal
@@ -726,6 +746,7 @@
                                     m_str: "even"
                               m_id: "push_back"
                               m_parent: @238
+                            m_context: Context.EXEC_BLOCK
                             m_id: "out"
                       - #243 PSSVoidFunctionCallProcStmt
                         children: ArrayList[0]
@@ -735,6 +756,7 @@
                         func: #244 PSSFunctionCallExpression
                           m_path: #245 PSSMemberPathElemExpression
                             m_child: #246 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_function_parameter_list: #247 ArrayList[1]
                                 - #248 PSSPrimaryExpression
                                   m_val: #249 PSSStringVal
@@ -743,6 +765,7 @@
                                     m_str: "odd"
                               m_id: "push_back"
                               m_parent: @245
+                            m_context: Context.EXEC_BLOCK
                             m_id: "out"
             - #250 PSSForeachProcStmt
               children: ArrayList[0]
@@ -752,6 +775,7 @@
               m_static_insts: ArrayList[0]
               m_expression: #251 PSSRefPathExpression
                 m_ref_path: #252 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "test"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "t"
@@ -775,6 +799,7 @@
                       func: #257 PSSFunctionCallExpression
                         m_path: #258 PSSMemberPathElemExpression
                           m_child: #259 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_function_parameter_list: #260 ArrayList[1]
                               - #261 PSSPrimaryExpression
                                 m_val: #262 PSSStringVal
@@ -783,9 +808,11 @@
                                   m_str: "large"
                             m_id: "push_back"
                             m_parent: @258
+                          m_context: Context.EXEC_BLOCK
                           m_id: "out"
                     m_cond: #263 PSSRefPathExpression
                       m_ref_path: #264 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "t"
                       m_type_identifier_elems: ""
                     m_ranges: #265 ArrayList[1]
@@ -821,6 +848,7 @@
                         func: #277 PSSFunctionCallExpression
                           m_path: #278 PSSMemberPathElemExpression
                             m_child: #279 PSSMemberPathElemExpression
+                              m_context: Context.EXEC_BLOCK
                               m_function_parameter_list: #280 ArrayList[1]
                                 - #281 PSSPrimaryExpression
                                   m_val: #282 PSSStringVal
@@ -829,6 +857,7 @@
                                     m_str: "small"
                               m_id: "push_back"
                               m_parent: @278
+                            m_context: Context.EXEC_BLOCK
                             m_id: "out"
   m_hierarchy_id: ""
   m_id: ""

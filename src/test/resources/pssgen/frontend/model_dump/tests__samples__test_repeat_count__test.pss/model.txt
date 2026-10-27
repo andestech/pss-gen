@@ -174,6 +174,7 @@
                           m_expression: #47 PSSEqualExpression
                             m_left: #48 PSSRefPathExpression
                               m_ref_path: #49 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "bit_val"
                               m_type_identifier_elems: ""
                             m_right: #50 PSSPrimaryExpression
@@ -231,10 +232,12 @@
                           m_expression: #64 PSSEqualExpression
                             m_left: #65 PSSRefPathExpression
                               m_ref_path: #66 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "bit_val"
                               m_type_identifier_elems: ""
                             m_right: #67 PSSRefPathExpression
                               m_ref_path: #68 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "i"
                               m_type_identifier_elems: ""
                     m_default_constraint: #69 PSSConstraintList
@@ -258,10 +261,12 @@
                     m_expression: #74 PSSEqualExpression
                       m_left: #75 PSSRefPathExpression
                         m_ref_path: #76 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "val"
                         m_type_identifier_elems: ""
                       m_right: #77 PSSRefPathExpression
                         m_ref_path: #78 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "repeat_sum"
                         m_type_identifier_elems: ""
               m_default_constraint: #79 PSSConstraintList
@@ -409,6 +414,7 @@
                         m_op: "+="
                         m_ref: #119 PSSRefPathExpression
                           m_ref_path: #120 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "repeat_sum"
                           m_type_identifier_elems: ""
                       - #121 PSSAssignProcStmt
@@ -429,6 +435,7 @@
                         m_op: "+="
                         m_ref: #125 PSSRefPathExpression
                           m_ref_path: #126 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "subtrahend_a"
                             m_index: #127 PSSPrimaryExpression
                               m_val: #128 PSSIntVal
@@ -472,11 +479,13 @@
                         m_static_insts: ArrayList[0]
                         m_expression: #137 PSSRefPathExpression
                           m_ref_path: #138 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "i"
                           m_type_identifier_elems: ""
                         m_op: "+="
                         m_ref: #139 PSSRefPathExpression
                           m_ref_path: #140 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "repeat_sum"
                           m_type_identifier_elems: ""
                       - #141 PSSAssignProcStmt
@@ -486,11 +495,13 @@
                         m_static_insts: ArrayList[0]
                         m_expression: #142 PSSRefPathExpression
                           m_ref_path: #143 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "i"
                           m_type_identifier_elems: ""
                         m_op: "+="
                         m_ref: #144 PSSRefPathExpression
                           m_ref_path: #145 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "subtrahend_a"
                             m_index: #146 PSSPrimaryExpression
                               m_val: #147 PSSIntVal
@@ -563,11 +574,13 @@
                         m_static_insts: ArrayList[0]
                         m_expression: #163 PSSRefPathExpression
                           m_ref_path: #164 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "i"
                           m_type_identifier_elems: ""
                         m_op: "+="
                         m_ref: #165 PSSRefPathExpression
                           m_ref_path: #166 PSSMemberPathElemExpression
+                            m_context: Context.EXEC_BLOCK
                             m_id: "repeat_sum"
                           m_type_identifier_elems: ""
                 - #167 PSSAssignProcStmt
@@ -578,6 +591,7 @@
                   m_static_insts: ArrayList[0]
                   m_expression: #168 PSSRefPathExpression
                     m_ref_path: #169 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "subtrahend_a"
                       m_index: #170 PSSPrimaryExpression
                         m_val: #171 PSSIntVal
@@ -593,6 +607,7 @@
                   m_op: "-="
                   m_ref: #173 PSSRefPathExpression
                     m_ref_path: #174 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "repeat_sum"
                     m_type_identifier_elems: ""
                 - #175 PSSAssignProcStmt
@@ -603,6 +618,7 @@
                   m_static_insts: ArrayList[0]
                   m_expression: #176 PSSRefPathExpression
                     m_ref_path: #177 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "subtrahend_a"
                       m_index: #178 PSSPrimaryExpression
                         m_val: #179 PSSIntVal
@@ -618,6 +634,7 @@
                   m_op: "-="
                   m_ref: #181 PSSRefPathExpression
                     m_ref_path: #182 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_id: "repeat_sum"
                     m_type_identifier_elems: ""
           m_flowref: ArrayList[0]

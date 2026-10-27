@@ -244,6 +244,7 @@
                 m_static_insts: ArrayList[0]
                 m_expression: #55 PSSInExpression
                   m_left: #56 PSSMemberPathElemExpression
+                    m_context: Context.MEMBER_CONSTRAINT
                     m_id: "a"
                   m_right: #57 PSSOpenRangeListExpression
                     m_list: #58 ArrayList[2]
@@ -333,6 +334,7 @@
                 m_static_insts: ArrayList[0]
                 m_expression: #84 PSSInExpression
                   m_left: #85 PSSMemberPathElemExpression
+                    m_context: Context.MEMBER_CONSTRAINT
                     m_id: "c"
                   m_right: #86 PSSOpenRangeListExpression
                     m_list: #87 ArrayList[1]
@@ -365,6 +367,7 @@
                 m_static_insts: ArrayList[0]
                 m_expression: #96 PSSGreaterEqualExpression
                   m_left: #97 PSSMemberPathElemExpression
+                    m_context: Context.MEMBER_CONSTRAINT
                     m_id: "e"
                   m_right: #98 PSSPrimaryExpression
                     m_val: #99 PSSIntVal

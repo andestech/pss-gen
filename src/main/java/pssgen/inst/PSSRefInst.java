@@ -86,8 +86,8 @@ public class PSSRefInst extends PSSInst {
     }
 
     @Override
-    public PSSInst findInstance(String hierarchy_id) {
-        return getReference().findInstance(hierarchy_id);
+    public PSSInst findInstance(String hierarchy_id, PSSScope.Context context) {
+        return getReference().findInstance(hierarchy_id, context);
     }
 
     @Override

@@ -90,14 +90,17 @@
           m_static_insts: ArrayList[0]
           m_expression: #25 PSSRefPathExpression
             m_ref_path: #26 PSSMemberPathElemExpression
+              m_context: Context.FUNCTION_BODY
               m_id: "a"
             m_type_identifier_elems: ""
           m_op: "="
           m_ref: #27 PSSRefPathExpression
             m_ref_path: #28 PSSMemberPathElemExpression
               m_child: #29 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
                 m_id: "x"
                 m_parent: @28
+              m_context: Context.FUNCTION_BODY
               m_id: "p"
             m_type_identifier_elems: ""
         - #30 PSSAssignProcStmt
@@ -118,6 +121,7 @@
           m_op: "="
           m_ref: #34 PSSRefPathExpression
             m_ref_path: #35 PSSMemberPathElemExpression
+              m_context: Context.FUNCTION_BODY
               m_id: "a"
             m_type_identifier_elems: ""
     - #36 PSSFunctionModel
@@ -165,16 +169,20 @@
           m_expression: #45 PSSRefPathExpression
             m_ref_path: #46 PSSMemberPathElemExpression
               m_child: #47 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
                 m_id: "x"
                 m_parent: @46
+              m_context: Context.FUNCTION_BODY
               m_id: "p_src"
             m_type_identifier_elems: ""
           m_op: "="
           m_ref: #48 PSSRefPathExpression
             m_ref_path: #49 PSSMemberPathElemExpression
               m_child: #50 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
                 m_id: "x"
                 m_parent: @49
+              m_context: Context.FUNCTION_BODY
               m_id: "p_dst"
             m_type_identifier_elems: ""
     - #51 PSSFunctionModel
@@ -235,8 +243,10 @@
           m_ref: #64 PSSRefPathExpression
             m_ref_path: #65 PSSMemberPathElemExpression
               m_child: #66 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
                 m_id: "x"
                 m_parent: @65
+              m_context: Context.FUNCTION_BODY
               m_id: "s"
             m_type_identifier_elems: ""
         - #67 PSSReturnProcStmt
@@ -246,6 +256,7 @@
           m_static_insts: ArrayList[0]
           m_expression: #68 PSSRefPathExpression
             m_ref_path: #69 PSSMemberPathElemExpression
+              m_context: Context.FUNCTION_BODY
               m_id: "s"
             m_type_identifier_elems: ""
     - #70 PSSComponentModel
@@ -347,6 +358,7 @@
                     m_expression: #94 PSSEqualExpression
                       m_left: #95 PSSRefPathExpression
                         m_ref_path: #96 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #97 PSSRefPathExpression
@@ -354,12 +366,16 @@
                           m_child: #99 PSSMemberPathElemExpression
                             m_child: #100 PSSMemberPathElemExpression
                               m_child: #101 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "x"
                                 m_parent: @100
+                              m_context: Context.INLINE_CONSTRAINT
                               m_id: "p"
                               m_parent: @99
+                            m_context: Context.INLINE_CONSTRAINT
                             m_id: "comp"
                             m_parent: @98
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "this"
                         m_type_identifier_elems: ""
               m_default_constraint: #102 PSSConstraintList
@@ -461,6 +477,7 @@
               m_op: "="
               m_ref: #125 PSSRefPathExpression
                 m_ref_path: #126 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "a"
                 m_type_identifier_elems: ""
             - #127 PSSAssignProcStmt
@@ -483,8 +500,10 @@
               m_ref: #131 PSSRefPathExpression
                 m_ref_path: #132 PSSMemberPathElemExpression
                   m_child: #133 PSSMemberPathElemExpression
+                    m_context: Context.EXEC_BLOCK
                     m_id: "x"
                     m_parent: @132
+                  m_context: Context.EXEC_BLOCK
                   m_id: "p"
                 m_type_identifier_elems: ""
             - #134 PSSVoidFunctionCallProcStmt
@@ -495,13 +514,16 @@
               m_static_insts: ArrayList[0]
               func: #135 PSSFunctionCallExpression
                 m_path: #136 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_function_parameter_list: #137 ArrayList[2]
                     - #138 PSSRefPathExpression
                       m_ref_path: #139 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "p"
                       m_type_identifier_elems: ""
                     - #140 PSSRefPathExpression
                       m_ref_path: #141 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "a"
                       m_type_identifier_elems: ""
                   m_id: "set_val0"
@@ -513,13 +535,16 @@
               m_static_insts: ArrayList[0]
               func: #143 PSSFunctionCallExpression
                 m_path: #144 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_function_parameter_list: #145 ArrayList[2]
                     - #146 PSSRefPathExpression
                       m_ref_path: #147 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "p"
                       m_type_identifier_elems: ""
                     - #148 PSSRefPathExpression
                       m_ref_path: #149 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_function_parameter_list: ArrayList[0]
                         m_id: "zero_attributes"
                       m_type_identifier_elems: ""

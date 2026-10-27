@@ -48,6 +48,7 @@ import pssgen.expr.PSSRefPathExpression;
 import pssgen.expr.PSSRightShiftExpression;
 import pssgen.expr.PSSSubExpression;
 import pssgen.expr.PSSUnaryMinusExpression;
+import pssgen.inst.PSSScope;
 import pssgen.model.PSSActionModel;
 import pssgen.model.PSSArrayModel;
 import pssgen.model.PSSAttrField;
@@ -132,9 +133,23 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	private final PSSStringModel m_string_type = new PSSStringModel();
 	/** the run's messages */
 	private final PSSLog m_log;
+	/** where the names being built are written; set around each construct that decides it */
+	private PSSScope.Context m_context;
 
 	public PSSGenVisitor(PSSLog log) {
+		this(log, PSSScope.Context.DECLARATION);
+	}
+
+	/**
+	 * Constructs a visitor whose names, outside the constructs that decide their
+	 * context, are written in a given context.
+	 *
+	 * @param log     the run's messages
+	 * @param context the context of names outside those constructs
+	 */
+	public PSSGenVisitor(PSSLog log, PSSScope.Context context) {
 		m_log = log;
+		m_context = context;
 		exp_stack = new Stack<PSSExpression>();
 		activity_stack = new Stack<PSSActivity>();
 		proc_stmt_list = new ArrayList<PSSProcStmt>();
@@ -386,9 +401,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 		visit(ctx.function_prototype());
 		PSSFunctionPrototype prototype = cur_function_prototype;
 		List<PSSProcStmt> stmts = new ArrayList<PSSProcStmt>();
-		for (PSSParser.Procedural_stmtContext c : ctx.procedural_stmt()) {
-			visit(c);
-			stmts.add(proc_stmt_list.remove(0));
+		PSSScope.Context outer = m_context;
+		m_context = PSSScope.Context.FUNCTION_BODY;
+		try {
+			for (PSSParser.Procedural_stmtContext c : ctx.procedural_stmt()) {
+				visit(c);
+				stmts.add(proc_stmt_list.remove(0));
+			}
+		} finally {
+			m_context = outer;
 		}
 		PSSFunctionModel f = new PSSFunctionModel(qualifier, pure, prototype, stmts);
 
@@ -491,11 +512,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		PSSExecBlock block = new PSSExecBlock(kind);
 
-		for (int i = 0; i < ctx.exec_stmt().size(); i++) {
-			visit(ctx.exec_stmt(i));
+		PSSScope.Context outer = m_context;
+		m_context = PSSScope.Context.EXEC_BLOCK;
+		try {
+			for (int i = 0; i < ctx.exec_stmt().size(); i++) {
+				visit(ctx.exec_stmt(i));
 
-			PSSProcStmt stmt = proc_stmt_list.remove(0);
-			block.addStmt(stmt);
+				PSSProcStmt stmt = proc_stmt_list.remove(0);
+				block.addStmt(stmt);
+			}
+		} finally {
+			m_context = outer;
 		}
 
 		root.addExecBlock(block, m_log);
@@ -982,12 +1009,18 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 	@Override
 	public Integer visitActivity_declaration(PSSParser.Activity_declarationContext ctx) {
-		for (int i = 0; i < ctx.activity_declaration_body_stmt().size(); i++) {
-			visit(ctx.activity_declaration_body_stmt(i));
-			PSSActivity stmt = activity_stack.pop();
-			if (stmt != null) {
-				((PSSActionModel) root).addActivityStmt(stmt);
+		PSSScope.Context outer = m_context;
+		m_context = PSSScope.Context.ACTIVITY;
+		try {
+			for (int i = 0; i < ctx.activity_declaration_body_stmt().size(); i++) {
+				visit(ctx.activity_declaration_body_stmt(i));
+				PSSActivity stmt = activity_stack.pop();
+				if (stmt != null) {
+					((PSSActionModel) root).addActivityStmt(stmt);
+				}
 			}
+		} finally {
+			m_context = outer;
 		}
 		return 0;
 	}
@@ -1005,7 +1038,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 
 		PSSTraversalActivity node = new PSSTraversalActivity(handle_id, type_id);
 		if (ctx.inline_constraints_or_empty().constraint_set() != null) {
-			visit(ctx.inline_constraints_or_empty().constraint_set());
+			PSSScope.Context outer = m_context;
+			m_context = PSSScope.Context.INLINE_CONSTRAINT;
+			try {
+				visit(ctx.inline_constraints_or_empty().constraint_set());
+			} finally {
+				m_context = outer;
+			}
 
 			for (PSSConstraint item : constraint_list) {
 				node.addConstraint(item);
@@ -1025,10 +1064,16 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 	}
 
 	public Integer visitConstraint_declaration(PSSParser.Constraint_declarationContext ctx) {
-		if (ctx.identifier() != null) {
-			visit(ctx.constraint_block());
-		} else {
-			visit(ctx.constraint_set());
+		PSSScope.Context outer = m_context;
+		m_context = PSSScope.Context.MEMBER_CONSTRAINT;
+		try {
+			if (ctx.identifier() != null) {
+				visit(ctx.constraint_block());
+			} else {
+				visit(ctx.constraint_set());
+			}
+		} finally {
+			m_context = outer;
 		}
 
 		for (PSSConstraint item : constraint_list) {
@@ -1359,7 +1404,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			index = exp_stack.pop();
 		}
 
-		PSSMemberPathElemExpression e = new PSSMemberPathElemExpression(id, args, index);
+		PSSMemberPathElemExpression e = new PSSMemberPathElemExpression(id, args, index, m_context);
 		exp_stack.push(e);
 
 		return 0;
@@ -1538,7 +1583,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			args.add(exp_stack.pop());
 		}
 
-		PSSFunctionCallExpression func_call = new PSSFunctionCallExpression(path, id, args);
+		PSSFunctionCallExpression func_call = new PSSFunctionCallExpression(path, id, args, m_context);
 		exp_stack.push(func_call);
 		// PSSMessage.Fatal("Syntax is not yet supported: '" + ctx.getText() + "'");
 		return 0;
@@ -1787,7 +1832,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Integer> {
 			}
 
 			if (0 < domain_constraint) {
-				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id);
+				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id, PSSScope.Context.MEMBER_CONSTRAINT);
 				while (domain_constraint-- > 0) {
 					PSSExpression item = exp_stack.pop();
 					if (item instanceof PSSOpenRangeListExpression) {

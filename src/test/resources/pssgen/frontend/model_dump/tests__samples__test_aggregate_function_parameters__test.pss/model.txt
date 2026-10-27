@@ -97,6 +97,7 @@
               m_static_insts: ArrayList[0]
               m_expression: #23 PSSRefPathExpression
                 m_ref_path: #24 PSSMemberPathElemExpression
+                  m_context: Context.FUNCTION_BODY
                   m_id: "l2"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -109,13 +110,16 @@
                 func: #26 PSSFunctionCallExpression
                   m_path: #27 PSSMemberPathElemExpression
                     m_child: #28 PSSMemberPathElemExpression
+                      m_context: Context.FUNCTION_BODY
                       m_function_parameter_list: #29 ArrayList[1]
                         - #30 PSSRefPathExpression
                           m_ref_path: #31 PSSMemberPathElemExpression
+                            m_context: Context.FUNCTION_BODY
                             m_id: "v"
                           m_type_identifier_elems: ""
                       m_id: "push_back"
                       m_parent: @27
+                    m_context: Context.FUNCTION_BODY
                     m_id: "l1"
         - #32 PSSFunctionModel
           children: ArrayList[0]
@@ -161,6 +165,7 @@
                   m_id: "tmp"
                   m_init_exp: #42 PSSRefPathExpression
                     m_ref_path: #43 PSSMemberPathElemExpression
+                      m_context: Context.FUNCTION_BODY
                       m_id: "l"
                     m_type_identifier_elems: ""
               m_type: #44 PSSListModel
@@ -183,9 +188,11 @@
               func: #47 PSSFunctionCallExpression
                 m_path: #48 PSSMemberPathElemExpression
                   m_child: #49 PSSMemberPathElemExpression
+                    m_context: Context.FUNCTION_BODY
                     m_function_parameter_list: ArrayList[0]
                     m_id: "clear"
                     m_parent: @48
+                  m_context: Context.FUNCTION_BODY
                   m_id: "l"
             - #50 PSSWhileProcStmt
               children: ArrayList[0]
@@ -196,9 +203,11 @@
                 m_left: #52 PSSRefPathExpression
                   m_ref_path: #53 PSSMemberPathElemExpression
                     m_child: #54 PSSMemberPathElemExpression
+                      m_context: Context.FUNCTION_BODY
                       m_function_parameter_list: ArrayList[0]
                       m_id: "size"
                       m_parent: @53
+                    m_context: Context.FUNCTION_BODY
                     m_id: "tmp"
                   m_type_identifier_elems: ""
                 m_right: #55 PSSPrimaryExpression
@@ -219,17 +228,21 @@
                 func: #59 PSSFunctionCallExpression
                   m_path: #60 PSSMemberPathElemExpression
                     m_child: #61 PSSMemberPathElemExpression
+                      m_context: Context.FUNCTION_BODY
                       m_function_parameter_list: #62 ArrayList[1]
                         - #63 PSSRefPathExpression
                           m_ref_path: #64 PSSMemberPathElemExpression
                             m_child: #65 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_function_parameter_list: ArrayList[0]
                               m_id: "pop_back"
                               m_parent: @64
+                            m_context: Context.FUNCTION_BODY
                             m_id: "tmp"
                           m_type_identifier_elems: ""
                       m_id: "push_back"
                       m_parent: @60
+                    m_context: Context.FUNCTION_BODY
                     m_id: "l"
         - #66 PSSFunctionModel
           children: ArrayList[0]
@@ -383,27 +396,33 @@
                 m_left: #101 PSSLessThanExpression
                   m_left: #102 PSSRefPathExpression
                     m_ref_path: #103 PSSMemberPathElemExpression
+                      m_context: Context.FUNCTION_BODY
                       m_id: "i1"
                     m_type_identifier_elems: ""
                   m_right: #104 PSSRefPathExpression
                     m_ref_path: #105 PSSMemberPathElemExpression
                       m_child: #106 PSSMemberPathElemExpression
+                        m_context: Context.FUNCTION_BODY
                         m_function_parameter_list: ArrayList[0]
                         m_id: "size"
                         m_parent: @105
+                      m_context: Context.FUNCTION_BODY
                       m_id: "l1"
                     m_type_identifier_elems: ""
                 m_right: #107 PSSLessThanExpression
                   m_left: #108 PSSRefPathExpression
                     m_ref_path: #109 PSSMemberPathElemExpression
+                      m_context: Context.FUNCTION_BODY
                       m_id: "i2"
                     m_type_identifier_elems: ""
                   m_right: #110 PSSRefPathExpression
                     m_ref_path: #111 PSSMemberPathElemExpression
                       m_child: #112 PSSMemberPathElemExpression
+                        m_context: Context.FUNCTION_BODY
                         m_function_parameter_list: ArrayList[0]
                         m_id: "size"
                         m_parent: @111
+                      m_context: Context.FUNCTION_BODY
                       m_id: "l2"
                     m_type_identifier_elems: ""
               m_stmt: #113 PSSSequenceProcStmt
@@ -420,14 +439,17 @@
                     m_cond: #116 PSSGreaterEqualExpression
                       m_left: #117 PSSRefPathExpression
                         m_ref_path: #118 PSSMemberPathElemExpression
+                          m_context: Context.FUNCTION_BODY
                           m_id: "i1"
                         m_type_identifier_elems: ""
                       m_right: #119 PSSRefPathExpression
                         m_ref_path: #120 PSSMemberPathElemExpression
                           m_child: #121 PSSMemberPathElemExpression
+                            m_context: Context.FUNCTION_BODY
                             m_function_parameter_list: ArrayList[0]
                             m_id: "size"
                             m_parent: @120
+                          m_context: Context.FUNCTION_BODY
                           m_id: "l1"
                         m_type_identifier_elems: ""
                     m_false_stmt: #122 PSSIfElseProcStmt
@@ -438,14 +460,17 @@
                       m_cond: #123 PSSGreaterEqualExpression
                         m_left: #124 PSSRefPathExpression
                           m_ref_path: #125 PSSMemberPathElemExpression
+                            m_context: Context.FUNCTION_BODY
                             m_id: "i2"
                           m_type_identifier_elems: ""
                         m_right: #126 PSSRefPathExpression
                           m_ref_path: #127 PSSMemberPathElemExpression
                             m_child: #128 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_function_parameter_list: ArrayList[0]
                               m_id: "size"
                               m_parent: @127
+                            m_context: Context.FUNCTION_BODY
                             m_id: "l2"
                           m_type_identifier_elems: ""
                       m_false_stmt: #129 PSSIfElseProcStmt
@@ -456,17 +481,21 @@
                         m_cond: #130 PSSLessEqualExpression
                           m_left: #131 PSSRefPathExpression
                             m_ref_path: #132 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_id: "l1"
                               m_index: #133 PSSRefPathExpression
                                 m_ref_path: #134 PSSMemberPathElemExpression
+                                  m_context: Context.FUNCTION_BODY
                                   m_id: "i1"
                                 m_type_identifier_elems: ""
                             m_type_identifier_elems: ""
                           m_right: #135 PSSRefPathExpression
                             m_ref_path: #136 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_id: "l2"
                               m_index: #137 PSSRefPathExpression
                                 m_ref_path: #138 PSSMemberPathElemExpression
+                                  m_context: Context.FUNCTION_BODY
                                   m_id: "i2"
                                 m_type_identifier_elems: ""
                             m_type_identifier_elems: ""
@@ -484,17 +513,21 @@
                               func: #142 PSSFunctionCallExpression
                                 m_path: #143 PSSMemberPathElemExpression
                                   m_child: #144 PSSMemberPathElemExpression
+                                    m_context: Context.FUNCTION_BODY
                                     m_function_parameter_list: #145 ArrayList[1]
                                       - #146 PSSRefPathExpression
                                         m_ref_path: #147 PSSMemberPathElemExpression
+                                          m_context: Context.FUNCTION_BODY
                                           m_id: "l2"
                                           m_index: #148 PSSRefPathExpression
                                             m_ref_path: #149 PSSMemberPathElemExpression
+                                              m_context: Context.FUNCTION_BODY
                                               m_id: "i2"
                                             m_type_identifier_elems: ""
                                         m_type_identifier_elems: ""
                                     m_id: "push_back"
                                     m_parent: @143
+                                  m_context: Context.FUNCTION_BODY
                                   m_id: "res"
                             - #150 PSSAssignProcStmt
                               children: ArrayList[0]
@@ -504,6 +537,7 @@
                               m_expression: #151 PSSAddExpression
                                 m_left: #152 PSSRefPathExpression
                                   m_ref_path: #153 PSSMemberPathElemExpression
+                                    m_context: Context.FUNCTION_BODY
                                     m_id: "i2"
                                   m_type_identifier_elems: ""
                                 m_right: #154 PSSPrimaryExpression
@@ -519,6 +553,7 @@
                               m_op: "="
                               m_ref: #157 PSSRefPathExpression
                                 m_ref_path: #158 PSSMemberPathElemExpression
+                                  m_context: Context.FUNCTION_BODY
                                   m_id: "i2"
                                 m_type_identifier_elems: ""
                         m_true_stmt: #159 PSSSequenceProcStmt
@@ -535,17 +570,21 @@
                               func: #162 PSSFunctionCallExpression
                                 m_path: #163 PSSMemberPathElemExpression
                                   m_child: #164 PSSMemberPathElemExpression
+                                    m_context: Context.FUNCTION_BODY
                                     m_function_parameter_list: #165 ArrayList[1]
                                       - #166 PSSRefPathExpression
                                         m_ref_path: #167 PSSMemberPathElemExpression
+                                          m_context: Context.FUNCTION_BODY
                                           m_id: "l1"
                                           m_index: #168 PSSRefPathExpression
                                             m_ref_path: #169 PSSMemberPathElemExpression
+                                              m_context: Context.FUNCTION_BODY
                                               m_id: "i1"
                                             m_type_identifier_elems: ""
                                         m_type_identifier_elems: ""
                                     m_id: "push_back"
                                     m_parent: @163
+                                  m_context: Context.FUNCTION_BODY
                                   m_id: "res"
                             - #170 PSSAssignProcStmt
                               children: ArrayList[0]
@@ -555,6 +594,7 @@
                               m_expression: #171 PSSAddExpression
                                 m_left: #172 PSSRefPathExpression
                                   m_ref_path: #173 PSSMemberPathElemExpression
+                                    m_context: Context.FUNCTION_BODY
                                     m_id: "i1"
                                   m_type_identifier_elems: ""
                                 m_right: #174 PSSPrimaryExpression
@@ -570,6 +610,7 @@
                               m_op: "="
                               m_ref: #177 PSSRefPathExpression
                                 m_ref_path: #178 PSSMemberPathElemExpression
+                                  m_context: Context.FUNCTION_BODY
                                   m_id: "i1"
                                 m_type_identifier_elems: ""
                       m_true_stmt: #179 PSSSequenceProcStmt
@@ -586,17 +627,21 @@
                             func: #182 PSSFunctionCallExpression
                               m_path: #183 PSSMemberPathElemExpression
                                 m_child: #184 PSSMemberPathElemExpression
+                                  m_context: Context.FUNCTION_BODY
                                   m_function_parameter_list: #185 ArrayList[1]
                                     - #186 PSSRefPathExpression
                                       m_ref_path: #187 PSSMemberPathElemExpression
+                                        m_context: Context.FUNCTION_BODY
                                         m_id: "l1"
                                         m_index: #188 PSSRefPathExpression
                                           m_ref_path: #189 PSSMemberPathElemExpression
+                                            m_context: Context.FUNCTION_BODY
                                             m_id: "i1"
                                           m_type_identifier_elems: ""
                                       m_type_identifier_elems: ""
                                   m_id: "push_back"
                                   m_parent: @183
+                                m_context: Context.FUNCTION_BODY
                                 m_id: "res"
                           - #190 PSSAssignProcStmt
                             children: ArrayList[0]
@@ -606,6 +651,7 @@
                             m_expression: #191 PSSAddExpression
                               m_left: #192 PSSRefPathExpression
                                 m_ref_path: #193 PSSMemberPathElemExpression
+                                  m_context: Context.FUNCTION_BODY
                                   m_id: "i1"
                                 m_type_identifier_elems: ""
                               m_right: #194 PSSPrimaryExpression
@@ -621,6 +667,7 @@
                             m_op: "="
                             m_ref: #197 PSSRefPathExpression
                               m_ref_path: #198 PSSMemberPathElemExpression
+                                m_context: Context.FUNCTION_BODY
                                 m_id: "i1"
                               m_type_identifier_elems: ""
                     m_true_stmt: #199 PSSSequenceProcStmt
@@ -637,17 +684,21 @@
                           func: #202 PSSFunctionCallExpression
                             m_path: #203 PSSMemberPathElemExpression
                               m_child: #204 PSSMemberPathElemExpression
+                                m_context: Context.FUNCTION_BODY
                                 m_function_parameter_list: #205 ArrayList[1]
                                   - #206 PSSRefPathExpression
                                     m_ref_path: #207 PSSMemberPathElemExpression
+                                      m_context: Context.FUNCTION_BODY
                                       m_id: "l2"
                                       m_index: #208 PSSRefPathExpression
                                         m_ref_path: #209 PSSMemberPathElemExpression
+                                          m_context: Context.FUNCTION_BODY
                                           m_id: "i2"
                                         m_type_identifier_elems: ""
                                     m_type_identifier_elems: ""
                                 m_id: "push_back"
                                 m_parent: @203
+                              m_context: Context.FUNCTION_BODY
                               m_id: "res"
                         - #210 PSSAssignProcStmt
                           children: ArrayList[0]
@@ -657,6 +708,7 @@
                           m_expression: #211 PSSAddExpression
                             m_left: #212 PSSRefPathExpression
                               m_ref_path: #213 PSSMemberPathElemExpression
+                                m_context: Context.FUNCTION_BODY
                                 m_id: "i2"
                               m_type_identifier_elems: ""
                             m_right: #214 PSSPrimaryExpression
@@ -672,6 +724,7 @@
                           m_op: "="
                           m_ref: #217 PSSRefPathExpression
                             m_ref_path: #218 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_id: "i2"
                             m_type_identifier_elems: ""
             - #219 PSSReturnProcStmt
@@ -681,6 +734,7 @@
               m_static_insts: ArrayList[0]
               m_expression: #220 PSSRefPathExpression
                 m_ref_path: #221 PSSMemberPathElemExpression
+                  m_context: Context.FUNCTION_BODY
                   m_id: "res"
                 m_type_identifier_elems: ""
         - #222 PSSFunctionModel
@@ -821,9 +875,11 @@
                 m_left: #254 PSSRefPathExpression
                   m_ref_path: #255 PSSMemberPathElemExpression
                     m_child: #256 PSSMemberPathElemExpression
+                      m_context: Context.FUNCTION_BODY
                       m_function_parameter_list: ArrayList[0]
                       m_id: "size"
                       m_parent: @255
+                    m_context: Context.FUNCTION_BODY
                     m_id: "l"
                   m_type_identifier_elems: ""
                 m_right: #257 PSSPrimaryExpression
@@ -851,9 +907,11 @@
                       m_left: #264 PSSRefPathExpression
                         m_ref_path: #265 PSSMemberPathElemExpression
                           m_child: #266 PSSMemberPathElemExpression
+                            m_context: Context.FUNCTION_BODY
                             m_function_parameter_list: ArrayList[0]
                             m_id: "size"
                             m_parent: @265
+                          m_context: Context.FUNCTION_BODY
                           m_id: "l"
                         m_type_identifier_elems: ""
                       m_right: #267 PSSPrimaryExpression
@@ -869,6 +927,7 @@
                     m_op: "="
                     m_ref: #270 PSSRefPathExpression
                       m_ref_path: #271 PSSMemberPathElemExpression
+                        m_context: Context.FUNCTION_BODY
                         m_id: "mid"
                       m_type_identifier_elems: ""
                   - #272 PSSWhileProcStmt
@@ -879,10 +938,12 @@
                     m_cond: #273 PSSLessThanExpression
                       m_left: #274 PSSRefPathExpression
                         m_ref_path: #275 PSSMemberPathElemExpression
+                          m_context: Context.FUNCTION_BODY
                           m_id: "cur"
                         m_type_identifier_elems: ""
                       m_right: #276 PSSRefPathExpression
                         m_ref_path: #277 PSSMemberPathElemExpression
+                          m_context: Context.FUNCTION_BODY
                           m_id: "mid"
                         m_type_identifier_elems: ""
                     m_stmt: #278 PSSSequenceProcStmt
@@ -899,17 +960,21 @@
                           func: #281 PSSFunctionCallExpression
                             m_path: #282 PSSMemberPathElemExpression
                               m_child: #283 PSSMemberPathElemExpression
+                                m_context: Context.FUNCTION_BODY
                                 m_function_parameter_list: #284 ArrayList[1]
                                   - #285 PSSRefPathExpression
                                     m_ref_path: #286 PSSMemberPathElemExpression
+                                      m_context: Context.FUNCTION_BODY
                                       m_id: "l"
                                       m_index: #287 PSSRefPathExpression
                                         m_ref_path: #288 PSSMemberPathElemExpression
+                                          m_context: Context.FUNCTION_BODY
                                           m_id: "cur"
                                         m_type_identifier_elems: ""
                                     m_type_identifier_elems: ""
                                 m_id: "push_back"
                                 m_parent: @282
+                              m_context: Context.FUNCTION_BODY
                               m_id: "left"
                         - #289 PSSAssignProcStmt
                           children: ArrayList[0]
@@ -919,6 +984,7 @@
                           m_expression: #290 PSSAddExpression
                             m_left: #291 PSSRefPathExpression
                               m_ref_path: #292 PSSMemberPathElemExpression
+                                m_context: Context.FUNCTION_BODY
                                 m_id: "cur"
                               m_type_identifier_elems: ""
                             m_right: #293 PSSPrimaryExpression
@@ -934,6 +1000,7 @@
                           m_op: "="
                           m_ref: #296 PSSRefPathExpression
                             m_ref_path: #297 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_id: "cur"
                             m_type_identifier_elems: ""
                   - #298 PSSWhileProcStmt
@@ -944,14 +1011,17 @@
                     m_cond: #299 PSSLessThanExpression
                       m_left: #300 PSSRefPathExpression
                         m_ref_path: #301 PSSMemberPathElemExpression
+                          m_context: Context.FUNCTION_BODY
                           m_id: "cur"
                         m_type_identifier_elems: ""
                       m_right: #302 PSSRefPathExpression
                         m_ref_path: #303 PSSMemberPathElemExpression
                           m_child: #304 PSSMemberPathElemExpression
+                            m_context: Context.FUNCTION_BODY
                             m_function_parameter_list: ArrayList[0]
                             m_id: "size"
                             m_parent: @303
+                          m_context: Context.FUNCTION_BODY
                           m_id: "l"
                         m_type_identifier_elems: ""
                     m_stmt: #305 PSSSequenceProcStmt
@@ -968,17 +1038,21 @@
                           func: #308 PSSFunctionCallExpression
                             m_path: #309 PSSMemberPathElemExpression
                               m_child: #310 PSSMemberPathElemExpression
+                                m_context: Context.FUNCTION_BODY
                                 m_function_parameter_list: #311 ArrayList[1]
                                   - #312 PSSRefPathExpression
                                     m_ref_path: #313 PSSMemberPathElemExpression
+                                      m_context: Context.FUNCTION_BODY
                                       m_id: "l"
                                       m_index: #314 PSSRefPathExpression
                                         m_ref_path: #315 PSSMemberPathElemExpression
+                                          m_context: Context.FUNCTION_BODY
                                           m_id: "cur"
                                         m_type_identifier_elems: ""
                                     m_type_identifier_elems: ""
                                 m_id: "push_back"
                                 m_parent: @309
+                              m_context: Context.FUNCTION_BODY
                               m_id: "right"
                         - #316 PSSAssignProcStmt
                           children: ArrayList[0]
@@ -988,6 +1062,7 @@
                           m_expression: #317 PSSAddExpression
                             m_left: #318 PSSRefPathExpression
                               m_ref_path: #319 PSSMemberPathElemExpression
+                                m_context: Context.FUNCTION_BODY
                                 m_id: "cur"
                               m_type_identifier_elems: ""
                             m_right: #320 PSSPrimaryExpression
@@ -1003,6 +1078,7 @@
                           m_op: "="
                           m_ref: #323 PSSRefPathExpression
                             m_ref_path: #324 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_id: "cur"
                             m_type_identifier_elems: ""
                   - #325 PSSReturnProcStmt
@@ -1012,21 +1088,26 @@
                     m_static_insts: ArrayList[0]
                     m_expression: #326 PSSRefPathExpression
                       m_ref_path: #327 PSSMemberPathElemExpression
+                        m_context: Context.FUNCTION_BODY
                         m_function_parameter_list: #328 ArrayList[2]
                           - #329 PSSRefPathExpression
                             m_ref_path: #330 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_function_parameter_list: #331 ArrayList[1]
                                 - #332 PSSRefPathExpression
                                   m_ref_path: #333 PSSMemberPathElemExpression
+                                    m_context: Context.FUNCTION_BODY
                                     m_id: "left"
                                   m_type_identifier_elems: ""
                               m_id: "mergeSort"
                             m_type_identifier_elems: ""
                           - #334 PSSRefPathExpression
                             m_ref_path: #335 PSSMemberPathElemExpression
+                              m_context: Context.FUNCTION_BODY
                               m_function_parameter_list: #336 ArrayList[1]
                                 - #337 PSSRefPathExpression
                                   m_ref_path: #338 PSSMemberPathElemExpression
+                                    m_context: Context.FUNCTION_BODY
                                     m_id: "right"
                                   m_type_identifier_elems: ""
                               m_id: "mergeSort"
@@ -1040,6 +1121,7 @@
                 m_static_insts: ArrayList[0]
                 m_expression: #340 PSSRefPathExpression
                   m_ref_path: #341 PSSMemberPathElemExpression
+                    m_context: Context.FUNCTION_BODY
                     m_id: "l"
                   m_type_identifier_elems: ""
         - #342 PSSActionModel
@@ -1136,10 +1218,12 @@
                           m_expression: #365 PSSEqualExpression
                             m_left: #366 PSSRefPathExpression
                               m_ref_path: #367 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "x"
                               m_type_identifier_elems: ""
                             m_right: #368 PSSRefPathExpression
                               m_ref_path: #369 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                     m_default_constraint: #370 PSSConstraintList
@@ -1149,8 +1233,10 @@
               m_expression: #371 PSSRefPathExpression
                 m_ref_path: #372 PSSMemberPathElemExpression
                   m_child: #373 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "l1"
                     m_parent: @372
+                  m_context: Context.ACTIVITY
                   m_id: "comp"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -1184,10 +1270,12 @@
                           m_expression: #381 PSSEqualExpression
                             m_left: #382 PSSRefPathExpression
                               m_ref_path: #383 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "x"
                               m_type_identifier_elems: ""
                             m_right: #384 PSSRefPathExpression
                               m_ref_path: #385 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                     m_default_constraint: #386 PSSConstraintList
@@ -1197,8 +1285,10 @@
               m_expression: #387 PSSRefPathExpression
                 m_ref_path: #388 PSSMemberPathElemExpression
                   m_child: #389 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "l2"
                     m_parent: @388
+                  m_context: Context.ACTIVITY
                   m_id: "comp"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -1406,13 +1496,16 @@
               m_static_insts: ArrayList[0]
               func: #447 PSSFunctionCallExpression
                 m_path: #448 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_function_parameter_list: #449 ArrayList[2]
                     - #450 PSSRefPathExpression
                       m_ref_path: #451 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l1"
                       m_type_identifier_elems: ""
                     - #452 PSSRefPathExpression
                       m_ref_path: #453 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l2"
                       m_type_identifier_elems: ""
                   m_id: "append"
@@ -1424,13 +1517,16 @@
               m_static_insts: ArrayList[0]
               func: #455 PSSFunctionCallExpression
                 m_path: #456 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_function_parameter_list: #457 ArrayList[2]
                     - #458 PSSRefPathExpression
                       m_ref_path: #459 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l1"
                       m_type_identifier_elems: ""
                     - #460 PSSRefPathExpression
                       m_ref_path: #461 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l3"
                       m_type_identifier_elems: ""
                   m_id: "append"
@@ -1442,9 +1538,11 @@
               m_static_insts: ArrayList[0]
               m_expression: #463 PSSRefPathExpression
                 m_ref_path: #464 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_function_parameter_list: #465 ArrayList[1]
                     - #466 PSSRefPathExpression
                       m_ref_path: #467 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l1"
                       m_type_identifier_elems: ""
                   m_id: "mergeSort"
@@ -1452,6 +1550,7 @@
               m_op: "="
               m_ref: #468 PSSRefPathExpression
                 m_ref_path: #469 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "l1"
                 m_type_identifier_elems: ""
             - #470 PSSVoidFunctionCallProcStmt
@@ -1462,9 +1561,11 @@
               m_static_insts: ArrayList[0]
               func: #471 PSSFunctionCallExpression
                 m_path: #472 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_function_parameter_list: #473 ArrayList[1]
                     - #474 PSSRefPathExpression
                       m_ref_path: #475 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "l2"
                       m_type_identifier_elems: ""
                   m_id: "reverse"

@@ -4,6 +4,7 @@ import java.util.*;
 
 import pssgen.inst.PSSActionInst;
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSScope;
 import pssgen.model.PSSActionModel;
 import pssgen.solver.PSSConstraint;
 import pssgen.solver.PSSConstraintList;
@@ -59,7 +60,7 @@ public class PSSTraversalActivity extends PSSActivity {
 
 	public void evalNamedActivity(PSSInst inst) {
 		// Find child action inst
-		m_handle_var = (PSSActionInst) inst.findInstance(m_handle_id);
+		m_handle_var = (PSSActionInst) inst.findInstance(m_handle_id, PSSScope.Context.TRAVERSAL_HANDLE);
 		if (m_handle_var == null) {
 			PSSMessage.Error("TRAVERSAL", "Cannot action handle '" + m_handle_id + "'");
 		}

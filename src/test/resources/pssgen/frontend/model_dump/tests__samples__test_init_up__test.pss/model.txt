@@ -197,8 +197,10 @@
                   m_expression: #45 PSSRefPathExpression
                     m_ref_path: #46 PSSMemberPathElemExpression
                       m_child: #47 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "label_global"
                         m_parent: @46
+                      m_context: Context.EXEC_BLOCK
                       m_id: "comp"
                     m_type_identifier_elems: ""
                   m_op: "="
@@ -206,10 +208,13 @@
                     m_ref_path: #49 PSSMemberPathElemExpression
                       m_child: #50 PSSMemberPathElemExpression
                         m_child: #51 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "label"
                           m_parent: @50
+                        m_context: Context.EXEC_BLOCK
                         m_id: "region1"
                         m_parent: @49
+                      m_context: Context.EXEC_BLOCK
                       m_id: "comp"
                     m_type_identifier_elems: ""
                 - #52 PSSAssignProcStmt
@@ -221,8 +226,10 @@
                   m_expression: #53 PSSRefPathExpression
                     m_ref_path: #54 PSSMemberPathElemExpression
                       m_child: #55 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "align_global"
                         m_parent: @54
+                      m_context: Context.EXEC_BLOCK
                       m_id: "comp"
                     m_type_identifier_elems: ""
                   m_op: "="
@@ -230,10 +237,13 @@
                     m_ref_path: #57 PSSMemberPathElemExpression
                       m_child: #58 PSSMemberPathElemExpression
                         m_child: #59 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "align"
                           m_parent: @58
+                        m_context: Context.EXEC_BLOCK
                         m_id: "region1"
                         m_parent: @57
+                      m_context: Context.EXEC_BLOCK
                       m_id: "comp"
                     m_type_identifier_elems: ""
                 - #60 PSSAssignProcStmt
@@ -245,8 +255,10 @@
                   m_expression: #61 PSSRefPathExpression
                     m_ref_path: #62 PSSMemberPathElemExpression
                       m_child: #63 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
                         m_id: "size_global"
                         m_parent: @62
+                      m_context: Context.EXEC_BLOCK
                       m_id: "comp"
                     m_type_identifier_elems: ""
                   m_op: "="
@@ -254,10 +266,13 @@
                     m_ref_path: #65 PSSMemberPathElemExpression
                       m_child: #66 PSSMemberPathElemExpression
                         m_child: #67 PSSMemberPathElemExpression
+                          m_context: Context.EXEC_BLOCK
                           m_id: "size"
                           m_parent: @66
+                        m_context: Context.EXEC_BLOCK
                         m_id: "region1"
                         m_parent: @65
+                      m_context: Context.EXEC_BLOCK
                       m_id: "comp"
                     m_type_identifier_elems: ""
           m_flowref: ArrayList[0]
@@ -423,6 +438,7 @@
               m_op: "="
               m_ref: #102 PSSRefPathExpression
                 m_ref_path: #103 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "label_global"
                 m_type_identifier_elems: ""
             - #104 PSSAssignProcStmt
@@ -444,6 +460,7 @@
               m_op: "="
               m_ref: #108 PSSRefPathExpression
                 m_ref_path: #109 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "align_global"
                 m_type_identifier_elems: ""
             - #110 PSSAssignProcStmt
@@ -465,6 +482,7 @@
               m_op: "="
               m_ref: #114 PSSRefPathExpression
                 m_ref_path: #115 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "size_global"
                 m_type_identifier_elems: ""
   m_hierarchy_id: ""

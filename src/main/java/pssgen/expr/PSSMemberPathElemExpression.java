@@ -9,6 +9,7 @@ import pssgen.inst.PSSFunctionInst;
 import pssgen.inst.PSSIAggregate;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSRefInst;
+import pssgen.inst.PSSScope;
 import pssgen.model.PSSFunctionModel;
 import pssgen.model.PSSModel;
 import pssgen.model.PSSPlatformQualifier;
@@ -41,26 +42,33 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     /** the optional index */
     public PSSExpression m_index;
 
+    /** where the path is written, which decides how its first element is resolved */
+    private final PSSScope.Context m_context;
+
     /**
      * Constructs this expression.
      *
-     * @param id   the identifier of this expression
-     * @param args the optional list of function parameters of this expression
-     * @param idx  the optional index of this expression
+     * @param id      the identifier of this expression
+     * @param args    the optional list of function parameters of this expression
+     * @param idx     the optional index of this expression
+     * @param context where the path is written
      */
-    public PSSMemberPathElemExpression(String id, List<PSSExpression> args, PSSExpression idx) {
+    public PSSMemberPathElemExpression(String id, List<PSSExpression> args, PSSExpression idx,
+            PSSScope.Context context) {
         m_id = id;
         m_function_parameter_list = args;
         m_index = idx;
+        m_context = context;
     }
 
     /**
      * Constructs this expression with a specified identifier.
      *
-     * @param id the identifier of this expression
+     * @param id      the identifier of this expression
+     * @param context where the path is written
      */
-    public PSSMemberPathElemExpression(String id) {
-        this(id, null, null);
+    public PSSMemberPathElemExpression(String id, PSSScope.Context context) {
+        this(id, null, null, context);
     }
 
 	@Override
@@ -182,7 +190,7 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         PSSInst inst = null;
         if (m_function_parameter_list == null) {
             if (pkg == null || m_parent != null) {
-                inst = m_parent == null ? ctx.findInstance(m_id) : parent.findInstanceUnder(m_id);
+                inst = m_parent == null ? ctx.findInstance(m_id, m_context) : parent.findInstanceUnder(m_id);
             } else {
                 inst = pkg.findStaticInst(m_id);
             }

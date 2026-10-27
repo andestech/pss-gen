@@ -287,6 +287,7 @@
                     m_expression: #72 PSSEqualExpression
                       m_left: #73 PSSRefPathExpression
                         m_ref_path: #74 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #75 PSSRefPathExpression
@@ -294,14 +295,18 @@
                           m_child: #77 PSSMemberPathElemExpression
                             m_child: #78 PSSMemberPathElemExpression
                               m_child: #79 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_function_parameter_list: ArrayList[0]
                                 m_id: "size"
                                 m_parent: @78
+                              m_context: Context.INLINE_CONSTRAINT
                               m_function_parameter_list: ArrayList[0]
                               m_id: "values"
                               m_parent: @77
+                            m_context: Context.INLINE_CONSTRAINT
                             m_id: "mi"
                             m_parent: @76
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "pss_top"
                         m_type_identifier_elems: ""
               m_default_constraint: #80 PSSConstraintList
@@ -325,18 +330,22 @@
                     m_expression: #85 PSSEqualExpression
                       m_left: #86 PSSRefPathExpression
                         m_ref_path: #87 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #88 PSSRefPathExpression
                         m_ref_path: #89 PSSMemberPathElemExpression
                           m_child: #90 PSSMemberPathElemExpression
                             m_child: #91 PSSMemberPathElemExpression
+                              m_context: Context.INLINE_CONSTRAINT
                               m_function_parameter_list: ArrayList[0]
                               m_id: "size"
                               m_parent: @90
+                            m_context: Context.INLINE_CONSTRAINT
                             m_function_parameter_list: ArrayList[0]
                             m_id: "foo"
                             m_parent: @89
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "pss_top"
                         m_type_identifier_elems: ""
               m_default_constraint: #92 PSSConstraintList
@@ -360,11 +369,13 @@
                     m_expression: #97 PSSEqualExpression
                       m_left: #98 PSSRefPathExpression
                         m_ref_path: #99 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "x"
                         m_type_identifier_elems: ""
                       m_right: #100 PSSRefPathExpression
                         m_ref_path: #101 PSSMemberPathElemExpression
                           m_child: #102 PSSMemberPathElemExpression
+                            m_context: Context.INLINE_CONSTRAINT
                             m_id: "a"
                             m_index: #103 PSSPrimaryExpression
                               m_val: #104 PSSIntVal
@@ -377,6 +388,7 @@
                                   m_width: 65
                                 m_val: 0
                             m_parent: @101
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "comp"
                         m_type_identifier_elems: ""
               m_default_constraint: #106 PSSConstraintList
@@ -413,10 +425,12 @@
                           m_expression: #114 PSSEqualExpression
                             m_left: #115 PSSRefPathExpression
                               m_ref_path: #116 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "x"
                               m_type_identifier_elems: ""
                             m_right: #117 PSSRefPathExpression
                               m_ref_path: #118 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                     m_default_constraint: #119 PSSConstraintList
@@ -426,8 +440,10 @@
               m_expression: #120 PSSRefPathExpression
                 m_ref_path: #121 PSSMemberPathElemExpression
                   m_child: #122 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "mi"
                     m_parent: @121
+                  m_context: Context.ACTIVITY
                   m_id: "pss_top"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -461,10 +477,12 @@
                           m_expression: #130 PSSEqualExpression
                             m_left: #131 PSSRefPathExpression
                               m_ref_path: #132 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "x"
                               m_type_identifier_elems: ""
                             m_right: #133 PSSRefPathExpression
                               m_ref_path: #134 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                                 m_index: #135 PSSPrimaryExpression
                                   m_val: #136 PSSIntVal
@@ -485,11 +503,14 @@
                 m_ref_path: #140 PSSMemberPathElemExpression
                   m_child: #141 PSSMemberPathElemExpression
                     m_child: #142 PSSMemberPathElemExpression
+                      m_context: Context.ACTIVITY
                       m_function_parameter_list: ArrayList[0]
                       m_id: "values"
                       m_parent: @141
+                    m_context: Context.ACTIVITY
                     m_id: "ma"
                     m_parent: @140
+                  m_context: Context.ACTIVITY
                   m_id: "pss_top"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -536,10 +557,12 @@
                                 m_expression: #153 PSSEqualExpression
                                   m_left: #154 PSSRefPathExpression
                                     m_ref_path: #155 PSSMemberPathElemExpression
+                                      m_context: Context.INLINE_CONSTRAINT
                                       m_id: "x"
                                     m_type_identifier_elems: ""
                                   m_right: #156 PSSRefPathExpression
                                     m_ref_path: #157 PSSMemberPathElemExpression
+                                      m_context: Context.INLINE_CONSTRAINT
                                       m_id: "vv"
                                     m_type_identifier_elems: ""
                           m_default_constraint: #158 PSSConstraintList
@@ -548,6 +571,7 @@
                           m_type_id: "A"
                     m_expression: #159 PSSRefPathExpression
                       m_ref_path: #160 PSSMemberPathElemExpression
+                        m_context: Context.ACTIVITY
                         m_id: "v"
                       m_type_identifier_elems: ""
                     m_iterator_identifier: "vv"
@@ -555,11 +579,14 @@
                 m_ref_path: #162 PSSMemberPathElemExpression
                   m_child: #163 PSSMemberPathElemExpression
                     m_child: #164 PSSMemberPathElemExpression
+                      m_context: Context.ACTIVITY
                       m_function_parameter_list: ArrayList[0]
                       m_id: "values"
                       m_parent: @163
+                    m_context: Context.ACTIVITY
                     m_id: "m"
                     m_parent: @162
+                  m_context: Context.ACTIVITY
                   m_id: "pss_top"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -593,10 +620,12 @@
                           m_expression: #172 PSSEqualExpression
                             m_left: #173 PSSRefPathExpression
                               m_ref_path: #174 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "x"
                               m_type_identifier_elems: ""
                             m_right: #175 PSSRefPathExpression
                               m_ref_path: #176 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                     m_default_constraint: #177 PSSConstraintList
@@ -607,12 +636,15 @@
                 m_ref_path: #179 PSSMemberPathElemExpression
                   m_child: #180 PSSMemberPathElemExpression
                     m_child: #181 PSSMemberPathElemExpression
+                      m_context: Context.ACTIVITY
                       m_function_parameter_list: ArrayList[0]
                       m_id: "values"
                       m_parent: @180
+                    m_context: Context.ACTIVITY
                     m_function_parameter_list: ArrayList[0]
                     m_id: "foo"
                     m_parent: @179
+                  m_context: Context.ACTIVITY
                   m_id: "pss_top"
                 m_type_identifier_elems: ""
               m_iterator_identifier: "v"
@@ -865,6 +897,7 @@
               m_op: "="
               m_ref: #250 PSSRefPathExpression
                 m_ref_path: #251 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "mi"
                 m_type_identifier_elems: ""
             - #252 PSSAssignProcStmt
@@ -898,6 +931,7 @@
               m_op: "="
               m_ref: #261 PSSRefPathExpression
                 m_ref_path: #262 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "ma"
                   m_index: #263 PSSPrimaryExpression
                     m_val: #264 PSSIntVal
@@ -941,6 +975,7 @@
               m_op: "="
               m_ref: #275 PSSRefPathExpression
                 m_ref_path: #276 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "ma"
                   m_index: #277 PSSPrimaryExpression
                     m_val: #278 PSSIntVal
@@ -973,6 +1008,7 @@
               m_ref: #284 PSSRefPathExpression
                 m_ref_path: #285 PSSMemberPathElemExpression
                   m_child: #286 PSSMemberPathElemExpression
+                    m_context: Context.EXEC_BLOCK
                     m_function_parameter_list: ArrayList[0]
                     m_id: "values"
                     m_index: #287 PSSPrimaryExpression
@@ -986,6 +1022,7 @@
                           m_width: 65
                         m_val: 0
                     m_parent: @285
+                  m_context: Context.EXEC_BLOCK
                   m_id: "mi"
                 m_type_identifier_elems: ""
             - #290 PSSAssignProcStmt
@@ -1020,6 +1057,7 @@
               m_ref: #299 PSSRefPathExpression
                 m_ref_path: #300 PSSMemberPathElemExpression
                   m_child: #301 PSSMemberPathElemExpression
+                    m_context: Context.EXEC_BLOCK
                     m_function_parameter_list: ArrayList[0]
                     m_id: "values"
                     m_index: #302 PSSPrimaryExpression
@@ -1033,6 +1071,7 @@
                           m_width: 65
                         m_val: 0
                     m_parent: @300
+                  m_context: Context.EXEC_BLOCK
                   m_id: "ma"
                 m_type_identifier_elems: ""
             - #305 PSSAssignProcStmt
@@ -1043,6 +1082,7 @@
               m_static_insts: ArrayList[0]
               m_expression: #306 PSSRefPathExpression
                 m_ref_path: #307 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "ma"
                   m_index: #308 PSSPrimaryExpression
                     m_val: #309 PSSIntVal
@@ -1058,6 +1098,7 @@
               m_op: "="
               m_ref: #311 PSSRefPathExpression
                 m_ref_path: #312 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "a"
                 m_type_identifier_elems: ""
             - #313 PSSAssignProcStmt
@@ -1092,6 +1133,7 @@
               m_ref: #322 PSSRefPathExpression
                 m_ref_path: #323 PSSMemberPathElemExpression
                   m_child: #324 PSSMemberPathElemExpression
+                    m_context: Context.EXEC_BLOCK
                     m_function_parameter_list: ArrayList[0]
                     m_id: "values"
                     m_index: #325 PSSPrimaryExpression
@@ -1105,6 +1147,7 @@
                           m_width: 65
                         m_val: 0
                     m_parent: @323
+                  m_context: Context.EXEC_BLOCK
                   m_id: "ma"
                 m_type_identifier_elems: ""
             - #328 PSSAssignProcStmt
@@ -1126,6 +1169,7 @@
               m_op: "="
               m_ref: #332 PSSRefPathExpression
                 m_ref_path: #333 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
                   m_id: "a"
                   m_index: #334 PSSPrimaryExpression
                     m_val: #335 PSSIntVal
@@ -1148,6 +1192,7 @@
                 m_path: #339 PSSMemberPathElemExpression
                   m_child: #340 PSSMemberPathElemExpression
                     m_child: #341 PSSMemberPathElemExpression
+                      m_context: Context.EXEC_BLOCK
                       m_function_parameter_list: #342 ArrayList[1]
                         - #343 PSSPrimaryExpression
                           m_val: #344 PSSIntVal
@@ -1161,6 +1206,7 @@
                             m_val: 100
                       m_id: "push_back"
                       m_parent: @340
+                    m_context: Context.EXEC_BLOCK
                     m_function_parameter_list: ArrayList[0]
                     m_id: "values"
                     m_index: #346 PSSPrimaryExpression
@@ -1174,6 +1220,7 @@
                           m_width: 65
                         m_val: 0
                     m_parent: @339
+                  m_context: Context.EXEC_BLOCK
                   m_id: "m"
   m_hierarchy_id: ""
   m_id: ""

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import pssgen.frontend.PSSGenVisitor;
 import pssgen.frontend.VerboseListener;
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSScope;
 import pssgen.model.PSSModel;
 import pssgen.parser.PSSLexer;
 import pssgen.parser.PSSParser;
@@ -92,7 +93,7 @@ public class PSSRefPathExpression extends PSSExpression {
 				log.Warning("[SYNTAX] <RefPath> : text after the reference is ignored, from '"
 					+ tokens.LT(1).getText() + "' in '" + str + "'");
 			}
-			PSSGenVisitor eval = new PSSGenVisitor(log);
+			PSSGenVisitor eval = new PSSGenVisitor(log, PSSScope.Context.TEMPLATE);
 			eval.root = root;
 			eval.visit(ref_path);
 			res = (PSSRefPathExpression) eval.exp_stack.pop();

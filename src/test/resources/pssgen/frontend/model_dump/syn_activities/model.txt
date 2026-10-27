@@ -120,6 +120,7 @@
                     m_expression: #31 PSSEqualExpression
                       m_left: #32 PSSRefPathExpression
                         m_ref_path: #33 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "v"
                         m_type_identifier_elems: ""
                       m_right: #34 PSSPrimaryExpression
@@ -165,6 +166,7 @@
                     m_expression: #45 PSSEqualExpression
                       m_left: #46 PSSRefPathExpression
                         m_ref_path: #47 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
                           m_id: "v"
                         m_type_identifier_elems: ""
                       m_right: #48 PSSPrimaryExpression
@@ -229,6 +231,7 @@
                         m_expression: #64 PSSLessThanExpression
                           m_left: #65 PSSRefPathExpression
                             m_ref_path: #66 PSSMemberPathElemExpression
+                              m_context: Context.INLINE_CONSTRAINT
                               m_id: "v"
                             m_type_identifier_elems: ""
                           m_right: #67 PSSPrimaryExpression
@@ -300,6 +303,7 @@
                         m_expression: #85 PSSGreaterThanExpression
                           m_left: #86 PSSRefPathExpression
                             m_ref_path: #87 PSSMemberPathElemExpression
+                              m_context: Context.INLINE_CONSTRAINT
                               m_id: "v"
                             m_type_identifier_elems: ""
                           m_right: #88 PSSPrimaryExpression
@@ -360,6 +364,7 @@
               m_static_insts: ArrayList[0]
               m_count: #102 PSSRefPathExpression
                 m_ref_path: #103 PSSMemberPathElemExpression
+                  m_context: Context.ACTIVITY
                   m_id: "n"
                 m_type_identifier_elems: ""
               m_index_id: "i"
@@ -380,10 +385,12 @@
                       m_expression: #108 PSSEqualExpression
                         m_left: #109 PSSRefPathExpression
                           m_ref_path: #110 PSSMemberPathElemExpression
+                            m_context: Context.INLINE_CONSTRAINT
                             m_id: "v"
                           m_type_identifier_elems: ""
                         m_right: #111 PSSRefPathExpression
                           m_ref_path: #112 PSSMemberPathElemExpression
+                            m_context: Context.INLINE_CONSTRAINT
                             m_id: "i"
                           m_type_identifier_elems: ""
                 m_default_constraint: #113 PSSConstraintList
@@ -399,6 +406,7 @@
               m_count: #115 PSSLessThanExpression
                 m_left: #116 PSSRefPathExpression
                   m_ref_path: #117 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "n"
                   m_type_identifier_elems: ""
                 m_right: #118 PSSPrimaryExpression
@@ -461,15 +469,18 @@
                           m_expression: #133 PSSEqualExpression
                             m_left: #134 PSSRefPathExpression
                               m_ref_path: #135 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                             m_right: #136 PSSAddExpression
                               m_left: #137 PSSRefPathExpression
                                 m_ref_path: #138 PSSMemberPathElemExpression
+                                  m_context: Context.INLINE_CONSTRAINT
                                   m_id: "e"
                                 m_type_identifier_elems: ""
                               m_right: #139 PSSRefPathExpression
                                 m_ref_path: #140 PSSMemberPathElemExpression
+                                  m_context: Context.INLINE_CONSTRAINT
                                   m_id: "k"
                                 m_type_identifier_elems: ""
                     m_default_constraint: #141 PSSConstraintList
@@ -478,6 +489,7 @@
                     m_type_id: "leaf_a"
               m_expression: #142 PSSRefPathExpression
                 m_ref_path: #143 PSSMemberPathElemExpression
+                  m_context: Context.ACTIVITY
                   m_id: "arr"
                 m_type_identifier_elems: ""
               m_index_identifier: "k"
@@ -516,6 +528,7 @@
                   m_cond: #151 PSSGreaterThanExpression
                     m_left: #152 PSSRefPathExpression
                       m_ref_path: #153 PSSMemberPathElemExpression
+                        m_context: Context.ACTIVITY
                         m_id: "n"
                       m_type_identifier_elems: ""
                     m_right: #154 PSSPrimaryExpression
@@ -545,6 +558,7 @@
                           m_expression: #161 PSSEqualExpression
                             m_left: #162 PSSRefPathExpression
                               m_ref_path: #163 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                             m_right: #164 PSSPrimaryExpression
@@ -615,6 +629,7 @@
               m_cond: #181 PSSGreaterThanExpression
                 m_left: #182 PSSRefPathExpression
                   m_ref_path: #183 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "n"
                   m_type_identifier_elems: ""
                 m_right: #184 PSSPrimaryExpression
@@ -651,6 +666,7 @@
                           m_expression: #193 PSSEqualExpression
                             m_left: #194 PSSRefPathExpression
                               m_ref_path: #195 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
                                 m_id: "v"
                               m_type_identifier_elems: ""
                             m_right: #196 PSSPrimaryExpression
@@ -688,6 +704,7 @@
               m_cond: #204 PSSGreaterThanExpression
                 m_left: #205 PSSRefPathExpression
                   m_ref_path: #206 PSSMemberPathElemExpression
+                    m_context: Context.ACTIVITY
                     m_id: "n"
                   m_type_identifier_elems: ""
                 m_right: #207 PSSPrimaryExpression
@@ -727,6 +744,7 @@
               m_static_insts: ArrayList[0]
               m_cond: #216 PSSRefPathExpression
                 m_ref_path: #217 PSSMemberPathElemExpression
+                  m_context: Context.ACTIVITY
                   m_id: "n"
                 m_type_identifier_elems: ""
               m_default: #218 PSSSequenceActivity
@@ -815,6 +833,7 @@
                         m_expression: #247 PSSEqualExpression
                           m_left: #248 PSSRefPathExpression
                             m_ref_path: #249 PSSMemberPathElemExpression
+                              m_context: Context.INLINE_CONSTRAINT
                               m_id: "v"
                             m_type_identifier_elems: ""
                           m_right: #250 PSSPrimaryExpression
