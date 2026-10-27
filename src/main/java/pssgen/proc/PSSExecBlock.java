@@ -3,6 +3,7 @@ package pssgen.proc;
 import java.util.*;
 
 import pssgen.inst.PSSInst;
+import pssgen.model.PSSExecKind;
 import pssgen.model.PSSModel;
 
 public class PSSExecBlock extends PSSModel {
@@ -24,6 +25,11 @@ public class PSSExecBlock extends PSSModel {
 	public void addStmt(PSSProcStmt stmt) {
 		m_list.add(stmt);
 		stmt.m_parent = this;
+	}
+
+	@Override
+	public PSSExecKind getExecKind() {
+		return getKind();
 	}
 
 	public PSSExecKind getKind() {

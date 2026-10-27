@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import pssgen.expr.PSSExpression;
-import pssgen.inst.PSSICollection;
-import pssgen.inst.PSSIIterator;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSNamespaceInst;
 import pssgen.inst.PSSScope;
 import pssgen.util.PSSMessage;
+import pssgen.value.PSSICollection;
+import pssgen.value.PSSIIterator;
 import pssgen.value.PSSVal;
 
 /**

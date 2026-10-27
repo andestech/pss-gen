@@ -5,7 +5,9 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import pssgen.expr.PSSRefPathExpression;
+import pssgen.expr.PSSRefPathParser;
 import pssgen.inst.PSSInst;
+import pssgen.model.PSSExecKind;
 import pssgen.model.PSSModel;
 import pssgen.util.PSSMessage;
 
@@ -15,10 +17,13 @@ public class PSSTargetCode extends PSSModel {
 	PSSExecKind m_exec_kind;
 	String m_language;
 	String m_code;
+	/** parses the {{...}} references of the code when it is expanded */
+	private final PSSRefPathParser m_ref_parser;
 
-	public PSSTargetCode (PSSModel root, PSSExecKind exec_kind, String language, String code) {
+	public PSSTargetCode (PSSModel root, PSSExecKind exec_kind, String language, String code, PSSRefPathParser ref_parser) {
 		super("");
 		m_root = root;
+		m_ref_parser = ref_parser;
 		m_exec_kind = exec_kind;
 		m_language = language;
 		m_code = code.replace("\"\"\"", "");
@@ -47,7 +52,7 @@ public class PSSTargetCode extends PSSModel {
 				String prefix = residual.substring(0, start);
 				String ref = m.group(1);
 
-				PSSRefPathExpression ref_exp = PSSRefPathExpression.fromString(m_root, ref, inst.run().log());
+				PSSRefPathExpression ref_exp = m_ref_parser.fromString(m_root, ref, inst.run().log());
 
 				PSSInst var = ref_exp.getInst(inst);
 

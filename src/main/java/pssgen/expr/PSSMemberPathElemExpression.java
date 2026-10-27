@@ -10,12 +10,11 @@ import pssgen.inst.PSSIAggregate;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSRefInst;
 import pssgen.inst.PSSScope;
+import pssgen.model.PSSExecKind;
 import pssgen.model.PSSFunctionModel;
 import pssgen.model.PSSModel;
 import pssgen.model.PSSPlatformQualifier;
 import pssgen.model.PSSRefModel;
-import pssgen.proc.PSSExecBlock;
-import pssgen.proc.PSSExecKind;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSRefVal;
 import pssgen.value.PSSVal;
@@ -164,8 +163,8 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     private PSSExecKind getContextExecKind(PSSInst inst) {
         while (inst != null) {
             PSSModel m = inst.getTypeModel();
-            if (m instanceof PSSExecBlock) {
-                return ((PSSExecBlock) m).getKind();
+            if (m != null && m.getExecKind() != null) {
+                return m.getExecKind();
             }
             if (inst instanceof PSSFunctionInst) {
                 return ((PSSFunctionInst) inst).getExecKind();

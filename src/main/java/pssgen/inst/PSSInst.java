@@ -2,8 +2,8 @@ package pssgen.inst;
 
 import java.util.*;
 
+import pssgen.model.PSSExecKind;
 import pssgen.model.PSSModel;
-import pssgen.proc.PSSExecKind;
 import pssgen.solver.PSSConstraintList;
 import pssgen.solver.PSSDomain;
 import pssgen.solver.PSSSolver;

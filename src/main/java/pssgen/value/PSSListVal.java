@@ -6,8 +6,6 @@ import java.util.ListIterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import pssgen.inst.PSSICollection;
-import pssgen.inst.PSSIIterator;
 import pssgen.model.PSSListModel;
 import pssgen.model.PSSModel;
 import pssgen.util.PSSMessage;

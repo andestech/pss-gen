@@ -286,6 +286,7 @@
                 m_code: "#region1.label = {{comp.region1.label}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @38
               - #71 PSSTargetCode
                 children: ArrayList[0]
@@ -295,6 +296,7 @@
                 m_code: "#region1.align = {{comp.region1.align}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @38
               - #72 PSSTargetCode
                 children: ArrayList[0]
@@ -304,6 +306,7 @@
                 m_code: "#region1.size  = {{comp.region1.size}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @38
       m_hierarchy_id: "pss_top"
       m_id: "pss_top"

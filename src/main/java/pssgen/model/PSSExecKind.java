@@ -1,4 +1,4 @@
-package pssgen.proc;
+package pssgen.model;
 
 /**
  * This is an enumeration of exec_kind. See PSS 2.0 Section 22.1.3 for more

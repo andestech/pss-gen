@@ -60,6 +60,7 @@
                 m_code: "bit_val = {{bit_val}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @5
         - #19 PSSActionModel
           children: #20 ArrayList[1]
@@ -117,6 +118,7 @@
                 m_code: "val = {{val}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @19
         - #33 PSSActionModel
           children: #34 ArrayList[1]

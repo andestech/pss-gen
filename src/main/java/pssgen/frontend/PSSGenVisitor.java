@@ -59,6 +59,7 @@ import pssgen.model.PSSDataDeclModel;
 import pssgen.model.PSSDataInstModel;
 import pssgen.model.PSSDataTypeModel;
 import pssgen.model.PSSEnumModel;
+import pssgen.model.PSSExecKind;
 import pssgen.model.PSSFlowRefModel;
 import pssgen.model.PSSFunctionModel;
 import pssgen.model.PSSFunctionParameter;
@@ -86,7 +87,6 @@ import pssgen.proc.PSSContinueProcStmt;
 import pssgen.proc.PSSDataDeclProcStmt;
 import pssgen.proc.PSSDataInstProcStmt;
 import pssgen.proc.PSSExecBlock;
-import pssgen.proc.PSSExecKind;
 import pssgen.proc.PSSForeachProcStmt;
 import pssgen.proc.PSSIfElseProcStmt;
 import pssgen.proc.PSSMatchProcStmt;
@@ -948,7 +948,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		String language = ctx.language_identifier().getText();
 		PSSExecKind exec_kind = PSSExecKind.valueOf(ctx.exec_kind().getText());
 		String code = ctx.string_literal().getText();
-		PSSTargetCode node = new PSSTargetCode(root, exec_kind, language, code);
+		PSSTargetCode node = new PSSTargetCode(root, exec_kind, language, code, PSSTemplateRefParser.INSTANCE);
 
 		((PSSActionModel) root).addTargetCode(node);
 		return node;

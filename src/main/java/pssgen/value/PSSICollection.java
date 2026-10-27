@@ -1,4 +1,4 @@
-package pssgen.inst;
+package pssgen.value;
 
 /**
  * An interface for collections.

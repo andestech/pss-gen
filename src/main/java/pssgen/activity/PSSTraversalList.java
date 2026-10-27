@@ -7,8 +7,8 @@ import pssgen.inst.PSSFlowRefInst;
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSScope;
 import pssgen.model.PSSActionModel;
+import pssgen.model.PSSExecKind;
 import pssgen.model.PSSModel;
-import pssgen.proc.PSSExecKind;
 import pssgen.util.PSSMessage;
 
 public class PSSTraversalList {

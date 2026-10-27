@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import pssgen.inst.PSSICollection;
-import pssgen.inst.PSSIIterator;
 import pssgen.model.PSSModel;
 import pssgen.model.PSSSetModel;
 

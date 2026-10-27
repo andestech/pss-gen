@@ -738,6 +738,7 @@
                 m_code: ".text\n\t\tmain:"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @22
         - #209 PSSActionModel
           children: #210 ArrayList[1]
@@ -910,6 +911,7 @@
                 m_code: "\tadd\tx{{rd}}, x{{rs1}}, x{{rs2}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @209
         - #265 PSSActionModel
           children: #266 ArrayList[1]
@@ -1082,6 +1084,7 @@
                 m_code: "\tsub\tx{{rd}}, x{{rs1}}, x{{rs2}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @265
         - #321 PSSActionModel
           children: #322 ArrayList[2]
@@ -1199,6 +1202,7 @@
                 m_code: "\tli\t{{rd}}, {{imm}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @321
         - #355 PSSActionModel
           children: ArrayList[0]
@@ -1224,6 +1228,7 @@
                 m_code: ".option norelax\n\t\t.include \"entry.s\"\n\t\t"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @355
         - #361 PSSActionModel
           children: ArrayList[0]
@@ -1249,6 +1254,7 @@
                 m_code: "\tli\ta0, 0\t"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @361
         - #367 PSSActionModel
           children: ArrayList[0]
@@ -1274,6 +1280,7 @@
                 m_code: "\tlb\tt0, 0(a0)\t"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @367
         - #373 PSSActionModel
           children: ArrayList[0]
@@ -1299,6 +1306,7 @@
                 m_code: "\tlh\tt0, 0(a0)\t"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @373
         - #379 PSSActionModel
           children: ArrayList[0]
@@ -1324,6 +1332,7 @@
                 m_code: "\tlw\tt0, 0(a0)\t"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @379
         - #385 PSSActionModel
           children: ArrayList[0]
@@ -1349,6 +1358,7 @@
                 m_code: "\tld\tt0, 0(a0)\t"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @385
       m_hierarchy_id: "pss_top"
       m_id: "pss_top"

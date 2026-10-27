@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import pssgen.expr.PSSExpression;
 import pssgen.model.PSSDataTypeModel;
+import pssgen.model.PSSExecKind;
 import pssgen.model.PSSFunctionModel;
 import pssgen.model.PSSFunctionParameter;
 import pssgen.model.PSSFunctionReturnType;
@@ -14,7 +15,6 @@ import pssgen.model.PSSRefModel;
 import pssgen.model.PSSTypeCategory;
 import pssgen.proc.PSSBreakException;
 import pssgen.proc.PSSContinueException;
-import pssgen.proc.PSSExecKind;
 import pssgen.proc.PSSProcStmt;
 import pssgen.proc.PSSReturnException;
 import pssgen.util.PSSMessage;

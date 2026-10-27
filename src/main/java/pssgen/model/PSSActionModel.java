@@ -7,7 +7,6 @@ import pssgen.inst.PSSActionInst;
 import pssgen.inst.PSSFlowRefInst;
 import pssgen.inst.PSSInst;
 import pssgen.proc.PSSExecBlock;
-import pssgen.proc.PSSExecKind;
 import pssgen.proc.PSSTargetCode;
 import pssgen.proc.PSSTargetCodeList;
 import pssgen.solver.PSSConstraint;

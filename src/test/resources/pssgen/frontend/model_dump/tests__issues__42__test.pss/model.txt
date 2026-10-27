@@ -213,6 +213,7 @@
                 m_code: "value = {{value}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @55
       m_hierarchy_id: "pss_top"
       m_id: "pss_top"

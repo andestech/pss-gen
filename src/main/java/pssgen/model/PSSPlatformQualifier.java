@@ -3,7 +3,6 @@ package pssgen.model;
 import pssgen.inst.PSSFunctionInst;
 import pssgen.inst.PSSInst;
 import pssgen.proc.PSSExecBlock;
-import pssgen.proc.PSSExecKind;
 
 /**
  * A {@code PSSPlatformQualifier} can be either {@code target} or {@code solve}.

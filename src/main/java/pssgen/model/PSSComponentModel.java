@@ -5,7 +5,6 @@ import java.util.*;
 import pssgen.inst.PSSComponentInst;
 import pssgen.inst.PSSInst;
 import pssgen.proc.PSSExecBlock;
-import pssgen.proc.PSSExecKind;
 import pssgen.util.PSSLog;
 import pssgen.util.PSSMessage;
 

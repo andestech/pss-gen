@@ -359,6 +359,7 @@
                 m_code: "val = {{val}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @88
         - #102 PSSActionModel
           children: ArrayList[0]

@@ -691,6 +691,7 @@
                 m_code: "{{v}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @127
       m_hierarchy_id: "pss_top"
       m_id: "pss_top"

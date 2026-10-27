@@ -3,6 +3,7 @@ package pssgen.proc;
 import java.util.*;
 
 import pssgen.inst.PSSInst;
+import pssgen.model.PSSExecKind;
 
 public class PSSTargetCodeList {
 	public ArrayList<PSSTargetCode> m_list;

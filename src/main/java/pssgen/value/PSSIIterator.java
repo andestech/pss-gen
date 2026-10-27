@@ -1,8 +1,7 @@
-package pssgen.inst;
+package pssgen.value;
 
 import java.util.Map;
 
-import pssgen.value.PSSVal;
 
 /**
  * This is an interface for iterators.

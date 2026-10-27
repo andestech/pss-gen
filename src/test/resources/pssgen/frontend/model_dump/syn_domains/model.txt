@@ -411,6 +411,7 @@
                 m_code: "{{a}} {{b}} {{e}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @5
       m_hierarchy_id: "pss_top"
       m_id: "pss_top"

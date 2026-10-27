@@ -1989,6 +1989,7 @@
                 m_code: "{{x}}"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @52
               - #607 PSSTargetCode
                 children: ArrayList[0]
@@ -1998,6 +1999,7 @@
                 m_code: "header"
                 m_exec_kind: PSSExecKind.header
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @52
               - #608 PSSTargetCode
                 children: ArrayList[0]
@@ -2007,6 +2009,7 @@
                 m_code: "declaration"
                 m_exec_kind: PSSExecKind.declaration
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @52
       m_hierarchy_id: "pss_top"
       m_id: "pss_top"

@@ -6,7 +6,6 @@ import pssgen.activity.PSSInferredAction;
 import pssgen.activity.PSSInferredActionList;
 import pssgen.inst.PSSInst;
 import pssgen.proc.PSSExecBlock;
-import pssgen.proc.PSSExecKind;
 import pssgen.solver.PSSConstraint;
 import pssgen.solver.PSSConstraintList;
 import pssgen.util.PSSLog;
@@ -295,6 +294,16 @@ public class PSSModel {
 
 	public String getId() {
 		return m_id;
+	}
+
+	/**
+	 * Returns the exec kind of an exec block.
+	 *
+	 * @return the kind of the exec block this model is, or null for a model that is
+	 *         not an exec block
+	 */
+	public PSSExecKind getExecKind() {
+		return null;
 	}
 
 	public String getText() {

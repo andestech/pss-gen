@@ -1,6 +1,7 @@
 package pssgen.proc;
 
 import pssgen.inst.PSSInst;
+import pssgen.model.PSSExecKind;
 import pssgen.model.PSSModel;
 import pssgen.util.PSSMessage;
 

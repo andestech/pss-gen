@@ -254,6 +254,7 @@
                 m_code: "\ninVal_0 = {{inVal_0}}\ninVal_1 = {{inVal_1}}\ninVal_2 = {{inVal_2}}\noutVal_0 = {{outVal_0}}\noutVal_1 = {{outVal_1}}\noutVal_2 = {{outVal_2}}\nIN_2 = {{IN_2}}\nOUT_0 = {{OUT_0}}\nOUT_10 = {{OUT_10}}\nSAME_NAME = {{SAME_NAME}}\nout_e::SAME_NAME = {{out_e::SAME_NAME}}\nin_e::SAME_NAME = {{in_e::SAME_NAME}}\n"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @9
         - #55 PSSActionModel
           children: #56 ArrayList[2]
@@ -378,6 +379,7 @@
                 m_code: "\noutVal = {{outVal}}\ninVal = {{inVal}}\n"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @55
         - #89 PSSActionModel
           children: ArrayList[0]

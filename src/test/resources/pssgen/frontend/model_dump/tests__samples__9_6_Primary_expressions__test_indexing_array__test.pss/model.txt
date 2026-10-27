@@ -815,6 +815,7 @@
                 m_code: "\nnibble_0_0 = {{nibble_0_0}} = {{nibble_0_0[3]}}{{nibble_0_0[2]}}{{nibble_0_0[1]}}{{nibble_0_0[0]}}\nnibble_0_1 = {{nibble_0_1}} = {{nibble_0_1[3]}}{{nibble_0_1[2]}}{{nibble_0_1[1]}}{{nibble_0_1[0]}}\nnibble_0_2 = {{nibble_0_2}} = {{nibble_0_2[3]}}{{nibble_0_2[2]}}{{nibble_0_2[1]}}{{nibble_0_2[0]}}\nnibble_1_0 = {{nibble_1_0}} = {{nibble_1_0[3]}}{{nibble_1_0[2]}}{{nibble_1_0[1]}}{{nibble_1_0[0]}}\nnibble_1_1 = {{nibble_1_1}} = {{nibble_1_1[3]}}{{nibble_1_1[2]}}{{nibble_1_1[1]}}{{nibble_1_1[0]}}\nnibble_1_2 = {{nibble_1_2}} = {{nibble_1_2[3]}}{{nibble_1_2[2]}}{{nibble_1_2[1]}}{{nibble_1_2[0]}}\n"
                 m_exec_kind: PSSExecKind.body
                 m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
                 m_root: @5
       m_hierarchy_id: "pss_top"
       m_id: "pss_top"
