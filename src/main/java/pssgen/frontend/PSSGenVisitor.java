@@ -118,22 +118,25 @@ import pssgen.value.PSSVal;
  */
 public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
-	/** A data type and the domain constraints of an integer type's {@code in [...]}. */
+	/** A data type and the domain of an integer type's {@code in [...]}. */
 	static final class TypeSpec {
 		final PSSModel model;
+		/** the closed ranges and single values of the domain; null when it has none */
+		final PSSOpenRangeListExpression ranges;
 		/**
-		 * the domain items: the range list first, then the open-ended items from the
-		 * last to the first; empty for a type without a domain
+		 * the open-ended items of the domain ({@code a..}, {@code ..b}), from the last
+		 * to the first; they constrain the field after the ranges
 		 */
-		final List<PSSExpression> domain;
+		final List<PSSExpression> open_ended;
 
 		TypeSpec(PSSModel model) {
-			this(model, Collections.<PSSExpression>emptyList());
+			this(model, null, Collections.<PSSExpression>emptyList());
 		}
 
-		TypeSpec(PSSModel model, List<PSSExpression> domain) {
+		TypeSpec(PSSModel model, PSSOpenRangeListExpression ranges, List<PSSExpression> open_ended) {
 			this.model = model;
-			this.domain = domain;
+			this.ranges = ranges;
+			this.open_ended = open_ended;
 		}
 	}
 
@@ -677,9 +680,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Object visitInteger_type(PSSParser.Integer_typeContext ctx) {
-		List<PSSExpression> domain = Collections.<PSSExpression>emptyList();
+		TypeSpec domain = null;
 		String integer_atom_type = ctx.integer_atom_type().getText();
 		Integer width;
 		boolean sign = integer_atom_type.equals("int");
@@ -705,17 +707,14 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		// in [0..]		// constant_expression..
 		// in [..2]		// ..constant_expression
 		if (ctx.domain_open_range_list() != null) {
-			domain = (List<PSSExpression>) visit(ctx.domain_open_range_list());
+			domain = (TypeSpec) visit(ctx.domain_open_range_list());
 		}
 
-		return new TypeSpec(new PSSIntModel(width, sign), domain);
+		PSSIntModel model = new PSSIntModel(width, sign);
+		return domain == null ? new TypeSpec(model) : new TypeSpec(model, domain.ranges, domain.open_ended);
 	}
 
-	/**
-	 * Returns the domain items of an integer type: the list of the closed ranges and
-	 * single values first, if there is one, then the open-ended items from the last
-	 * to the first.
-	 */
+	/** Returns the domain of an integer type, as a {@link TypeSpec} without a model. */
 	@Override
 	public Object visitDomain_open_range_list(PSSParser.Domain_open_range_listContext ctx) {
 		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
@@ -723,19 +722,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		boolean ranges = false;
 		for (int i = 0; i < ctx.domain_open_range_value().size(); i++) {
 			PSSExpression item = (PSSExpression) visit(ctx.domain_open_range_value(i));
-			if (item instanceof PSSOpenRangeValueExpression) {
+			// visitDomain_open_range_value builds a range of the values with two bounds
+			if (ctx.domain_open_range_value(i).constant_expression().size() == 2) {
 				open_range_list.addOpenRangeValueExpression((PSSOpenRangeValueExpression)item);
 				ranges = true;
 			} else {
 				open_ended.add(0, item);
 			}
 		}
-		List<PSSExpression> domain = new ArrayList<PSSExpression>();
-		if (ranges) {
-			domain.add(open_range_list);
-		}
-		domain.addAll(open_ended);
-		return domain;
+		return new TypeSpec(null, ranges ? open_range_list : null, open_ended);
 	}
 
 	@Override
@@ -1669,7 +1664,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		PSSDataDeclModel data_decl = new PSSDataDeclModel(data_type);
 
 		// The domain of the type constrains the first instantiation only.
-		Iterator<PSSExpression> domain = type.domain.iterator();
+		boolean domain = type.ranges != null || !type.open_ended.isEmpty();
 		for (int i = 0; i < ctx.data_instantiation().size(); i++) {
 			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
 
@@ -1684,19 +1679,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 				const_expression = (PSSExpression) visit(data_inst.constant_expression());
 			}
 
-			if (domain.hasNext()) {
+			if (domain) {
+				domain = false;
 				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id, PSSScope.Context.MEMBER_CONSTRAINT);
-				while (domain.hasNext()) {
-					PSSExpression item = domain.next();
-					if (item instanceof PSSOpenRangeListExpression) {
-						item = new PSSInExpression(variable, item);
-					} else if (item instanceof PSSLessEqualExpression) {
-						item.setLeftExpression(variable);
-					} else if (item instanceof PSSGreaterEqualExpression) {
-						item.setLeftExpression(variable);
-					}
-					PSSExpressionConstraint expression_constraint = new PSSExpressionConstraint(item);
-					root.addConstraint(expression_constraint);
+				if (type.ranges != null) {
+					root.addConstraint(new PSSExpressionConstraint(new PSSInExpression(variable, type.ranges)));
+				}
+				for (PSSExpression item : type.open_ended) {
+					item.setLeftExpression(variable);
+					root.addConstraint(new PSSExpressionConstraint(item));
 				}
 			}
 
