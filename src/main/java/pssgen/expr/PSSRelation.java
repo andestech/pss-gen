@@ -9,11 +9,15 @@ public final class PSSRelation {
 	public enum Op {
 		EQ("=="), NE("!="), LT("<"), LE("<="), GT(">"), GE(">="), IN("in");
 
-		/** the operator as it is written in PSS */
-		public final String token;
+		private final String m_token;
 
 		Op(String token) {
-			this.token = token;
+			m_token = token;
+		}
+
+		/** Returns the operator as it is written in PSS. */
+		public String getToken() {
+			return m_token;
 		}
 	}
 

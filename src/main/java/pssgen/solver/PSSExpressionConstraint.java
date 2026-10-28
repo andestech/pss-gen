@@ -33,7 +33,7 @@ public class PSSExpressionConstraint extends PSSConstraint {
 		if (relation != null && m_expression.isRandomable(var) == false) {
 			String use = relation.op == PSSRelation.Op.IN
 				? "Use 'in' expression to non-random variable"
-				: "Use '" + relation.op.token + "' expression without random variable";
+				: "Use '" + relation.op.getToken() + "' expression without random variable";
 			log.Warning(use + " in constraint block is meaningless: " + m_expression.getText());
 		}
 
