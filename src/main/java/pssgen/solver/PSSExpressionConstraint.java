@@ -2,14 +2,8 @@ package pssgen.solver;
 
 import java.util.*;
 
-import pssgen.expr.PSSEqualExpression;
 import pssgen.expr.PSSExpression;
-import pssgen.expr.PSSGreaterEqualExpression;
-import pssgen.expr.PSSGreaterThanExpression;
-import pssgen.expr.PSSInExpression;
-import pssgen.expr.PSSLessEqualExpression;
-import pssgen.expr.PSSLessThanExpression;
-import pssgen.expr.PSSNotEqualExpression;
+import pssgen.expr.PSSRelation;
 import pssgen.inst.PSSInst;
 import pssgen.util.PSSLog;
 
@@ -30,20 +24,12 @@ public class PSSExpressionConstraint extends PSSConstraint {
 	public boolean validate(PSSInst var) {
 		PSSLog log = var.run().log();
 		// Report warning if a constraint is unrelated to any random variable
-		if        (m_expression instanceof PSSInExpression           && m_expression.isRandomable(var) == false) {
-			log.Warning("Use 'in' expression to non-random variable in constraint block is meaningless: " + m_expression.getText());
-		} else if (m_expression instanceof PSSEqualExpression        && m_expression.isRandomable(var) == false) {
-			log.Warning("Use '==' expression without random variable in constraint block is meaningless: " + m_expression.getText());
-		} else if (m_expression instanceof PSSNotEqualExpression     && m_expression.isRandomable(var) == false) {
-			log.Warning("Use '!=' expression without random variable in constraint block is meaningless: " + m_expression.getText());
-		} else if (m_expression instanceof PSSGreaterThanExpression  && m_expression.isRandomable(var) == false) {
-			log.Warning("Use '>' expression without random variable in constraint block is meaningless: " + m_expression.getText());
-		} else if (m_expression instanceof PSSGreaterEqualExpression && m_expression.isRandomable(var) == false) {
-			log.Warning("Use '>=' expression without random variable in constraint block is meaningless: " + m_expression.getText());
-		} else if (m_expression instanceof PSSLessThanExpression     && m_expression.isRandomable(var) == false) {
-			log.Warning("Use '<' expression without random variable in constraint block is meaningless: " + m_expression.getText());
-		} else if (m_expression instanceof PSSLessEqualExpression    && m_expression.isRandomable(var) == false) {
-			log.Warning("Use '<=' expression without random variable in constraint block is meaningless: " + m_expression.getText());
+		PSSRelation relation = m_expression.relation();
+		if (relation != null && m_expression.isRandomable(var) == false) {
+			String use = relation.op == PSSRelation.Op.IN
+				? "Use 'in' expression to non-random variable"
+				: "Use '" + relation.op.token + "' expression without random variable";
+			log.Warning(use + " in constraint block is meaningless: " + m_expression.getText());
 		}
 
 		return m_expression.eval(var).toBool();

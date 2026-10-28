@@ -93,4 +93,8 @@ public class PSSExpression {
 		return getText().hashCode();
 	}
 
+	/** Returns this expression as a comparison 'left op right', or null when it is not one. */
+	public PSSRelation relation() {
+		return null;
+	}
 }

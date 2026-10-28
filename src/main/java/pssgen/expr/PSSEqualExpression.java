@@ -55,4 +55,9 @@ public class PSSEqualExpression extends PSSExpression {
 	public String getText() {
 		return m_left.getText() + "==" + m_right.getText();
 	}
+
+	@Override
+	public PSSRelation relation() {
+		return new PSSRelation(PSSRelation.Op.EQ, m_left, m_right);
+	}
 }

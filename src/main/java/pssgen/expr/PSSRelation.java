@@ -6,13 +6,22 @@ import java.util.List;
 /** A comparison 'left op right' of a constraint, as the propagating solver reads it. */
 public final class PSSRelation {
 
-	public enum Op { EQ, NE, LT, LE, GT, GE, IN }
+	public enum Op {
+		EQ("=="), NE("!="), LT("<"), LE("<="), GT(">"), GE(">="), IN("in");
+
+		/** the operator as it is written in PSS */
+		public final String token;
+
+		Op(String token) {
+			this.token = token;
+		}
+	}
 
 	public final Op op;
 	public final PSSExpression left;
 	public final PSSExpression right;
 
-	private PSSRelation(Op op, PSSExpression left, PSSExpression right) {
+	PSSRelation(Op op, PSSExpression left, PSSExpression right) {
 		this.op = op;
 		this.left = left;
 		this.right = right;
@@ -36,41 +45,9 @@ public final class PSSRelation {
 			collect(a.m_right, res);
 			return;
 		}
-		PSSRelation r = of(e);
+		PSSRelation r = e.relation();
 		if (r != null && r.left != null && r.right != null) {
 			res.add(r);
 		}
-	}
-
-	private static PSSRelation of(PSSExpression e) {
-		if (e instanceof PSSEqualExpression) {
-			PSSEqualExpression x = (PSSEqualExpression) e;
-			return new PSSRelation(Op.EQ, x.m_left, x.m_right);
-		}
-		if (e instanceof PSSNotEqualExpression) {
-			PSSNotEqualExpression x = (PSSNotEqualExpression) e;
-			return new PSSRelation(Op.NE, x.m_left, x.m_right);
-		}
-		if (e instanceof PSSLessThanExpression) {
-			PSSLessThanExpression x = (PSSLessThanExpression) e;
-			return new PSSRelation(Op.LT, x.m_left, x.m_right);
-		}
-		if (e instanceof PSSLessEqualExpression) {
-			PSSLessEqualExpression x = (PSSLessEqualExpression) e;
-			return new PSSRelation(Op.LE, x.m_left, x.m_right);
-		}
-		if (e instanceof PSSGreaterThanExpression) {
-			PSSGreaterThanExpression x = (PSSGreaterThanExpression) e;
-			return new PSSRelation(Op.GT, x.m_left, x.m_right);
-		}
-		if (e instanceof PSSGreaterEqualExpression) {
-			PSSGreaterEqualExpression x = (PSSGreaterEqualExpression) e;
-			return new PSSRelation(Op.GE, x.m_left, x.m_right);
-		}
-		if (e instanceof PSSInExpression) {
-			PSSInExpression x = (PSSInExpression) e;
-			return new PSSRelation(Op.IN, x.m_left, x.m_right);
-		}
-		return null;
 	}
 }

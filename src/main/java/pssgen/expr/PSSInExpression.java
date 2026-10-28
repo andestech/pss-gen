@@ -56,4 +56,8 @@ public class PSSInExpression extends PSSExpression {
 		return m_left.getText() + " in " + m_right.getText();
 	}
 
+	@Override
+	public PSSRelation relation() {
+		return new PSSRelation(PSSRelation.Op.IN, m_left, m_right);
+	}
 }

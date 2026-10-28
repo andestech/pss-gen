@@ -57,4 +57,9 @@ public class PSSGreaterThanExpression extends PSSExpression {
 	public String getText() {
 		return m_left.getText() + ">" + m_right.getText();
 	}
+
+	@Override
+	public PSSRelation relation() {
+		return new PSSRelation(PSSRelation.Op.GT, m_left, m_right);
+	}
 }

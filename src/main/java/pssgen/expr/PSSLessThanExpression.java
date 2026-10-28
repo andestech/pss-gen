@@ -56,4 +56,9 @@ public class PSSLessThanExpression extends PSSExpression {
 	public String getText() {
 		return m_left.getText() + "<" + m_right.getText();
 	}
+
+	@Override
+	public PSSRelation relation() {
+		return new PSSRelation(PSSRelation.Op.LT, m_left, m_right);
+	}
 }
