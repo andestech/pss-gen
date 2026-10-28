@@ -88,4 +88,14 @@ public class PSSRefVal extends PSSVal {
 		return Equal(rhs).LogicalNot();
 	}
 
+	/**
+	 * Returns the value of the instance that val refers to, or val itself when it is
+	 * not a reference (null included).
+	 */
+	public static PSSVal deref(PSSVal val) {
+		if (val instanceof PSSRefVal) {
+			return ((PSSRefVal) val).getInst().toVal();
+		}
+		return val;
+	}
 }

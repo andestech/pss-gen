@@ -348,8 +348,8 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         PSSInst inst = getInst(pkg, var, var);
         PSSVal res = inst == null ? null : inst.toVal();
 
-        if (!(inst instanceof PSSComponentRefInst || inst instanceof PSSComponentInst) && res instanceof PSSRefVal) {
-            res = ((PSSRefVal) res).getInst().toVal();
+        if (!(inst instanceof PSSComponentRefInst || inst instanceof PSSComponentInst)) {
+            res = PSSRefVal.deref(res);
         }
 
         return res;

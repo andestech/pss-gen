@@ -109,10 +109,7 @@ public class PSSSetInst extends PSSInst implements PSSIAggregate {
         // PSS 2.0 Section 22.3.3
         // Parameters of aggregate data types are passed as a handle.
         // Assigning a reference to an aggregate variable is possible in a function.
-        if (val instanceof PSSRefVal) {
-            PSSRefVal r = (PSSRefVal) val;
-            val = r.getInst().toVal();
-        }
+        val = PSSRefVal.deref(val);
 
         if (val instanceof PSSListVal) {
             PSSListVal s = (PSSListVal) val;
