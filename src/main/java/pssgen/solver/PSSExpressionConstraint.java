@@ -18,6 +18,11 @@ public class PSSExpressionConstraint extends PSSConstraint {
 		return m_expression;
 	}
 
+	@Override
+	boolean refersTo(PSSInst parent_inst, PSSInst search_inst) {
+		return m_expression.getInsts(parent_inst).contains(search_inst);
+	}
+
 	public PSSDomainMap deduceDomain(PSSInst var) {
 		return m_expression.deduceDomain(var);
 	}

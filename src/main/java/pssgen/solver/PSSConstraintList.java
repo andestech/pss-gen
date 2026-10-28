@@ -2,7 +2,6 @@ package pssgen.solver;
 
 import java.util.*;
 
-import pssgen.expr.PSSExpression;
 import pssgen.inst.PSSInst;
 
 public class PSSConstraintList {
@@ -26,17 +25,7 @@ public class PSSConstraintList {
 
 	public boolean containsInst (PSSInst parent_inst, PSSInst search_inst) {
 		for (PSSConstraint item : m_list) {
-			if (item instanceof PSSExpressionConstraint) {
-				// Search each expression
-				PSSExpression exp = ((PSSExpressionConstraint)item).getExpression();
-				ArrayList<PSSInst> exp_inst_list = exp.getInsts(parent_inst);
-				if (exp_inst_list.contains(search_inst)) return true;
-			} else if (item instanceof PSSIfConstraint) {
-				// TODO: if (true) search true expression
-				// TODO: if (false) search false expression if exist
-			} else if (item instanceof PSSForeachConstraint) {
-				// TODO: search each element
-			}
+			if (item.refersTo(parent_inst, search_inst)) return true;
 		}
 		return false;
 	}
