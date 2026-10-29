@@ -337,6 +337,7 @@
                 m_parent: @55
                 m_static_insts: ArrayList[0]
                 m_expression: #73 PSSInExpression
+                  m_bare_left: "inVal"
                   m_left: #74 PSSRefPathExpression
                     m_ref_path: #75 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT
@@ -461,6 +462,7 @@
                     m_parent: @110
                     m_static_insts: ArrayList[0]
                     m_expression: #114 PSSInExpression
+                      m_bare_left: "outVal"
                       m_left: #115 PSSRefPathExpression
                         m_ref_path: #116 PSSMemberPathElemExpression
                           m_context: Context.INLINE_CONSTRAINT

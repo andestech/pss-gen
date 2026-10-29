@@ -453,6 +453,7 @@
                 m_parent: @38
                 m_static_insts: ArrayList[0]
                 m_expression: #129 PSSInExpression
+                  m_bare_left: "x"
                   m_left: #130 PSSRefPathExpression
                     m_ref_path: #131 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT

@@ -1246,11 +1246,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		} else if (ctx.open_range_list() != null) {
 			PSSExpression left = (PSSExpression) visit(ctx.expression(0));
 			PSSExpression right = (PSSExpression) visit(ctx.open_range_list());
-			return new PSSInExpression(left, right);
+			return new PSSInExpression(left, right, bareIdentifier(ctx.expression(0)));
 		} else if (ctx.collection_expression() != null) {
 			PSSExpression left = (PSSExpression) visit(ctx.expression(0));
 			PSSExpression right = (PSSExpression) visit(ctx.collection_expression());
-			return new PSSInExpression(left, right);
+			return new PSSInExpression(left, right, bareIdentifier(ctx.expression(0)));
 		} else {
 			PSSMessage.Error("VISITOR-0001", "visitExpression is not fully implemented yet");
 			return null;
@@ -1721,5 +1721,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 				return true;
 		}
 		return false;
+	}
+
+	/** The identifier when ctx is a name without qualifier, path, index or call; else null. */
+	private static String bareIdentifier(PSSParser.ExpressionContext ctx) {
+		if (ctx.primary() == null || ctx.primary().ref_path() == null)
+			return null;
+		String text = ctx.primary().ref_path().getText();
+		return text.matches("[A-Za-z_][A-Za-z0-9_]*") ? text : null;
 	}
 }

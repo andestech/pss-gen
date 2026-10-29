@@ -101,7 +101,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 9.7.1 / 8.7.1 | Shift whose result is assigned to a wider target, e.g. `ans = src << 8` with `bit[8] src` and `bit[32] ans` | supported | | tests/issues/52 | The shifted operand takes the width of the assignment. |
 | 9.5.8 / 8.5.8 | Conditional `c ? a : b` | unsupported | `[VISITOR-0001] visitExpression is not fully implemented yet` | | |
 | 9.5.9 / 8.5.9 | `x in [a, b..c]` and `x in collection` | supported | | tests/issues/20 | |
-| 9.5.9 / 8.5.9 | Unqualified enum item on the left of `in` | partial | | tests/samples/PSSv2.1_7.9_Collections/arrays/test_array_operator_in | #47: accepted; the LRM requires `e::ITEM in ...`. |
+| 9.5.9 / 8.5.9 | Unqualified enum item on the left of `in` | supported | `[PSS 2.0 Section 9.5.9] The left-hand side of 'in' shall not be an unqualified enum item: '...'` | tests/issues/47 | Rejected, as the LRM requires; `e::ITEM in ...` is accepted. |
 | 9.5 / 8.5 | Operators other than `==`, `!=`, `in` on strings | unsupported | `PSSVal.Add()`: `PSSStringVal::Add is not implemented` | | The LRM defines no other string operator, so the input is illegal. Each operator names its own method (`Sub`, `Mul`, `GreaterEqual`, ...); as a constraint, e.g. `s > "a"`, the message is `PSSDomain.reduceDomainGreaterThan()`: `PSSStringDomain::reduceDomainGreaterThan is not implemented`. |
 | 9.6.1 / 8.6.1 | Bit-select and part-select, read and assigned | supported | | tests/issues/32 | Part-select assignment is in tests/issues/33, bit-selects in tests/samples/9_6_Primary_expressions/test_bit_selects. |
 | 9.6.2 / 8.6.2 | Indexing arrays, lists and maps, also on call results `m.values()[0]` | supported | | tests/samples/test_function_chaining | |

@@ -1753,6 +1753,7 @@
                   m_parent: @161
                   m_static_insts: ArrayList[0]
                   m_expression: #530 PSSInExpression
+                    m_bare_left: "x"
                     m_left: #531 PSSRefPathExpression
                       m_ref_path: #532 PSSMemberPathElemExpression
                         m_context: Context.EXEC_BLOCK

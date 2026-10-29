@@ -654,6 +654,7 @@
                 m_parent: @22
                 m_static_insts: ArrayList[0]
                 m_expression: #179 PSSInExpression
+                  m_bare_left: "icount"
                   m_left: #180 PSSRefPathExpression
                     m_ref_path: #181 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT
@@ -799,6 +800,7 @@
                 m_parent: @209
                 m_static_insts: ArrayList[0]
                 m_expression: #223 PSSInExpression
+                  m_bare_left: "rs1"
                   m_left: #224 PSSRefPathExpression
                     m_ref_path: #225 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT
@@ -834,6 +836,7 @@
                 m_parent: @209
                 m_static_insts: ArrayList[0]
                 m_expression: #236 PSSInExpression
+                  m_bare_left: "rs2"
                   m_left: #237 PSSRefPathExpression
                     m_ref_path: #238 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT
@@ -869,6 +872,7 @@
                 m_parent: @209
                 m_static_insts: ArrayList[0]
                 m_expression: #249 PSSInExpression
+                  m_bare_left: "rd"
                   m_left: #250 PSSRefPathExpression
                     m_ref_path: #251 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT
@@ -972,6 +976,7 @@
                 m_parent: @265
                 m_static_insts: ArrayList[0]
                 m_expression: #279 PSSInExpression
+                  m_bare_left: "rs1"
                   m_left: #280 PSSRefPathExpression
                     m_ref_path: #281 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT
@@ -1007,6 +1012,7 @@
                 m_parent: @265
                 m_static_insts: ArrayList[0]
                 m_expression: #292 PSSInExpression
+                  m_bare_left: "rs2"
                   m_left: #293 PSSRefPathExpression
                     m_ref_path: #294 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT
@@ -1042,6 +1048,7 @@
                 m_parent: @265
                 m_static_insts: ArrayList[0]
                 m_expression: #305 PSSInExpression
+                  m_bare_left: "rd"
                   m_left: #306 PSSRefPathExpression
                     m_ref_path: #307 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT
@@ -1165,6 +1172,7 @@
                 m_parent: @321
                 m_static_insts: ArrayList[0]
                 m_expression: #339 PSSInExpression
+                  m_bare_left: "rd"
                   m_left: #340 PSSRefPathExpression
                     m_ref_path: #341 PSSMemberPathElemExpression
                       m_context: Context.MEMBER_CONSTRAINT

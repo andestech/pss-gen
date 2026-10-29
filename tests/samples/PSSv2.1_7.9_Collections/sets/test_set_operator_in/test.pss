@@ -55,7 +55,7 @@ component pss_top {
             if (4'b0010     in nibbleSet ) bit_0 = 1;
             if (2           in intSet    ) bit_1 = 1;
             if (false       in boolSet   ) bit_2 = 1;
-            if (TWO         in enumSet   ) bit_3 = 1;
+            if (eSTR2NUM::TWO in enumSet ) bit_3 = 1;
             if ("A"         in stringSet ) bit_4 = 1;
             // if (2.2         in float32Set) bit_5 = 1;
             // if (3.3         in float64Set) bit_6 = 1;

@@ -63,7 +63,7 @@ component pss_top {
             if (4'b0010     in nibbleArray_0 ) nibbleArray_in  = 1;
             if (2           in intArray_0    ) intArray_in     = 1;
             if (false       in boolArray_0   ) boolArray_in    = 1;
-            if (ONE         in enumArray_0   ) enumArray_in    = 1;
+            if (eSTR2NUM::ONE in enumArray_0 ) enumArray_in    = 1;
             if ("A"         in stringArray_0 ) stringArray_in  = 1;
             // if (2.2         in float32Array_0) float32Array_in = 1;
             // if (3.3         in float64Array_0) float64Array_in = 1;

@@ -54,7 +54,7 @@ component pss_top {
             if (4'b0010     in nibbleList ) nibbleList_in  = 1;
             if (2           in intList    ) intList_in     = 1;
             if (false       in boolList   ) boolList_in    = 1;
-            if (TWO         in enumList   ) enumList_in    = 1;
+            if (eSTR2NUM::TWO in enumList ) enumList_in    = 1;
             if ("A"         in stringList ) stringList_in  = 1;
             // if (2.2         in float32List) float32List_in = 1;
             // if (3.3         in float64List) float64List_in = 1;
