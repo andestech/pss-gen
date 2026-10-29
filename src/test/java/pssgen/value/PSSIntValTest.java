@@ -111,8 +111,10 @@ class PSSIntValTest {
 	}
 
 	@Test
-	void leftShiftKeepsTheLeftOperandType() {
-		assertEquals(14, val(bits(15, 4).LeftShift(1)));
+	void leftShiftKeepsTheBitsShiftedPastTheLeftOperandWidth() {
+		PSSVal shl = bits(15, 4).LeftShift(1);
+		assertEquals(30, val(shl));
+		assertEquals(PSSIntModel.DEFAULT_INT_SIZE, model(shl).getSize());
 		assertEquals(30, val(ints(15, 4).LeftShift(1)));
 	}
 

@@ -1,0 +1,11 @@
+
+            r_add     = 256
+            r_shl_lit = 512
+            r_shl_var = 27136
+            r_inv     = 4294967280
+            r_mul     = 480
+            r_par     = 128
+            r_neg     = 4294967295
+            r_narrow  = 160
+            r_cmp     = 1
+        

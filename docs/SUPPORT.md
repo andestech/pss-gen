@@ -98,7 +98,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 9.5.5 / 8.5.5 | `~`, and `\|` through `\|=` | supported | | tests/issues/22 | `\|=` is in tests/samples/9_6_Primary_expressions/test_bit_selects. |
 | 9.5.6 / 8.5.6 | Reduction `&x`, `\|x`, `^x` | unsupported | `PSSGenVisitor.visitExpression()`: `unary operator '...'is not yet supported` | | No space before `is` in the message. |
 | 9.5.7 / 8.5.7 | `<<` | supported | | tests/issues/35 | |
-| 9.7.1 / 8.7.1 | Shift whose result is assigned to a wider target | partial | | tests/issues/36 | #52: sized by the left operand, not by the assignment, so `ans = src << 8` with `bit[8] src` and `bit[32] ans` gives 0. |
+| 9.7.1 / 8.7.1 | Shift whose result is assigned to a wider target, e.g. `ans = src << 8` with `bit[8] src` and `bit[32] ans` | supported | | tests/issues/52 | The shifted operand takes the width of the assignment. |
 | 9.5.8 / 8.5.8 | Conditional `c ? a : b` | unsupported | `[VISITOR-0001] visitExpression is not fully implemented yet` | | |
 | 9.5.9 / 8.5.9 | `x in [a, b..c]` and `x in collection` | supported | | tests/issues/20 | |
 | 9.5.9 / 8.5.9 | Unqualified enum item on the left of `in` | partial | | tests/samples/PSSv2.1_7.9_Collections/arrays/test_array_operator_in | #47: accepted; the LRM requires `e::ITEM in ...`. |

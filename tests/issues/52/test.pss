@@ -1,0 +1,58 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2026/10/29
+@brief          Test issue 52: the left operand of a shift takes the width of the assignment.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        bit [8]  src = 8'h6A;
+        bit [32] r_add;
+        bit [32] r_shl_lit;
+        bit [32] r_shl_var;
+        bit [32] r_inv;
+        bit [32] r_mul;
+        bit [32] r_par;
+        bit [32] r_neg;
+        bit [8]  r_narrow;
+        bit [32] r_cmp = 0;
+        exec post_solve {
+            r_add     = 8'hFF + 8'h01;
+            r_shl_lit = 8'b10 << 8;
+            r_shl_var = src << 8;
+            r_inv     = ~8'h0F;
+            r_mul     = 8'hF0 * 8'h02;
+            r_par     = (8'hFF + 8'h01) >> 1;
+            r_neg     = -8'h01;
+            r_narrow  = src << 4;
+            if ((src << 4) == 12'h6A0) r_cmp = 1;
+        }
+        exec body ASM =
+        """
+            r_add     = {{r_add}}
+            r_shl_lit = {{r_shl_lit}}
+            r_shl_var = {{r_shl_var}}
+            r_inv     = {{r_inv}}
+            r_mul     = {{r_mul}}
+            r_par     = {{r_par}}
+            r_neg     = {{r_neg}}
+            r_narrow  = {{r_narrow}}
+            r_cmp     = {{r_cmp}}
+        """;
+    }
+}
+
+/**@}*/
