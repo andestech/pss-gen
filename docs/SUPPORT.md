@@ -114,7 +114,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 10.6 / 9.5 | `comp` of an action, `this` | supported | | tests/samples/test_this | |
 | 10 / 9 | Integer field with a value domain in a component, e.g. `bit[4] in [1..2] x;` | unsupported | `PSSModel.addConstraint()`: `PSSComponentModel::addConstraint is not implemented` | | A package-level `const` field with a domain stops the same way, naming its scope's class. |
 | 11.3.1, 11.3.2 / 10.2.1, 10.2.2 | Atomic actions with `exec body`; compound actions with `activity`; rand fields; root action from `-root` | supported | | tests/samples/test_demo | |
-| 11.1 / 10.1 | Compound action that also has an `exec body` | partial | | tests/issues/17 (skipped) | Accepted; the LRM forbids it. The test's model is also illegal by name resolution. It is skipped because the expected output needs an activity `foreach` to see a list element that an earlier sub-action's `post_solve` appends, and PSSGen expands the `foreach` first. |
+| 11.1 / 10.1 | Compound action that also has an `exec body` | partial | | tests/issues/17 | Accepted; the LRM forbids it. The test's model is also illegal by name resolution, which PSSGen reports first. |
 | 11.3.3 / 10.2.3 | `abstract action` | unsupported | `PSSGenVisitor.visitAbstract_action_declaration()`: `Syntax is not yet supported: '...'` | tests/errors/inheritance | An abstract action is only usable as a base type, and inheritance is not supported. |
 | 4.2, 21.3 / 4.2, 20.3 | Two fields with the same name in one type | partial | | tests/samples/PSSv2.1_7.9_Collections/maps/test_map_initialization_assignment | #48: not reported. |
 
@@ -153,7 +153,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 17.1.1, 17.1.4 / 16.1.1, 16.1.4 | Member constraints, named and unnamed, with `==`, relational, `&&`, `\|\|` and `in` expressions | supported | | tests/samples/test_with_constraint_ops | |
 | 17.1.4 / 16.1.4 | Constraint whose expression, or an operand of its `&&` / `\|\|`, is not a comparison or `in`, e.g. `x + 1;`, `!(x == 1);` | unsupported | `PSSExpression.deduceDomain()`: `PSSAddExpression.deduceDomain() is not implemented` | | The class names the kind of expression. |
 | 17.1.3 / 16.1.3 | In-line `with` constraints, including names of the containing action and `comp` | supported | | tests/samples/test_pss2.0_example169_name_resolution_inside_with_constraint_block | |
-| 21.3 / 20.3 | Member constraint that names a field of the traversing action | partial | | tests/issues/27 | #49: resolved to the other action's field, with `PSS-WARNING: Use 'in' expression to non-random variable in constraint block is meaningless: ...`; the LRM makes it an error. |
+| 21.3 / 20.3 | Member constraint, activity, exec block or template that names a field of the traversing action | supported | `[PSSMemberPathElemExpression] '...' is not defined.` | tests/issues/27 | Rejected, as the LRM requires. An in-line `with` constraint of the traversal may name the field (17.1.3). |
 | 17.1.5 / 16.1.5 | Implication `a -> b` | unsupported | `PSSGenVisitor.visitImplication_constraint_item()`: `Syntax is not yet supported: '...'` | | |
 | 17.1.6 / 16.1.6 | `if` / `else if` / `else` constraints | supported | | tests/samples/test_if_constraint_item | |
 | 17.1.7 / 16.1.7 | `foreach` constraints | supported | | tests/issues/42 | |

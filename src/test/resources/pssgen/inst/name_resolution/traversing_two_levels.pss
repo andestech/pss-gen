@@ -1,4 +1,4 @@
-// A member constraint two traversals down resolves a field of the root action.
+// A member constraint two traversals down names a field of the root action, which it does not see.
 component pss_top {
     action root_a {
         bit[5] root_val = 7;

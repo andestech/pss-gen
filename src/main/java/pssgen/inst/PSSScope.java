@@ -83,6 +83,16 @@ public final class PSSScope {
 		for (Context c : Context.values())
 			POLICY.put(c, Collections.unmodifiableSet(EnumSet.copyOf(all)));
 		POLICY.put(Context.LOCAL_REDECLARATION, Collections.unmodifiableSet(EnumSet.allOf(Step.class)));
+
+		// PSS 2.0 Section 21.3 b): a name used in the definition of a type resolves in
+		// that type, its super-types, its enclosing types and packages. The action that
+		// traverses an action is none of them; only an inline constraint of the traversal
+		// also sees the traversing action's fields (PSS 2.0 Section 17.1.3).
+		Set<Step> own_type = EnumSet.copyOf(all);
+		own_type.remove(Step.TRAVERSING_ACTIONS);
+		for (Context c : EnumSet.of(Context.MEMBER_CONSTRAINT, Context.ACTIVITY, Context.EXEC_BLOCK,
+				Context.TEMPLATE, Context.FUNCTION_BODY, Context.DECLARATION))
+			POLICY.put(c, Collections.unmodifiableSet(EnumSet.copyOf(own_type)));
 	}
 
 	private PSSScope() {
