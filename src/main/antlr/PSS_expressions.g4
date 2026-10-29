@@ -146,7 +146,7 @@ bit_slice
 
 function_call
 	: 'super' '.' function_ref_path
-	| '::'? (type_identifier_elem '::')? function_ref_path
+	| '::'? (type_identifier_elem '::')* function_ref_path
 ;
 
 function_ref_path

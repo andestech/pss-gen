@@ -1441,7 +1441,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 	@Override
 	public Object visitFunction_call(PSSParser.Function_callContext ctx) {
-		return visit(ctx.function_ref_path());
+		PSSFunctionCallExpression call = (PSSFunctionCallExpression) visit(ctx.function_ref_path());
+		List<String> pkg = new ArrayList<String>();
+		for (PSSParser.Type_identifier_elemContext elem : ctx.type_identifier_elem())
+			pkg.add(elem.getText());
+		if (!pkg.isEmpty())
+			call.setPackage(String.join("::", pkg));
+		return call;
 	}
 
 	@Override

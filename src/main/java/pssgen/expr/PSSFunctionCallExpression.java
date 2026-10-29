@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import pssgen.inst.PSSInst;
 import pssgen.inst.PSSScope;
+import pssgen.model.PSSModel;
+import pssgen.util.PSSMessage;
 import pssgen.value.PSSVal;
 
 /**
@@ -14,6 +16,9 @@ public class PSSFunctionCallExpression extends PSSExpression {
 
 	/** a function call expression */
 	PSSMemberPathElemExpression m_path;
+
+	/** the qualifying package, or null */
+	private String m_package;
 
 	/**
 	 * Constructs a function call expression.
@@ -33,21 +38,43 @@ public class PSSFunctionCallExpression extends PSSExpression {
 	}
 
 
+	/**
+	 * Sets the package that qualifies the call, as in {@code p::f()}.
+	 *
+	 * @param pkg the qualifying type identifiers joined by {@code ::}
+	 */
+	public void setPackage(String pkg) {
+		m_package = pkg;
+	}
+
+	/** The package model of the qualifier. */
+	private PSSModel findPackage(PSSInst var) {
+		PSSModel m = var.getTypeModel().findDeclaration(m_package);
+		if (m == null)
+			PSSMessage.Error("", "Function " + getText() + " is not defined.");
+		return m;
+	}
+
 	@Override
 	public PSSVal eval(PSSInst var) {
-		return m_path.eval(var);
+		if (m_package == null)
+			return m_path.eval(var);
+		return m_path.eval(findPackage(var), var);
 	}
 
 	@Override
 	public ArrayList<PSSInst> getInsts(PSSInst var) {
 		var ret = new ArrayList<PSSInst>();
-		ret.addAll(m_path.getInsts(var));
+		if (m_package == null)
+			ret.addAll(m_path.getInsts(var));
+		else
+			ret.add(m_path.getInst(findPackage(var), var));
 		return ret;
 	}
 
 	@Override
 	public String getText() {
-		return m_path.getText();
+		return (m_package == null ? "" : m_package + "::") + m_path.getText();
 	}
 
 	@Override
