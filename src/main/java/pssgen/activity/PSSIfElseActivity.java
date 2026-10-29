@@ -4,6 +4,8 @@ import java.util.*;
 
 import pssgen.expr.PSSExpression;
 import pssgen.inst.PSSInst;
+import pssgen.util.PSSMessage;
+import pssgen.value.PSSBoolVal;
 import pssgen.value.PSSVal;
 
 public class PSSIfElseActivity extends PSSActivity {
@@ -29,6 +31,9 @@ public class PSSIfElseActivity extends PSSActivity {
 
 	public void evalActivity(PSSInst inst) {
 		PSSVal cond = m_cond.eval(inst);
+		// PSS 2.0 Section 13.4.5 a): "expression shall be of type bool."
+		if (!(cond instanceof PSSBoolVal))
+			PSSMessage.Error("PSS 2.0 Section 13.4.5", "the condition '" + m_cond.getText() + "' of an activity if shall be of type bool");
 
 		if (cond.toBool()) {
 			m_true_stmt.evalActivity(inst);

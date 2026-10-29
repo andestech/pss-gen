@@ -129,7 +129,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 13.4.1 / 12.4.1 | `repeat (n)`, `repeat (i : n)` | supported | | tests/samples/test_repeat_count | |
 | 13.4.3 / 12.4.3 | `foreach` over a collection, with or without an index | supported | | tests/samples/test_reference_path_resolution | |
 | 13.4.4 / 12.4.4 | `select` with weights and guards | supported | | tests/samples/test_demo | |
-| 13.4.5 / 12.4.5 | `if` / `else` | supported | | tests/samples/test_demo | |
+| 13.4.5 / 12.4.5 | `if` / `else` | supported | `[PSS 2.0 Section 13.4.5] the condition '...' of an activity if shall be of type bool` | tests/samples/test_demo | A condition that is not bool, e.g. `if (1)`, is the error in the Message column when the `if` is reached. |
 | 13.4.6 / 12.4.6 | `match` | supported | | tests/samples/test_match | |
 | 13.5.1 / 12.5.1 | `replicate` | unsupported | `PSSGenVisitor.visitActivity_replicate_stmt()`: `Syntax is not yet supported: '...'` | | |
 | 13.6 / 12.6 | `super;` in an activity | unsupported | `PSSGenVisitor.visitActivity_super_stmt()`: `Syntax is not yet supported: '...'` | | |
