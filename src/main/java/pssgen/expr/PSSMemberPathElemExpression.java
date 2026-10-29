@@ -212,7 +212,16 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             if (pkg == null) {
                 // Find in parent
                 ci = parent.getComponentInst();
-                m = ci.getTypeModel().findDeclaration(m_id);
+                if (ci != null) {
+                    m = ci.getTypeModel().findDeclaration(m_id);
+                } else {
+                    // PSS 2.0 Section 21.3 c): in a function of a package, which runs
+                    // without a component, a call names a function of that package.
+                    PSSInst f = parent;
+                    while (f != null && !(f instanceof PSSFunctionInst))
+                        f = f.getParent();
+                    m = f == null ? null : f.getTypeModel().getParent().findDeclaration(m_id);
+                }
             } else {
                 // Find in package
                 ci = null;
