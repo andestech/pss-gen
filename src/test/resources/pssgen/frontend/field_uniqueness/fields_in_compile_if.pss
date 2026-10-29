@@ -1,0 +1,15 @@
+// The same field name in both branches of a compile if, and in two types, is no duplicate.
+component pss_top {
+    compile if (1) {
+        bit[4] c = 1;
+    } else {
+        bit[4] c = 2;
+    }
+    action sub_a {
+        int v = 3;
+    }
+    action root_a {
+        int v = 4;
+        exec body ASM = """v={{v}} c={{comp.c}}""";
+    }
+}

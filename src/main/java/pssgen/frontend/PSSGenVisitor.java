@@ -172,6 +172,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	 * them; the next constraint declaration adds them to the model it is declared in.
 	 */
 	private final List<PSSConstraint> m_inline_defaults = new ArrayList<PSSConstraint>();
+	/** The field names declared so far in each type, for the uniqueness check. */
+	private final Map<PSSModel, Set<String>> m_field_ids = new IdentityHashMap<PSSModel, Set<String>>();
 
 	/**
 	 * Constructs a visitor that adds declarations to root.
@@ -1675,6 +1677,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
 
 			String id = data_inst.identifier().getText();
+			// PSS 2.0 Section 4.2: in a given namespace, identifiers shall be unique. Both
+			// branches of a compile if are visited, so a field declared in each is not a
+			// second declaration.
+			if (!inCompileIf(ctx) && !m_field_ids.computeIfAbsent(root, r -> new HashSet<String>()).add(id))
+				PSSMessage.Error("PSS 2.0 Section 4.2", "'" + id + "' is declared more than once in '" + root.getId() + "'");
 			PSSExpression array_dim = null;
 			if (data_inst.array_dim() != null) {
 				array_dim = (PSSExpression) visit(data_inst.array_dim().constant_expression());
@@ -1704,4 +1711,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		return data_decl;
 	}
 
+	/** True when ctx is inside a branch of a compile if. */
+	private static boolean inCompileIf(ParserRuleContext ctx) {
+		for (ParserRuleContext p = ctx.getParent(); p != null; p = p.getParent()) {
+			if (p instanceof PSSParser.Package_body_compile_if_itemContext
+					|| p instanceof PSSParser.Action_body_compile_if_itemContext
+					|| p instanceof PSSParser.Component_body_compile_if_itemContext
+					|| p instanceof PSSParser.Struct_body_compile_if_itemContext)
+				return true;
+		}
+		return false;
+	}
 }

@@ -34,7 +34,6 @@ component pss_top {
         map<bit [4], bit [4] > nibbleMap_0 = {4'b1110:4'b0011, 4'b0110:4'b0010};
         map<bit [4], int     > nibbleMap_1 = {4'b1110:3      , 4'b0110:2      };
         map<bit [4], eSTR2NUM> nibbleMap_3;
-        map<bit [4], string  > nibbleMap_4;
         map<bit [4], string  > nibbleMap_4 = {4'b1110:"A"    , 4'b0110:"B"    };
         map<bit [4], float32 > nibbleMap_5;
         map<bit [4], float64 > nibbleMap_6;
