@@ -140,4 +140,22 @@ public class PSSActionInst extends PSSInst {
 	public boolean traverseRecorded(PSSActionInst sub) {
 		return m_sub_list.traverseThrough(sub);
 	}
+
+	/** the default constraints of the in-line constraints of this action's traversals */
+	private final PSSConstraintList m_def_c_list = new PSSConstraintList();
+
+	/**
+	 * Adds the default constraints of an in-line {@code with} block of a traversal of
+	 * this action (PSS 2.0 Section 17.1.3).
+	 *
+	 * @param c_list the default constraints
+	 */
+	public void addDefaultConstraint(PSSConstraintList c_list) {
+		for (int i = 0; i < c_list.size(); i++)
+			m_def_c_list.add(c_list.get(i));
+	}
+
+	public PSSConstraintList getDefaultConstraintList() {
+		return m_def_c_list;
+	}
 }

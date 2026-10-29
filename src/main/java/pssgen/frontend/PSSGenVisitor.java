@@ -167,11 +167,6 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	 * a cast inside the operand of a cast gives the outer cast its type.
 	 */
 	private PSSModel m_cast_type;
-	/**
-	 * Default constraints of inline {@code with} blocks: a traversal does not keep
-	 * them; the next constraint declaration adds them to the model it is declared in.
-	 */
-	private final List<PSSConstraint> m_inline_defaults = new ArrayList<PSSConstraint>();
 	/** The field names declared so far in each type, for the uniqueness check. */
 	private final Map<PSSModel, Set<String>> m_field_ids = new IdentityHashMap<PSSModel, Set<String>>();
 
@@ -994,7 +989,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			for (PSSConstraint item : set.constraints) {
 				node.addConstraint(item);
 			}
-			m_inline_defaults.addAll(set.defaults);
+			for (PSSConstraint item : set.defaults) {
+				node.addDefaultConstraint(item);
+			}
 		}
 
 		return node;
@@ -1024,11 +1021,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			root.addConstraint(item);
 		}
 
-		m_inline_defaults.addAll(set.defaults);
-		for (PSSConstraint item : m_inline_defaults) {
+		for (PSSConstraint item : set.defaults) {
 			root.addDefaultConstraint(item);
 		}
-		m_inline_defaults.clear();
 		return set;
 	}
 

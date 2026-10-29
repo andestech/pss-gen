@@ -54,6 +54,7 @@ public class PSSTraversalActivity extends PSSActivity {
 		PSSActionInst handle_var = sub_action_decl.declInst(true);
 		inst.addInst(handle_var);
 		handle_var.addConstraint(m_constraint);
+		handle_var.addDefaultConstraint(m_default_constraint);
 
 		inst.addSequentialTraversal(handle_var);
 	}
@@ -67,6 +68,7 @@ public class PSSTraversalActivity extends PSSActivity {
 
 		// Add inline constraint
 		m_handle_var.addConstraint(m_constraint);
+		m_handle_var.addDefaultConstraint(m_default_constraint);
 
 		inst.addSequentialTraversal(m_handle_var);
 	}

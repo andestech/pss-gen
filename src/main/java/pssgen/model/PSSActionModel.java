@@ -150,6 +150,7 @@ public class PSSActionModel extends PSSModel {
 		solver.addDefaultConstraint(inst, m_default_constraint);
 		// inline constraint
 		solver.add(inst, inst.getConstraintList());
+		solver.addDefaultConstraint(inst, ((PSSActionInst) inst).getDefaultConstraintList());
 
 		return solver;
 	}
