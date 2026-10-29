@@ -1,0 +1,8 @@
+
+            # v keeps its solved value after the casts
+            v        = 254
+            narrowed = 14
+            widened  = 254
+            sum      = 15
+            lit      = 11
+        

@@ -6,6 +6,8 @@ import pssgen.inst.PSSInst;
 import pssgen.inst.PSSIntInst;
 import pssgen.model.PSSModel;
 import pssgen.util.PSSMessage;
+import pssgen.value.PSSBoolVal;
+import pssgen.value.PSSIntVal;
 import pssgen.value.PSSVal;
 
 public class PSSCastExpression extends PSSExpression {
@@ -21,9 +23,7 @@ public class PSSCastExpression extends PSSExpression {
     @Override
     public PSSVal eval (PSSInst var) {
         if (m_rhs_expression instanceof PSSPrimaryExpression) {
-            PSSVal val = m_rhs_expression.eval(var);
-            val.setTypeModel(m_lhs_casting_type);
-            return val;
+            return convert(m_rhs_expression.eval(var));
         }
         ArrayList<PSSInst> insts = m_rhs_expression.getInsts(var);
         if (insts.size() > 0) {
@@ -31,11 +31,26 @@ public class PSSCastExpression extends PSSExpression {
             if (!(rhs_inst instanceof PSSIntInst)) {
                 PSSMessage.Fatal("Casting < " + rhs_inst.getClass().getSimpleName() + " > is not yet support.");
             }
-            ((PSSIntInst)rhs_inst).castType(m_lhs_casting_type);
-            return m_rhs_expression.eval(var);
+            return convert(m_rhs_expression.eval(var));
         }
         PSSMessage.Fatal("Casting < " + m_rhs_expression.getClass().getSimpleName() + " > ( " + m_rhs_expression.getText() + " ) is not yet support.");
         return null;
+    }
+
+    /**
+     * PSS 2.0 Section 8.11.1: the value of the operand represented as the casting type.
+     * The conversion works on a copy, so the operand (a field, a literal) keeps its
+     * own value and type.
+     */
+    private PSSVal convert (PSSVal val) {
+        PSSVal res = val;
+        if (val instanceof PSSIntVal) {
+            res = new PSSIntVal(val.toBigInteger(), val.getTypeModel());
+        } else if (val instanceof PSSBoolVal) {
+            res = PSSBoolVal.literal(String.valueOf(val.toBool()));
+        }
+        res.setTypeModel(m_lhs_casting_type);
+        return res;
     }
 
     @Override

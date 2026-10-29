@@ -2,8 +2,6 @@ package pssgen.inst;
 
 import java.math.*;
 
-import pssgen.model.PSSIntModel;
-import pssgen.model.PSSModel;
 import pssgen.solver.PSSDomain;
 import pssgen.solver.PSSIntDomain;
 import pssgen.util.PSSMessage;
@@ -40,13 +38,6 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 		PSSVal ret = (0 <= m_BitSelect) ? m_val.extract(m_BitSelect, m_BitSelect) : m_val;
 		m_BitSelect = -1;	// clear mask
 		return ret;
-	}
-
-	public void castType (PSSModel model) {
-		m_val.setTypeModel(model);
-		m_width = ((PSSIntModel)model).getSize();
-		m_sign = ((PSSIntModel)model).isSigned();
-		m_domain = new PSSIntDomain(m_width, m_sign);
 	}
 
 	@Override

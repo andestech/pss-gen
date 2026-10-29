@@ -1,0 +1,46 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2026/10/29
+@brief          Test issue 53: a cast converts the value of its operand and leaves the operand as it is.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        rand bit [8] v;
+        bit [8]  narrowed = 0;
+        bit [16] widened  = 0;
+        bit [8]  sum      = 0;
+        bit [8]  lit      = 0;
+        constraint v > 200;
+        exec post_solve {
+            narrowed = (bit [4]) v;
+            widened  = (bit [16]) v;
+            sum      = (bit [4]) (v + 1);
+            lit      = (bit [4]) 8'hAB;
+        }
+        exec body ASM =
+        """
+            # v keeps its solved value after the casts
+            v        = {{v}}
+            narrowed = {{narrowed}}
+            widened  = {{widened}}
+            sum      = {{sum}}
+            lit      = {{lit}}
+        """;
+    }
+}
+
+/**@}*/
