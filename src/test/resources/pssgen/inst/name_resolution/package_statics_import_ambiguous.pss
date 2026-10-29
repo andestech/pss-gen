@@ -1,0 +1,16 @@
+// PSS 2.0 21.1.3: IDLE is declared in two wildcard-imported packages, so neither is imported.
+package p {
+    enum a_e { IDLE = 1, RUN = 2 };
+}
+package q {
+    enum b_e { START = 3, IDLE = 4 };
+}
+component pss_top {
+    import p::*;
+    import q::*;
+    action root_a {
+        rand b_e v;
+        constraint v == IDLE;
+        exec body ASM = """v={{v}}""";
+    }
+}

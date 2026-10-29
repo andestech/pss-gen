@@ -191,6 +191,12 @@ class NameResolutionTest {
 		assertGenerates("package_statics_import", "n=1");
 	}
 
+	/** PSS 2.0 21.1.3: "If the same name is declared in two wildcard-imported packages, neither is imported." */
+	@Test
+	void enumItemOfTwoWildcardImportedPackagesIsNotFound() throws Exception {
+		assertFails("package_statics_import_ambiguous", "PSS-ERROR: [PSSMemberPathElemExpression] IDLE is not defined.");
+	}
+
 	/** PSS 2.0 21.1.3: "import statements are not transitive." */
 	@Test
 	void enumItemOfAPackageImportedByAnImportedPackageIsNotFound() throws Exception {
