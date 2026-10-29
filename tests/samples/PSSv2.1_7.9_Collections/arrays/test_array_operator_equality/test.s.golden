@@ -5,5 +5,5 @@ intArray_equ     = 1
 boolArray_equ    = 1
 enumArray_equ    = 1
 stringArray_equ  = 1
-structArray_equ  = 0
+structArray_equ  = 1
 

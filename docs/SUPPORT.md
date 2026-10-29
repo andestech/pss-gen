@@ -94,7 +94,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 9.5.1 / 8.5.1 | Power `**` | unsupported | `PSSExpression.eval()`: `PSSBinaryExpression.eval() is not implemented` | | In a constraint the text is `PSSBinaryExpression.deduceDomain() is not implemented`. |
 | 9.5.2, 9.5.4 / 8.5.2, 8.5.4 | `< <= > >=`, `&&`, `\|\|` | supported | | tests/samples/test_with_constraint_ops | `<=` and `>=` are in tests/samples/test_aggregate_function_parameters. |
 | 9.5.3 / 8.5.3 | `==`, `!=` on numbers, strings, enums and collections of scalars | supported | | tests/samples/PSSv2.1_7.9_Collections/lists/test_list_operator_equality | |
-| 9.5.3, 9.5.9 / 8.5.3, 8.5.9 | `==`, `!=` and `in` on struct values | partial | | tests/samples/PSSv2.1_7.9_Collections/arrays/test_array_operator_equality | #46: compares struct instances, not contents, so equal-valued structs differ. |
+| 9.5.3, 9.5.9 / 8.5.3, 8.5.9 | `==`, `!=` and `in` on struct values, also through arrays and lists of structs | supported | | tests/issues/46 | Compared field by field. |
 | 9.5.5 / 8.5.5 | `~`, and `\|` through `\|=` | supported | | tests/issues/22 | `\|=` is in tests/samples/9_6_Primary_expressions/test_bit_selects. |
 | 9.5.6 / 8.5.6 | Reduction `&x`, `\|x`, `^x` | unsupported | `PSSGenVisitor.visitExpression()`: `unary operator '...'is not yet supported` | | No space before `is` in the message. |
 | 9.5.7 / 8.5.7 | `<<` | supported | | tests/issues/35 | |

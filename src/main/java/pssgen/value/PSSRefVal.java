@@ -1,6 +1,9 @@
 package pssgen.value;
 
+import java.util.List;
+
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSStructInst;
 import pssgen.model.PSSModel;
 import pssgen.model.PSSRefModel;
 
@@ -74,10 +77,16 @@ public class PSSRefVal extends PSSVal {
 		return new PSSRefVal(new PSSRefModel(m), res);
 	}
 
+	/**
+	 * PSS 2.0 Section 9.5.3: two references are equal when they refer to the same
+	 * entity; two struct values, aggregates, are compared field by field.
+	 */
 	@Override
 	public PSSBoolVal Equal(PSSVal rhs) {
 		if (rhs instanceof PSSRefVal) {
 			PSSRefVal r = (PSSRefVal) rhs;
+			if (isStruct() && r.isStruct())
+				return PSSBoolVal.valueOf(sameFields(r));
 			return PSSBoolVal.valueOf(m_inst == r.m_inst);
 		}
 		return PSSBoolVal.FALSE;
@@ -86,6 +95,52 @@ public class PSSRefVal extends PSSVal {
 	@Override
 	public PSSBoolVal NotEqual(PSSVal rhs) {
 		return Equal(rhs).LogicalNot();
+	}
+
+	/** An element of a collection that holds struct values contains lhs when it equals it. */
+	@Override
+	public PSSBoolVal InRange(PSSVal lhs) {
+		if (isStruct())
+			return Equal(lhs);
+		return super.InRange(lhs);
+	}
+
+	/** Struct values are equal by their fields, also as collection elements and set keys. */
+	@Override
+	public boolean equals(Object o) {
+		if (isStruct() && o instanceof PSSRefVal && ((PSSRefVal) o).isStruct())
+			return sameFields((PSSRefVal) o);
+		return super.equals(o);
+	}
+
+	@Override
+	public int hashCode() {
+		if (!isStruct())
+			return super.hashCode();
+		int h = 1;
+		for (PSSInst field : m_inst.getInsts())
+			h = 31 * h + field.toVal().hashCode();
+		return h;
+	}
+
+	private boolean isStruct() {
+		return m_inst instanceof PSSStructInst;
+	}
+
+	private boolean sameFields(PSSRefVal r) {
+		if (m_inst == r.m_inst)
+			return true;
+		if (m_inst.getTypeModel() != r.m_inst.getTypeModel())
+			return false;
+		List<PSSInst> a = m_inst.getInsts();
+		List<PSSInst> b = r.m_inst.getInsts();
+		if (a.size() != b.size())
+			return false;
+		for (int i = 0; i < a.size(); i++) {
+			if (!a.get(i).toVal().equals(b.get(i).toVal()))
+				return false;
+		}
+		return true;
 	}
 
 	/**
