@@ -1,0 +1,13 @@
+// PSS 2.0 17.1.10 a): a default holds like an equality constraint next to a hard constraint it agrees with.
+component pss_top {
+    action root_a {
+        rand bit[8] x;
+        rand bit[3] b;
+        constraint {
+            default x == 10;
+            x > 5;
+            b == 3;
+        }
+        exec body ASM = """x={{x}} b={{b}}""";
+    }
+}

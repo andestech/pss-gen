@@ -122,12 +122,37 @@ public class PSSSolver {
 		}
 	}
 
+	/**
+	 * The constraints of each instance with its default constraints that apply:
+	 * PSS 2.0 Section 17.1.10 a) gives a default "the same semantics as the
+	 * corresponding equality constraint", so it narrows domains as one does, and a
+	 * conflict with another constraint empties a domain (a contradiction).
+	 */
+	private LinkedHashMap<PSSInst, PSSConstraintList> withDefaults() {
+		LinkedHashMap<PSSInst, PSSConstraintList> res = new LinkedHashMap<PSSInst, PSSConstraintList>();
+		for (Map.Entry<PSSInst, PSSConstraintList> e : m_inst_list.entrySet()) {
+			PSSConstraintList c_list = new PSSConstraintList();
+			for (int i = 0; i < e.getValue().size(); i++)
+				c_list.add(e.getValue().get(i));
+			res.put(e.getKey(), c_list);
+		}
+		for (Map.Entry<PSSInst, PSSConstraintList> e : m_default_constraint_list.entrySet()) {
+			for (int i = 0; i < e.getValue().size(); i++) {
+				PSSExpressionConstraint def_c = (PSSExpressionConstraint) e.getValue().get(i);
+				if (def_c.isActive(e.getKey()))
+					res.computeIfAbsent(e.getKey(), k -> new PSSConstraintList()).add(def_c);
+			}
+		}
+		return res;
+	}
+
 	void reduceDomain() {
 		PSSDomainMap result = new PSSDomainMap();
 
 		// Deduce domain by constraint
-		for (PSSInst inst : m_inst_list.keySet()) {
-			PSSConstraintList c_list = m_inst_list.get(inst);
+		LinkedHashMap<PSSInst, PSSConstraintList> constraints = withDefaults();
+		for (PSSInst inst : constraints.keySet()) {
+			PSSConstraintList c_list = constraints.get(inst);
 
 			for (int i = 0; i < c_list.size(); i++) {
 				PSSConstraint c = c_list.get(i);
@@ -149,22 +174,15 @@ public class PSSSolver {
 	}
 
 	public boolean validate () {
-		// Validate default constraint
+		// Validate default constraint (PSS 2.0 Section 17.1.10 a): "The equality must hold")
 		for (PSSInst item : m_default_constraint_list.keySet()) {
 			PSSConstraintList def_c_list = m_default_constraint_list.get(item);
-			PSSConstraintList c_list     = m_inst_list.get(item);
 
 			// Validate each default constraint
 			for (var i = 0; i < def_c_list.size(); i++) {
 				// Get random variable from syntax: (default hierarchical_id '==' constant_expression ';')
 				PSSExpressionConstraint def_c = (PSSExpressionConstraint)def_c_list.get(i);
 				if (!def_c.isActive(item)) continue;
-				PSSEqualExpression def_exp    = (PSSEqualExpression)def_c.getExpression();
-				PSSInst def_inst              = def_exp.getInsts(item).get(0);
-				
-				// Skip when hard constraint overwrites default constraint
-				if (c_list != null && c_list.containsInst(item, def_inst)) continue;
-
 				if (def_c.validate(item) == false) return false;
 			}
 		}
@@ -243,12 +261,11 @@ public class PSSSolver {
 	public int solvePropagate() {
 		PSSRun run = m_inst.run();
 
-		// Default value constraints, as solve() applies them; a variable that a hard
-		// comparison names starts from its full domain instead, as validate() then
-		// ignores its default.
+		// Default value constraints, as solve() applies them; PSSPropagator then
+		// narrows every variable by its hard and default comparisons together.
 		reduceDefaultDomain();
 
-		PSSPropagator prop = new PSSPropagator(m_inst_list, this::isDrawnScalar);
+		PSSPropagator prop = new PSSPropagator(withDefaults(), this::isDrawnScalar);
 		LinkedHashMap<PSSInst, PSSIntDomain> base = new LinkedHashMap<PSSInst, PSSIntDomain>();
 		for (PSSInst v : prop.variables()) {
 			base.put(v, (PSSIntDomain) v.getInitDomain());
@@ -270,7 +287,7 @@ public class PSSSolver {
 			}
 			// Fields that are not variables (in other actions, flow objects) count with
 			// their current values, which a full draw may have changed.
-			draw(new PSSPropagator(m_inst_list, this::isDrawnScalar), base, redraw);
+			draw(new PSSPropagator(withDefaults(), this::isDrawnScalar), base, redraw);
 			redraw = violatedVariables();
 			if (redraw == null || !redraw.isEmpty()) {
 				deduceOtherDomains(prop.variables());
@@ -327,8 +344,9 @@ public class PSSSolver {
 	 */
 	private void deduceOtherDomains(List<PSSInst> propagated) {
 		PSSDomainMap result = new PSSDomainMap();
-		for (PSSInst inst : m_inst_list.keySet()) {
-			PSSConstraintList c_list = m_inst_list.get(inst);
+		LinkedHashMap<PSSInst, PSSConstraintList> constraints = withDefaults();
+		for (PSSInst inst : constraints.keySet()) {
+			PSSConstraintList c_list = constraints.get(inst);
 			for (int i = 0; i < c_list.size(); i++) {
 				PSSDomainMap d_map = c_list.get(i).deduceDomain(inst);
 				if (d_map != null) {
@@ -351,12 +369,10 @@ public class PSSSolver {
 		Set<PSSInst> res = new LinkedHashSet<PSSInst>();
 		for (PSSInst item : m_default_constraint_list.keySet()) {
 			PSSConstraintList def_c_list = m_default_constraint_list.get(item);
-			PSSConstraintList c_list = m_inst_list.get(item);
 			for (var i = 0; i < def_c_list.size(); i++) {
 				PSSExpressionConstraint def_c = (PSSExpressionConstraint) def_c_list.get(i);
 				if (!def_c.isActive(item)) continue;
 				PSSInst def_inst = ((PSSEqualExpression) def_c.getExpression()).getInsts(item).get(0);
-				if (c_list != null && c_list.containsInst(item, def_inst)) continue;
 				if (!def_c.validate(item)) res.add(def_inst);
 			}
 		}

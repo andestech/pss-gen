@@ -25,8 +25,12 @@ class DefaultUnderIfTest {
 	Path tmp;
 
 	private String generate(String solver, int seed) throws Exception {
+		return generate("default_under_if.pss", solver, seed);
+	}
+
+	private String generate(String resource, String solver, int seed) throws Exception {
 		Path in = tmp.resolve("test.pss");
-		try (InputStream s = getClass().getResourceAsStream("default_under_if.pss")) {
+		try (InputStream s = getClass().getResourceAsStream(resource)) {
 			assertNotNull(s);
 			Files.copy(s, in, StandardCopyOption.REPLACE_EXISTING);
 		}
@@ -40,6 +44,17 @@ class DefaultUnderIfTest {
 		}
 		assertEquals(0, status, bo.toString("UTF-8"));
 		return new String(Files.readAllBytes(out), StandardCharsets.UTF_8);
+	}
+
+	/** PSS 2.0 17.1.10 a): "The equality must hold", also next to a hard constraint on the field. */
+	@Test
+	void aDefaultHoldsNextToAHardConstraintItAgreesWith() throws Exception {
+		for (String solver : new String[] { "retry", "propagate" }) {
+			for (int seed = 1; seed <= 10; seed++) {
+				String text = generate("default_with_hard.pss", solver, seed);
+				assertTrue(text.startsWith("x=10 b=3"), solver + " seed " + seed + ": " + text);
+			}
+		}
 	}
 
 	@Test
