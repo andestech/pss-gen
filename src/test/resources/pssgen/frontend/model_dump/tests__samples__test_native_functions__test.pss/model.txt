@@ -77,11 +77,11 @@
             m_return_type: #16 PSSFunctionReturnType
               m_data_type: #17 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "int[65]"
-                m_id: "int[65]"
+                m_hierarchy_id: "int[32]"
+                m_id: "int[32]"
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 65
+                m_width: 32
           m_pure: false
           m_stmts: #18 ArrayList[1]
             - #19 PSSIfElseProcStmt
@@ -178,11 +178,11 @@
             m_return_type: #48 PSSFunctionReturnType
               m_data_type: #49 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "int[65]"
-                m_id: "int[65]"
+                m_hierarchy_id: "int[32]"
+                m_id: "int[32]"
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 65
+                m_width: 32
           m_pure: false
           m_stmts: #50 ArrayList[1]
             - #51 PSSReturnProcStmt
@@ -236,11 +236,11 @@
             m_return_type: #65 PSSFunctionReturnType
               m_data_type: #66 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "int[65]"
-                m_id: "int[65]"
+                m_hierarchy_id: "int[32]"
+                m_id: "int[32]"
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 65
+                m_width: 32
           m_pure: false
           m_stmts: #67 ArrayList[1]
             - #68 PSSReturnProcStmt

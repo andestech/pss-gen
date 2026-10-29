@@ -66,12 +66,12 @@
           children: #20 ArrayList[1]
             - #21 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::int_print::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::int_print::int[32]"
+              m_id: "int[32]"
               m_parent: @19
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::int_print"
           m_id: "int_print"
           m_parent: @3
@@ -124,12 +124,12 @@
           children: #34 ArrayList[1]
             - #35 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::root_a::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::root_a::int[32]"
+              m_id: "int[32]"
               m_parent: @33
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::root_a"
           m_id: "root_a"
           m_parent: @3
@@ -370,11 +370,11 @@
                               m_val: 0
                   m_type: #108 PSSIntModel
                     children: ArrayList[0]
-                    m_hierarchy_id: "int[65]"
-                    m_id: "int[65]"
+                    m_hierarchy_id: "int[32]"
+                    m_id: "int[32]"
                     m_static_insts: ArrayList[0]
                     m_sign: true
-                    m_width: 65
+                    m_width: 32
                 - #109 PSSRepeatProcStmt
                   children: ArrayList[0]
                   m_hierarchy_id: ""
@@ -564,11 +564,11 @@
                                 m_val: 1
                         m_type: #161 PSSIntModel
                           children: ArrayList[0]
-                          m_hierarchy_id: "int[65]"
-                          m_id: "int[65]"
+                          m_hierarchy_id: "int[32]"
+                          m_id: "int[32]"
                           m_static_insts: ArrayList[0]
                           m_sign: true
-                          m_width: 65
+                          m_width: 32
                       - #162 PSSAssignProcStmt
                         children: ArrayList[0]
                         m_hierarchy_id: ""

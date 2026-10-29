@@ -6,12 +6,12 @@
       children: #4 ArrayList[1]
         - #5 PSSIntModel
           children: ArrayList[0]
-          m_hierarchy_id: "AA::int[65]"
-          m_id: "int[65]"
+          m_hierarchy_id: "AA::int[32]"
+          m_id: "int[32]"
           m_parent: @3
           m_static_insts: ArrayList[0]
           m_sign: true
-          m_width: 65
+          m_width: 32
       m_hierarchy_id: "AA"
       m_id: "AA"
       m_parent: @1
@@ -81,12 +81,12 @@
       children: #23 ArrayList[1]
         - #24 PSSIntModel
           children: ArrayList[0]
-          m_hierarchy_id: "BB::int[65]"
-          m_id: "int[65]"
+          m_hierarchy_id: "BB::int[32]"
+          m_id: "int[32]"
           m_parent: @22
           m_static_insts: ArrayList[0]
           m_sign: true
-          m_width: 65
+          m_width: 32
       m_hierarchy_id: "BB"
       m_id: "BB"
       m_parent: @1
@@ -172,22 +172,22 @@
           m_type: "BB"
         - #45 PSSIntModel
           children: ArrayList[0]
-          m_hierarchy_id: "pss_top::int[65]"
-          m_id: "int[65]"
+          m_hierarchy_id: "pss_top::int[32]"
+          m_id: "int[32]"
           m_parent: @41
           m_static_insts: ArrayList[0]
           m_sign: true
-          m_width: 65
+          m_width: 32
         - #46 PSSStructModel
           children: #47 ArrayList[1]
             - #48 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::SS::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::SS::int[32]"
+              m_id: "int[32]"
               m_parent: @46
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::SS"
           m_id: "SS"
           m_parent: @41
@@ -226,20 +226,20 @@
           children: #59 ArrayList[2]
             - #60 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::TT::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::TT::int[32]"
+              m_id: "int[32]"
               m_parent: @58
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
             - #61 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::TT::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::TT::int[32]"
+              m_id: "int[32]"
               m_parent: @58
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::TT"
           m_id: "TT"
           m_parent: @41
@@ -340,11 +340,11 @@
             m_return_type: #83 PSSFunctionReturnType
               m_data_type: #84 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "int[65]"
-                m_id: "int[65]"
+                m_hierarchy_id: "int[32]"
+                m_id: "int[32]"
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 65
+                m_width: 32
           m_pure: false
           m_stmts: #85 ArrayList[1]
             - #86 PSSReturnProcStmt
@@ -390,11 +390,11 @@
             m_return_type: #98 PSSFunctionReturnType
               m_data_type: #99 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "int[65]"
-                m_id: "int[65]"
+                m_hierarchy_id: "int[32]"
+                m_id: "int[32]"
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 65
+                m_width: 32
           m_pure: false
           m_stmts: #100 ArrayList[1]
             - #101 PSSReturnProcStmt
@@ -438,11 +438,11 @@
             m_return_type: #114 PSSFunctionReturnType
               m_data_type: #115 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "int[65]"
-                m_id: "int[65]"
+                m_hierarchy_id: "int[32]"
+                m_id: "int[32]"
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 65
+                m_width: 32
           m_pure: false
           m_stmts: #116 ArrayList[1]
             - #117 PSSReturnProcStmt
@@ -527,12 +527,12 @@
           children: #143 ArrayList[1]
             - #144 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::A::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::A::int[32]"
+              m_id: "int[32]"
               m_parent: @142
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::A"
           m_id: "A"
           m_parent: @41
@@ -585,12 +585,12 @@
           children: #157 ArrayList[1]
             - #158 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::root_a::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::root_a::int[32]"
+              m_id: "int[32]"
               m_parent: @156
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::root_a"
           m_id: "root_a"
           m_parent: @41

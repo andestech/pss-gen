@@ -72,12 +72,12 @@
           children: #23 ArrayList[3]
             - #24 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::main_a::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::main_a::int[32]"
+              m_id: "int[32]"
               m_parent: @22
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
             - #25 PSSDataTypeModel
               children: ArrayList[0]
               m_hierarchy_id: "pss_top::main_a::"
@@ -88,12 +88,12 @@
               m_type: "li_a"
             - #26 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::main_a::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::main_a::int[32]"
+              m_id: "int[32]"
               m_parent: @22
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::main_a"
           m_id: "main_a"
           m_parent: @3
@@ -745,12 +745,12 @@
           children: #210 ArrayList[1]
             - #211 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::add_a::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::add_a::int[32]"
+              m_id: "int[32]"
               m_parent: @209
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::add_a"
           m_id: "add_a"
           m_parent: @3
@@ -921,12 +921,12 @@
           children: #266 ArrayList[1]
             - #267 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::sub_a::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::sub_a::int[32]"
+              m_id: "int[32]"
               m_parent: @265
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::sub_a"
           m_id: "sub_a"
           m_parent: @3
@@ -1103,12 +1103,12 @@
               m_static_insts: ArrayList[0]
             - #324 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::li_a::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::li_a::int[32]"
+              m_id: "int[32]"
               m_parent: @321
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::li_a"
           m_id: "li_a"
           m_parent: @3

@@ -14,11 +14,11 @@
               m_static_insts: ArrayList[0]
               m_elem_type_model: #8 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "int[65]"
-                m_id: "int[65]"
+                m_hierarchy_id: "int[32]"
+                m_id: "int[32]"
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 65
+                m_width: 32
               m_size_exp: #9 PSSPrimaryExpression
                 m_val: #10 PSSIntVal
                   m_type: #11 PSSIntModel
@@ -162,12 +162,12 @@
           children: #56 ArrayList[1]
             - #57 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::print::int[65]"
-              m_id: "int[65]"
+              m_hierarchy_id: "pss_top::print::int[32]"
+              m_id: "int[32]"
               m_parent: @55
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 65
+              m_width: 32
           m_hierarchy_id: "pss_top::print"
           m_id: "print"
           m_parent: @3

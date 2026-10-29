@@ -50,11 +50,11 @@ public class PSSIntVal extends PSSVal {
 		int new_width = ((PSSIntModel)type).getSize();
 		if        (new_width < ori_width) {
 			// truncated if casting_type width is smaller than original
-			m_val = _extract(new_width - 1, 0);
+			m_val = wrapSigned(_extract(new_width - 1, 0), new_width, ((PSSIntModel)type).isSigned());
 			super.setTypeModel(type);
 		} else if (ori_width < new_width) {
 			// left-zero-padded if casting_type width is larger than original
-			m_val = _extract(new_width - 1, 0);
+			m_val = wrapSigned(_extract(new_width - 1, 0), new_width, ((PSSIntModel)type).isSigned());
 			super.setTypeModel(type);
 		}
 	}
@@ -422,4 +422,19 @@ public class PSSIntVal extends PSSVal {
 		return false;
 	}
 
+	/**
+	 * PSS 2.0 Section 8.2.1 e): a signed variable holds only the values of its width,
+	 * so its N low bits are read as an N-bit two's complement number.
+	 *
+	 * @param v      a value
+	 * @param width  the width of the variable or casting type
+	 * @param signed the signedness of the variable or casting type
+	 * @return v unchanged when unsigned, else the value of its N low bits
+	 */
+	public static BigInteger wrapSigned(BigInteger v, int width, boolean signed) {
+		if (!signed)
+			return v;
+		BigInteger low = v.and(BigInteger.ONE.shiftLeft(width).subtract(BigInteger.ONE));
+		return low.testBit(width - 1) ? low.subtract(BigInteger.ONE.shiftLeft(width)) : low;
+	}
 }
