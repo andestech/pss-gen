@@ -124,10 +124,9 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
             }
         } else if (val instanceof PSSMapVal) {
             PSSMapVal m = (PSSMapVal) val;
-            for (PSSVal k : m.keys().getValList()) {
-                PSSVal v = m.get(k);
-                insert(k, v);
-            }
+            // The entries themselves: the empty literal {} has no key type to build keys() from.
+            for (Map.Entry<PSSVal, PSSVal> e : m.getMap().entrySet())
+                insert(e.getKey(), e.getValue());
         } else
             PSSMessage.Error("PSSMapInst", "A map can only be assigned a map_literal.");
     }

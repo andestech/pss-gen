@@ -118,7 +118,9 @@ public class PSSArrayInst extends PSSInst implements PSSIAggregate {
 
         PSSListVal arrayVal = (PSSListVal) val;
 
-        if (!m_elem_type_model.isCompatible(arrayVal.getElementTypeModel()))
+        // The empty literal {} has no element type; the size check below rejects it.
+        if (arrayVal.getElementTypeModel() != null
+                && !m_elem_type_model.isCompatible(arrayVal.getElementTypeModel()))
             PSSMessage.Error("ArrayInst", "The element type " +
                     arrayVal.getTypeModel().getText() + " of " +
                     arrayVal.getText() + " is incompatible with array " + getId());

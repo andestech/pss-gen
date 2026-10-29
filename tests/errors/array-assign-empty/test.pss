@@ -1,0 +1,9 @@
+// PSS 2.0 9.3: {} has no element for a fixed-size array of 2 elements.
+component pss_top {
+    action root_a {
+        array<int, 2> a;
+        exec post_solve {
+            a = {};
+        }
+    }
+}

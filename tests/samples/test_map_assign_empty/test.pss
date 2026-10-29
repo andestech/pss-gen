@@ -1,0 +1,17 @@
+// PSS 2.0 4.8.1, 8.8.4: assigning {} empties a map; assigning a map literal replaces the entries.
+component pss_top {
+    action root_a {
+        map<int, int> m = { 5 : 6, 7 : 8 };
+        int after_empty = -1;
+        int after_one   = -1;
+        int value       = -1;
+        exec post_solve {
+            m = {};
+            after_empty = m.size();
+            m = { 1 : 2 };
+            after_one = m.size();
+            value = m[1];
+        }
+        exec body ASM = """after_empty={{after_empty}} after_one={{after_one}} value={{value}}""";
+    }
+}
