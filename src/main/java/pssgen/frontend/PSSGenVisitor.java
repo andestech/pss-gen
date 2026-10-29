@@ -1121,11 +1121,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 		ConstraintSet true_set = constraintSet(ctx.constraint_set(0));
 		constraint.addTrueConstraint(true_set.constraints);
+		for (PSSConstraint item : true_set.defaults)
+			((PSSExpressionConstraint) item).addGuard(exp, true);
 		set.defaults.addAll(true_set.defaults);
 
 		if (ctx.constraint_set().size() > 1) {
 			ConstraintSet false_set = constraintSet(ctx.constraint_set(1));
 			constraint.addFalseConstraint(false_set.constraints);
+			for (PSSConstraint item : false_set.defaults)
+				((PSSExpressionConstraint) item).addGuard(exp, false);
 			set.defaults.addAll(false_set.defaults);
 		}
 

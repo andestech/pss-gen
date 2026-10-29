@@ -1,0 +1,29 @@
+// #31: a default constraint under if / else applies only in the branch the constant condition selects.
+component pss_top {
+    action root_a {
+        rand bit[4] a;
+        rand bit[4] b;
+        rand bit[4] c;
+        constraint {
+            if (true) {
+                default a == 1;
+            } else {
+                default a == 2;
+            }
+            if (false) {
+                default b == 3;
+            } else {
+                if (true) {
+                    default b == 4;
+                } else {
+                    default b == 5;
+                }
+            }
+            if (false) {
+                default c == 6;
+            }
+            c in [7..8];
+        }
+        exec body ASM = """a={{a}} b={{b}} c={{c}}""";
+    }
+}

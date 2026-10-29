@@ -162,7 +162,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 17.1.10 / 16.1.10 | `default x == c;` that no other constraint contradicts | supported | | tests/samples/16_1_10_Default_value_constraints/test_default_basic | |
 | 17.1.10 / 16.1.10 | `default x == c;` that another constraint contradicts | partial | | tests/issues/15 | The default is dropped; the LRM requires a contradiction to be reported. tests/samples/16_1_10_Default_value_constraints/test_override expects the same behavior. |
 | 17.1.10 / 16.1.10 | Several default constraints on one field | partial | | | #50: the LRM precedence rules (outer context, derived type, later declaration) are not applied. |
-| 17.1.10 / 16.1.10 | Default constraint under `if` with a constant condition | partial | `PSSRandom.limitRetry()`: `randomize fail` | tests/issues/31 (skipped) | Both branches' defaults apply, whatever the condition; this is why the test is skipped. |
+| 17.1.10 / 16.1.10 | Default constraint under `if` / `else` with a constant condition | supported | | tests/issues/31 | Only the defaults of the branch the condition selects apply. A condition on a random field, which the LRM forbids, is not reported; it is evaluated against the field's value before and after the draw. |
 | 17.1.10 / 16.1.10 | `default disable x;` | unsupported | `PSSGenVisitor.visitConstraint_body_item()`: `Syntax is not yet supported: '...'` | | #50 |
 | 17.4.4 / 16.4.5 | Constraining `comp` of a traversed action | supported | | tests/samples/test_pss2.0_example169_name_resolution_inside_with_constraint_block | |
 | 17.4.10 / 16.4.12 | `exec pre_solve` and `exec post_solve` in actions | supported | | tests/samples/test_if_constraint_item | |

@@ -109,6 +109,7 @@ public class PSSSolver {
 			for (var i = 0; i < def_c_list.size(); i++) {
 				// Get random variable from syntax: (default hierarchical_id '==' constant_expression ';')
 				PSSExpressionConstraint def_c = (PSSExpressionConstraint)def_c_list.get(i);
+				if (!def_c.isActive(item)) continue;
 				PSSEqualExpression def_exp    = (PSSEqualExpression)def_c.getExpression();
 				PSSInst def_inst              = def_exp.getInsts(item).get(0);
 				
@@ -157,6 +158,7 @@ public class PSSSolver {
 			for (var i = 0; i < def_c_list.size(); i++) {
 				// Get random variable from syntax: (default hierarchical_id '==' constant_expression ';')
 				PSSExpressionConstraint def_c = (PSSExpressionConstraint)def_c_list.get(i);
+				if (!def_c.isActive(item)) continue;
 				PSSEqualExpression def_exp    = (PSSEqualExpression)def_c.getExpression();
 				PSSInst def_inst              = def_exp.getInsts(item).get(0);
 				
@@ -349,6 +351,7 @@ public class PSSSolver {
 			PSSConstraintList c_list = m_inst_list.get(item);
 			for (var i = 0; i < def_c_list.size(); i++) {
 				PSSExpressionConstraint def_c = (PSSExpressionConstraint) def_c_list.get(i);
+				if (!def_c.isActive(item)) continue;
 				PSSInst def_inst = ((PSSEqualExpression) def_c.getExpression()).getInsts(item).get(0);
 				if (c_list != null && c_list.containsInst(item, def_inst)) continue;
 				if (!def_c.validate(item)) res.add(def_inst);

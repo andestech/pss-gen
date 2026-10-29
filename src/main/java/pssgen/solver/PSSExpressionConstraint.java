@@ -10,8 +10,45 @@ import pssgen.util.PSSLog;
 public class PSSExpressionConstraint extends PSSConstraint {
 	PSSExpression m_expression;
 
+	/** the conditions of the if constraints a default constraint is written under; null when none */
+	private List<PSSExpression> m_guards;
+	/** per condition, the value it must have: false in an else branch */
+	private List<Boolean> m_guard_values;
+
 	public PSSExpressionConstraint(PSSExpression expression) {
 		m_expression = expression;
+	}
+
+	/**
+	 * Adds a condition under which this default constraint applies.
+	 *
+	 * @param guard the condition of an enclosing if constraint
+	 * @param value true in the if branch, false in the else branch
+	 */
+	public void addGuard(PSSExpression guard, boolean value) {
+		if (m_guards == null) {
+			m_guards = new ArrayList<PSSExpression>();
+			m_guard_values = new ArrayList<Boolean>();
+		}
+		m_guards.add(guard);
+		m_guard_values.add(value);
+	}
+
+	/**
+	 * PSS 2.0 Section 17.1.10 f): a default constraint may be conditioned on a constant
+	 * expression; it applies only where all its conditions hold.
+	 *
+	 * @param var the instance the constraint belongs to
+	 * @return {@code true} if every condition holds
+	 */
+	public boolean isActive(PSSInst var) {
+		if (m_guards == null)
+			return true;
+		for (int i = 0; i < m_guards.size(); i++) {
+			if (m_guards.get(i).eval(var).toBool() != m_guard_values.get(i))
+				return false;
+		}
+		return true;
 	}
 
 	public PSSExpression getExpression() {

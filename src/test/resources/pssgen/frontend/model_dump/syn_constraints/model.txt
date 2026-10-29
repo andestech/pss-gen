@@ -581,19 +581,23 @@
                         m_sign: true
                         m_width: 65
                       m_val: 2
-              - #174 PSSExpressionConstraint
+                m_guard_values: #174 ArrayList[1]
+                  - true
+                m_guards: #175 ArrayList[1]
+                  - @93
+              - #176 PSSExpressionConstraint
                 children: ArrayList[0]
                 m_hierarchy_id: ""
                 m_id: ""
                 m_parent: @38
                 m_static_insts: ArrayList[0]
-                m_expression: #175 PSSEqualExpression
-                  m_left: #176 PSSMemberPathElemExpression
+                m_expression: #177 PSSEqualExpression
+                  m_left: #178 PSSMemberPathElemExpression
                     m_context: Context.MEMBER_CONSTRAINT
                     m_id: "e"
-                  m_right: #177 PSSPrimaryExpression
-                    m_val: #178 PSSIntVal
-                      m_type: #179 PSSIntModel
+                  m_right: #179 PSSPrimaryExpression
+                    m_val: #180 PSSIntVal
+                      m_type: #181 PSSIntModel
                         children: ArrayList[0]
                         m_hierarchy_id: "int[65]"
                         m_id: "int[65]"
@@ -601,19 +605,19 @@
                         m_sign: true
                         m_width: 65
                       m_val: 1
-              - #180 PSSExpressionConstraint
+              - #182 PSSExpressionConstraint
                 children: ArrayList[0]
                 m_hierarchy_id: ""
                 m_id: ""
                 m_parent: @38
                 m_static_insts: ArrayList[0]
-                m_expression: #181 PSSEqualExpression
-                  m_left: #182 PSSMemberPathElemExpression
+                m_expression: #183 PSSEqualExpression
+                  m_left: #184 PSSMemberPathElemExpression
                     m_context: Context.INLINE_CONSTRAINT
                     m_id: "w"
-                  m_right: #183 PSSPrimaryExpression
-                    m_val: #184 PSSIntVal
-                      m_type: #185 PSSIntModel
+                  m_right: #185 PSSPrimaryExpression
+                    m_val: #186 PSSIntVal
+                      m_type: #187 PSSIntModel
                         children: ArrayList[0]
                         m_hierarchy_id: "int[65]"
                         m_id: "int[65]"
@@ -623,13 +627,13 @@
                       m_val: 4
           m_exec_list: ArrayList[0]
           m_flowref: ArrayList[0]
-          m_target_code: #186 PSSTargetCodeList
+          m_target_code: #188 PSSTargetCodeList
             m_list: ArrayList[0]
       m_hierarchy_id: "pss_top"
       m_id: "pss_top"
       m_parent: @1
       m_static_insts: ArrayList[0]
-      m_data_list: #187 PSSComponentDataDeclListModel
+      m_data_list: #189 PSSComponentDataDeclListModel
         children: ArrayList[0]
         m_hierarchy_id: ""
         m_id: ""
