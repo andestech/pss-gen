@@ -3,6 +3,7 @@ package pssgen.proc;
 import java.util.*;
 
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSNamespaceInst;
 import pssgen.model.PSSExecKind;
 import pssgen.model.PSSModel;
 
@@ -37,9 +38,9 @@ public class PSSExecBlock extends PSSModel {
 	}
 
 	public void eval(PSSInst inst) {
-		// Add an anonymous instance for exec local data
-		// Associate the instance with this model so that the exec kind can be detected
-		PSSInst block_inst = new PSSInst("", "", this, false);
+		// An anonymous scope for exec local data (PSS 2.0 Section 22.7.1), associated
+		// with this model so that the exec kind can be detected
+		PSSInst block_inst = new PSSNamespaceInst("", this);
 		inst.addInst(block_inst);
 		try {
 			for (int i = 0; i < m_list.size(); i++) {

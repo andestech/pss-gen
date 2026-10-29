@@ -82,7 +82,10 @@ public final class PSSScope {
 		Set<Step> all = EnumSet.complementOf(EnumSet.of(Step.STOP_AT_LOCAL_SCOPE));
 		for (Context c : Context.values())
 			POLICY.put(c, Collections.unmodifiableSet(EnumSet.copyOf(all)));
-		POLICY.put(Context.LOCAL_REDECLARATION, Collections.unmodifiableSet(EnumSet.allOf(Step.class)));
+		// PSS 2.0 Section 22.7.1: a block is a nested scope, so a local may hide a field
+		// of an enclosing type or an enum item; only the block's own names are checked.
+		POLICY.put(Context.LOCAL_REDECLARATION,
+			Collections.unmodifiableSet(EnumSet.complementOf(EnumSet.of(Step.STATIC_ITEMS))));
 
 		// PSS 2.0 Section 21.3 b): a name used in the definition of a type resolves in
 		// that type, its super-types, its enclosing types and packages. The action that

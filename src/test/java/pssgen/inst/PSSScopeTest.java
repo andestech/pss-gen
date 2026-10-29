@@ -33,7 +33,7 @@ class PSSScopeTest {
 
 	@Test
 	void redeclarationCheckStopsAtTheLocalScope() {
-		assertEquals(EnumSet.allOf(Step.class), PSSScope.policy(Context.LOCAL_REDECLARATION));
+		assertEquals(EnumSet.complementOf(EnumSet.of(Step.STATIC_ITEMS)), PSSScope.policy(Context.LOCAL_REDECLARATION));
 	}
 
 	@Test

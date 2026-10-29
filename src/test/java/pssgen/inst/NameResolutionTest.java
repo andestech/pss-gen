@@ -234,16 +234,16 @@ class NameResolutionTest {
 		assertGenerates("redeclaration_function", "r=1");
 	}
 
-	/** The check does not stop at an exec block: the action's field counts as a declaration of the scope. */
+	/** PSS 2.0 22.7.1: an exec block is a nested scope; its local hides the action's field there. */
 	@Test
-	void execBlockLocalWithTheNameOfAnActionFieldIsARedeclaration() throws Exception {
-		assertFails("redeclaration_exec_block", "PSS-ERROR: [PSSDataDeclProcStmt] x is redeclared in the same scope.");
+	void execBlockLocalMayTakeTheNameOfAnActionField() throws Exception {
+		assertGenerates("redeclaration_exec_block", "x=2");
 	}
 
-	/** The check also finds enum items. */
+	/** A local is no member of a namespace (PSS 2.0 21.3), so it may take the name of an enum item. */
 	@Test
-	void localWithTheNameOfAnEnumItemIsARedeclaration() throws Exception {
-		assertFails("redeclaration_enum_item", "PSS-ERROR: [PSSDataDeclProcStmt] RED is redeclared in the same scope.");
+	void localMayTakeTheNameOfAnEnumItem() throws Exception {
+		assertGenerates("redeclaration_enum_item", "r=1");
 	}
 
 	@Test
