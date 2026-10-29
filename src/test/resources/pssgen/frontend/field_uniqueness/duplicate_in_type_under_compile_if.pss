@@ -1,0 +1,10 @@
+// A type declared inside a compile if still has unique field names.
+compile if (true) {
+    component pss_top {
+        action root_a {
+            int val = 1;
+            int val = 5;
+            exec body ASM = """val={{val}}""";
+        }
+    }
+}

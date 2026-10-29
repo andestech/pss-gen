@@ -1713,9 +1713,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		return data_decl;
 	}
 
-	/** True when ctx is inside a branch of a compile if. */
+	/** True when ctx is inside a branch of a compile if of the type that declares it. */
 	private static boolean inCompileIf(ParserRuleContext ctx) {
 		for (ParserRuleContext p = ctx.getParent(); p != null; p = p.getParent()) {
+			if (p instanceof PSSParser.Action_declarationContext || p instanceof PSSParser.Struct_declarationContext
+					|| p instanceof PSSParser.Component_declarationContext || p instanceof PSSParser.Package_declarationContext)
+				return false;
 			if (p instanceof PSSParser.Package_body_compile_if_itemContext
 					|| p instanceof PSSParser.Action_body_compile_if_itemContext
 					|| p instanceof PSSParser.Component_body_compile_if_itemContext

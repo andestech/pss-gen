@@ -48,6 +48,13 @@ class FieldUniquenessTest {
 		assertTrue(r[1].endsWith("PSS-ERROR: [PSS 2.0 Section 4.2] 'a' is declared more than once in 's_t'\n"), r[1]);
 	}
 
+	@Test
+	void sameNameTwiceInATypeDeclaredUnderACompileIfIsAnError() throws Exception {
+		String[] r = run("duplicate_in_type_under_compile_if");
+		assertEquals("1", r[0], r[1]);
+		assertTrue(r[1].endsWith("PSS-ERROR: [PSS 2.0 Section 4.2] 'val' is declared more than once in 'root_a'\n"), r[1]);
+	}
+
 	/** Both branches of a compile if are visited; their fields are not duplicates. */
 	@Test
 	void sameNameInCompileIfBranchesAndInOtherTypesIsAccepted() throws Exception {

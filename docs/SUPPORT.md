@@ -116,7 +116,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 11.3.1, 11.3.2 / 10.2.1, 10.2.2 | Atomic actions with `exec body`; compound actions with `activity`; rand fields; root action from `-root` | supported | | tests/samples/test_demo | |
 | 11.1 / 10.1 | Compound action that also has an `exec body` | partial | | tests/issues/17 | Accepted; the LRM forbids it. The test's model is also illegal by name resolution, which PSSGen reports first. |
 | 11.3.3 / 10.2.3 | `abstract action` | unsupported | `PSSGenVisitor.visitAbstract_action_declaration()`: `Syntax is not yet supported: '...'` | tests/errors/inheritance | An abstract action is only usable as a base type, and inheritance is not supported. |
-| 4.2, 21.3 / 4.2, 20.3 | Two fields with the same name in one type | supported | `[PSS 2.0 Section 4.2] '...' is declared more than once in '...'` | tests/issues/48 | Rejected, as the LRM requires. Both branches of a `compile if` are read, so a field declared in each branch is not reported. |
+| 4.2, 21.3 / 4.2, 20.3 | Two fields with the same name in one type | supported | `[PSS 2.0 Section 4.2] '...' is declared more than once in '...'` | tests/issues/48 | Rejected, as the LRM requires. Both branches of a `compile if` are read, so a field declared in a `compile if` branch of its type is not reported. |
 
 ## Activities
 
