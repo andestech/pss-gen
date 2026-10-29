@@ -1,0 +1,16 @@
+// #55: the constraints of a struct type hold in each element of a rand array and in a rand struct field of a rand struct.
+component pss_top {
+    struct pair_s {
+        rand bit [4] x;
+        rand bit [4] y;
+        constraint x < y;
+    }
+    struct outer_s {
+        rand pair_s inner;
+    }
+    action root_a {
+        rand pair_s  ps[3];
+        rand outer_s o;
+        exec body ASM = """{{ps[0].x}}<{{ps[0].y}} {{ps[1].x}}<{{ps[1].y}} {{ps[2].x}}<{{ps[2].y}} {{o.inner.x}}<{{o.inner.y}}""";
+    }
+}

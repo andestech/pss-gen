@@ -457,4 +457,14 @@ public class PSSInst {
 	public final ArrayList<PSSInst> getInsts() {
 		return m_insts;
 	}
+
+	/**
+	 * Returns the instance that holds this one: the parent, or the owner of an
+	 * instance without a parent (an array element).
+	 *
+	 * @return the holding instance, or null for a root
+	 */
+	public final PSSInst getContainer() {
+		return m_parent != null ? m_parent : m_owner;
+	}
 }

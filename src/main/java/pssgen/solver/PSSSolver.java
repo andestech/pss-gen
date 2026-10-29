@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import pssgen.expr.PSSEqualExpression;
 import pssgen.inst.PSSActionInst;
+import pssgen.inst.PSSArrayInst;
 import pssgen.inst.PSSBoolInst;
 import pssgen.inst.PSSFlowRefInst;
 import pssgen.inst.PSSIScalarInst;
@@ -76,9 +77,26 @@ public class PSSSolver {
 		if (inst instanceof PSSStructInst) {
 			PSSConstraintList c_list = inst.getTypeModel().getConstraintList();
 			add(inst, c_list);
+			if (inst.isRand())
+				addRandomized(inst.getInsts());
 		} else if (inst instanceof PSSFlowRefInst) {
 			PSSConstraintList c_list = inst.getTypeModel().getConstraintList();
 			add(inst, c_list);
+		} else if (inst instanceof PSSArrayInst) {
+			if (inst.isRand())
+				addRandomized(((PSSArrayInst) inst).elements());
+		}
+	}
+
+	/**
+	 * PSS 2.0 Sections 17.4.1.1 a) and 8.8.1: the rand struct fields of a rand struct
+	 * and the elements of a rand array are randomized with their container, so the
+	 * constraints of their struct types hold for them too.
+	 */
+	private void addRandomized(List<PSSInst> parts) {
+		for (PSSInst part : parts) {
+			if (part.isRand())
+				add(part);
 		}
 	}
 
@@ -357,13 +375,14 @@ public class PSSSolver {
 
 	/**
 	 * True when m_inst.randomize() draws v: a random scalar whose containers up to the
-	 * solved action are random too (a field of a non-random struct keeps its value,
-	 * a field of a sub-action is drawn when that action is solved).
+	 * solved action, array elements and arrays included, are random too (a field of a
+	 * non-random struct keeps its value, a field of a sub-action is drawn when that
+	 * action is solved).
 	 */
 	private boolean isDrawn(PSSInst v) {
 		if (!(v instanceof PSSIScalarInst) || !v.isRandomable())
 			return false;
-		for (PSSInst p = v.getParent(); p != null; p = p.getParent()) {
+		for (PSSInst p = v.getContainer(); p != null; p = p.getContainer()) {
 			if (p == m_inst)
 				return true;
 			if (p instanceof PSSActionInst || !p.isRandomable())

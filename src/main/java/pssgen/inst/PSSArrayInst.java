@@ -228,4 +228,13 @@ public class PSSArrayInst extends PSSInst implements PSSIAggregate {
         return res;
     }
 
+    /**
+     * Returns the elements of this array.
+     *
+     * @return the elements of this array, in index order
+     */
+    public List<PSSInst> elements() {
+        return java.util.Collections.unmodifiableList(m_array);
+    }
+
 };
