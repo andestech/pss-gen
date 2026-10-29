@@ -1,0 +1,18 @@
+// An inline constraint in mid_a names a field of root_a, which traverses mid_a: only mid_a, the containing action, is searched.
+component pss_top {
+    action root_a {
+        bit[5] root_val = 7;
+        activity {
+            do mid_a;
+        }
+    }
+    action mid_a {
+        activity {
+            do leaf_a with { v == root_val; };
+        }
+    }
+    action leaf_a {
+        rand bit[5] v;
+        exec body ASM = """v={{v}}""";
+    }
+}

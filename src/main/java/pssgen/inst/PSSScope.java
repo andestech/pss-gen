@@ -60,7 +60,11 @@ public final class PSSScope {
 		ENCLOSING_SCOPES,
 		/** end the walk after the first instance that opens a scope ({@link PSSIScope}) */
 		STOP_AT_LOCAL_SCOPE,
-		/** from an action that another action traverses, go on to the traversing action */
+		/**
+		 * from an action that another action traverses, go on to the traversing action,
+		 * once: PSS 2.0 Section 17.1.3 names "the containing action", not the actions
+		 * that traverse it in turn
+		 */
 		TRAVERSING_ACTIONS,
 		/**
 		 * from a component, go on above its outermost enclosing component, past the
@@ -174,6 +178,7 @@ public final class PSSScope {
 	private static PSSInst enclosingScopes(PSSInst start, String id, Set<Step> steps) {
 		PSSInst inst = null;
 		PSSInst base = start;
+		boolean traversed = false;
 		while (inst == null && base != null) {
 			inst = base.findInstanceUnder(id);
 
@@ -195,8 +200,9 @@ public final class PSSScope {
 
 			// An action reaches component data through "comp.", "this." or "pss_top.".
 			if (base instanceof PSSActionInst) {
-				if (!steps.contains(Step.TRAVERSING_ACTIONS) || nearestAction(base.getParent()) == null)
+				if (!steps.contains(Step.TRAVERSING_ACTIONS) || nearestAction(base.getParent()) == null || traversed)
 					break;
+				traversed = true;
 			}
 
 			base = base.getParent();
