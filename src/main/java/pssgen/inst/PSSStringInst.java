@@ -7,7 +7,8 @@ import pssgen.value.PSSStringVal;
 import pssgen.value.PSSVal;
 
 public class PSSStringInst extends PSSInst implements PSSIScalarInst {
-	private String m_str;
+	/** PSS 2.0 Section 8.5: a string that is not initialized is the empty string. */
+	private String m_str = "";
 
 	PSSStringDomain m_domain;
 
@@ -33,15 +34,9 @@ public class PSSStringInst extends PSSInst implements PSSIScalarInst {
 		m_domain = (PSSStringDomain) domain;
 	}
 	public PSSVal toVal() {
-		if (!isInitialized()) {
-			PSSMessage.Error("StringInst", "'" + getHierarchyId()+ "' is not initialized");
-		}
 		return new PSSStringVal(m_str);
 	}
 	public String toTargetCode() {
-		if (!isInitialized()) {
-			PSSMessage.Error("StringInst", "'" + getHierarchyId() + "' is not initialized");
-		}
 		return m_str;
 	}
 

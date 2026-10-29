@@ -68,10 +68,8 @@ public class PSSBoolInst extends PSSInst implements PSSIScalarInst {
 		m_val = val.toBool();
 	}
 
+	/** PSS 2.0 Section 8.3: a bool that is not initialized is false. */
 	public String toTargetCode() {
-		if (!isInitialized()) {
-			PSSMessage.Error("INTVAR-0001", "variable '" + getId() + "' is not initialized");
-		}
 		return String.valueOf(m_val);
 	}
 

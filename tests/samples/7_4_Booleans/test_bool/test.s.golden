@@ -1,6 +1,6 @@
 
             # testBool
-            bool_0 = 0
-            bool_1 = 1
-            bool_2 = 0
+            bool_0 = false
+            bool_1 = true
+            bool_2 = false
         

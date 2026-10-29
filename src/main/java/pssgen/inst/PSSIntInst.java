@@ -126,9 +126,6 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 	}
 
 	public String toTargetCode() {
-		if (!isInitialized()) {
-			PSSMessage.Error("INTVAR-0001", "variable '" + getHierarchyId() + "' is not initialized");
-		}
 		PSSVal val = toVal();
 		PSSIntVal intVal = new PSSIntVal(val.toBigInteger());
 		return intVal.toTargetCode();
