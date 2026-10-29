@@ -292,7 +292,10 @@ public class PSSSolver {
 		LinkedHashMap<PSSInst, PSSIntDomain> dom = new LinkedHashMap<PSSInst, PSSIntDomain>();
 		for (PSSInst v : prop.variables()) {
 			boolean keep = redraw != null && !redraw.contains(v);
-			dom.put(v, keep ? PSSPropagator.single(v.toVal().toBigInteger()) : base.get(v));
+			// An array element reached through a random index is a variable only for
+			// the index values of this draw; it starts from its full domain.
+			PSSIntDomain b = base.computeIfAbsent(v, k -> (PSSIntDomain) k.getInitDomain());
+			dom.put(v, keep ? PSSPropagator.single(v.toVal().toBigInteger()) : b);
 		}
 		boolean open = prop.narrow(dom);
 		for (PSSInst v : prop.variables()) {
