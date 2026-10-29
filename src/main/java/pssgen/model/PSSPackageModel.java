@@ -2,10 +2,22 @@ package pssgen.model;
 
 import java.util.*;
 
+import pssgen.inst.PSSInst;
+
 public class PSSPackageModel extends PSSModel {
 
 	public PSSPackageModel(String id) {
 		super(id);
+	}
+
+	/**
+	 * Declares the items of the enums of this package, so that a reference to them
+	 * from a component outside the package finds them (PSS 2.0 Section 21.1.3).
+	 */
+	@Override
+	public void declEnumItem(PSSInst inst) {
+		for (PSSModel child : getChildren())
+			child.declEnumItem(inst);
 	}
 
 	public void dump (String indent) {

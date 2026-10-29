@@ -173,16 +173,22 @@ class NameResolutionTest {
 		assertEquals("m=2 n=1\n", r[2], r[1]);
 	}
 
-	/** Not found, although the LRM resolves pkg::type::item. */
+	/** PSS 2.0 21.1.3: pkg::type::item from a component outside the package. */
 	@Test
-	void enumItemQualifiedWithAnotherPackageIsNotFound() throws Exception {
-		assertFails("package_statics_qualified", "PSS-ERROR: [PSSMemberPathElemExpression] M1 is not defined.");
+	void enumItemQualifiedWithAnotherPackage() throws Exception {
+		assertGenerates("package_statics_qualified", "m=2");
 	}
 
-	/** Not found, although the LRM makes the items of an imported package visible. */
+	/** PSS 2.0 21.1.3, 21.3 a): an item of an enum of a wildcard-imported package, unqualified. */
 	@Test
-	void enumItemOfAnImportedPackageIsNotFound() throws Exception {
-		assertFails("package_statics_import", "PSS-ERROR: [PSSMemberPathElemExpression] M0 is not defined.");
+	void enumItemOfAWildcardImportedPackage() throws Exception {
+		assertGenerates("package_statics_import", "n=1");
+	}
+
+	/** PSS 2.0 21.1.3: "import statements are not transitive." */
+	@Test
+	void enumItemOfAPackageImportedByAnImportedPackageIsNotFound() throws Exception {
+		assertFails("package_statics_not_transitive", "PSS-ERROR: [PSSMemberPathElemExpression] B is not defined.");
 	}
 
 	// --- components

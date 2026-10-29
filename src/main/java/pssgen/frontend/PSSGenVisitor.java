@@ -219,7 +219,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	public Object visitImport_stmt(PSSParser.Import_stmtContext ctx) {
 		String type_id = ctx.package_import_pattern().type_identifier().getText();
 
-		PSSImportStmtModel node = new PSSImportStmtModel(type_id);
+		PSSParser.Package_import_qualifierContext q = ctx.package_import_pattern().package_import_qualifier();
+		PSSImportStmtModel node = new PSSImportStmtModel(type_id, q != null && q.package_import_wildcard() != null);
 		root.addChild(node);
 
 		return node;

@@ -69,6 +69,15 @@ public class PSSModel {
 					return inst;
 			}
 		}
+		// enum items of the packages this model imports, after its own (PSS 2.0 Section
+		// 21.1.3: a local declaration takes precedence over a wildcard import)
+		for (PSSModel c : children) {
+			if (c instanceof PSSImportStmtModel) {
+				PSSInst inst = ((PSSImportStmtModel) c).findImportedEnumItem(id);
+				if (inst != null)
+					return inst;
+			}
+		}
 		return null;
 	}
 
