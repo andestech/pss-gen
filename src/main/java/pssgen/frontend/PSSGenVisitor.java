@@ -162,11 +162,6 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	private final PSSLog m_log;
 	/** where the names being built are written; set around each construct that decides it */
 	private PSSScope.Context m_context;
-	/**
-	 * The type of the cast built last. A cast takes it after its operand is built, so
-	 * a cast inside the operand of a cast gives the outer cast its type.
-	 */
-	private PSSModel m_cast_type;
 	/** The field names declared so far in each type, for the uniqueness check. */
 	private final Map<PSSModel, Set<String>> m_field_ids = new IdentityHashMap<PSSModel, Set<String>>();
 
@@ -1395,9 +1390,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 	@Override
 	public Object visitCast_expression(PSSParser.Cast_expressionContext ctx) {
-		m_cast_type = ((TypeSpec) visit(ctx.casting_type())).model;
+		PSSModel cast_type = ((TypeSpec) visit(ctx.casting_type())).model;
 		PSSExpression rhs_exp = (PSSExpression) visit(ctx.primary());
-		return new PSSCastExpression(m_cast_type, rhs_exp);
+		return new PSSCastExpression(cast_type, rhs_exp);
 	}
 
 	@Override

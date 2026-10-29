@@ -38,7 +38,11 @@ class CastConstraintTest {
 		"        rand bit [8] w;",
 		"        rand bit [4] low;",
 		"        constraint low == (bit [4]) w;",
-		"        exec body ASM = \"\"\" val={{val}} w={{w}} low={{low}}\"\"\";",
+		"        rand bit [8] w5;",
+		"        rand bit [4] low5;",
+		"        constraint low5 == (bit [4]) w5;",
+		"        constraint low5 == 5;",
+		"        exec body ASM = \"\"\" val={{val}} w={{w}} low={{low}} w5={{w5}}\"\"\";",
 		"    }",
 		"}",
 		"");
@@ -47,7 +51,7 @@ class CastConstraintTest {
 		Path in = tmp.resolve("test.pss");
 		Files.write(in, INPUT.getBytes(StandardCharsets.UTF_8));
 		Path out = tmp.resolve("test.s");
-		Pattern p = Pattern.compile("msb=(\\d+)\\s+val=(\\d+) w=(\\d+) low=(\\d+)");
+		Pattern p = Pattern.compile("msb=(\\d+)\\s+val=(\\d+) w=(\\d+) low=(\\d+) w5=(\\d+)");
 		for (int seed = 1; seed <= 20; seed++) {
 			String[] args = { "-solver", solver, "-seed", String.valueOf(seed), in.toString(), "-o", out.toString(),
 				"-root", "pss_top::root_a" };
@@ -62,6 +66,7 @@ class CastConstraintTest {
 			assertTrue(m.find(), text);
 			assertEquals(Integer.parseInt(m.group(1)) * 8, Integer.parseInt(m.group(2)), text);
 			assertEquals(Integer.parseInt(m.group(3)) % 16, Integer.parseInt(m.group(4)), text);
+			assertEquals(5, Integer.parseInt(m.group(5)) % 16, text);
 		}
 	}
 

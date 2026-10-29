@@ -24,12 +24,14 @@ component pss_top {
         bit [16] widened  = 0;
         bit [8]  sum      = 0;
         bit [8]  lit      = 0;
+        bit [16] nested   = 0;
         constraint v > 200;
         exec post_solve {
             narrowed = (bit [4]) v;
             widened  = (bit [16]) v;
             sum      = (bit [4]) (v + 1);
             lit      = (bit [4]) 8'hAB;
+            nested   = (bit [16]) ((bit [4]) v);
         }
         exec body ASM =
         """
@@ -39,6 +41,7 @@ component pss_top {
             widened  = {{widened}}
             sum      = {{sum}}
             lit      = {{lit}}
+            nested   = {{nested}}
         """;
     }
 }

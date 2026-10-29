@@ -26,6 +26,12 @@ public class PSSCastExpression extends PSSExpression {
         return m_rhs_expression.isRandomable(var);
     }
 
+    /** The fields of the operand, so that the solver draws them for the constraint. */
+    @Override
+    public ArrayList<PSSInst> getInsts (PSSInst var) {
+        return m_rhs_expression.getInsts(var);
+    }
+
     @Override
     public PSSVal eval (PSSInst var) {
         if (m_rhs_expression instanceof PSSPrimaryExpression) {
