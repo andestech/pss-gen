@@ -20,6 +20,12 @@ public class PSSCastExpression extends PSSExpression {
         m_rhs_expression   = rhs;
     }
 
+    /** A cast is random when its operand is. */
+    @Override
+    public boolean isRandomable (PSSInst var) {
+        return m_rhs_expression.isRandomable(var);
+    }
+
     @Override
     public PSSVal eval (PSSInst var) {
         if (m_rhs_expression instanceof PSSPrimaryExpression) {
