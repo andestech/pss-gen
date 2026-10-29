@@ -215,8 +215,8 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | LRM (2.0 / 2.1) | Construct | Status | Message | Test | Notes |
 |---|---|---|---|---|---|
 | 22.5 / 21.5 | `exec header`, `exec declaration`, `exec body` templates; several blocks of one kind | supported | | tests/samples/test_target_code | |
-| 22.5.3 / 21.5.3 | `{{field}}`, `{{a.b.c}}`, `{{comp.x}}`, `{{a[0]}}` for int, bit, bool and string fields | supported | | tests/samples/test_comp_init | |
-| 22.5.3 / 21.5.3 | `{{e}}` for an enum field | partial | | tests/samples/PSSv2.1_7.9_Collections/maps/test_map_operator_index | Printed as the item's integer value; the LRM example prints the item name. For `ASM` targets this is a deliberate deviation: the generated assembly uses the value. For other target languages it is a known deviation. |
+| 22.5.3 / 21.5.3 | `{{field}}`, `{{a.b.c}}`, `{{comp.x}}`, `{{a[0]}}` for int, bit, bool and string fields | supported | | tests/samples/test_template_language | In every target language: `int` signed decimal, `bit` unsigned decimal at any width, `bool` `true` / `false`, `string` as is (22.5.3.2). |
+| 22.5.3 / 21.5.3 | `{{e}}` for an enum field | supported | | tests/samples/test_template_language | A target language other than `ASM` prints the item name, as in the LRM example. `ASM` prints the item's integer value, which the generated assembly uses; the language is matched exactly, so `asm` prints names. A bare item `{{e_t::A}}` or `{{A}}`, and an enum field whose value is no item, print the integer value. |
 | 22.5.3 / 21.5.3 | `{{x}}` for a collection or struct field | unsupported | `PSSInst.toTargetCode()`: `PSSListInst::toTargetCode is not implemented` | | The class names the kind of the field. The LRM defines no text form for these types. |
 | 22.5.3 / 21.5.3 | `{{s[0]}}` on a string field | unsupported | `PSSInst.indexOf()`: `PSSStringInst::indexOf is not implemented` | | |
 

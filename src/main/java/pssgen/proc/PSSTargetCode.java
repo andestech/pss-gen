@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 
 import pssgen.expr.PSSRefPathExpression;
 import pssgen.expr.PSSRefPathParser;
+import pssgen.inst.PSSEnumInst;
 import pssgen.inst.PSSInst;
 import pssgen.model.PSSExecKind;
 import pssgen.model.PSSModel;
@@ -63,7 +64,7 @@ public class PSSTargetCode extends PSSModel {
 
 
 				result = result.concat(prefix);
-				result = result.concat(var.toTargetCode());
+				result = result.concat(toTargetCode(var));
 				residual = residual.substring(end);
 			}
 			else {
@@ -83,5 +84,21 @@ public class PSSTargetCode extends PSSModel {
 		System.out.println(indent + "exec body " + m_language + " = \"\"\"");
 		System.out.println(indent + "\t" + m_code);
 		System.out.println(indent + "\"\"\";");
+	}
+
+	/**
+	 * The text of a {@code {{...}}} reference. PSS 2.0 Section 22.5.3, Example 326,
+	 * prints an enum field as the name of its item; ASM templates print the item's
+	 * value, which the generated assembly uses.
+	 */
+	private String toTargetCode(PSSInst var) {
+		boolean item = var instanceof PSSEnumInst && !((PSSEnumInst) var).isAccessBitSelect();
+		String text = var.toTargetCode();
+		if (item && !"ASM".equals(m_language)) {
+			String name = ((PSSEnumInst) var).getItemName();
+			if (name != null)
+				return name;
+		}
+		return text;
 	}
 }
