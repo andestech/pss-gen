@@ -54,7 +54,7 @@ public class PSSNotEqualExpression extends PSSExpression {
 	}
 
 	public String getText() {
-		return m_left.getText() + "==" + m_right.getText();
+		return m_left.getText() + "!=" + m_right.getText();
 	}
 
 	@Override

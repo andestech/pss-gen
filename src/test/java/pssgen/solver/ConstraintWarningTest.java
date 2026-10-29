@@ -56,7 +56,7 @@ class ConstraintWarningTest {
 		List<String> once = List.of(
 			IN + "a in [ 4..6 ]",
 			String.format(NOT_IN, "==") + "a==5",
-			String.format(NOT_IN, "!=") + "a==4",
+			String.format(NOT_IN, "!=") + "a!=4",
 			String.format(NOT_IN, ">") + "a>1",
 			String.format(NOT_IN, ">=") + "a>=5",
 			String.format(NOT_IN, "<") + "a<9",
@@ -66,9 +66,9 @@ class ConstraintWarningTest {
 		assertEquals(expected, warnings());
 	}
 
-	/** The text of 'a != 4' reads 'a==4'. */
+	/** The text of 'a != 4' reads 'a!=4'. */
 	@Test
-	void knownBugNotEqualTextReadsAsEqual() throws Exception {
-		assertTrue(warnings().contains(String.format(NOT_IN, "!=") + "a==4"));
+	void notEqualTextReadsAsNotEqual() throws Exception {
+		assertTrue(warnings().contains(String.format(NOT_IN, "!=") + "a!=4"));
 	}
 }
