@@ -1,0 +1,16 @@
+// PSS 2.0 17.4.6: an activity may not read a field of a handle it has not traversed yet.
+component pss_top {
+    action root_a {
+        sub_a c;
+        activity {
+            if (c.y == 0) {
+                do sub_a;
+            }
+            c;
+        }
+    }
+    action sub_a {
+        int y = 0;
+        exec body ASM = """y={{y}}""";
+    }
+}

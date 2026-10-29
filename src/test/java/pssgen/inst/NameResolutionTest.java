@@ -210,6 +210,12 @@ class NameResolutionTest {
 		assertGenerates("activity_names", "val=1", "val=1", "val=2");
 	}
 
+	/** PSS 2.0 17.4.6: a handle's fields are read only after the activity traverses it. */
+	@Test
+	void activityDoesNotReadAHandleBeforeItsTraversal() throws Exception {
+		assertFails("handle_not_yet_traversed", "PSS-ERROR: [PSSMemberPathElemExpression] c.y is not defined.");
+	}
+
 	@Test
 	void foreachSeesItsIteratorAndIndex() throws Exception {
 		assertGenerates("foreach_iterators", "sum=8", "val=1", "val=3", "val=5");

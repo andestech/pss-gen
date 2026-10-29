@@ -3,6 +3,7 @@ package pssgen.expr;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import pssgen.inst.PSSActionInst;
 import pssgen.inst.PSSComponentInst;
 import pssgen.inst.PSSComponentRefInst;
 import pssgen.inst.PSSFunctionInst;
@@ -190,6 +191,13 @@ public class PSSMemberPathElemExpression extends PSSExpression {
         if (m_function_parameter_list == null) {
             if (pkg == null || m_parent != null) {
                 inst = m_parent == null ? ctx.findInstance(m_id, m_context) : parent.findInstanceUnder(m_id);
+                // PSS 2.0 Section 17.4.6: an activity reads a field of a sub-action handle
+                // after the activity has traversed it; the handle is solved on that read.
+                if (inst == null && m_parent != null && m_context == PSSScope.Context.ACTIVITY
+                        && parent instanceof PSSActionInst && !parent.isTraversed()
+                        && parent.getParent() instanceof PSSActionInst
+                        && ((PSSActionInst) parent.getParent()).traverseRecorded((PSSActionInst) parent))
+                    inst = parent.findInstanceUnder(m_id);
             } else {
                 inst = pkg.findStaticInst(m_id);
             }

@@ -1,0 +1,36 @@
+// PSS 2.0 17.4.6: after an activity traverses a handle, its expressions read the
+// handle's solved fields, post_solve updates included (the legal form of issue 17).
+component pss_top {
+    action root_a {
+        append_a app;
+        activity {
+            app;
+            repeat (app.n) {
+                do print_n with { val == app.n; };
+            }
+            foreach (i : app.vals[j]) {
+                do print_v with { val == i; };
+            }
+        }
+    }
+
+    action append_a {
+        bit[4] n = 1;
+        list<int> vals = {1, 2};
+        exec post_solve {
+            n = 2;
+            vals.push_back(3);
+        }
+        exec body ASM = """append_a""";
+    }
+
+    action print_n {
+        rand int val;
+        exec body ASM = """print_n: {{val}}""";
+    }
+
+    action print_v {
+        rand int val;
+        exec body ASM = """print_v: {{val}}""";
+    }
+}

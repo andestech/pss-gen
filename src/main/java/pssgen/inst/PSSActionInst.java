@@ -130,4 +130,14 @@ public class PSSActionInst extends PSSInst {
 		return new PSSRefVal(new PSSRefModel(PSSTypeCategory.ACTION), this);
 	}
 
+	/**
+	 * Traverses the sub-actions this action's activity has recorded, in order, up to
+	 * and including sub (see {@link PSSTraversalList#traverseThrough}).
+	 *
+	 * @param sub a sub-action handle of this action
+	 * @return {@code true} if sub has been traversed
+	 */
+	public boolean traverseRecorded(PSSActionInst sub) {
+		return m_sub_list.traverseThrough(sub);
+	}
 }

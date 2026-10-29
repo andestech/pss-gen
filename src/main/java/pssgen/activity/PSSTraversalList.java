@@ -170,5 +170,33 @@ public class PSSTraversalList {
 		}
 	}
 
+	/**
+	 * PSS 2.0 Section 17.4.6: an activity expression may read the fields of a
+	 * sub-action handle that the activity has already traversed. Traverses, in their
+	 * order, the sub-actions recorded so far up to and including handle, so that its
+	 * fields exist and hold their solved values. A sub-action that is traversed here
+	 * is not traversed again by {@link #traverse()}.
+	 *
+	 * @param handle a sub-action handle
+	 * @return {@code false} when handle is not recorded, or when a sub-action up to it
+	 *         still has an unbound flow object, which a later bind or inference fills
+	 */
+	public boolean traverseThrough(PSSActionInst handle) {
+		int end = -1;
+		for (int i = 0; i < m_list.size() && end < 0; i++) {
+			if (m_list.get(i).getInst() == handle)
+				end = i;
+		}
+		if (end < 0)
+			return false;
+		for (int i = 0; i <= end; i++) {
+			if (m_list.get(i).getInst().getUnboundRefList().size() > 0)
+				return false;
+		}
+		for (int i = 0; i <= end; i++) {
+			PSSActionInst sub = m_list.get(i).getInst();
+			((PSSActionModel) sub.getTypeDecl()).traverse(sub);
+		}
+		return true;
+	}
 }
-
