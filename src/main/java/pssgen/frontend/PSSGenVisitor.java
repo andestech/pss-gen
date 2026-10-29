@@ -1676,7 +1676,6 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 		PSSDataDeclModel data_decl = new PSSDataDeclModel(data_type);
 
-		// The domain of the type constrains the first instantiation only.
 		boolean domain = type.ranges != null || !type.open_ended.isEmpty();
 		for (int i = 0; i < ctx.data_instantiation().size(); i++) {
 			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
@@ -1698,12 +1697,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			}
 
 			if (domain) {
-				domain = false;
+				// PSS 2.0 Section 8.2.1 e): the domain belongs to the type, so it constrains
+				// every field declared with it. Each field gets its own domain items, as an
+				// open-ended item holds the field it constrains.
+				TypeSpec field_type = i == 0 ? type : (TypeSpec) visit(ctx.data_type());
 				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id, PSSScope.Context.MEMBER_CONSTRAINT);
-				if (type.ranges != null) {
-					root.addConstraint(new PSSExpressionConstraint(new PSSInExpression(variable, type.ranges)));
+				if (field_type.ranges != null) {
+					root.addConstraint(new PSSExpressionConstraint(new PSSInExpression(variable, field_type.ranges)));
 				}
-				for (PSSExpression item : type.open_ended) {
+				for (PSSExpression item : field_type.open_ended) {
 					item.setLeftExpression(variable);
 					root.addConstraint(new PSSExpressionConstraint(item));
 				}
