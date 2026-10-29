@@ -98,7 +98,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 9.5.5 / 8.5.5 | `~`, and `\|` through `\|=` | supported | | tests/issues/22 | `\|=` is in tests/samples/9_6_Primary_expressions/test_bit_selects. |
 | 9.5.6 / 8.5.6 | Reduction `&x`, `\|x`, `^x` | unsupported | `PSSGenVisitor.visitExpression()`: `unary operator '...'is not yet supported` | | No space before `is` in the message. |
 | 9.5.7 / 8.5.7 | `<<` | supported | | tests/issues/35 | |
-| 9.7.1 / 8.7.1 | Shift whose result is assigned to a wider target, e.g. `ans = src << 8` with `bit[8] src` and `bit[32] ans` | supported | | tests/issues/52 | The shifted operand takes the width of the assignment. |
+| 9.7.1 / 8.7.1 | Shift whose result is assigned to a wider target, e.g. `ans = src << 8` with `bit[8] src` and `bit[32] ans` | partial | | tests/issues/52 | `<<` keeps the bits shifted past its operand's width, and an unsigned target truncates the result to its own width, so the example gives 27136. As for every operator, intermediate results are not truncated to the width of the assignment: `(src << 4) >> 4` assigned to a `bit[8]` gives 106 where the LRM gives 10. A signed target `int[N]` keeps a value outside its N bits. |
 | 9.5.8 / 8.5.8 | Conditional `c ? a : b` | unsupported | `[VISITOR-0001] visitExpression is not fully implemented yet` | | |
 | 9.5.9 / 8.5.9 | `x in [a, b..c]` and `x in collection` | supported | | tests/issues/20 | |
 | 9.5.9 / 8.5.9 | Unqualified enum item on the left of `in` | supported | `[PSS 2.0 Section 9.5.9] The left-hand side of 'in' shall not be an unqualified enum item: '...'` | tests/issues/47 | Rejected, as the LRM requires; `e::ITEM in ...` is accepted. |
@@ -123,7 +123,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | LRM (2.0 / 2.1) | Construct | Status | Message | Test | Notes |
 |---|---|---|---|---|---|
 | 13.3.1 / 12.3.1 | `do T`, handle traversal `h;`, `with { ... }` | supported | | tests/samples/test_demo | |
-| 17.4.6 / 16.4.8 | A field of a traversed action handle read by a later activity expression, e.g. `h; repeat (h.n) ...` | partial | | tests/samples/test_handle_field_in_activity | Reads the handle's solved values, post_solve updates included. A handle traversed again, in a loop or a later block, keeps the values of its first traversal; the LRM resets it to uninitialized. A read before the first traversal is reported as `[PSSMemberPathElemExpression] '...' is not defined.` |
+| 17.4.6 / 16.4.8 | A field of a traversed action handle read by a later activity expression, e.g. `h; repeat (h.n) ...` | partial | | tests/samples/test_handle_field_in_activity | Reads the handle's solved values, post_solve updates included. A handle traversed again, in a loop or a later block, keeps the values of its first traversal; the LRM resets it to uninitialized. A read before the first traversal, or while a sub-action up to the handle waits for a flow object that a later `bind` or inference supplies, is reported as `[PSSMemberPathElemExpression] ... is not defined.` |
 | 13.3.4 / 12.3.4 | `parallel` | unsupported | `PSSGenVisitor.visitActivity_parallel_stmt()`: `Syntax is not yet supported: '...'` | | |
 | 13.3.5 / 12.3.5 | `schedule` | supported | | tests/samples/test_demo | |
 | 13.4.1 / 12.4.1 | `repeat (n)`, `repeat (i : n)` | supported | | tests/samples/test_repeat_count | |
@@ -154,7 +154,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 17.1.1, 17.1.4 / 16.1.1, 16.1.4 | Member constraints, named and unnamed, with `==`, relational, `&&`, `\|\|` and `in` expressions | supported | | tests/samples/test_with_constraint_ops | |
 | 17.1.4 / 16.1.4 | Constraint whose expression, or an operand of its `&&` / `\|\|`, is not a comparison or `in`, e.g. `x + 1;`, `!(x == 1);` | unsupported | `PSSExpression.deduceDomain()`: `PSSAddExpression.deduceDomain() is not implemented` | | The class names the kind of expression. |
 | 17.1.3 / 16.1.3 | In-line `with` constraints, including names of the containing action and `comp` | supported | | tests/samples/test_pss2.0_example169_name_resolution_inside_with_constraint_block | |
-| 21.3 / 20.3 | Member constraint, activity, exec block or template that names a field of the traversing action | supported | `[PSSMemberPathElemExpression] '...' is not defined.` | tests/issues/27 | Rejected, as the LRM requires. An in-line `with` constraint of the traversal may name the field (17.1.3). |
+| 21.3 / 20.3 | Member constraint, activity, exec block or template that names a field of the traversing action | supported | `[PSSMemberPathElemExpression] ... is not defined.` | tests/issues/27 | Rejected, as the LRM requires. An in-line `with` constraint of the traversal may name the field (17.1.3). |
 | 17.1.5 / 16.1.5 | Implication `a -> b` | unsupported | `PSSGenVisitor.visitImplication_constraint_item()`: `Syntax is not yet supported: '...'` | | |
 | 17.1.6 / 16.1.6 | `if` / `else if` / `else` constraints | supported | | tests/samples/test_if_constraint_item | |
 | 17.1.7 / 16.1.7 | `foreach` constraints | supported | | tests/issues/42 | |
