@@ -51,7 +51,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 4.6 / 4.6 | Sized and based numbers (`8'b01101010`, `2'b10`, `'h8045`) | supported | | tests/issues/35 | `'h` numbers are in tests/samples/test_demo (softconfig.pss). |
 | 4.6 / 4.6 | A digit string that is no legal number, e.g. `01234567890` | supported | | tests/samples/4_6_Numbers/test_octal (skipped) | Rejected with `[SYNTAX] '...'`, as the LRM requires. The test is skipped because its own input contains this literal; its golden also has wrong values. |
 | 4.7 / 4.7 | Quoted `"..."` and triple-quoted `"""..."""` strings | supported | | tests/samples/test_multi_constraint | |
-| 4.7 / 4.7 | Escape sequences in quoted strings | partial | `[SYNTAX] '...'` | tests/samples/4_7_String_literals (skipped) | `\"` ends the literal, so the rest of the line is a syntax error; this is why the test is skipped. Other escapes (`\n`, `\t`, `\\`, `\ddd`, ...) are copied unconverted, backslash included. The test's golden also mis-renders control characters. |
+| 4.7 / 4.7 | Escape sequences in quoted strings, in expressions and in target templates | supported | `[PSS 2.0 Section 4.7] illegal escape sequence '...' in string literal ...` | tests/samples/4_7_String_literals | Each escape of Table 3 becomes one character; an escape not in the table is the error in the Message column. A quoted target template is inserted without its quotes. Triple-quoted strings have no escapes. |
 | 4.8.1-4.8.3 / 4.8.1-4.8.3 | Empty `{}`, value list `{1, 2}` and map `{1: 2}` literals | supported | | tests/samples/test_function_chaining | |
 | 4.8.4 / 4.8.4 | Structure literal `{.a = 1}` | unsupported | `PSSGenVisitor.visitAggregate_literal()`: `Syntax is not yet supported: '...'` | | |
 

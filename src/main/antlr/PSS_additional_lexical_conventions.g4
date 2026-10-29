@@ -17,7 +17,7 @@ string_literal
 	| TRIPLE_QUOTED_STRING
 ;
 
-QUOTED_STRING : '"' (~ [\n\r"])* '"' ;
+QUOTED_STRING : '"' ( ~ [\\\n\r"] | '\\' ~ [\n\r] )* '"' ;
 
 
 filename_string : QUOTED_STRING ;

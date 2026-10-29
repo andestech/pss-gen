@@ -935,7 +935,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	public Object visitTarget_code_exec_block(PSSParser.Target_code_exec_blockContext ctx) {
 		String language = ctx.language_identifier().getText();
 		PSSExecKind exec_kind = PSSExecKind.valueOf(ctx.exec_kind().getText());
-		String code = ctx.string_literal().getText();
+		String code = ctx.string_literal().QUOTED_STRING() != null ? quotedString(ctx.string_literal().getText())
+				: ctx.string_literal().getText();
 		PSSTargetCode node = new PSSTargetCode(root, exec_kind, language, code, PSSTemplateRefParser.INSTANCE);
 
 		((PSSActionModel) root).addTargetCode(node);
@@ -1256,7 +1257,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	public Object visitPrimary(PSSParser.PrimaryContext ctx) {
 
 		if (ctx.string_literal() != null) {
-			String text = ctx.getText().replace("\"", "");
+			String text = ctx.string_literal().QUOTED_STRING() != null ? quotedString(ctx.getText())
+					: ctx.getText().replace("\"", "");
 			return new PSSPrimaryExpression(new PSSStringVal(text));
 		} else if (ctx.number() != null) {
 			String text = ctx.getText();
@@ -1729,5 +1731,48 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			return null;
 		String text = ctx.primary().ref_path().getText();
 		return text.matches("[A-Za-z_][A-Za-z0-9_]*") ? text : null;
+	}
+
+	/**
+	 * PSS 2.0 Section 4.7: the characters of a quoted string literal, each escape
+	 * sequence of Table 3 converted to the one character it stands for.
+	 *
+	 * @param text the literal with its quotes
+	 * @return the string without the quotes
+	 */
+	private static String quotedString(String text) {
+		String body = text.substring(1, text.length() - 1);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < body.length(); i++) {
+			char c = body.charAt(i);
+			if (c != '\\') {
+				sb.append(c);
+				continue;
+			}
+			// the lexer puts a character after every backslash
+			char e = body.charAt(++i);
+			switch (e) {
+			case '\'': case '"': case '?': case '\\': sb.append(e); break;
+			case 'a': sb.append((char) 0x07); break;
+			case 'b': sb.append((char) 0x08); break;
+			case 'f': sb.append((char) 0x0C); break;
+			case 'n': sb.append((char) 0x0A); break;
+			case 'r': sb.append((char) 0x0D); break;
+			case 't': sb.append((char) 0x09); break;
+			case 'v': sb.append((char) 0x0B); break;
+			default:
+				if (i + 2 < body.length() && isOctal(e) && isOctal(body.charAt(i + 1)) && isOctal(body.charAt(i + 2))) {
+					sb.append((char) Integer.parseInt(body.substring(i, i + 3), 8));
+					i += 2;
+				} else {
+					PSSMessage.Error("PSS 2.0 Section 4.7", "illegal escape sequence '\\" + e + "' in string literal " + text);
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+	private static boolean isOctal(char c) {
+		return c >= '0' && c <= '7';
 	}
 }
