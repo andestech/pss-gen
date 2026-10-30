@@ -122,7 +122,7 @@ public class PSSIntInst extends PSSInst implements PSSIScalarInst {
 			}
 			m_BitSelect = -1;	// clear mask
 		}
-		m_val = new PSSIntVal(PSSIntVal.wrapSigned(result.toBigInteger(), m_width, m_sign), m_width, m_sign);
+		m_val = new PSSIntVal(result.toBigInteger(), m_width, m_sign);
 	}
 
 	public String toTargetCode() {

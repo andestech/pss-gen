@@ -71,18 +71,18 @@ class PSSIntValTest {
 	}
 
 	@Test
-	void castToNarrowerSignedTypeReadsTheBitsAsTwosComplement() {
+	void castToNarrowerSignedTypeGivesTheUnsignedBitPattern() {
 		PSSIntVal v = bits(15, 8);
 		v.setTypeModel(new PSSIntModel(4, true));
-		assertEquals(-1, val(v));
+		assertEquals(15, val(v));
 		assertTrue(model(v).isSigned());
 	}
 
 	@Test
-	void castOfNegativeToWiderSignedTypeKeepsTheValue() {
+	void castOfNegativeToWiderWidthZeroPads() {
 		PSSIntVal v = ints(-1, 4);
 		v.setTypeModel(new PSSIntModel(8, true));
-		assertEquals(-1, val(v));
+		assertEquals(255, val(v));
 		assertEquals(8, model(v).getSize());
 	}
 

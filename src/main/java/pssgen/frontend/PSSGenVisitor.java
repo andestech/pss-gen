@@ -691,7 +691,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			width = Integer.valueOf(ctx.constant_expression().getText());
 		} else {
 			if (sign) {
-				width = PSSIntModel.INT_TYPE_SIZE;
+				width = PSSIntModel.DEFAULT_INT_SIZE;
 			} else {
 				width = PSSIntModel.DEFAULT_BIT_SIZE;
 			}

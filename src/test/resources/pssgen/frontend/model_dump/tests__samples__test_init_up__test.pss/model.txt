@@ -13,28 +13,28 @@
               - @5
               - #8 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "pss_top::region::int[32]"
-                m_id: "int[32]"
+                m_hierarchy_id: "pss_top::region::int[65]"
+                m_id: "int[65]"
                 m_parent: @6
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 32
+                m_width: 65
               - #9 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "pss_top::region::int[32]"
-                m_id: "int[32]"
+                m_hierarchy_id: "pss_top::region::int[65]"
+                m_id: "int[65]"
                 m_parent: @6
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 32
+                m_width: 65
               - #10 PSSIntModel
                 children: ArrayList[0]
-                m_hierarchy_id: "pss_top::region::int[32]"
-                m_id: "int[32]"
+                m_hierarchy_id: "pss_top::region::int[65]"
+                m_id: "int[65]"
                 m_parent: @6
                 m_static_insts: ArrayList[0]
                 m_sign: true
-                m_width: 32
+                m_width: 65
             m_hierarchy_id: "pss_top::region"
             m_id: "region"
             m_parent: @3
@@ -144,20 +144,20 @@
           m_static_insts: ArrayList[0]
         - #35 PSSIntModel
           children: ArrayList[0]
-          m_hierarchy_id: "pss_top::int[32]"
-          m_id: "int[32]"
+          m_hierarchy_id: "pss_top::int[65]"
+          m_id: "int[65]"
           m_parent: @3
           m_static_insts: ArrayList[0]
           m_sign: true
-          m_width: 32
+          m_width: 65
         - #36 PSSIntModel
           children: ArrayList[0]
-          m_hierarchy_id: "pss_top::int[32]"
-          m_id: "int[32]"
+          m_hierarchy_id: "pss_top::int[65]"
+          m_id: "int[65]"
           m_parent: @3
           m_static_insts: ArrayList[0]
           m_sign: true
-          m_width: 32
+          m_width: 65
         - @6
         - #37 PSSDataTypeModel
           children: ArrayList[0]

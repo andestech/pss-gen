@@ -6,17 +6,17 @@
       children: #4 ArrayList[4]
         - #5 PSSListModel
           children: ArrayList[0]
-          m_hierarchy_id: "pss_top::list<int[32]>"
-          m_id: "list<int[32]>"
+          m_hierarchy_id: "pss_top::list<int[65]>"
+          m_id: "list<int[65]>"
           m_parent: @3
           m_static_insts: ArrayList[0]
           m_elem_type_model: #6 PSSIntModel
             children: ArrayList[0]
-            m_hierarchy_id: "int[32]"
-            m_id: "int[32]"
+            m_hierarchy_id: "int[65]"
+            m_id: "int[65]"
             m_static_insts: ArrayList[0]
             m_sign: true
-            m_width: 32
+            m_width: 65
         - #7 PSSListModel
           children: ArrayList[0]
           m_hierarchy_id: "pss_top::list<string>"

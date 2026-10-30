@@ -6,12 +6,12 @@
       children: #4 ArrayList[1]
         - #5 PSSIntModel
           children: ArrayList[0]
-          m_hierarchy_id: "params_s::int[32]"
-          m_id: "int[32]"
+          m_hierarchy_id: "params_s::int[65]"
+          m_id: "int[65]"
           m_parent: @3
           m_static_insts: ArrayList[0]
           m_sign: true
-          m_width: 32
+          m_width: 65
       m_hierarchy_id: "params_s"
       m_id: "params_s"
       m_parent: @1
@@ -71,11 +71,11 @@
           - #20 PSSFunctionParameter
             m_data_type: #21 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "int[32]"
-              m_id: "int[32]"
+              m_hierarchy_id: "int[65]"
+              m_id: "int[65]"
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 32
+              m_width: 65
             m_id: "a"
             m_struct: false
             m_type: false
@@ -271,22 +271,22 @@
           m_type: "params_s"
         - #73 PSSIntModel
           children: ArrayList[0]
-          m_hierarchy_id: "pss_top::int[32]"
-          m_id: "int[32]"
+          m_hierarchy_id: "pss_top::int[65]"
+          m_id: "int[65]"
           m_parent: @70
           m_static_insts: ArrayList[0]
           m_sign: true
-          m_width: 32
+          m_width: 65
         - #74 PSSActionModel
           children: #75 ArrayList[1]
             - #76 PSSIntModel
               children: ArrayList[0]
-              m_hierarchy_id: "pss_top::A::int[32]"
-              m_id: "int[32]"
+              m_hierarchy_id: "pss_top::A::int[65]"
+              m_id: "int[65]"
               m_parent: @74
               m_static_insts: ArrayList[0]
               m_sign: true
-              m_width: 32
+              m_width: 65
           m_hierarchy_id: "pss_top::A"
           m_id: "A"
           m_parent: @70

@@ -215,28 +215,29 @@
 		
 .text
 		main:
-	li	t0, 43017341
-	li	t1, 1
-	li	t1, 2
-	add	x18, x6, x19
-	sub	x17, x19, x19
-	add	x31, x25, x30
-	sub	x24, x9, x29
-	add	x5, x8, x14
-	sub	x25, x29, x10
+	li	t1, 5912793249386640788
+	li	t0, 1
+	li	t0, 2
+	li	t0, 3
+	add	x20, x3, x16
+	sub	x3, x31, x15
+	add	x4, x30, x12
+	sub	x7, x12, x3
+	add	x9, x5, x8
+	sub	x1, x6, x21
 	li	a0, 0	
+	lh	t0, 0(a0)	
 	lb	t0, 0(a0)	
-	ld	t0, 0(a0)	
-	lw	t0, 0(a0)	
-	lh	t0, 0(a0)	
-	ld	t0, 0(a0)	
 	lw	t0, 0(a0)	
 	ld	t0, 0(a0)	
-	lw	t0, 0(a0)	
 	lw	t0, 0(a0)	
 	ld	t0, 0(a0)	
 	ld	t0, 0(a0)	
 	ld	t0, 0(a0)	
 	lw	t0, 0(a0)	
 	lh	t0, 0(a0)	
+	ld	t0, 0(a0)	
+	lh	t0, 0(a0)	
+	ld	t0, 0(a0)	
+	lw	t0, 0(a0)	
 	j	_EXIT_POINT	
