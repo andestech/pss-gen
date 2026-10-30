@@ -347,6 +347,22 @@ PSSGen packages, in pipeline order:
 `docs/SUPPORT.md` lists, per section of the LRM, which constructs PSSGen supports, which it
 accepts with a deviation, and the message it stops with for the others.
 
+### `int` is 65 bits
+
+The LRM makes `int` 32 bits signed (PSS 2.0 Section 8.2, Table 5). PSSGen makes it 65 bits
+signed, so a plain `int` holds any 64-bit value, signed or unsigned, and a signed field keeps a
+value stored into it even when the value does not fit its width:
+
+```pss
+int     c = (1 << 63) - 1;  // 9223372036854775807; the LRM gives -1
+int     b = 'd4294967295;   // 4294967295; the LRM gives -1
+int[8]  a = 255;            // 255; the LRM gives -1
+```
+
+A description that relies on the 32-bit range of `int`, or on a signed field wrapping, gets
+other values from PSSGen. Use `bit[32]` for a 32-bit unsigned value, and mask a value
+explicitly where the wrap matters.
+
 ### `repeat (index : count)` and `this`
 
 Inside `repeat`, `this` does not refer to the index variable. A constraint such as
