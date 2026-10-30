@@ -35,10 +35,10 @@ component pss_top {
         exec post_solve {
             ans1 = 1 << 32;     // 0
             ans2 = 8'b10 << 3;  // 00010000
-            ans3 = 8'b10 << 8;  // 0
+            ans3 = 8'b10 << 8;  // 512
             ans4 = ans4  << 8;  // 27136
-            ans5 = src   << 8;  // 0
-            ans6 = src   << 4;  // 10100000
+            ans5 = src   << 8;  // 27136
+            ans6 = src   << 4;  // 1696
         }
         exec body ASM =
         """
