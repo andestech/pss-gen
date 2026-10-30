@@ -363,6 +363,24 @@ A description that relies on the 32-bit range of `int`, or on a signed field wra
 other values from PSSGen. Use `bit[32]` for a 32-bit unsigned value, and mask a value
 explicitly where the wrap matters.
 
+### A compound action may have an `exec body`
+
+The LRM forbids a compound action, one with an `activity`, to specify a `body` exec block
+(PSS 2.0 Section 11.1). PSSGen accepts it and does not report it: the body's output comes
+before the output of the actions its activity traverses.
+
+```pss
+action region_a {
+    exec body ASM = """region:""";   // printed first
+    activity {
+        do fill_a;                   // then the body of fill_a
+    }
+}
+```
+
+A description meant for other LRM tools should move the body into an atomic action that the
+activity traverses first.
+
 ### `repeat (index : count)` and `this`
 
 Inside `repeat`, `this` does not refer to the index variable. A constraint such as
