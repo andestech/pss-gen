@@ -31,7 +31,7 @@ class CastConstraintTest {
 		"        activity {",
 		"            do example with { val == ((bit [4])msb << 3); };",
 		"        }",
-		"        exec body ASM = \"\"\"msb={{msb}}\"\"\";",
+		"        exec header ASM = \"\"\"msb={{msb}}\"\"\";",
 		"    }",
 		"    action example {",
 		"        rand bit [4] val;",

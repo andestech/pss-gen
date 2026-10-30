@@ -472,6 +472,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		if (ctx.action_super_spec() != null)
 			visit(ctx.action_super_spec());
 		String id = ctx.action_identifier().getText();
+		if (isCompoundWithBody(ctx))
+			PSSMessage.Error("PSS 2.0 Section 11.1", "compound action '" + id + "' shall not specify a body exec block");
 
 		PSSActionModel node = new PSSActionModel(id);
 		root.addChild(node);
@@ -1774,5 +1776,24 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 	private static boolean isOctal(char c) {
 		return c >= '0' && c <= '7';
+	}
+
+	/**
+	 * PSS 2.0 Section 11.1 a): an action with an activity is compound, and a compound
+	 * action shall not specify body exec blocks. Only the items of the action itself
+	 * count: both branches of a compile if are visited.
+	 */
+	private static boolean isCompoundWithBody(PSSParser.Action_declarationContext ctx) {
+		boolean activity = false;
+		boolean body = false;
+		for (PSSParser.Action_body_itemContext item : ctx.action_body_item()) {
+			if (item.activity_declaration() != null)
+				activity = true;
+			PSSParser.Exec_block_stmtContext e = item.exec_block_stmt();
+			if (e != null && ((e.exec_block() != null && e.exec_block().exec_kind().getText().equals("body"))
+					|| (e.target_code_exec_block() != null && e.target_code_exec_block().exec_kind().getText().equals("body"))))
+				body = true;
+		}
+		return activity && body;
 	}
 }

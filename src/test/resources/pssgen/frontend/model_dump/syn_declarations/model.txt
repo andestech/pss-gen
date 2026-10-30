@@ -691,7 +691,7 @@
                 m_id: ""
                 m_static_insts: ArrayList[0]
                 m_code: "{{v}}"
-                m_exec_kind: PSSExecKind.body
+                m_exec_kind: PSSExecKind.header
                 m_language: "ASM"
                 m_ref_parser: PSSTemplateRefParser {}
                 m_root: @127

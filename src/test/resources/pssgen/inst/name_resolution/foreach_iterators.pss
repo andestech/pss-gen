@@ -18,7 +18,7 @@ component pss_top {
                 do sub_a with { val == e + i; };
             }
         }
-        exec body ASM = """sum={{sum}}""";
+        exec header ASM = """sum={{sum}}""";
     }
     action sub_a {
         rand bit[4] val;

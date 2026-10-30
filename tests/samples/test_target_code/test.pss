@@ -2,7 +2,6 @@ component pss_top {
 	action root_a {
 		exec header      ASM = """root_a.header""";
 		exec declaration ASM = """root_a.declaration""";
-		exec body        ASM = """root_a.body""";
 		activity {
 			do sub_a;
 		}

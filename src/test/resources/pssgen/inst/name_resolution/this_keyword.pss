@@ -6,7 +6,7 @@ component pss_top {
         activity {
             do sub_a with { w == this.v; };
         }
-        exec body ASM = """root this.v={{this.v}}""";
+        exec header ASM = """root this.v={{this.v}}""";
     }
     action sub_a {
         rand bit[4] v;

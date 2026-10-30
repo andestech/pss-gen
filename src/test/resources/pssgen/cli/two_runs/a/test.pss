@@ -32,7 +32,7 @@ component pss_top {
                 do sub_b;
             }
         }
-        exec body ASM = """
+        exec header ASM = """
 A v={{v}} narrowed={{narrowed}} from_bool={{from_bool}} s={{s}} flag={{flag}} first={{first}} li={{li[0]}},{{li[1]}},{{li[5]}}
 """;
     }

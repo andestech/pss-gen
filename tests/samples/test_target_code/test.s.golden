@@ -2,5 +2,4 @@ root_a.header
 sub_a.header
 root_a.declaration
 sub_a.declaration
-root_a.body
 sub_a.body

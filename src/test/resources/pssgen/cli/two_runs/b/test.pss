@@ -21,7 +21,7 @@ component pss_top {
                 do leaf;
             }
         }
-        exec body ASM = """
+        exec header ASM = """
 B b1={{b1}} b2={{b2}} name={{name}} n={{n}} arr={{arr[0]}},{{arr[1]}},{{arr[2]}} ps={{ps[0].x}}<{{ps[0].y}},{{ps[1].x}}<{{ps[1].y}}
 """;
     }
