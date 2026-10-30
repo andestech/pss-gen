@@ -381,6 +381,37 @@ action region_a {
 A description meant for other LRM tools should move the body into an atomic action that the
 activity traverses first.
 
+### Names reach the fields of traversing actions
+
+The LRM resolves a name used in an action in that action, its super-types, its enclosing
+component and packages (PSS 2.0 Section 21.3); only an in-line `with` constraint also sees the
+fields of the action that contains the traversal (Section 17.1.3). PSSGen looks further: a name
+not found in the action resolves to a field of the action that traverses it, then of the action
+that traverses that one, up to the root action. The nearest field of that name wins, and the
+field can be assigned as well as read:
+
+```pss
+action root_a {
+    cfg_s cfg;
+    int   count = 0;
+    activity { do mid_a; }
+}
+action mid_a {
+    activity { do leaf_a; }
+}
+action leaf_a {
+    int w;
+    exec pre_solve {
+        w = cfg.xlen;           // root_a.cfg, two traversals up; the LRM reports cfg as not defined
+        count = count + 1;      // assigns root_a.count
+    }
+}
+```
+
+The LRM has no qualified name for such a field either: `root_a.cfg` and `root_a::cfg` are not
+defined. A description meant for other LRM tools should pass values down through in-line
+constraints, or keep read-only configuration in component fields read through `comp`.
+
 ### `repeat (index : count)` and `this`
 
 Inside `repeat`, `this` does not refer to the index variable. A constraint such as
