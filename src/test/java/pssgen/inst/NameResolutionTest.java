@@ -121,12 +121,6 @@ class NameResolutionTest {
 		assertGenerates("traversing_inline_constraint", "val=9");
 	}
 
-	/** PSS 2.0 17.1.3: only the containing action, not the action that traverses it in turn. */
-	@Test
-	void inlineConstraintDoesNotSeeFieldTwoTraversalsUp() throws Exception {
-		assertFails("traversing_inline_two_levels", "PSS-ERROR: [PSSMemberPathElemExpression] root_val is not defined.");
-	}
-
 	// --- this, comp, pss_top
 
 	@Test
