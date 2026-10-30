@@ -16,14 +16,15 @@ component pss_top {
 
 		constraint icount in [2, 3, 4];
 
+		exec body ASM  =
+		""".text
+		main:""";
+
 		exec pre_solve {
 			xlen = 64;
 		}
 
 		activity {
-			// the label of the code, in an atomic action: a compound action has no body exec
-			do main_label_a;
-
 			// action traversal
 			i0;
 
@@ -94,12 +95,6 @@ component pss_top {
 
 		exec body ASM  =
 		"""	li	{{rd}}, {{imm}}""";
-	}
-
-	action main_label_a {
-		exec body ASM  =
-		""".text
-		main:""";
 	}
 
 	action entry_a {

@@ -13,6 +13,6 @@ component pss_top {
         constraint {
             w == 11;
         }
-        exec header ASM = """root w={{w}}""";
+        exec body ASM = """root w={{w}}""";
     }
 }

@@ -60,6 +60,6 @@ component pss_top {
             do producer;
             do consumer;
         }
-        exec header ASM = """{{v}}""";
+        exec body ASM = """{{v}}""";
     }
 }
