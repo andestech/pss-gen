@@ -1,0 +1,12 @@
+printStr: root_a
+printVal: 1
+printVal: 2
+appendList: 3
+printStr: appendList
+printVal: 1
+printVal: 2
+printVal: 3
+printStr: root_a
+printVal: 1
+printVal: 2
+printVal: 3

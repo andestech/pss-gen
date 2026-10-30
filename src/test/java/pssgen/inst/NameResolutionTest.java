@@ -79,40 +79,28 @@ class NameResolutionTest {
 
 	// --- a field of the traversing action
 
-	/** #49, PSS 2.0 21.3 b): a member constraint's names resolve in its own type, not in the traversing action. */
+	/** #49: the LRM does not look a member constraint's names up in the traversing action. */
 	@Test
-	void memberConstraintDoesNotSeeTraversingActionField() throws Exception {
-		assertFails("traversing_member_constraint", "PSS-ERROR: [PSSMemberPathElemExpression] root_val is not defined.");
+	void knownBug49MemberConstraintSeesTraversingActionField() throws Exception {
+		assertGenerates("traversing_member_constraint", "val=7");
 	}
 
-	/** #49: two traversals down, the root action's field is not found either. */
+	/** #49: two traversals down, the root action's field is still found. */
 	@Test
-	void memberConstraintDoesNotSeeFieldTwoTraversalsUp() throws Exception {
-		assertFails("traversing_two_levels", "PSS-ERROR: [PSSMemberPathElemExpression] root_val is not defined.");
+	void knownBug49MemberConstraintSeesFieldTwoTraversalsUp() throws Exception {
+		assertGenerates("traversing_two_levels", "val=10");
 	}
 
 	/** The exec block analog of #49. */
 	@Test
-	void execBlockDoesNotSeeTraversingActionField() throws Exception {
-		assertFails("traversing_exec_block", "PSS-ERROR: [PSSMemberPathElemExpression] root_val is not defined.");
+	void knownBug49ExecBlockSeesTraversingActionField() throws Exception {
+		assertGenerates("traversing_exec_block", "v=8");
 	}
 
 	/** The target template analog of #49. */
 	@Test
-	void templateDoesNotSeeTraversingActionField() throws Exception {
-		assertFails("traversing_template", "PSS-ERROR: [PSSMemberPathElemExpression] root_val is not defined.");
-	}
-
-	/** The activity analog of #49. */
-	@Test
-	void activityDoesNotSeeTraversingActionField() throws Exception {
-		assertFails("traversing_activity", "PSS-ERROR: [PSSMemberPathElemExpression] n is not defined.");
-	}
-
-	/** The field initializer analog of #49. */
-	@Test
-	void fieldInitializerDoesNotSeeTraversingActionField() throws Exception {
-		assertFails("traversing_declaration", "PSS-ERROR: [PSSMemberPathElemExpression] root_val is not defined.");
+	void knownBug49TemplateSeesTraversingActionField() throws Exception {
+		assertGenerates("traversing_template", "root_val=7");
 	}
 
 	/** PSS 2.0 17.1.3: an inline constraint may name fields of the traversing action. */

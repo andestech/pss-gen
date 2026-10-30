@@ -1,4 +1,4 @@
-// A target template of sub_a names a field of root_a, the action that traverses it, which sub_a does not see.
+// A target template of sub_a resolves a field of root_a, the action that traverses it.
 component pss_top {
     action root_a {
         bit[5] root_val = 7;

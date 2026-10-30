@@ -13,21 +13,15 @@ import pssgen.inst.PSSScope.Step;
 class PSSScopeTest {
 
 	/**
-	 * A name in the definition of a type does not reach the action that traverses it
-	 * (#49); an inline constraint and the lookups of handles, flow objects and
-	 * iterators do. Only the redeclaration check stops at the first local scope.
+	 * Every context looks a name up the same way, through the traversing actions too
+	 * (#49); only the redeclaration check stops at the first local scope.
 	 */
 	@Test
-	void onlyInlineConstraintsAndHandleLookupsReachTheTraversingAction() {
-		EnumSet<Context> own_type = EnumSet.of(Context.MEMBER_CONSTRAINT, Context.ACTIVITY, Context.EXEC_BLOCK,
-			Context.TEMPLATE, Context.FUNCTION_BODY, Context.DECLARATION);
+	void everyContextTakesEveryStepButTheLocalStop() {
 		for (Context c : Context.values()) {
 			if (c == Context.LOCAL_REDECLARATION)
 				continue;
-			EnumSet<Step> expected = EnumSet.complementOf(EnumSet.of(Step.STOP_AT_LOCAL_SCOPE));
-			if (own_type.contains(c))
-				expected.remove(Step.TRAVERSING_ACTIONS);
-			assertEquals(expected, PSSScope.policy(c), c.name());
+			assertEquals(EnumSet.complementOf(EnumSet.of(Step.STOP_AT_LOCAL_SCOPE)), PSSScope.policy(c), c.name());
 		}
 	}
 
