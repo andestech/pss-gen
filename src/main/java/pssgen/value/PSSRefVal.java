@@ -147,6 +147,19 @@ public class PSSRefVal extends PSSVal {
 	 * Returns the value of the instance that val refers to, or val itself when it is
 	 * not a reference (null included).
 	 */
+	/**
+	 * Returns the data type of a value. A struct value is a reference to its struct
+	 * instance, so its data type is the type of that instance.
+	 *
+	 * @param val a value
+	 * @return the data type of val
+	 */
+	public static PSSModel typeOf(PSSVal val) {
+		if (val instanceof PSSRefVal && ((PSSRefVal) val).getInst() != null)
+			return ((PSSRefVal) val).getInst().getTypeModel();
+		return val.getTypeModel();
+	}
+
 	public static PSSVal deref(PSSVal val) {
 		if (val instanceof PSSRefVal) {
 			return ((PSSRefVal) val).getInst().toVal();

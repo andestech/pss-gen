@@ -180,7 +180,7 @@ public class PSSSetInst extends PSSInst implements PSSIAggregate {
      * @param e an element to be inserted
      */
     public void insert(PSSVal e) {
-        if (m_elem_type_model.isCompatible(e.getTypeModel())) {
+        if (m_elem_type_model.isCompatible(PSSRefVal.typeOf(e))) {
             PSSInst i = m_elem_type_model.declInst("", false);
             i.setOwner(this);
             i.assign(e);

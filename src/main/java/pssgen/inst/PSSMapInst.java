@@ -203,12 +203,12 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
     public void insert(PSSVal k, PSSVal v) {
         PSSMapModel map_type = getTypeModel();
 
-        if (!map_type.getKeyType().isCompatible(k.getTypeModel()))
-            PSSMessage.Error("", "The key type " + k.getTypeModel().getText() + " of " + k.getText()
+        if (!map_type.getKeyType().isCompatible(PSSRefVal.typeOf(k)))
+            PSSMessage.Error("", "The key type " + PSSRefVal.typeOf(k).getText() + " of " + k.getText()
                     + " is incompatible with map " + getId());
         // PSS 2.0 Section 4.8.1: the empty literal {} has no type of its own; it is the
         // empty value of a collection value type, and the assignment below checks it.
-        PSSModel vt = v.getTypeModel();
+        PSSModel vt = PSSRefVal.typeOf(v);
         if (vt == null ? !(map_type.getValueType() instanceof PSSIAggregate)
                 : !map_type.getValueType().isCompatible(vt))
             PSSMessage.Error("", "The value type " + (vt == null ? "{}" : vt.getText()) + " of " + v.getText()

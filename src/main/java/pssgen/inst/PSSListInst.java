@@ -268,9 +268,9 @@ public class PSSListInst extends PSSInst implements PSSIAggregate {
      * @param element an element to be inserted
      */
     public void insert(int index, PSSVal element) {
-        if (!m_elem_type_model.isCompatible(element.getTypeModel()))
+        if (!m_elem_type_model.isCompatible(PSSRefVal.typeOf(element)))
             PSSMessage.Error("ListInst", "The element type " +
-                    element.getTypeModel().getText() + " of " +
+                    PSSRefVal.typeOf(element).getText() + " of " +
                     element.getText() + " is incompatible with list " + getId());
 
         try {
