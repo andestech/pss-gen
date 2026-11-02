@@ -270,6 +270,9 @@ public class PSSIntVal extends PSSVal {
 		return Div(rhs_int);
 	}
 	protected PSSVal Div (BigInteger rhs) {
+		// PSS 2.0 Section 9.5.1: "Division or modulus by zero shall be considered illegal."
+		if (rhs.signum() == 0)
+			PSSMessage.Error("PSS 2.0 Section 9.5.1", "division by zero: " + getText() + " / 0");
 		BigInteger result = m_val.divide(rhs);
 		return new PSSIntVal(result);
 	}
@@ -285,6 +288,9 @@ public class PSSIntVal extends PSSVal {
 		return Mod(rhs_int);
 	}
 	protected PSSVal Mod (BigInteger rhs) {
+		// PSS 2.0 Section 9.5.1: "Division or modulus by zero shall be considered illegal."
+		if (rhs.signum() == 0)
+			PSSMessage.Error("PSS 2.0 Section 9.5.1", "modulus by zero: " + getText() + " % 0");
 		BigInteger result = m_val.mod(rhs);
 		return new PSSIntVal(result);
 	}

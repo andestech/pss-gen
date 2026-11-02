@@ -107,7 +107,14 @@ class PSSIntValTest {
 	void divisionTruncatesTowardZeroAndModIsNonNegative() {
 		assertEquals(-3, val(new PSSIntVal(-7).Div(2)));
 		assertEquals(2, val(new PSSIntVal(-7).Mod(3)));
-		assertThrows(ArithmeticException.class, () -> new PSSIntVal(1).Div(0));
+	}
+
+	@Test
+	void divisionAndModulusByZeroAreErrors() {
+		RuntimeException e = assertThrows(RuntimeException.class, () -> new PSSIntVal(1).Div(0));
+		assertEquals("division by zero: 1 / 0", e.getMessage());
+		e = assertThrows(RuntimeException.class, () -> new PSSIntVal(1).Mod(0));
+		assertEquals("modulus by zero: 1 % 0", e.getMessage());
 	}
 
 	@Test
