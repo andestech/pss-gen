@@ -118,7 +118,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | 11.3.1, 11.3.2 / 10.2.1, 10.2.2 | Atomic actions with `exec body`; compound actions with `activity`; rand fields; root action from `-root` | supported | | tests/samples/test_demo | |
 | 11.1 / 10.1 | Compound action that also has an `exec body` | partial | | tests/issues/17 (skipped) | Accepted and not reported, although the LRM forbids it: the body's output comes before the output of the activity. See README, Known limitations. The test's model is also illegal by name resolution. It is skipped because the expected output needs an activity `foreach` to see a list element that an earlier sub-action's `post_solve` appends, and PSSGen expands the `foreach` first. |
 | 11.3.3 / 10.2.3 | `abstract action` | unsupported | `PSSGenVisitor.visitAbstract_action_declaration()`: `Syntax is not yet supported: '...'` | tests/errors/inheritance | An abstract action is only usable as a base type, and inheritance is not supported. |
-| 4.2, 21.3 / 4.2, 20.3 | Two fields with the same name in one type | supported | `[PSS 2.0 Section 4.2] '...' is declared more than once in '...'` | tests/issues/48 | Rejected, as the LRM requires. Both branches of a `compile if` are read, so a field declared in a `compile if` branch of its type is not reported. |
+| 4.2, 21.3 / 4.2, 20.3 | Two fields with the same name in one type, flow-object and resource-object references included | supported | `[PSS 2.0 Section 4.2] '...' is declared more than once in '...'` | tests/issues/48, tests/errors/duplicate-flow-ref | Rejected, as the LRM requires. Both branches of a `compile if` are read, so a field declared in a `compile if` branch of its type is not reported. |
 
 ## Activities
 

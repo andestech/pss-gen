@@ -520,11 +520,19 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		String direction = ctx.input_or_output().getText();
 		String type = ctx.flow_object_type().getText();
 		for (int i = 0; i < ctx.object_ref_field().size(); i++) {
+			declareFieldId(ctx, ctx.object_ref_field(i).identifier().getText());
 			String id = ctx.object_ref_field(i).getText();
 			PSSFlowRefModel node = new PSSFlowRefModel(id, direction.equals("output"), type);
 			root.addFlowRef(node);
 		}
 		return null;
+	}
+
+	@Override
+	public Object visitResource_ref_field_declaration(PSSParser.Resource_ref_field_declarationContext ctx) {
+		for (int i = 0; i < ctx.object_ref_field().size(); i++)
+			declareFieldId(ctx, ctx.object_ref_field(i).identifier().getText());
+		return visitChildren(ctx);
 	}
 
 	@Override
@@ -1751,11 +1759,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
 
 			String id = data_inst.identifier().getText();
-			// PSS 2.0 Section 4.2: in a given namespace, identifiers shall be unique. Both
-			// branches of a compile if are visited, so a field declared in each is not a
-			// second declaration.
-			if (!inCompileIf(ctx) && !m_field_ids.computeIfAbsent(root, r -> new HashSet<String>()).add(id))
-				PSSMessage.Error("PSS 2.0 Section 4.2", "'" + id + "' is declared more than once in '" + root.getId() + "'");
+			declareFieldId(ctx, id);
 			PSSExpression array_dim = null;
 			if (data_inst.array_dim() != null) {
 				array_dim = (PSSExpression) visit(data_inst.array_dim().constant_expression());
@@ -1804,6 +1808,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			constraints.add(new PSSExpressionConstraint(item));
 		}
 		return constraints;
+	}
+
+	/**
+	 * PSS 2.0 Section 4.2: in a given namespace, identifiers shall be unique; data fields,
+	 * flow-object and resource-object references of a type share its namespace. Both
+	 * branches of a compile if are visited, so a field declared in each is not a second
+	 * declaration.
+	 */
+	private void declareFieldId(ParserRuleContext ctx, String id) {
+		if (!inCompileIf(ctx) && !m_field_ids.computeIfAbsent(root, r -> new HashSet<String>()).add(id))
+			PSSMessage.Error("PSS 2.0 Section 4.2", "'" + id + "' is declared more than once in '" + root.getId() + "'");
 	}
 
 	/** True when ctx is inside a branch of a compile if of the type that declares it. */
