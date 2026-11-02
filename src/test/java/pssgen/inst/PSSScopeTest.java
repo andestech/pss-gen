@@ -19,15 +19,22 @@ class PSSScopeTest {
 	@Test
 	void everyContextTakesEveryStepButTheLocalStop() {
 		for (Context c : Context.values()) {
-			if (c == Context.LOCAL_REDECLARATION)
+			if (c == Context.LOCAL_REDECLARATION || c == Context.INLINE_CONSTRAINT)
 				continue;
-			assertEquals(EnumSet.complementOf(EnumSet.of(Step.STOP_AT_LOCAL_SCOPE)), PSSScope.policy(c), c.name());
+			assertEquals(EnumSet.complementOf(EnumSet.of(Step.STOP_AT_LOCAL_SCOPE, Step.THIS_TRAVERSING_ACTION)),
+				PSSScope.policy(c), c.name());
 		}
+	}
+
+	/** PSS 2.0 Section 17.1.3: only an in-line constraint reaches the containing action with this. */
+	@Test
+	void onlyAnInlineConstraintTakesThisToTheTraversingAction() {
+		assertEquals(EnumSet.complementOf(EnumSet.of(Step.STOP_AT_LOCAL_SCOPE)), PSSScope.policy(Context.INLINE_CONSTRAINT));
 	}
 
 	@Test
 	void redeclarationCheckStopsAtTheLocalScope() {
-		assertEquals(EnumSet.complementOf(EnumSet.of(Step.STATIC_ITEMS, Step.KEYWORD_PSS_TOP)),
+		assertEquals(EnumSet.complementOf(EnumSet.of(Step.STATIC_ITEMS, Step.KEYWORD_PSS_TOP, Step.THIS_TRAVERSING_ACTION)),
 			PSSScope.policy(Context.LOCAL_REDECLARATION));
 	}
 

@@ -47,8 +47,13 @@ public final class PSSScope {
 
 	/** One part of the walk. */
 	public enum Step {
-		/** a first token {@code this}: the action that traverses the nearest action, else that action */
+		/** a first token {@code this}: the nearest action */
 		KEYWORD_THIS,
+		/**
+		 * with {@link #KEYWORD_THIS}: the action that traverses the nearest action, else
+		 * that action
+		 */
+		THIS_TRAVERSING_ACTION,
 		/** a first token {@code comp}: the {@code comp} child of the nearest action */
 		KEYWORD_COMP,
 		/**
@@ -82,13 +87,18 @@ public final class PSSScope {
 	private static final Map<Context, Set<Step>> POLICY = new EnumMap<Context, Set<Step>>(Context.class);
 
 	static {
-		Set<Step> all = EnumSet.complementOf(EnumSet.of(Step.STOP_AT_LOCAL_SCOPE));
+		Set<Step> all = EnumSet.complementOf(EnumSet.of(Step.STOP_AT_LOCAL_SCOPE, Step.THIS_TRAVERSING_ACTION));
 		for (Context c : Context.values())
 			POLICY.put(c, Collections.unmodifiableSet(EnumSet.copyOf(all)));
+		// PSS 2.0 Section 17.1.3: in an in-line constraint, this is the action that
+		// contains the traversal; elsewhere it is the action whose definition holds it.
+		Set<Step> inline = EnumSet.copyOf(all);
+		inline.add(Step.THIS_TRAVERSING_ACTION);
+		POLICY.put(Context.INLINE_CONSTRAINT, Collections.unmodifiableSet(inline));
 		// PSS 2.0 Section 22.7.1: a block is a nested scope, so a local may hide a field
 		// of an enclosing type or an enum item; only the block's own names are checked.
 		POLICY.put(Context.LOCAL_REDECLARATION,
-			Collections.unmodifiableSet(EnumSet.complementOf(EnumSet.of(Step.STATIC_ITEMS, Step.KEYWORD_PSS_TOP))));
+			Collections.unmodifiableSet(EnumSet.complementOf(EnumSet.of(Step.STATIC_ITEMS, Step.KEYWORD_PSS_TOP, Step.THIS_TRAVERSING_ACTION))));
 	}
 
 	private PSSScope() {
@@ -118,7 +128,7 @@ public final class PSSScope {
 
 		PSSInst inst = null;
 		if (steps.contains(Step.KEYWORD_THIS) && "this".equals(tokens[0])) {
-			inst = thisAction(start);
+			inst = thisAction(start, steps.contains(Step.THIS_TRAVERSING_ACTION));
 		} else if (steps.contains(Step.KEYWORD_COMP) && "comp".equals(tokens[0])) {
 			PSSInst action = nearestAction(start);
 			if (action == null)
@@ -148,12 +158,13 @@ public final class PSSScope {
 	}
 
 	/**
-	 * PSS 2.0 Section 17.1.3: fields of the containing action that the traversed
-	 * sub-action shadows are reached with {@code this}.
+	 * The action {@code this} names. PSS 2.0 Section 17.1.3: in an in-line constraint,
+	 * fields of the containing action that the traversed sub-action shadows are reached
+	 * with {@code this}, so there it is the action that traverses the nearest one.
 	 */
-	private static PSSInst thisAction(PSSInst start) {
+	private static PSSInst thisAction(PSSInst start, boolean traversing) {
 		PSSInst action_inner = nearestAction(start);
-		PSSInst action_outer = action_inner == null ? null : nearestAction(action_inner.getParent());
+		PSSInst action_outer = action_inner == null || !traversing ? null : nearestAction(action_inner.getParent());
 		if (action_outer != null)
 			return action_outer;
 		if (action_inner != null)
