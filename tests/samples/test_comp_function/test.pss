@@ -1,0 +1,20 @@
+// PSS 2.0 10.6: comp refers to the component instance of an action, so comp.f() calls a
+// function of that component.
+component pss_top {
+    int base = 4;
+    function int get() {
+        return 9;
+    }
+    function int add(int a) {
+        return a + 1;
+    }
+    action root_a {
+        int v = 0;
+        int w = 0;
+        exec post_solve {
+            v = comp.get();
+            w = comp.add(comp.base);
+        }
+        exec body ASM = """v={{v}} w={{w}}""";
+    }
+}

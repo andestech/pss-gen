@@ -203,7 +203,11 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             }
             if (inst == null)
                 PSSMessage.Error("PSSMemberPathElemExpression", getUpperHierarchicalID() + " is not defined.");
-        } else if (m_parent == null || parent instanceof PSSComponentInst) {
+        } else if (m_parent == null || parent instanceof PSSComponentInst || parent instanceof PSSComponentRefInst) {
+            // PSS 2.0 Section 10.6: comp is the component instance of the action, so
+            // comp.f() calls a function of that component.
+            if (parent instanceof PSSComponentRefInst)
+                parent = ((PSSComponentRefInst) parent).getReference();
             // m_id may refer to a user defined function under a component or a package
 
             // Find the function definition
