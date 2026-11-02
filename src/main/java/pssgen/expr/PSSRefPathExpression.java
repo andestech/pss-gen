@@ -60,11 +60,23 @@ public class PSSRefPathExpression extends PSSExpression {
 		return ret;
 	}
 
+	/** The declaration the qualifier names; a leading '::' starts at the outermost namespace. */
+	private PSSModel findQualifier(PSSInst var) {
+		PSSModel scope = var.getTypeModel();
+		String qualifier = m_type_identifier_elems;
+		if (qualifier.startsWith("::")) {
+			while (scope.getParent() != null)
+				scope = scope.getParent();
+			qualifier = qualifier.substring(2);
+		}
+		return scope.findDeclaration(qualifier);
+	}
+
 	@Override
 	public PSSInst getInst(PSSInst var) {
 		PSSInst inst = null;
 		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals("")) {
-			PSSModel m = var.getTypeModel().findDeclaration(m_type_identifier_elems);
+			PSSModel m = findQualifier(var);
 			inst = m_ref_path.getInst(m, var);
 		} else {
 			inst = m_ref_path.getInst(var);
@@ -125,7 +137,7 @@ public class PSSRefPathExpression extends PSSExpression {
 	private PSSVal evalOriVal (PSSInst var) {
 		PSSVal res = null;
 		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals("")) {
-			PSSModel m = var.getTypeModel().findDeclaration(m_type_identifier_elems);
+			PSSModel m = findQualifier(var);
 			res = m_ref_path.eval(m, var);
 		} else {
 			res = m_ref_path.eval(var);

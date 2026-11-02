@@ -198,28 +198,33 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 	@Override
 	public Object visitPackage_declaration(PSSParser.Package_declarationContext ctx) {
-		String id = ctx.package_id_path().getText();
 		// PSS 2.0 Section 21.1.1.1 a): several package statements of one name declare the
-		// members of one package.
+		// members of one package; 'package outer::inner' declares inner inside outer.
+		PSSModel outer = root;
 		PSSPackageModel node = null;
-		for (PSSModel c : root.getChildren()) {
-			if (c instanceof PSSPackageModel && c.getId().equals(id))
-				node = (PSSPackageModel) c;
+		for (PSSParser.Package_identifierContext elem : ctx.package_id_path().package_identifier()) {
+			String id = elem.getText();
+			node = null;
+			for (PSSModel c : root.getChildren()) {
+				if (c instanceof PSSPackageModel && c.getId().equals(id))
+					node = (PSSPackageModel) c;
+			}
+			if (node == null) {
+				node = new PSSPackageModel(id);
+				root.addChild(node);
+			}
+			root = node;
 		}
-		if (node == null) {
-			node = new PSSPackageModel(id);
-			root.addChild(node);
-		}
-		root = node;
 
 		for (int i = 0; i < ctx.package_body_item().size(); i++) {
 			visit(ctx.package_body_item(i));
 		}
 
-		root = node.getParent();
+		root = outer;
 
 		return node;
 	}
+
 
 	@Override
 	public Object visitImport_stmt(PSSParser.Import_stmtContext ctx) {
@@ -1403,6 +1408,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 				strs.add(ctx.static_ref_path().type_identifier_elem(i).getText() + "::");
 			}
 			type_identifier_elem = String.join("", strs);
+			// A leading '::' starts the qualifier at the outermost namespace (PSS 2.0 Section 21.3).
+			if (ctx.static_ref_path().getChild(0).getText().equals("::"))
+				type_identifier_elem = "::" + type_identifier_elem;
 		}
 
 		PSSMemberPathElemExpression static_ref_path = (PSSMemberPathElemExpression) visit(ctx.static_ref_path().member_path_elem());
@@ -1501,8 +1509,10 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		List<String> pkg = new ArrayList<String>();
 		for (PSSParser.Type_identifier_elemContext elem : ctx.type_identifier_elem())
 			pkg.add(elem.getText());
+		// A leading '::' starts the qualifier at the outermost namespace (PSS 2.0 Section 21.3).
+		String root_prefix = ctx.getChild(0).getText().equals("::") ? "::" : "";
 		if (!pkg.isEmpty())
-			call.setPackage(String.join("::", pkg));
+			call.setPackage(root_prefix + String.join("::", pkg));
 		return call;
 	}
 

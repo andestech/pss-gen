@@ -49,7 +49,14 @@ public class PSSFunctionCallExpression extends PSSExpression {
 
 	/** The package model of the qualifier. */
 	private PSSModel findPackage(PSSInst var) {
-		PSSModel m = var.getTypeModel().findDeclaration(m_package);
+		PSSModel scope = var.getTypeModel();
+		String pkg = m_package;
+		if (pkg.startsWith("::")) {
+			while (scope.getParent() != null)
+				scope = scope.getParent();
+			pkg = pkg.substring(2);
+		}
+		PSSModel m = scope.findDeclaration(pkg);
 		if (m == null)
 			PSSMessage.Error("", "Function " + getText() + " is not defined.");
 		return m;
