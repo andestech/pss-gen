@@ -409,6 +409,7 @@
           m_id: ""
           m_parent: @106
           m_static_insts: ArrayList[0]
+          m_searching: false
           m_type_id: "pk"
           m_wildcard: true
         - #109 PSSImportStmtModel
@@ -417,6 +418,7 @@
           m_id: ""
           m_parent: @106
           m_static_insts: ArrayList[0]
+          m_searching: false
           m_type_id: "outer::inner"
           m_wildcard: false
         - #110 PSSDataTypeModel

@@ -1,0 +1,20 @@
+// PSS 2.0 21.1.3: two packages may import each other; names still resolve.
+package p {
+    import q::*;
+    enum a_e { A = 1 };
+}
+package q {
+    import p::*;
+    enum b_e { B = 2 };
+}
+enum g_e { G = 3 };
+component pss_top {
+    import p::*;
+    action root_a {
+        rand g_e x;
+        rand a_e y;
+        constraint x == G;
+        constraint y == a_e::A;
+        exec body ASM = """x={{x}} y={{y}}""";
+    }
+}
