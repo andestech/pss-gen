@@ -1,0 +1,14 @@
+// PSS 2.0 9.5.9: an unqualified enum item on the left of 'in' is an error, in parentheses too.
+component pss_top {
+    enum e_t { A = 3, B = 4 };
+    action root_a {
+        list<e_t> l = {e_t::A};
+        int v = 0;
+        exec post_solve {
+            if ((A) in l) {
+                v = 1;
+            }
+        }
+        exec body ASM = """v={{v}}""";
+    }
+}

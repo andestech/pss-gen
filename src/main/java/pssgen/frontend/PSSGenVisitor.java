@@ -1821,8 +1821,11 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		return false;
 	}
 
-	/** The identifier when ctx is a name without qualifier, path, index or call; else null. */
+	/** The identifier when ctx is a name, in parentheses or not, without qualifier, path, index or call; else null. */
 	private static String bareIdentifier(PSSParser.ExpressionContext ctx) {
+		// Parentheses do not qualify a name: (A) is the same reference as A.
+		while (ctx.primary() != null && ctx.primary().paren_expr() != null)
+			ctx = ctx.primary().paren_expr().expression();
 		if (ctx.primary() == null || ctx.primary().ref_path() == null)
 			return null;
 		String text = ctx.primary().ref_path().getText();
