@@ -108,6 +108,7 @@ import pssgen.util.PSSMessage;
 import pssgen.value.PSSBoolVal;
 import pssgen.value.PSSNumber;
 import pssgen.value.PSSStringVal;
+import pssgen.value.PSSRangeVal;
 import pssgen.value.PSSVal;
 
 /**
@@ -701,6 +702,8 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		// in [..2]		// ..constant_expression
 		if (ctx.domain_open_range_list() != null) {
 			domain = (TypeSpec) visit(ctx.domain_open_range_list());
+			if ((domain.ranges != null ? 1 : 0) + domain.open_ended.size() > 1)
+				domain = closedDomain(ctx.domain_open_range_list(), width, sign);
 		}
 
 		PSSIntModel model = new PSSIntModel(width, sign);
@@ -724,6 +727,31 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 			}
 		}
 		return new TypeSpec(null, ranges ? open_range_list : null, open_ended);
+	}
+
+	/**
+	 * PSS 2.0 Section 8.2.1 d): a domain is the union of its items. For a domain that
+	 * mixes an open-ended item with other items, each open-ended item becomes the closed
+	 * range up to the bound of the type, so that a single 'in' holds the whole union.
+	 */
+	private TypeSpec closedDomain(PSSParser.Domain_open_range_listContext ctx, int width, boolean sign) {
+		PSSVal type_range = PSSRangeVal.getIntRangeVal(width, sign);
+		PSSOpenRangeListExpression open_range_list = new PSSOpenRangeListExpression();
+		for (PSSParser.Domain_open_range_valueContext value : ctx.domain_open_range_value()) {
+			PSSExpression item = (PSSExpression) visit(value);
+			if (value.constant_expression().size() == 2) {
+				open_range_list.addOpenRangeValueExpression((PSSOpenRangeValueExpression) item);
+			} else {
+				PSSExpression bound = (PSSExpression) visit(value.constant_expression(0));
+				if (item instanceof PSSLessEqualExpression)
+					open_range_list.addOpenRangeValueExpression(
+						new PSSOpenRangeValueExpression(new PSSPrimaryExpression(type_range.getMin()), bound));
+				else
+					open_range_list.addOpenRangeValueExpression(
+						new PSSOpenRangeValueExpression(bound, new PSSPrimaryExpression(type_range.getMax())));
+			}
+		}
+		return new TypeSpec(null, open_range_list, Collections.<PSSExpression>emptyList());
 	}
 
 	@Override
