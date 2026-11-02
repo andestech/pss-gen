@@ -235,7 +235,7 @@
                 m_type: @12
               m_rand: false
           m_constraint: #52 PSSConstraintList
-            m_list: #53 ArrayList[4]
+            m_list: #53 ArrayList[5]
               - #54 PSSExpressionConstraint
                 children: ArrayList[0]
                 m_hierarchy_id: ""
@@ -410,68 +410,70 @@
                               m_sign: true
                               m_width: 65
                             m_val: 200
-              - #117 PSSExpressionConstraint
+              - #117 PSSForeachConstraint
                 children: ArrayList[0]
                 m_hierarchy_id: ""
                 m_id: ""
                 m_parent: @5
                 m_static_insts: ArrayList[0]
-                m_expression: #118 PSSInExpression
-                  m_left: #119 PSSMemberPathElemExpression
-                    m_context: Context.MEMBER_CONSTRAINT
-                    m_id: "c"
-                  m_right: #120 PSSOpenRangeListExpression
-                    m_list: #121 ArrayList[1]
-                      - #122 PSSOpenRangeValueExpression
-                        m_begin: #123 PSSPrimaryExpression
-                          m_val: #124 PSSIntVal
-                            m_type: #125 PSSIntModel
-                              children: ArrayList[0]
-                              m_hierarchy_id: "int[65]"
-                              m_id: "int[65]"
-                              m_static_insts: ArrayList[0]
-                              m_sign: true
-                              m_width: 65
-                            m_val: 0
-                        m_end: #126 PSSPrimaryExpression
-                          m_val: #127 PSSIntVal
-                            m_type: #128 PSSIntModel
-                              children: ArrayList[0]
-                              m_hierarchy_id: "int[65]"
-                              m_id: "int[65]"
-                              m_static_insts: ArrayList[0]
-                              m_sign: true
-                              m_width: 65
-                            m_val: 7
-              - #129 PSSExpressionConstraint
+                m_constraints: #118 ArrayList[1]
+                  - #119 PSSExpressionConstraint
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_static_insts: ArrayList[0]
+                    m_expression: #120 PSSInExpression
+                      m_left: #121 PSSMemberPathElemExpression
+                        m_context: Context.MEMBER_CONSTRAINT
+                        m_id: "c"
+                        m_index: #122 PSSMemberPathElemExpression
+                          m_context: Context.MEMBER_CONSTRAINT
+                          m_id: "$index"
+                      m_right: #123 PSSOpenRangeListExpression
+                        m_list: #124 ArrayList[1]
+                          - #125 PSSOpenRangeValueExpression
+                            m_begin: #126 PSSPrimaryExpression
+                              m_val: #127 PSSIntVal
+                                m_type: #128 PSSIntModel
+                                  children: ArrayList[0]
+                                  m_hierarchy_id: "int[65]"
+                                  m_id: "int[65]"
+                                  m_static_insts: ArrayList[0]
+                                  m_sign: true
+                                  m_width: 65
+                                m_val: 0
+                            m_end: #129 PSSPrimaryExpression
+                              m_val: #130 PSSIntVal
+                                m_type: #131 PSSIntModel
+                                  children: ArrayList[0]
+                                  m_hierarchy_id: "int[65]"
+                                  m_id: "int[65]"
+                                  m_static_insts: ArrayList[0]
+                                  m_sign: true
+                                  m_width: 65
+                                m_val: 7
+                m_expression: #132 PSSMemberPathElemExpression
+                  m_context: Context.MEMBER_CONSTRAINT
+                  m_id: "c"
+                m_index_identifier: "$index"
+              - #133 PSSExpressionConstraint
                 children: ArrayList[0]
                 m_hierarchy_id: ""
                 m_id: ""
                 m_parent: @5
                 m_static_insts: ArrayList[0]
-                m_expression: #130 PSSInExpression
-                  m_left: #131 PSSMemberPathElemExpression
+                m_expression: #134 PSSInExpression
+                  m_left: #135 PSSMemberPathElemExpression
                     m_context: Context.MEMBER_CONSTRAINT
                     m_id: "e"
-                  m_right: #132 PSSOpenRangeListExpression
-                    m_list: #133 ArrayList[2]
-                      - #134 PSSOpenRangeValueExpression
-                        m_begin: #135 PSSPrimaryExpression
-                          m_val: #136 PSSIntVal
+                  m_right: #136 PSSOpenRangeListExpression
+                    m_list: #137 ArrayList[2]
+                      - #138 PSSOpenRangeValueExpression
+                        m_begin: #139 PSSPrimaryExpression
+                          m_val: #140 PSSIntVal
                             m_type: @72
                             m_val: 0
-                        m_end: #137 PSSPrimaryExpression
-                          m_val: #138 PSSIntVal
-                            m_type: #139 PSSIntModel
-                              children: ArrayList[0]
-                              m_hierarchy_id: "int[65]"
-                              m_id: "int[65]"
-                              m_static_insts: ArrayList[0]
-                              m_sign: true
-                              m_width: 65
-                            m_val: 9
-                      - #140 PSSOpenRangeValueExpression
-                        m_begin: #141 PSSPrimaryExpression
+                        m_end: #141 PSSPrimaryExpression
                           m_val: #142 PSSIntVal
                             m_type: #143 PSSIntModel
                               children: ArrayList[0]
@@ -480,18 +482,75 @@
                               m_static_insts: ArrayList[0]
                               m_sign: true
                               m_width: 65
+                            m_val: 9
+                      - #144 PSSOpenRangeValueExpression
+                        m_begin: #145 PSSPrimaryExpression
+                          m_val: #146 PSSIntVal
+                            m_type: #147 PSSIntModel
+                              children: ArrayList[0]
+                              m_hierarchy_id: "int[65]"
+                              m_id: "int[65]"
+                              m_static_insts: ArrayList[0]
+                              m_sign: true
+                              m_width: 65
                             m_val: 20
-                        m_end: #144 PSSPrimaryExpression
-                          m_val: #145 PSSIntVal
+                        m_end: #148 PSSPrimaryExpression
+                          m_val: #149 PSSIntVal
                             m_type: @72
                             m_val: 255
-          m_default_constraint: #146 PSSConstraintList
+              - #150 PSSForeachConstraint
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_parent: @5
+                m_static_insts: ArrayList[0]
+                m_constraints: #151 ArrayList[1]
+                  - #152 PSSExpressionConstraint
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_static_insts: ArrayList[0]
+                    m_expression: #153 PSSInExpression
+                      m_left: #154 PSSMemberPathElemExpression
+                        m_context: Context.MEMBER_CONSTRAINT
+                        m_id: "l"
+                        m_index: #155 PSSMemberPathElemExpression
+                          m_context: Context.MEMBER_CONSTRAINT
+                          m_id: "$index"
+                      m_right: #156 PSSOpenRangeListExpression
+                        m_list: #157 ArrayList[1]
+                          - #158 PSSOpenRangeValueExpression
+                            m_begin: #159 PSSPrimaryExpression
+                              m_val: #160 PSSIntVal
+                                m_type: #161 PSSIntModel
+                                  children: ArrayList[0]
+                                  m_hierarchy_id: "int[65]"
+                                  m_id: "int[65]"
+                                  m_static_insts: ArrayList[0]
+                                  m_sign: true
+                                  m_width: 65
+                                m_val: 1
+                            m_end: #162 PSSPrimaryExpression
+                              m_val: #163 PSSIntVal
+                                m_type: #164 PSSIntModel
+                                  children: ArrayList[0]
+                                  m_hierarchy_id: "int[65]"
+                                  m_id: "int[65]"
+                                  m_static_insts: ArrayList[0]
+                                  m_sign: true
+                                  m_width: 65
+                                m_val: 2
+                m_expression: #165 PSSMemberPathElemExpression
+                  m_context: Context.MEMBER_CONSTRAINT
+                  m_id: "l"
+                m_index_identifier: "$index"
+          m_default_constraint: #166 PSSConstraintList
             m_list: ArrayList[0]
           m_exec_list: ArrayList[0]
           m_flowref: ArrayList[0]
-          m_target_code: #147 PSSTargetCodeList
-            m_list: #148 ArrayList[1]
-              - #149 PSSTargetCode
+          m_target_code: #167 PSSTargetCodeList
+            m_list: #168 ArrayList[1]
+              - #169 PSSTargetCode
                 children: ArrayList[0]
                 m_hierarchy_id: ""
                 m_id: ""
@@ -505,7 +564,7 @@
       m_id: "pss_top"
       m_parent: @1
       m_static_insts: ArrayList[0]
-      m_data_list: #150 PSSComponentDataDeclListModel
+      m_data_list: #170 PSSComponentDataDeclListModel
         children: ArrayList[0]
         m_hierarchy_id: ""
         m_id: ""

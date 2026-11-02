@@ -129,9 +129,15 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		 * to the first; they constrain the field after the ranges
 		 */
 		final List<PSSExpression> open_ended;
+		/** the element type of an array or list type, whose domain each element has; else null */
+		ParserRuleContext element;
 
 		TypeSpec(PSSModel model) {
 			this(model, null, Collections.<PSSExpression>emptyList());
+		}
+
+		boolean hasDomain() {
+			return ranges != null || !open_ended.isEmpty();
 		}
 
 		TypeSpec(PSSModel model, PSSOpenRangeListExpression ranges, List<PSSExpression> open_ended) {
@@ -645,18 +651,26 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 	@Override
 	public Object visitArray_type(PSSParser.Array_typeContext ctx) {
-		PSSModel data_model = ((TypeSpec) visit(ctx.data_type())).model;
+		TypeSpec elem = (TypeSpec) visit(ctx.data_type());
+		PSSModel data_model = elem.model;
 
 		PSSExpression size_exp = (PSSExpression) visit(ctx.array_size_expression());
 
-		return new TypeSpec(new PSSArrayModel(data_model, size_exp));
+		TypeSpec type = new TypeSpec(new PSSArrayModel(data_model, size_exp));
+		if (elem.hasDomain())
+			type.element = ctx.data_type();
+		return type;
 	}
 
 	@Override
 	public Object visitList_type(PSSParser.List_typeContext ctx) {
-		PSSModel data_model = ((TypeSpec) visit(ctx.data_type())).model;
+		TypeSpec elem = (TypeSpec) visit(ctx.data_type());
+		PSSModel data_model = elem.model;
 
-		return new TypeSpec(new PSSListModel(data_model));
+		TypeSpec type = new TypeSpec(new PSSListModel(data_model));
+		if (elem.hasDomain())
+			type.element = ctx.data_type();
+		return type;
 	}
 
 	@Override
@@ -1696,7 +1710,7 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 		PSSDataDeclModel data_decl = new PSSDataDeclModel(data_type);
 
-		boolean domain = type.ranges != null || !type.open_ended.isEmpty();
+		boolean domain = type.hasDomain();
 		for (int i = 0; i < ctx.data_instantiation().size(); i++) {
 			PSSParser.Data_instantiationContext data_inst = ctx.data_instantiation(i);
 
@@ -1716,19 +1730,25 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 				const_expression = (PSSExpression) visit(data_inst.constant_expression());
 			}
 
-			if (domain) {
+			if (domain && array_dim == null) {
 				// PSS 2.0 Section 8.2.1 e): the domain belongs to the type, so it constrains
 				// every field declared with it. Each field gets its own domain items, as an
 				// open-ended item holds the field it constrains.
 				TypeSpec field_type = i == 0 ? type : (TypeSpec) visit(ctx.data_type());
 				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id, PSSScope.Context.MEMBER_CONSTRAINT);
-				if (field_type.ranges != null) {
-					root.addConstraint(new PSSExpressionConstraint(new PSSInExpression(variable, field_type.ranges)));
-				}
-				for (PSSExpression item : field_type.open_ended) {
-					item.setLeftExpression(variable);
-					root.addConstraint(new PSSExpressionConstraint(item));
-				}
+				for (PSSConstraint c : domainConstraints(field_type, variable))
+					root.addConstraint(c);
+			} else if (domain || type.element != null) {
+				// The elements of an array field 'T x[N]', or of an array or list type whose
+				// element type has a domain, each have the type of an element.
+				TypeSpec elem_type = (TypeSpec) visit(domain ? ctx.data_type() : type.element);
+				String index = "$index";
+				PSSMemberPathElemExpression element = new PSSMemberPathElemExpression(id, null,
+						new PSSMemberPathElemExpression(index, PSSScope.Context.MEMBER_CONSTRAINT),
+						PSSScope.Context.MEMBER_CONSTRAINT);
+				root.addConstraint(new PSSForeachConstraint(null,
+						new PSSMemberPathElemExpression(id, PSSScope.Context.MEMBER_CONSTRAINT), index,
+						domainConstraints(elem_type, element)));
 			}
 
 			PSSDataInstModel inst = new PSSDataInstModel(id, array_dim, const_expression);
@@ -1736,6 +1756,18 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 		}
 		return data_decl;
+	}
+
+	/** The constraints that keep target in the domain of type. */
+	private static List<PSSConstraint> domainConstraints(TypeSpec type, PSSExpression target) {
+		List<PSSConstraint> constraints = new ArrayList<PSSConstraint>();
+		if (type.ranges != null)
+			constraints.add(new PSSExpressionConstraint(new PSSInExpression(target, type.ranges)));
+		for (PSSExpression item : type.open_ended) {
+			item.setLeftExpression(target);
+			constraints.add(new PSSExpressionConstraint(item));
+		}
+		return constraints;
 	}
 
 	/** True when ctx is inside a branch of a compile if of the type that declares it. */
