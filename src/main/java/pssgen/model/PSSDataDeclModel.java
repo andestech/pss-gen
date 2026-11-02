@@ -3,6 +3,7 @@ package pssgen.model;
 import java.util.*;
 
 import pssgen.inst.PSSInst;
+import pssgen.inst.PSSStaticConstInst;
 
 public class PSSDataDeclModel extends PSSModel {
 
@@ -33,6 +34,18 @@ public class PSSDataDeclModel extends PSSModel {
 			PSSDataInstModel d_inst = m_inst_list.get(i);
 			d_inst.eval(parent_inst, m_type, rand);
 		}
+	}
+
+	/**
+	 * Declares the fields of this declaration as static constants of a type or package
+	 * (PSS 2.0 Sections 8.1.1, 21.1.1.1 b)), found by name through the static members of
+	 * scope.
+	 *
+	 * @param scope the type or package that declares the constants
+	 */
+	public void declStatic(PSSModel scope) {
+		for (int i=0; i<m_inst_list.size(); i++)
+			scope.addStaticInst(new PSSStaticConstInst(scope, m_inst_list.get(i), m_type));
 	}
 
 	public String getText() {

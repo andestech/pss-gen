@@ -58,7 +58,7 @@ public class PSSModel {
 		// static instances in this model
 		for (PSSInst inst : m_static_insts) {
 			if (inst.getId().equals(id))
-				return inst;
+				return inst.resolveStatic();
 		}
 		// enum items in this model
 		for (PSSModel c : children) {

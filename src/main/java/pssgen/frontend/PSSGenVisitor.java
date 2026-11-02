@@ -265,6 +265,12 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	public Object visitComponent_data_declaration(PSSParser.Component_data_declarationContext ctx) {
 
 		PSSDataDeclModel decl = (PSSDataDeclModel) visit(ctx.data_declaration());
+		// PSS 2.0 Section 21.3: a static const is a static member of the component type;
+		// it also stays readable through an instance.
+		for (int i = 0; i < ctx.getChildCount(); i++) {
+			if (ctx.getChild(i).getText().equals("static"))
+				decl.declStatic(root);
+		}
 
 		PSSComponentDataDeclModel data_decl = new PSSComponentDataDeclModel(decl);
 		root.addComponentDataDecl(data_decl);
@@ -1690,16 +1696,25 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 	@Override
 	public Object visitAttr_field(PSSParser.Attr_fieldContext ctx) {
-		boolean rand = false;
-		if (ctx.rand_or_static_const() != null) {
-			rand = true;
-		}
+		boolean rand = ctx.rand_or_static_const() != null && ctx.rand_or_static_const().getText().equals("rand");
 
 		PSSDataDeclModel decl = (PSSDataDeclModel) visit(ctx.data_declaration());
+		// PSS 2.0 Section 21.3: a static const is a static member of the type; it also
+		// stays readable through an instance, as a field that is not random.
+		if (ctx.rand_or_static_const() != null && !rand)
+			decl.declStatic(root);
 		PSSAttrField attrfield = new PSSAttrField(rand, decl);
 		root.addAttrField(attrfield);
 
 		return attrfield;
+	}
+
+	/** PSS 2.0 Section 21.1.1.1 b): a const field of a package is a static constant. */
+	@Override
+	public Object visitConst_field_declaration(PSSParser.Const_field_declarationContext ctx) {
+		PSSDataDeclModel decl = (PSSDataDeclModel) visit(ctx.data_declaration());
+		decl.declStatic(root);
+		return decl;
 	}
 
 	@Override

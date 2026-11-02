@@ -1,0 +1,37 @@
+// PSS 2.0 8.1.1, 21.1.1.1 b), 21.3: static constants of a package, a component and an action,
+// read unqualified from an enclosed type and qualified with '::'; a constant expression may
+// use other constants and enum items.
+package cfg_pkg {
+    const int xlen = 64;
+    const int half = xlen / 2;
+}
+component lib_c {
+    action lib_a {
+        int w = 0;
+        exec pre_solve {
+            w = pss_top::flen + cfg_pkg::half;
+        }
+        exec body ASM = """lib={{w}}""";
+    }
+}
+component pss_top {
+    enum mode_e { M0 = 3, M1 = 5 };
+    static const int flen = 32;
+    lib_c lib;
+    action root_a {
+        static const bit[8] k = 7;
+        static const int mode = mode_e::M1 + 1;
+        int a = 0;
+        int b = 0;
+        int c = 0;
+        exec pre_solve {
+            a = flen;
+            b = mode;
+            c = k + cfg_pkg::xlen;
+        }
+        exec header ASM = """a={{a}} b={{b}} c={{c}} k={{k}}""";
+        activity {
+            do lib_c::lib_a;
+        }
+    }
+}

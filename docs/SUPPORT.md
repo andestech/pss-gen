@@ -191,6 +191,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 |---|---|---|---|---|---|
 | 21 / 20 | Several input files; file list `-f`; library directory `-y` | supported | | tests/samples/test_filelist | |
 | 21 / 20 | Enums, structs and functions declared outside any component | supported | | tests/samples/test_pss2.0_example315_parameter_passing_semantics | |
+| 8.1.1, 21.1.1, 21.3 / 7.1.1, 20.1.1, 20.3 | `static const` field of a component, action or struct; `const` field of a package; read by name inside the type or a type nested in it, or as `T::name`, `pkg::name` | supported | `[] ... is read-only` | tests/samples/test_static_const | The value is the initializer's, which may name enum items and other constants. Assigning to it is the error in the Message column. In a component or action it is also readable through an instance, e.g. `comp.name`. |
 | 21.1 / 20.1 | Field whose type name resolves to a package | unsupported | `PSSModel.declInst()`: `PSSPackageModel::declInst is not implemented` | | Not legal PSS. |
 | 23.3 / 22.3 | `compile has` | unsupported | `PSSGenVisitor.visitPrimary()`: `Syntax is not yet supported: '...'` | | |
 

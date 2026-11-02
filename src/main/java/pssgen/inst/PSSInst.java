@@ -114,6 +114,15 @@ public class PSSInst {
 		return null;
 	}
 
+	/**
+	 * Returns the instance that this static member of a type or package stands for.
+	 *
+	 * @return the instance, or null when it cannot be given a value
+	 */
+	public PSSInst resolveStatic() {
+		return this;
+	}
+
 	public void setTraversed() {
 		m_traversed = true;
 	}
