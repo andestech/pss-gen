@@ -1,0 +1,37 @@
+// PSS 2.0 17.4.1.1 a): the rand struct fields of a flow object are randomized with it, so the
+// constraints of their struct type hold.
+component pss_top {
+    struct s_t {
+        rand bit[8] v;
+        constraint v in [40..45];
+    };
+    buffer data_b {
+        rand s_t s;
+        rand s_t pair[2];
+        rand bit[8] w;
+        constraint w in [1..3];
+    };
+    action prod_a {
+        output data_b out_b;
+    }
+    action cons_a {
+        input data_b in_b;
+        bit ok = 0;
+        exec post_solve {
+            if (in_b.s.v >= 40 && in_b.s.v <= 45 && in_b.pair[0].v >= 40 && in_b.pair[0].v <= 45
+                && in_b.pair[1].v >= 40 && in_b.pair[1].v <= 45 && in_b.w >= 1 && in_b.w <= 3) {
+                ok = 1;
+            }
+        }
+        exec body ASM = """ok={{ok}}""";
+    }
+    action root_a {
+        prod_a p;
+        cons_a c;
+        activity {
+            p;
+            c;
+            bind p.out_b c.in_b;
+        }
+    }
+}

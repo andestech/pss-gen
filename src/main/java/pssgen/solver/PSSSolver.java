@@ -82,6 +82,9 @@ public class PSSSolver {
 		} else if (inst instanceof PSSFlowRefInst) {
 			PSSConstraintList c_list = inst.getTypeModel().getConstraintList();
 			add(inst, c_list);
+			PSSInst flow_object = ((PSSFlowRefInst) inst).getVar();
+			if (flow_object != null)
+				addRandomized(flow_object.getInsts());
 		} else if (inst instanceof PSSArrayInst) {
 			if (inst.isRand())
 				addRandomized(((PSSArrayInst) inst).elements());
@@ -90,8 +93,8 @@ public class PSSSolver {
 
 	/**
 	 * PSS 2.0 Sections 17.4.1.1 a) and 8.8.1: the rand struct fields of a rand struct
-	 * and the elements of a rand array are randomized with their container, so the
-	 * constraints of their struct types hold for them too.
+	 * or a flow object and the elements of a rand array are randomized with their
+	 * container, so the constraints of their struct types hold for them too.
 	 */
 	private void addRandomized(List<PSSInst> parts) {
 		for (PSSInst part : parts) {
