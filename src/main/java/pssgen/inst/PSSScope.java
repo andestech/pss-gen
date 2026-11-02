@@ -51,7 +51,10 @@ public final class PSSScope {
 		KEYWORD_THIS,
 		/** a first token {@code comp}: the {@code comp} child of the nearest action */
 		KEYWORD_COMP,
-		/** a first token {@code pss_top}: the nearest instance named pss_top */
+		/**
+		 * a first token {@code pss_top} that names no field or local: the nearest instance
+		 * named pss_top
+		 */
 		KEYWORD_PSS_TOP,
 		/**
 		 * the children of each instance from the start up to the nearest action, and of
@@ -85,7 +88,7 @@ public final class PSSScope {
 		// PSS 2.0 Section 22.7.1: a block is a nested scope, so a local may hide a field
 		// of an enclosing type or an enum item; only the block's own names are checked.
 		POLICY.put(Context.LOCAL_REDECLARATION,
-			Collections.unmodifiableSet(EnumSet.complementOf(EnumSet.of(Step.STATIC_ITEMS))));
+			Collections.unmodifiableSet(EnumSet.complementOf(EnumSet.of(Step.STATIC_ITEMS, Step.KEYWORD_PSS_TOP))));
 	}
 
 	private PSSScope() {
@@ -122,10 +125,15 @@ public final class PSSScope {
 				PSSMessage.Error("", "The reference \"comp\" should be used in an action.");
 			inst = action.findChild("comp");
 		} else if (steps.contains(Step.KEYWORD_PSS_TOP) && "pss_top".equals(tokens[0])) {
+			// pss_top is no keyword (PSS 2.0 Section 4.2): a field or local of that name
+			// comes first.
+			if (steps.contains(Step.ENCLOSING_SCOPES))
+				inst = enclosingScopes(start, tokens[0], steps);
 			PSSInst top = start;
-			while (top != null && !top.getId().equals("pss_top"))
+			while (inst == null && top != null && !top.getId().equals("pss_top"))
 				top = top.getParent();
-			inst = top;
+			if (inst == null)
+				inst = top;
 		} else if (steps.contains(Step.ENCLOSING_SCOPES)) {
 			inst = enclosingScopes(start, tokens[0], steps);
 		}
