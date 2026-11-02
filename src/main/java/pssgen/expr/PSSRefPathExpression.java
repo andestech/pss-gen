@@ -73,6 +73,20 @@ public class PSSRefPathExpression extends PSSExpression {
 	}
 
 	@Override
+	public String bareName() {
+		if ((m_type_identifier_elems != null && !m_type_identifier_elems.isEmpty()) || m_bit_slice_from != null)
+			return null;
+		return m_ref_path.bareName();
+	}
+
+	@Override
+	public PSSInst plainInst(PSSInst var) {
+		if (m_bit_slice_from != null || !m_ref_path.isPlainPath())
+			return null;
+		return getInst(var);
+	}
+
+	@Override
 	public PSSInst getInst(PSSInst var) {
 		PSSInst inst = null;
 		if (m_type_identifier_elems != null && !m_type_identifier_elems.equals("")) {

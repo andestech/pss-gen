@@ -2,6 +2,7 @@ package pssgen.expr;
 
 import java.util.ArrayList;
 
+import pssgen.inst.PSSEnumInst;
 import pssgen.inst.PSSInst;
 import pssgen.solver.PSSDomainMap;
 import pssgen.util.PSSMessage;
@@ -77,6 +78,57 @@ public class PSSExpression {
 	 */
 	public PSSInst getInst(PSSInst var) {
 		return null;
+	}
+
+	/**
+	 * Returns the name, when this expression is one name without qualifier, path, index,
+	 * call or select.
+	 *
+	 * @return the name, or null
+	 */
+	public String bareName() {
+		return null;
+	}
+
+	/**
+	 * Returns the field this expression reads, when the path has no index, call or
+	 * select, so that resolving it has no side effect.
+	 *
+	 * @param var the instance the expression is evaluated in
+	 * @return the field, or null
+	 */
+	public PSSInst plainInst(PSSInst var) {
+		return null;
+	}
+
+	/**
+	 * PSS 2.0 Section 21.3 a): in an expression whose expected type is an enum type, a
+	 * name is first searched among the items of that type. Returns the item's value as
+	 * an expression when e is a bare name and expected is an enum field with an item of
+	 * that name; else e.
+	 *
+	 * @param e        an expression
+	 * @param expected the field whose type is the expected type of e, or null
+	 * @return the expression to evaluate for e
+	 */
+	public static PSSExpression expecting(PSSExpression e, PSSInst expected) {
+		String name = e.bareName();
+		if (name != null && expected instanceof PSSEnumInst) {
+			PSSVal item = ((PSSEnumInst) expected).itemValue(name);
+			if (item != null)
+				return new PSSPrimaryExpression(item);
+		}
+		return e;
+	}
+
+	/**
+	 * As {@link #expecting(PSSExpression, PSSInst)}, where the expected type is the type
+	 * of the field that other reads.
+	 */
+	public static PSSExpression expecting(PSSExpression e, PSSExpression other, PSSInst var) {
+		if (e.bareName() == null)
+			return e;
+		return expecting(e, other.plainInst(var));
 	}
 
 	/**

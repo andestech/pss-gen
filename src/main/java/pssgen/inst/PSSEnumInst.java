@@ -49,6 +49,20 @@ public class PSSEnumInst extends PSSIntInst {
 	}
 
 	/**
+	 * Returns the value of an item of this field's enum type.
+	 *
+	 * @param name an item name
+	 * @return the value, or null when the type has no such item
+	 */
+	public PSSIntVal itemValue(String name) {
+		for (String item : m_enum_model.getEnumItems()) {
+			if (item.equals(name))
+				return new PSSIntVal(BigInteger.valueOf(m_enum_model.getEnumItemValue(item)));
+		}
+		return null;
+	}
+
+	/**
 	 * Returns the name of the enum item this field holds.
 	 *
 	 * @return the item name, or null when no item has the value of this field

@@ -32,7 +32,7 @@ public class PSSDataInstModel extends PSSModel {
 		parent_inst.addInst(inst);
 
 		if (m_init_exp != null) {
-			PSSVal init_val = m_init_exp.eval(parent_inst);
+			PSSVal init_val = PSSExpression.expecting(m_init_exp, inst).eval(parent_inst);
 			inst.assign(init_val);
 		}
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import pssgen.expr.PSSExpression;
 import pssgen.expr.PSSLinear;
 import pssgen.expr.PSSRelation;
 import pssgen.inst.PSSInst;
@@ -86,7 +87,7 @@ public final class PSSPropagator {
 			m_items.add(new Item(t.getKey(), list));
 			return;
 		}
-		PSSLinear right = PSSLinear.of(r.right, scope, isVariable);
+		PSSLinear right = PSSLinear.of(PSSExpression.expecting(r.right, r.left, scope), scope, isVariable);
 		if (left == null || right == null)
 			return;
 		PSSLinear diff = PSSLinear.difference(left, right);

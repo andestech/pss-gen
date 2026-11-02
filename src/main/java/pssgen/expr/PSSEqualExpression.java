@@ -25,8 +25,8 @@ public class PSSEqualExpression extends PSSExpression {
 	}
 
 	public PSSVal eval(PSSInst var) {
-		PSSVal leftVal = m_left.eval(var);
-		PSSVal rightVal = m_right.eval(var);
+		PSSVal leftVal = expecting(m_left, m_right, var).eval(var);
+		PSSVal rightVal = expecting(m_right, m_left, var).eval(var);
 
 		return leftVal.Equal(rightVal);
 	}
@@ -36,7 +36,7 @@ public class PSSEqualExpression extends PSSExpression {
 
 		PSSInst leftInst = m_left.getInst(var);
 		if (leftInst != null) {
-			PSSVal rightVal = m_right.eval(var);
+			PSSVal rightVal = expecting(m_right, leftInst).eval(var);
 			PSSDomain left_domain = leftInst.getInitDomain();
 			left_domain = left_domain.reduceDomainEqual(rightVal);
 			map.add(leftInst, left_domain);

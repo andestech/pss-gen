@@ -37,7 +37,7 @@ public class PSSAssignProcStmt extends PSSProcStmt {
 	}
 
 	public void eval(PSSInst inst) {
-		PSSVal rightVal = m_expression.eval(inst);
+		PSSVal rightVal = (m_op.equals("=") ? PSSExpression.expecting(m_expression, m_ref, inst) : m_expression).eval(inst);
 		PSSInst leftInst = m_ref.getInst(inst);
 
 		if (leftInst.isReadOnly())

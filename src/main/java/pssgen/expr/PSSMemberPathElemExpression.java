@@ -382,6 +382,20 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     }
 
     @Override
+    public String bareName() {
+        return m_parent == null && m_child == null && m_index == null && m_function_parameter_list == null ? m_id : null;
+    }
+
+    /** True when no element of the path from this one down has an index or a call. */
+    boolean isPlainPath() {
+        for (PSSMemberPathElemExpression e = this; e != null; e = e.m_child) {
+            if (e.m_index != null || e.m_function_parameter_list != null)
+                return false;
+        }
+        return true;
+    }
+
+    @Override
     public String getText() {
         StringBuffer sb = new StringBuffer();
         sb.append(m_id);

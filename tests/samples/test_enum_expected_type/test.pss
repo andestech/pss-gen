@@ -1,0 +1,24 @@
+// PSS 2.0 21.3 a): where the expected type is an enum type, an unqualified name is first an
+// item of that type, before a field or local of the same name.
+component pss_top {
+    enum e_t { A = 3, B = 4, C = 5 };
+    action root_a {
+        int B = 9;
+        e_t initial = B;
+        e_t assigned = A;
+        rand e_t eq;
+        rand e_t ne;
+        bit same = 0;
+        int other = 0;
+        constraint eq == B;
+        constraint ne != A && ne != C;
+        exec post_solve {
+            assigned = B;
+            if (eq == B) {
+                same = 1;
+            }
+            other = B;
+        }
+        exec body ASM = """initial={{initial}} assigned={{assigned}} eq={{eq}} ne={{ne}} same={{same}} other={{other}}""";
+    }
+}
