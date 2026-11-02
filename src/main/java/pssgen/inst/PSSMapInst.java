@@ -206,8 +206,12 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
         if (!map_type.getKeyType().isCompatible(k.getTypeModel()))
             PSSMessage.Error("", "The key type " + k.getTypeModel().getText() + " of " + k.getText()
                     + " is incompatible with map " + getId());
-        if (!map_type.getValueType().isCompatible(v.getTypeModel()))
-            PSSMessage.Error("", "The value type " + v.getTypeModel().getText() + " of " + v.getText()
+        // PSS 2.0 Section 4.8.1: the empty literal {} has no type of its own; it is the
+        // empty value of a collection value type, and the assignment below checks it.
+        PSSModel vt = v.getTypeModel();
+        if (vt == null ? !(map_type.getValueType() instanceof PSSIAggregate)
+                : !map_type.getValueType().isCompatible(vt))
+            PSSMessage.Error("", "The value type " + (vt == null ? "{}" : vt.getText()) + " of " + v.getText()
                     + " is incompatible with map " + getId());
 
         PSSInst vi = m_values.get(k);
