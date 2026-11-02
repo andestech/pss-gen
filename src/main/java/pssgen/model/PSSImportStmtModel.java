@@ -12,8 +12,16 @@ public class PSSImportStmtModel extends PSSModel {
 	/** true for a wildcard import {@code import p::*;} */
 	private final boolean m_wildcard;
 
-	public PSSImportStmtModel(String type_id, boolean wildcard) {
-		super("");
+	/**
+	 * Constructs an import statement.
+	 *
+	 * @param type_id  the imported package
+	 * @param wildcard true for {@code import p::*;}
+	 * @param alias    the name {@code pp} of {@code import p as pp;}, else ""; a qualified
+	 *                 name {@code pp::x} finds this import, which searches the package
+	 */
+	public PSSImportStmtModel(String type_id, boolean wildcard, String alias) {
+		super(alias);
 
 		m_type_id = type_id;
 		m_wildcard = wildcard;
@@ -63,6 +71,13 @@ public class PSSImportStmtModel extends PSSModel {
 			PSSMessage.Error("IMPORT", "cannot not find package '" + m_type_id + "'");
 		}
 		return package_decl;
+	}
+
+	@Override
+	public PSSInst findStaticInst(String id) {
+		if (getId().isEmpty())
+			return super.findStaticInst(id);
+		return findPackage().findStaticInst(id);
 	}
 
 	public PSSModel findDeclaration(String id) {

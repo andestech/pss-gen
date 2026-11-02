@@ -231,7 +231,9 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		String type_id = ctx.package_import_pattern().type_identifier().getText();
 
 		PSSParser.Package_import_qualifierContext q = ctx.package_import_pattern().package_import_qualifier();
-		PSSImportStmtModel node = new PSSImportStmtModel(type_id, q != null && q.package_import_wildcard() != null);
+		// PSS 2.0 Section 21.1.4: 'import p as pp' names package p pp in this scope.
+		String alias = q != null && q.package_import_alias() != null ? q.package_import_alias().package_identifier().getText() : "";
+		PSSImportStmtModel node = new PSSImportStmtModel(type_id, q != null && q.package_import_wildcard() != null, alias);
 		root.addChild(node);
 
 		return node;
