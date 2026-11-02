@@ -1,0 +1,28 @@
+// PSS 2.0 21.1.1.1 a), 21.3: several package statements of one name form one package.
+package p {
+    function int one() {
+        return 1;
+    }
+}
+package p {
+    function int two() {
+        return 2;
+    }
+    enum e_t { A = 3, B = 4 };
+}
+component pss_top {
+    import p::*;
+    action root_a {
+        int v = 0;
+        int w = 0;
+        int x = 0;
+        int y = 0;
+        exec post_solve {
+            v = p::one();
+            w = p::two();
+            x = p::e_t::B;
+            y = A;
+        }
+        exec body ASM = """v={{v}} w={{w}} x={{x}} y={{y}}""";
+    }
+}

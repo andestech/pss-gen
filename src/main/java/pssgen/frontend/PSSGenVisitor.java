@@ -199,8 +199,17 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 	@Override
 	public Object visitPackage_declaration(PSSParser.Package_declarationContext ctx) {
 		String id = ctx.package_id_path().getText();
-		PSSPackageModel node = new PSSPackageModel(id);
-		root.addChild(node);
+		// PSS 2.0 Section 21.1.1.1 a): several package statements of one name declare the
+		// members of one package.
+		PSSPackageModel node = null;
+		for (PSSModel c : root.getChildren()) {
+			if (c instanceof PSSPackageModel && c.getId().equals(id))
+				node = (PSSPackageModel) c;
+		}
+		if (node == null) {
+			node = new PSSPackageModel(id);
+			root.addChild(node);
+		}
 		root = node;
 
 		for (int i = 0; i < ctx.package_body_item().size(); i++) {
