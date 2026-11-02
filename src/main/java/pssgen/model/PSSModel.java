@@ -215,6 +215,9 @@ public class PSSModel {
 		for (int i = 0; i < children.size(); i++) {
 			PSSModel child = children.get(i);
 
+			if (child instanceof PSSImportStmtModel)
+				((PSSImportStmtModel) child).findPackage();
+
 			if (child.m_id.equals(id)) {
 				if (child_id.length() == 0) {
 					return child;
@@ -222,6 +225,11 @@ public class PSSModel {
 					return child.findDeclaration(child_id);
 				}
 			}
+		}
+		// PSS 2.0 Section 21.3 b): the members of the scope come before the members of
+		// the packages it imports.
+		for (int i = 0; i < children.size(); i++) {
+			PSSModel child = children.get(i);
 
 			if (child.getClass().getSimpleName().equals("PSSImportStmtModel")) {
 				PSSModel node = child.findDeclaration(id);

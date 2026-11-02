@@ -1,0 +1,25 @@
+// PSS 2.0 21.3 b): a component's own members are found before the members of a package it
+// imports; an imported member that the component does not declare is still found.
+package p {
+    function int get() {
+        return 7;
+    }
+    function int other() {
+        return 3;
+    }
+}
+component pss_top {
+    import p::*;
+    function int get() {
+        return 9;
+    }
+    action root_a {
+        int v = 0;
+        int w = 0;
+        exec post_solve {
+            v = get();
+            w = other();
+        }
+        exec body ASM = """v={{v}} w={{w}}""";
+    }
+}

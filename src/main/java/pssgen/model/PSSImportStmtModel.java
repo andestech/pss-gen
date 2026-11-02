@@ -51,12 +51,22 @@ public class PSSImportStmtModel extends PSSModel {
 	/** true while a lookup searches the imported package through this import */
 	private boolean m_searching;
 
-	public PSSModel findDeclaration(String id) {
-		PSSModel package_decl = getParent().findPackageDeclaration(m_type_id);;
+	/**
+	 * Returns the imported package.
+	 *
+	 * @return the package; an error when there is none
+	 */
+	public PSSModel findPackage() {
+		PSSModel package_decl = getParent().findPackageDeclaration(m_type_id);
 
 		if (package_decl == null) {
 			PSSMessage.Error("IMPORT", "cannot not find package '" + m_type_id + "'");
 		}
+		return package_decl;
+	}
+
+	public PSSModel findDeclaration(String id) {
+		PSSModel package_decl = findPackage();
 
 		// Two packages may import each other; a lookup that comes back to this import
 		// has searched the package already.
