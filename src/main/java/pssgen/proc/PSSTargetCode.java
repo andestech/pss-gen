@@ -37,7 +37,8 @@ public class PSSTargetCode extends PSSModel {
 	}
 
 	private void execute(PSSInst inst) {
-		Pattern pattern = Pattern.compile("\\{\\{([\\w\\.\\[\\]]+)\\}\\}");
+		// A reference may be qualified with '::', e.g. {{e_t::A}} (PSS 2.0 Section 22.5.3).
+		Pattern pattern = Pattern.compile("\\{\\{((?:[\\w\\.\\[\\]]|::)+)\\}\\}");
 
 		int begin = 0;
 		String residual = m_code;

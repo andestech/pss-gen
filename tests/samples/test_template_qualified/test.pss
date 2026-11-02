@@ -1,0 +1,10 @@
+// PSS 2.0 22.5.3: a template reference may be a qualified name, {{e_t::B}}.
+package p {
+    enum q_e { X = 11, Y = 12 };
+}
+component pss_top {
+    enum e_t { A = 5, B = 7 };
+    action root_a {
+        exec body ASM = """bare={{A}} qualified={{e_t::B}} package={{p::q_e::Y}}""";
+    }
+}
