@@ -34,7 +34,7 @@ public class PSSAggregateExpression extends PSSExpression {
 
 	@Override
 	public PSSVal eval(PSSInst var) {
-		PSSListVal result = new PSSListVal(null);
+		PSSListVal result = PSSListVal.ofLiteral();
 
 		for (int i = 0; i < m_list.size(); i++) {
 			PSSExpression item = m_list.get(i);

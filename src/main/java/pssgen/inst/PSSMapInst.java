@@ -5,8 +5,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 import pssgen.model.PSSIntModel;
+import pssgen.model.PSSListModel;
 import pssgen.model.PSSMapModel;
 import pssgen.model.PSSModel;
+import pssgen.model.PSSSetModel;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSIntVal;
 import pssgen.value.PSSListVal;
@@ -209,6 +211,11 @@ public class PSSMapInst extends PSSInst implements PSSIAggregate {
         // PSS 2.0 Section 4.8.1: the empty literal {} has no type of its own; it is the
         // empty value of a collection value type, and the assignment below checks it.
         PSSModel vt = PSSRefVal.typeOf(v);
+        // PSS 2.0 Section 4.8.2: a value list literal is the value of an array, a list or a
+        // set; for a map of sets it is a set of the literal's elements.
+        if (v instanceof PSSListVal && ((PSSListVal) v).isLiteral() && vt != null
+                && map_type.getValueType() instanceof PSSSetModel)
+            vt = new PSSSetModel(((PSSListModel) vt).getElementTypeModel());
         if (vt == null ? !(map_type.getValueType() instanceof PSSIAggregate)
                 : !map_type.getValueType().isCompatible(vt))
             PSSMessage.Error("", "The value type " + (vt == null ? "{}" : vt.getText()) + " of " + v.getText()

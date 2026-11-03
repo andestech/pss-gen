@@ -60,6 +60,30 @@ public class PSSListVal extends PSSVal implements PSSICollection {
         this(null);
     }
 
+    /** whether this list is the value of a value list literal */
+    private boolean m_literal;
+
+    /**
+     * Returns an empty list for the value of a value list literal, whose collection type
+     * comes from the context (PSS 2.0 Section 4.8.2).
+     *
+     * @return an empty list
+     */
+    public static PSSListVal ofLiteral() {
+        PSSListVal res = new PSSListVal();
+        res.m_literal = true;
+        return res;
+    }
+
+    /**
+     * Returns {@code true} if this list is the value of a value list literal.
+     *
+     * @return {@code true} if this list is the value of a value list literal
+     */
+    public boolean isLiteral() {
+        return m_literal;
+    }
+
     /**
      * Returns an empty list with elements of a specified type.
      *
