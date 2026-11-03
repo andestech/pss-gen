@@ -94,6 +94,7 @@ public class PSSTraversalList {
 			PSSTraversal t = m_list.get(i);
 			PSSActionInst sub = t.getInst();
 			PSSActionModel sub_action_decl = (PSSActionModel) sub.getTypeDecl();
+			sub.takeHandlePlace();
 			sub_action_decl.traverse(sub);
 		}
 	}
@@ -195,6 +196,7 @@ public class PSSTraversalList {
 		}
 		for (int i = 0; i <= end; i++) {
 			PSSActionInst sub = m_list.get(i).getInst();
+			sub.takeHandlePlace();
 			((PSSActionModel) sub.getTypeDecl()).traverse(sub);
 		}
 		return true;

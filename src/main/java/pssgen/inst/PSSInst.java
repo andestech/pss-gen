@@ -98,6 +98,17 @@ public class PSSInst {
 		m_insts.remove(inst);
 	}
 
+	/**
+	 * Puts inst in the place of the child old; old keeps this instance as its parent.
+	 *
+	 * @param old  a child of this instance
+	 * @param inst the instance that takes its place
+	 */
+	public void replaceInst(PSSInst old, PSSInst inst) {
+		m_insts.set(m_insts.indexOf(old), inst);
+		inst.m_parent = this;
+	}
+
 	public boolean isTraversed() {
 		return m_traversed;
 	}

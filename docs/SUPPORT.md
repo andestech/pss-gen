@@ -124,8 +124,8 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 
 | LRM (2.0 / 2.1) | Construct | Status | Message | Test | Notes |
 |---|---|---|---|---|---|
-| 13.3.1 / 12.3.1 | `do T`, handle traversal `h;`, `with { ... }` | supported | | tests/samples/test_demo | |
-| 17.4.6 / 16.4.8 | A field of a traversed action handle read by a later activity expression, e.g. `h; repeat (h.n) ...` | partial | | tests/samples/test_handle_field_in_activity | Reads the handle's solved values, post_solve updates included. A handle traversed again, in a loop or a later block, keeps the values of its first traversal; the LRM resets it to uninitialized. A read before the first traversal, or while a sub-action up to the handle waits for a flow object that a later `bind` or inference supplies, is reported as `[PSSMemberPathElemExpression] ... is not defined.` |
+| 13.3.1 / 12.3.1 | `do T`, handle traversal `h;`, `with { ... }` | supported | | tests/samples/test_demo | Each traversal of a handle selects new values (tests/samples/test_handle_retraverse). A handle traversed more than once in one sequential, parallel or schedule scope (13.3.1 c)) is not reported. |
+| 17.4.6 / 16.4.8 | A field of a traversed action handle read by a later activity expression, e.g. `h; repeat (h.n) ...` | partial | | tests/samples/test_handle_field_in_activity | Reads the handle's solved values, post_solve updates included. A handle traversed again, in a loop or a later block, is randomized anew with the in-line constraints of that traversal only, and a later read gets the most recent values (tests/samples/test_handle_retraverse). A read before the first traversal, or while a sub-action up to the handle waits for a flow object that a later `bind` or inference supplies, is reported as `[PSSMemberPathElemExpression] ... is not defined.` |
 | 13.3.4 / 12.3.4 | `parallel` | unsupported | `PSSGenVisitor.visitActivity_parallel_stmt()`: `Syntax is not yet supported: '...'` | | |
 | 13.3.5 / 12.3.5 | `schedule` | supported | | tests/samples/test_demo | |
 | 13.4.1 / 12.4.1 | `repeat (n)`, `repeat (i : n)` | supported | | tests/samples/test_repeat_count | |

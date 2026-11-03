@@ -158,4 +158,46 @@ public class PSSActionInst extends PSSInst {
 	public PSSConstraintList getDefaultConstraintList() {
 		return m_def_c_list;
 	}
+
+	/** the handle field instance this instance traverses, which is this unless retraversed */
+	private PSSActionInst m_handle = this;
+	/** for a handle field instance: the instance of its traversals now in the field */
+	private PSSActionInst m_current = this;
+	/** whether an activity has recorded a traversal of this instance */
+	private boolean m_recorded;
+
+	/**
+	 * The instance a traversal of this action handle records. PSS 2.0 Section 13.3.1 a):
+	 * the handle is randomized and evaluated where each traversal occurs, and Section
+	 * 17.1.3: the in-line constraints of a traversal apply to that traversal only. The
+	 * first traversal records this instance; a later one records a new instance of the
+	 * same type, which takes the place of this one in the parent.
+	 *
+	 * @return the instance to record
+	 */
+	public PSSActionInst recordTraversal() {
+		if (!m_recorded) {
+			m_recorded = true;
+			return this;
+		}
+		PSSActionInst fresh = (PSSActionInst) getTypeDecl().declInst(getId(), false);
+		fresh.m_recorded = true;
+		fresh.m_handle = m_handle;
+		getParent().replaceInst(this, fresh);
+		m_handle.m_current = fresh;
+		return fresh;
+	}
+
+	/**
+	 * Puts this traversal instance of a handle in the handle's place before it is
+	 * traversed, so that a reference to the handle reads the most recently selected
+	 * values (PSS 2.0 Section 17.1.3).
+	 */
+	public void takeHandlePlace() {
+		PSSActionInst cur = m_handle.m_current;
+		if (cur != this) {
+			getParent().replaceInst(cur, this);
+			m_handle.m_current = this;
+		}
+	}
 }

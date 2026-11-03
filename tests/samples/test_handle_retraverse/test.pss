@@ -1,0 +1,38 @@
+// PSS 2.0 13.3.1 a), 17.4.6, Example 203: a handle traversed in a loop is randomized anew on
+// each traversal; 17.1.3: an in-line constraint applies to its own traversal only, and a
+// reference to the handle reads the most recently selected values.
+component pss_top {
+    action pick_a {
+        rand bit[8] n;
+        constraint n in [1..200];
+        exec body ASM = """pick {{n}}""";
+    }
+
+    action print_a {
+        rand bit[8] val;
+        exec body ASM = """print {{val}}""";
+    }
+
+    action pair_a {
+        pick_a h;
+        rand bit[8] base;
+        activity {
+            h with { n == base; };
+            do print_a with { val == h.n; };
+        }
+    }
+
+    action root_a {
+        pick_a h;
+        pair_a p;
+        activity {
+            repeat (3) {
+                h;
+                do print_a with { val == h.n; };
+            }
+            repeat (2) {
+                p with { base < 20; };
+            }
+        }
+    }
+}

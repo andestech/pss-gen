@@ -65,6 +65,7 @@ public class PSSTraversalActivity extends PSSActivity {
 		if (m_handle_var == null) {
 			PSSMessage.Error("TRAVERSAL", "Cannot action handle '" + m_handle_id + "'");
 		}
+		m_handle_var = m_handle_var.recordTraversal();
 
 		// Add inline constraint
 		m_handle_var.addConstraint(m_constraint);
