@@ -1,0 +1,12 @@
+// PSS 2.0 22.5.3: a mustache reference is an expression; {{l.size()}} expands to the size.
+component pss_top {
+    function int seven() {
+        return 7;
+    }
+    action root_a {
+        list<int>     l = {1, 2, 3};
+        set<int>      s = {4, 4, 5};
+        map<int, int> m = {1 : 2};
+        exec body ASM = """l={{l.size()}} s={{s.size()}} m={{m.size()}} f={{seven()}}""";
+    }
+}
