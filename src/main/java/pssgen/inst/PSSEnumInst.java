@@ -13,7 +13,7 @@ public class PSSEnumInst extends PSSIntInst {
 	private final PSSEnumModel m_enum_model;
 
 	public PSSEnumInst(String id, String type, PSSEnumModel type_decl, boolean rand) {
-		super(id, rand, 32, true);
+		super(id, rand, type_decl.fieldWidth(), true);
 		m_enum_model = type_decl;
 
 		/*
@@ -24,7 +24,7 @@ public class PSSEnumInst extends PSSIntInst {
 		 */
 		String[] items = type_decl.getEnumItems();
 		if (items.length > 0) {
-			m_val = new PSSIntVal(BigInteger.valueOf(type_decl.getEnumItemValue(items[0])));
+			m_val = new PSSIntVal(type_decl.getEnumItemValue(items[0]));
 		}
 	}
 
@@ -40,7 +40,7 @@ public class PSSEnumInst extends PSSIntInst {
 			return;
 		List<BigInteger> items = new ArrayList<BigInteger>();
 		for (String item : m_enum_model.getEnumItems()) {
-			PSSIntVal v = new PSSIntVal(BigInteger.valueOf(m_enum_model.getEnumItemValue(item)));
+			PSSIntVal v = new PSSIntVal(m_enum_model.getEnumItemValue(item));
 			if (getDomain().InRange(v).toBool())
 				items.add(v.toBigInteger());
 		}
@@ -57,7 +57,7 @@ public class PSSEnumInst extends PSSIntInst {
 	public PSSIntVal itemValue(String name) {
 		for (String item : m_enum_model.getEnumItems()) {
 			if (item.equals(name))
-				return new PSSIntVal(BigInteger.valueOf(m_enum_model.getEnumItemValue(item)));
+				return new PSSIntVal(m_enum_model.getEnumItemValue(item));
 		}
 		return null;
 	}
@@ -70,7 +70,7 @@ public class PSSEnumInst extends PSSIntInst {
 	public String getItemName() {
 		BigInteger v = m_val.toBigInteger();
 		for (String item : m_enum_model.getEnumItems()) {
-			if (BigInteger.valueOf(m_enum_model.getEnumItemValue(item)).equals(v))
+			if (m_enum_model.getEnumItemValue(item).equals(v))
 				return item;
 		}
 		return null;

@@ -1,5 +1,6 @@
 package pssgen.model;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import pssgen.inst.PSSEnumInst;
@@ -10,14 +11,15 @@ import pssgen.value.PSSVal;
 
 public class PSSEnumModel extends PSSModel {
 
-	private LinkedHashMap<String, Integer> m_items;
+	/** PSS 2.0 Section 8.4: each item has the integer value of its constant expression */
+	private LinkedHashMap<String, BigInteger> m_items;
 
-	private Integer m_default_val;
+	private BigInteger m_default_val;
 
 	public PSSEnumModel(String id) {
 		super(id);
-		m_items = new LinkedHashMap<String, Integer>();
-		m_default_val = 0;
+		m_items = new LinkedHashMap<String, BigInteger>();
+		m_default_val = BigInteger.ZERO;
 	}
 
 	/**
@@ -35,19 +37,34 @@ public class PSSEnumModel extends PSSModel {
 	 * @param item an item in this enum
 	 * @return the value of item in this enum
 	 */
-	public int getEnumItemValue(String item) {
+	public BigInteger getEnumItemValue(String item) {
 		return m_items.get(item);
 	}
 
 	public void addEnumItem(String id) {
 		m_items.put(id, m_default_val);
-		m_default_val++;
+		m_default_val = m_default_val.add(BigInteger.ONE);
 	}
 
 	public void addEnumItem(String id, PSSVal val) {
-		m_default_val = val.toInt();
+		m_default_val = val.toBigInteger();
 		m_items.put(id, m_default_val);
-		m_default_val++;
+		m_default_val = m_default_val.add(BigInteger.ONE);
+	}
+
+	/**
+	 * The width of a field of this type: 32 bits (signed) when every item fits, else the
+	 * width of {@code int}, so that an item keeps its value (PSS 2.0 Section 8.4 d): the
+	 * values of the items are distinct).
+	 */
+	public int fieldWidth() {
+		BigInteger min = BigInteger.ONE.shiftLeft(31).negate();
+		BigInteger max = BigInteger.ONE.shiftLeft(31).subtract(BigInteger.ONE);
+		for (BigInteger v : m_items.values()) {
+			if (v.compareTo(min) < 0 || v.compareTo(max) > 0)
+				return PSSIntModel.DEFAULT_INT_SIZE;
+		}
+		return 32;
 	}
 
 	public PSSEnumInst declInst(String id, boolean rand) {
