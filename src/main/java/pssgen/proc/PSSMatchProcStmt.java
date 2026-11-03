@@ -3,6 +3,7 @@ package pssgen.proc;
 import java.util.*;
 
 import pssgen.expr.PSSExpression;
+import pssgen.expr.PSSOpenRangeListExpression;
 import pssgen.inst.PSSInst;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSListVal;
@@ -29,7 +30,7 @@ public class PSSMatchProcStmt extends PSSProcStmt {
         boolean matched = false;
         PSSVal cond = m_cond.eval(inst);
         for (int i = 0; i < m_ranges.size() && !matched; i++) {
-            PSSListVal range_vals = (PSSListVal)m_ranges.get(i).eval(inst);
+            PSSListVal range_vals = (PSSListVal) choice(m_ranges.get(i), inst);
             if (range_vals.InRange(cond).toBool()) {
                 m_stmts.get(i).eval(inst);
                 matched = true;
@@ -89,4 +90,11 @@ public class PSSMatchProcStmt extends PSSProcStmt {
 	public final PSSProcStmt getDefaultStmt() {
 		return d_stmt;
 	}
+
+    /** PSS 2.0 Section 21.3 a): the expected type of a choice is that of the match expression. */
+    private PSSVal choice(PSSExpression range, PSSInst inst) {
+        if (range instanceof PSSOpenRangeListExpression)
+            return ((PSSOpenRangeListExpression) range).eval(inst, m_cond.plainInst(inst));
+        return range.eval(inst);
+    }
 }

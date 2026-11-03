@@ -4,8 +4,12 @@ import java.util.ArrayList;
 
 import pssgen.inst.PSSEnumInst;
 import pssgen.inst.PSSInst;
+import pssgen.model.PSSDataTypeModel;
+import pssgen.model.PSSEnumModel;
+import pssgen.model.PSSModel;
 import pssgen.solver.PSSDomainMap;
 import pssgen.util.PSSMessage;
+import pssgen.value.PSSIntVal;
 import pssgen.value.PSSVal;
 
 public class PSSExpression {
@@ -118,6 +122,24 @@ public class PSSExpression {
 			if (item != null)
 				return new PSSPrimaryExpression(item);
 		}
+		return e;
+	}
+
+	/**
+	 * As {@link #expecting(PSSExpression, PSSInst)}, where the expected type is type.
+	 *
+	 * @param e    an expression
+	 * @param type the expected type of e, or null
+	 * @return the expression to evaluate for e
+	 */
+	public static PSSExpression expecting(PSSExpression e, PSSModel type) {
+		String name = e.bareName();
+		if (name == null)
+			return e;
+		if (type instanceof PSSDataTypeModel)
+			type = ((PSSDataTypeModel) type).resolve();
+		if (type instanceof PSSEnumModel && ((PSSEnumModel) type).hasEnumItem(name))
+			return new PSSPrimaryExpression(new PSSIntVal(((PSSEnumModel) type).getEnumItemValue(name)));
 		return e;
 	}
 

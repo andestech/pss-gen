@@ -13,6 +13,7 @@ import pssgen.inst.PSSRefInst;
 import pssgen.inst.PSSScope;
 import pssgen.model.PSSExecKind;
 import pssgen.model.PSSFunctionModel;
+import pssgen.model.PSSFunctionParameter;
 import pssgen.model.PSSModel;
 import pssgen.model.PSSPlatformQualifier;
 import pssgen.model.PSSRefModel;
@@ -250,7 +251,13 @@ public class PSSMemberPathElemExpression extends PSSExpression {
 
                 // Invoke the function
                 List<PSSVal> actuals = new ArrayList<PSSVal>();
-                for (PSSExpression arg : m_function_parameter_list) {
+                List<PSSFunctionParameter> params = fm.getPrototype().getParameters();
+                for (int j = 0; j < m_function_parameter_list.size(); j++) {
+                    // PSS 2.0 Section 21.3 a): the expected type of an argument is the type
+                    // of its parameter.
+                    PSSExpression arg = m_function_parameter_list.get(j);
+                    if (j < params.size() && params.get(j).isPlainDataType())
+                        arg = expecting(arg, params.get(j).getDataType());
                     PSSInst arg_inst = arg.getInst(ctx);
                     // PSS 2.0 Section 22.3.3
                     // Parameters of aggregate data types are passed as a handle to the instance in

@@ -1,0 +1,35 @@
+// PSS 2.0 21.3 a): where the expected type is an enum type, an unqualified name is first an
+// item of that type, before a field or local of the same name: in the values of 'in' and of a
+// match choice, whose expected type is that of the expression, and in a function argument,
+// whose expected type is that of the parameter.
+component pss_top {
+    enum e_t { A = 3, B = 4, C = 5 };
+    function int is_b(e_t e) {
+        if (e == e_t::B) {
+            return 1;
+        }
+        return 0;
+    }
+    action root_a {
+        int B = 9;
+        rand e_t f;
+        rand e_t g;
+        bit inside = 0;
+        int matched = 0;
+        int arg = 0;
+        constraint f in [B];
+        constraint g in [A..B] && g != A;
+        exec post_solve {
+            if (f in [B]) {
+                inside = 1;
+            }
+            match (f) {
+                [A]: matched = 1;
+                [B]: matched = 2;
+                default: matched = 3;
+            }
+            arg = is_b(B);
+        }
+        exec body ASM = """f={{f}} g={{g}} inside={{inside}} matched={{matched}} arg={{arg}}""";
+    }
+}

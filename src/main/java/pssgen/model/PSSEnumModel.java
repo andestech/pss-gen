@@ -41,6 +41,16 @@ public class PSSEnumModel extends PSSModel {
 		return m_items.get(item);
 	}
 
+	/**
+	 * Returns {@code true} if this enum has an item of a specified name.
+	 *
+	 * @param item an item name
+	 * @return {@code true} if this enum has the item
+	 */
+	public boolean hasEnumItem(String item) {
+		return m_items.containsKey(item);
+	}
+
 	public void addEnumItem(String id) {
 		m_items.put(id, m_default_val);
 		m_default_val = m_default_val.add(BigInteger.ONE);

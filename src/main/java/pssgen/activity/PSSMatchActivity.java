@@ -3,6 +3,7 @@ package pssgen.activity;
 import java.util.*;
 
 import pssgen.expr.PSSExpression;
+import pssgen.expr.PSSOpenRangeListExpression;
 import pssgen.inst.PSSInst;
 import pssgen.util.PSSMessage;
 import pssgen.value.PSSListVal;
@@ -37,7 +38,7 @@ public class PSSMatchActivity extends PSSActivity {
         PSSVal cond = m_cond.eval(inst);
 
         for (int i = 0; i < size && !matched; i++) {
-            PSSListVal range_vals = (PSSListVal)m_ranges.get(i).eval(inst);
+            PSSListVal range_vals = (PSSListVal) choice(m_ranges.get(i), inst);
             if (range_vals.InRange(cond).toBool()) {
                 m_stmts.get(i).evalActivity(inst);
                 matched = true;
@@ -50,6 +51,13 @@ public class PSSMatchActivity extends PSSActivity {
             else
                 PSSMessage.Error("MatchActivity", "Unmatched expression " + m_cond.getText() + " is illegal.");
         }
+    }
+
+    /** PSS 2.0 Section 21.3 a): the expected type of a choice is that of the match expression. */
+    private PSSVal choice(PSSExpression range, PSSInst inst) {
+        if (range instanceof PSSOpenRangeListExpression)
+            return ((PSSOpenRangeListExpression) range).eval(inst, m_cond.plainInst(inst));
+        return range.eval(inst);
     }
 
     public void dump(String indent) {

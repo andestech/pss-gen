@@ -55,7 +55,7 @@ public class PSSInExpression extends PSSExpression {
 		PSSDomainMap map = new PSSDomainMap();
 		PSSInst leftInst = m_left.getInst(var);
 		if (leftInst != null) {
-			List<PSSVal> rightList = m_right.eval(var).getValList();
+			List<PSSVal> rightList = right(var, leftInst).getValList();
 			PSSDomain left_domain = leftInst.getInitDomain();
 			left_domain = left_domain.reduceDomainIn(rightList);
 			map.add(leftInst, left_domain);
@@ -67,8 +67,15 @@ public class PSSInExpression extends PSSExpression {
 	public PSSVal eval(PSSInst var) {
 		checkLeft(var);
 		PSSVal leftVal = m_left.eval(var);
-		PSSVal rightVal = m_right.eval(var);
+		PSSVal rightVal = right(var, m_right instanceof PSSOpenRangeListExpression ? m_left.plainInst(var) : null);
 		return rightVal.InRange(leftVal);
+	}
+
+	/** PSS 2.0 Section 21.3 a): the expected type of the values in [...] is that of the left side. */
+	private PSSVal right(PSSInst var, PSSInst left) {
+		if (m_right instanceof PSSOpenRangeListExpression)
+			return ((PSSOpenRangeListExpression) m_right).eval(var, left);
+		return m_right.eval(var);
 	}
 
 	@Override

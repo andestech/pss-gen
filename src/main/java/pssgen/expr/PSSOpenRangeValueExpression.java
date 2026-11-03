@@ -22,9 +22,21 @@ public class PSSOpenRangeValueExpression extends PSSExpression {
 	}
 
 	public PSSVal eval(PSSInst var) {
-		PSSVal begin_val = m_begin.eval(var);
+		return eval(var, null);
+	}
+
+	/**
+	 * Evaluates the value or range where its expected type is the type of expected (PSS
+	 * 2.0 Section 21.3 a)).
+	 *
+	 * @param var      the instance the item is evaluated in
+	 * @param expected the field whose type is expected, or null
+	 * @return the value or range
+	 */
+	public PSSVal eval(PSSInst var, PSSInst expected) {
+		PSSVal begin_val = expecting(m_begin, expected).eval(var);
 		if (m_end != null) {
-			PSSVal end_val = m_end.eval(var);
+			PSSVal end_val = expecting(m_end, expected).eval(var);
 			return new PSSRangeVal(begin_val.toBigInteger(), end_val.toBigInteger());
 		}
 		else {
