@@ -1,0 +1,38 @@
+// PSS 2.0 10.6, 17.4.4: comp of an action is an instance of the component the action is
+// declared in, also when an action of another component traverses it.
+component sub_c {
+    int tag = 5;
+    function int get() {
+        return 50;
+    }
+    action sub_a {
+        int t = 0;
+        int s = 0;
+        exec post_solve {
+            t = comp.tag;
+            s = comp.get();
+        }
+        exec body ASM = """sub t={{t}} s={{s}}""";
+    }
+}
+
+component pss_top {
+    sub_c sub;
+    int tag = 9;
+    function int get() {
+        return 90;
+    }
+    action top_a {
+        int t = 0;
+        exec post_solve {
+            t = comp.tag;
+        }
+        exec body ASM = """top t={{t}}""";
+    }
+    action root_a {
+        activity {
+            do sub_c::sub_a;
+            do top_a;
+        }
+    }
+}

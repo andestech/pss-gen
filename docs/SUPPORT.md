@@ -113,7 +113,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | LRM (2.0 / 2.1) | Construct | Status | Message | Test | Notes |
 |---|---|---|---|---|---|
 | 10.4, 10.5 / 9.3, 9.4 | Components, component instances, `C::name` type references | supported | | tests/samples/test_pss2.0_example169_name_resolution_inside_with_constraint_block | |
-| 10.6 / 9.5 | `comp` of an action, `this` | supported | | tests/samples/test_this | |
+| 10.6 / 9.5 | `comp` of an action, `this` | supported | | tests/samples/test_this | `comp` of an action declared in another component is the first instance of that component type under the traversing action's component (tests/samples/test_comp_context). When the tree has no such instance, `comp` stays the traversing action's component; the model is not rejected. |
 | 10 / 9 | Integer field with a value domain in a component, e.g. `bit[4] in [1..2] x;` | unsupported | `PSSModel.addConstraint()`: `PSSComponentModel::addConstraint is not implemented` | | A package-level `const` field with a domain stops the same way, naming its scope's class. |
 | 11.3.1, 11.3.2 / 10.2.1, 10.2.2 | Atomic actions with `exec body`; compound actions with `activity`; rand fields; root action from `-root` | supported | | tests/samples/test_demo | |
 | 11.1 / 10.1 | Compound action that also has an `exec body` | partial | | tests/issues/17 (skipped) | Accepted and not reported, although the LRM forbids it: the body's output comes before the output of the activity. See README, Known limitations. The test's model is also illegal by name resolution. It is skipped because the expected output needs an activity `foreach` to see a list element that an earlier sub-action's `post_solve` appends, and PSSGen expands the `foreach` first. |

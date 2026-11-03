@@ -1,5 +1,6 @@
 package pssgen.inst;
 
+import pssgen.model.PSSModel;
 import pssgen.model.PSSRefModel;
 import pssgen.model.PSSTypeCategory;
 import pssgen.solver.PSSDomain;
@@ -35,7 +36,33 @@ public class PSSComponentRefInst extends PSSRefInst {
         if (action != null) {
             PSSInst comp = action.getComponentInst();
             if (comp != null)
-                return comp;
+                return ofContextType(comp, action.getTypeDecl().getParent());
+        }
+        return null;
+    }
+
+    /**
+     * PSS 2.0 Section 10.6: the static type of comp is the action's context component,
+     * and Section 17.4.4: comp is assigned a component instance of that type. Returns
+     * comp when it is of type context, else the first instance of type context in its
+     * sub-tree (depth first, in declaration order), else comp.
+     */
+    private static PSSInst ofContextType(PSSInst comp, PSSModel context) {
+        if (comp.getTypeModel() == context)
+            return comp;
+        PSSInst found = findOfType(comp, context);
+        return found != null ? found : comp;
+    }
+
+    private static PSSInst findOfType(PSSInst comp, PSSModel type) {
+        for (PSSInst child : comp.getInsts()) {
+            if (child instanceof PSSComponentInst) {
+                if (child.getTypeModel() == type)
+                    return child;
+                PSSInst found = findOfType(child, type);
+                if (found != null)
+                    return found;
+            }
         }
         return null;
     }
