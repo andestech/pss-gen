@@ -60,8 +60,10 @@ public class PSSComponentModel extends PSSModel {
 	public PSSComponentInst declInst(String id, boolean rand) {
 		PSSComponentInst comp = new PSSComponentInst(id, getId(), this);
 
-		m_data_list.declInst(comp);
+		// The enum items are declared first: a data field initializer may name one
+		// (PSS 2.0 Sections 8.4 g), h)).
 		declEnumInst(comp);
+		m_data_list.declInst(comp);
 
 		return comp;
 	}
