@@ -129,8 +129,13 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 		 * to the first; they constrain the field after the ranges
 		 */
 		final List<PSSExpression> open_ended;
-		/** the element type of an array or list type, whose domain each element has; else null */
+		/**
+		 * the element type of an array, list or set type, or the value type of a map type,
+		 * whose domain each element has; else null
+		 */
 		ParserRuleContext element;
+		/** the key type of a map type, whose domain each key has; else null */
+		ParserRuleContext key;
 
 		TypeSpec(PSSModel model) {
 			this(model, null, Collections.<PSSExpression>emptyList());
@@ -705,16 +710,24 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 
 	@Override
 	public Object visitMap_type(PSSParser.Map_typeContext ctx) {
-		PSSModel key_data_type = ((TypeSpec) visit(ctx.data_type(0))).model;
-		PSSModel val_data_type = ((TypeSpec) visit(ctx.data_type(1))).model;
+		TypeSpec key = (TypeSpec) visit(ctx.data_type(0));
+		TypeSpec val = (TypeSpec) visit(ctx.data_type(1));
 
-		return new TypeSpec(new PSSMapModel(key_data_type, val_data_type));
+		TypeSpec type = new TypeSpec(new PSSMapModel(key.model, val.model));
+		if (key.hasDomain())
+			type.key = ctx.data_type(0);
+		if (val.hasDomain())
+			type.element = ctx.data_type(1);
+		return type;
 	}
 
 	@Override
 	public Object visitSet_type(PSSParser.Set_typeContext ctx) {
-		PSSModel data_type = ((TypeSpec) visit(ctx.data_type())).model;
-		return new TypeSpec(new PSSSetModel(data_type));
+		TypeSpec elem = (TypeSpec) visit(ctx.data_type());
+		TypeSpec type = new TypeSpec(new PSSSetModel(elem.model));
+		if (elem.hasDomain())
+			type.element = ctx.data_type();
+		return type;
 	}
 
 	@Override
@@ -1778,6 +1791,20 @@ public class PSSGenVisitor extends PSSBaseVisitor<Object> {
 				PSSMemberPathElemExpression variable = new PSSMemberPathElemExpression(id, PSSScope.Context.MEMBER_CONSTRAINT);
 				for (PSSConstraint c : domainConstraints(field_type, variable))
 					root.addConstraint(c);
+			} else if (array_dim == null && (type.model instanceof PSSSetModel || type.model instanceof PSSMapModel)) {
+				// The elements of a set, and the keys and values of a map, each have the type
+				// of an element, key or value.
+				PSSMemberPathElemExpression coll = new PSSMemberPathElemExpression(id, PSSScope.Context.MEMBER_CONSTRAINT);
+				if (type.key != null) {
+					String index = "$index";
+					root.addConstraint(new PSSForeachConstraint(null, coll, index, domainConstraints(
+							(TypeSpec) visit(type.key), new PSSMemberPathElemExpression(index, PSSScope.Context.MEMBER_CONSTRAINT))));
+				}
+				if (type.element != null) {
+					String iterator = "$element";
+					root.addConstraint(new PSSForeachConstraint(iterator, coll, null, domainConstraints(
+							(TypeSpec) visit(type.element), new PSSMemberPathElemExpression(iterator, PSSScope.Context.MEMBER_CONSTRAINT))));
+				}
 			} else if (domain || type.element != null) {
 				// The elements of an array field 'T x[N]', or of an array or list type whose
 				// element type has a domain, each have the type of an element.
