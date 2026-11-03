@@ -240,12 +240,12 @@ test is a directory that holds `test.pss` and, for a test that must produce outp
 expected output `test.s.golden`.
 
 ```
-$ make -C src                                 # build the jar first
-$ make -C tests                               # every suite
-$ make -C tests SUITES=issues                 # one suite
-$ make -C tests TESTS=samples/test_hello_world   # one test
-$ make -C tests bin                           # with the native executable (make -C src bin)
-$ make -C tests clean                         # remove the test outputs
+$ make -C src                                   # build the jar first
+$ make -C tests                                 # every suite
+$ make -C tests SUITES=issues                   # one suite
+$ make -C tests TESTS=samples/test_hello_world  # one test
+$ make -C tests bin                             # with the native executable (make -C src bin)
+$ make -C tests clean                           # remove the test outputs
 ```
 
 `tests/run-tests.sh` runs PSSGen in the test directory as
