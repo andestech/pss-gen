@@ -1,0 +1,17 @@
+// PSS 2.0 8.8.1: '>>' closes two nested type parameter lists, as in the LRM examples; it is
+// still the right shift operator in an expression.
+component pss_top {
+    action root_a {
+        map<int, list<int>> ml = {1 : {2, 3}};
+        list<list<int>>     ll;
+        int shifted = 0;
+        int n = 0;
+        int m = -1;
+        exec post_solve {
+            shifted = 256 >> 4;
+            n = ml[1].size();
+            m = ll.size();
+        }
+        exec body ASM = """shifted={{shifted}} n={{n}} m={{m}}""";
+    }
+}

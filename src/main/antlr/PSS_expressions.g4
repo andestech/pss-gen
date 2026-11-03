@@ -52,9 +52,11 @@ binary_operator_precedence5
 	| '-'
 ;
 
+// The right shift is two adjacent '>' tokens, so that '>>' can also close two nested
+// type parameter lists, as in map<int, list<int>> (PSS 2.0 Section 8.8.1).
 binary_operator_precedence6
     : '<<'
-	| '>>'
+	| '>' '>' {_input.LT(-2).getStopIndex() + 1 == _input.LT(-1).getStartIndex()}?<fail={"requires the two '>' of '>>' to be adjacent"}>
 ;
 
 binary_operator_precedence7

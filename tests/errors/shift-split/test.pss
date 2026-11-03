@@ -1,0 +1,9 @@
+// The right shift operator is '>>' with no space between the two characters.
+component pss_top {
+    action root_a {
+        int v = 0;
+        exec post_solve {
+            v = 8 > > 1;
+        }
+    }
+}
