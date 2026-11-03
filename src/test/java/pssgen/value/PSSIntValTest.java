@@ -104,9 +104,12 @@ class PSSIntValTest {
 	}
 
 	@Test
-	void divisionTruncatesTowardZeroAndModIsNonNegative() {
+	void divisionTruncatesTowardZeroAndModTakesTheSignOfTheFirstOperand() {
 		assertEquals(-3, val(new PSSIntVal(-7).Div(2)));
-		assertEquals(2, val(new PSSIntVal(-7).Mod(3)));
+		assertEquals(-1, val(new PSSIntVal(-7).Mod(3)));
+		assertEquals(1, val(new PSSIntVal(7).Mod(-3)));
+		assertEquals(-1, val(new PSSIntVal(-7).Mod(-3)));
+		assertEquals(1, val(new PSSIntVal(7).Mod(3)));
 	}
 
 	@Test

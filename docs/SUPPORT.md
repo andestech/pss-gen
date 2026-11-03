@@ -92,7 +92,7 @@ not run it, and the Notes give the reason. #nn names a GitHub issue.
 | LRM (2.0 / 2.1) | Construct | Status | Message | Test | Notes |
 |---|---|---|---|---|---|
 | 9.3 / 8.3 | Assignment `=`, `+=`, `-=`, `\|=` | supported | | tests/samples/test_repeat_count | |
-| 9.5.1 / 8.5.1 | `+ - * / %` | supported | `[PSS 2.0 Section 9.5.1] division by zero: ...`, `[PSS 2.0 Section 9.5.1] modulus by zero: ...` | tests/samples/test_native_functions | `/` is in tests/samples/test_aggregate_function_parameters, `%` in tests/samples/test_continue. A zero right operand is the error in the Message column, as the LRM requires (tests/errors/division-by-zero, modulus-by-zero). |
+| 9.5.1 / 8.5.1 | `+ - * / %` | supported | `[PSS 2.0 Section 9.5.1] division by zero: ...`, `[PSS 2.0 Section 9.5.1] modulus by zero: ...` | tests/samples/test_native_functions | `/` is in tests/samples/test_aggregate_function_parameters, `%` in tests/samples/test_continue. A zero right operand is the error in the Message column, as the LRM requires (tests/errors/division-by-zero, modulus-by-zero). `/` truncates toward zero and `%` takes the sign of the first operand (tests/samples/test_mod_sign). |
 | 9.5.1 / 8.5.1 | Power `**` | unsupported | `PSSExpression.eval()`: `PSSBinaryExpression.eval() is not implemented` | | In a constraint the text is `PSSBinaryExpression.deduceDomain() is not implemented`. |
 | 9.5.2, 9.5.4 / 8.5.2, 8.5.4 | `< <= > >=`, `&&`, `\|\|` | supported | | tests/samples/test_with_constraint_ops | `<=` and `>=` are in tests/samples/test_aggregate_function_parameters. |
 | 9.5.3 / 8.5.3 | `==`, `!=` on numbers, strings, enums and collections of scalars | supported | | tests/samples/PSSv2.1_7.9_Collections/lists/test_list_operator_equality | |

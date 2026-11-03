@@ -291,7 +291,8 @@ public class PSSIntVal extends PSSVal {
 		// PSS 2.0 Section 9.5.1: "Division or modulus by zero shall be considered illegal."
 		if (rhs.signum() == 0)
 			PSSMessage.Error("PSS 2.0 Section 9.5.1", "modulus by zero: " + getText() + " % 0");
-		BigInteger result = m_val.mod(rhs);
+		// PSS 2.0 Section 9.5.1: the result of a modulus operation takes the sign of the first operand.
+		BigInteger result = m_val.remainder(rhs);
 		return new PSSIntVal(result);
 	}
 

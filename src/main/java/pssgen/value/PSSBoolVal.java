@@ -291,7 +291,7 @@ public class PSSBoolVal extends PSSVal {
 		if (rhs.signum() == 0)
 			PSSMessage.Error("PSS 2.0 Section 9.5.1", "modulus by zero: " + getText() + " % 0");
 		BigInteger lhs_int = toBigInteger();
-		BigInteger result  = lhs_int.mod(rhs);
+		BigInteger result  = lhs_int.remainder(rhs);
 		if (result.testBit(0)) {
 			return new PSSIntVal(BigInteger.ONE);
 		} else {
