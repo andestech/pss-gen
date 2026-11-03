@@ -241,6 +241,29 @@ public class PSSModel {
 		return null;
 	}
 
+	/**
+	 * Finds the function an unqualified call names, from this scope outward. PSS 2.0
+	 * Section 21.3 b), c): the members of each scope, then the packages it imports;
+	 * a member of another kind with the same name (e.g. an action) is passed over.
+	 *
+	 * @param id the function name
+	 * @return the function, or null
+	 */
+	public PSSFunctionModel findFunction(String id) {
+		for (PSSModel child : children) {
+			if (child instanceof PSSFunctionModel && child.m_id.equals(id))
+				return (PSSFunctionModel) child;
+		}
+		for (PSSModel child : children) {
+			if (child instanceof PSSImportStmtModel) {
+				PSSModel node = child.findDeclaration(id);
+				if (node instanceof PSSFunctionModel)
+					return (PSSFunctionModel) node;
+			}
+		}
+		return m_parent == null ? null : m_parent.findFunction(id);
+	}
+
 	public PSSModel findDeclaration(String hierarchy_id) {
 		/**
 		 * @breif find the declaration of a mode from the current namespace

@@ -177,6 +177,26 @@ public class PSSMemberPathElemExpression extends PSSExpression {
     }
 
     /**
+     * The action whose definition holds a call evaluated at inst: the nearest action,
+     * or, in an in-line constraint, the action that traverses it (PSS 2.0 Section
+     * 17.1.3); null in a function body.
+     */
+    private PSSActionInst callingAction(PSSInst inst) {
+        while (inst != null && !(inst instanceof PSSActionInst) && !(inst instanceof PSSFunctionInst))
+            inst = inst.getParent();
+        if (!(inst instanceof PSSActionInst))
+            return null;
+        if (m_context == PSSScope.Context.INLINE_CONSTRAINT) {
+            PSSInst outer = inst.getParent();
+            while (outer != null && !(outer instanceof PSSActionInst))
+                outer = outer.getParent();
+            if (outer != null)
+                return (PSSActionInst) outer;
+        }
+        return (PSSActionInst) inst;
+    }
+
+    /**
      * Resolve m_id.
      *
      * @param pkg    an optional package containing m_id (m_parent != null implies
@@ -217,7 +237,15 @@ public class PSSMemberPathElemExpression extends PSSExpression {
             if (pkg == null) {
                 // Find in parent
                 ci = parent.getComponentInst();
-                if (ci != null) {
+                PSSActionInst action = m_parent == null ? callingAction(parent) : null;
+                if (action != null && action.getTypeDecl().getParent() != null) {
+                    // PSS 2.0 Section 21.3 b) 5) and 22.2.1 b): an unqualified call in an
+                    // action names a function of the action's component, called on comp.
+                    m = action.getTypeDecl().getParent().findFunction(m_id);
+                    PSSInst comp = action.findInstanceUnder("comp");
+                    if (comp instanceof PSSComponentRefInst && ((PSSComponentRefInst) comp).getReference() != null)
+                        ci = ((PSSComponentRefInst) comp).getReference();
+                } else if (ci != null) {
                     m = ci.getTypeModel().findDeclaration(m_id);
                 } else {
                     // PSS 2.0 Section 21.3 c): in a function of a package, which runs
