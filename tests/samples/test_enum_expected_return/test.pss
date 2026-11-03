@@ -1,0 +1,22 @@
+// PSS 2.0 9.4.3, 21.3 a): the return type of a function is the expected type of the expression
+// in its return statement, so an unqualified name there is first an item of an enum return type.
+component pss_top {
+    enum e_t { A = 3, B = 4, C = 5 };
+    function e_t pick() {
+        int B = 9;
+        return B;
+    }
+    function int plain() {
+        int B = 9;
+        return B;
+    }
+    action root_a {
+        e_t r;
+        int p = 0;
+        exec post_solve {
+            r = pick();
+            p = plain();
+        }
+        exec body ASM = """r={{r}} p={{p}}""";
+    }
+}

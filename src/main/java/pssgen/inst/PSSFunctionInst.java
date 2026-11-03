@@ -102,6 +102,15 @@ public class PSSFunctionInst extends PSSInst implements PSSIScope {
     }
 
     /**
+     * Returns the instance that holds the returned value, or null for a void function.
+     *
+     * @return the result instance
+     */
+    public PSSInst getResultInst() {
+        return m_res;
+    }
+
+    /**
      * Sets the exec kind of this function invocation.
      *
      * @param kind an exec kind
