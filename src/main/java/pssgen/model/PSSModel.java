@@ -20,6 +20,12 @@ public class PSSModel {
 
 	List<PSSInst> m_static_insts;
 
+	/** the first static instance of each id in m_static_insts; built on demand */
+	private transient Map<String, PSSInst> m_static_index;
+	/** the enum and import-statement children, in declaration order */
+	private final transient List<PSSModel> m_enum_children = new ArrayList<PSSModel>();
+	private final transient List<PSSImportStmtModel> m_import_children = new ArrayList<PSSImportStmtModel>();
+
 	public PSSModel(String id) {
 		m_id = id;
 		m_hierarchy_id = m_id;
@@ -41,6 +47,10 @@ public class PSSModel {
 
 	public PSSModel addChild(PSSModel node) {
 		children.add(node);
+		if (node instanceof PSSEnumModel)
+			m_enum_children.add(node);
+		else if (node instanceof PSSImportStmtModel)
+			m_import_children.add((PSSImportStmtModel) node);
 		node.m_parent = this;
 		if (m_hierarchy_id.equals("")) {
 			node.m_hierarchy_id = node.m_id;
@@ -52,35 +62,37 @@ public class PSSModel {
 
 	public void addStaticInst(PSSInst inst) {
 		m_static_insts.add(inst);
+		if (m_static_index != null)
+			m_static_index.putIfAbsent(inst.getId(), inst);
 	}
 
 	public PSSInst findStaticInst(String id) {
-		// static instances in this model
-		for (PSSInst inst : m_static_insts) {
-			if (inst.getId().equals(id))
-				return inst.resolveStatic();
+		// static instances in this model; the index keeps the first of each id, as a
+		// scan of m_static_insts in order would find
+		if (m_static_index == null) {
+			m_static_index = new HashMap<String, PSSInst>();
+			for (PSSInst inst : m_static_insts)
+				m_static_index.putIfAbsent(inst.getId(), inst);
 		}
+		PSSInst own = m_static_index.get(id);
+		if (own != null)
+			return own.resolveStatic();
 		// enum items in this model
-		for (PSSModel c : children) {
-			if (c instanceof PSSEnumModel) {
-				PSSEnumModel m = (PSSEnumModel) c;
-				PSSInst inst = m.findStaticInst(id);
-				if (inst != null)
-					return inst;
-			}
+		for (PSSModel c : m_enum_children) {
+			PSSInst inst = c.findStaticInst(id);
+			if (inst != null)
+				return inst;
 		}
 		// enum items of the packages this model imports, after its own (PSS 2.0 Section
 		// 21.1.3: a local declaration takes precedence over a wildcard import; a name
 		// declared in two wildcard-imported packages is imported from neither)
 		PSSInst imported = null;
-		for (PSSModel c : children) {
-			if (c instanceof PSSImportStmtModel) {
-				PSSInst inst = ((PSSImportStmtModel) c).findImportedEnumItem(id);
-				if (inst != null && imported != null && inst != imported)
-					return null;
-				if (inst != null)
-					imported = inst;
-			}
+		for (PSSImportStmtModel c : m_import_children) {
+			PSSInst inst = c.findImportedEnumItem(id);
+			if (inst != null && imported != null && inst != imported)
+				return null;
+			if (inst != null)
+				imported = inst;
 		}
 		return imported;
 	}

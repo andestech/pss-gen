@@ -19,7 +19,8 @@ import java.util.Map;
  * object met again prints as {@code @<n>}, the number of its first appearance, so
  * shared nodes and back pointers are part of the text; objects without state (no
  * fields, lambdas, empty collections) print without a number, and a field that
- * is null is left out. Field names, class simple
+ * is null is left out, and so is a transient field, which holds a lookup index or
+ * run-time state rather than the model. Field names, class simple
  * names, scalar values and the order of collections are recorded; nothing that
  * depends on identity hashes or on where a class lives.
  */
@@ -119,7 +120,8 @@ final class ModelDump {
 			res.addAll(fields(c.getSuperclass()));
 		List<Field> own = new ArrayList<Field>();
 		for (Field f : c.getDeclaredFields()) {
-			if (Modifier.isStatic(f.getModifiers()) || f.isSynthetic() || SKIPPED_TYPES.contains(f.getType().getName()))
+			if (Modifier.isStatic(f.getModifiers()) || Modifier.isTransient(f.getModifiers()) || f.isSynthetic()
+				|| SKIPPED_TYPES.contains(f.getType().getName()))
 				continue;
 			f.setAccessible(true);
 			own.add(f);

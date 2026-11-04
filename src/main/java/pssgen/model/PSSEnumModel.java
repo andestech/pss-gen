@@ -16,6 +16,9 @@ public class PSSEnumModel extends PSSModel {
 
 	private BigInteger m_default_val;
 
+	/** true once the items are declared as static instances of this model */
+	private transient boolean m_items_declared;
+
 	public PSSEnumModel(String id) {
 		super(id);
 		m_items = new LinkedHashMap<String, BigInteger>();
@@ -83,6 +86,12 @@ public class PSSEnumModel extends PSSModel {
 	}
 
 	public void declEnumItem(PSSInst inst) {
+		// Every component instance declares the enums in scope, but an item is one
+		// static constant of its type: a second declaration would only lengthen the
+		// list that each static name lookup scans.
+		if (m_items_declared)
+			return;
+		m_items_declared = true;
 		m_items.forEach((key, v) -> {
 			PSSIntInst item = new PSSIntInst(key, false, PSSIntModel.DEFAULT_INT_SIZE, true);
 			PSSIntVal val = new PSSIntVal(v);
