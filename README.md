@@ -32,7 +32,7 @@ $ make -C tests                  # runs the regression tests
 Generate a test from a PSS file:
 
 ```
-$ java -classpath src/pssgen_v2.4.1.jar:antlr4/antlr-4.9.3-complete.jar \
+$ java -classpath src/pssgen_$(cat VERSION).jar:antlr4/antlr-4.9.3-complete.jar \
        PSSGenMain tests/samples/test_hello_world/test.pss -o test.s -root pss_top::root_a
 ```
 
@@ -337,7 +337,7 @@ PSSGen packages, in pipeline order:
 
 ## Releasing
 
-1. Set the new version, for example `v2.4.2`, in `VERSION`.
+1. Set the new version, for example `v1.2.3`, in `VERSION`, the only file that names it.
 2. Build and test: `make -C src bin`, `make -C src unit-test`, `make -C tests` and `make -C tests bin`.
 3. Commit, tag the commit with the same version, and publish
    `src/pssgen_<version>.jar` and `src/pssgen_<version>`.
