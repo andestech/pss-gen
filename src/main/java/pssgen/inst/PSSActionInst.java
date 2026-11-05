@@ -165,27 +165,64 @@ public class PSSActionInst extends PSSInst {
 	private PSSActionInst m_current = this;
 	/** whether an activity has recorded a traversal of this instance */
 	private boolean m_recorded;
+	/** for a handle field instance: the instances its traversals recorded, in order */
+	private List<PSSActionInst> m_traversals;
 
 	/**
 	 * The instance a traversal of this action handle records. PSS 2.0 Section 13.3.1 a):
 	 * the handle is randomized and evaluated where each traversal occurs, and Section
 	 * 17.1.3: the in-line constraints of a traversal apply to that traversal only. The
 	 * first traversal records this instance; a later one records a new instance of the
-	 * same type, which takes the place of this one in the parent.
+	 * same type, which takes the place of this one in the parent and keeps the flow
+	 * object bindings of the handle.
 	 *
 	 * @return the instance to record
 	 */
 	public PSSActionInst recordTraversal() {
+		if (m_handle.m_traversals == null) {
+			m_handle.m_traversals = new ArrayList<PSSActionInst>();
+		}
 		if (!m_recorded) {
 			m_recorded = true;
+			m_handle.m_traversals.add(this);
 			return this;
 		}
 		PSSActionInst fresh = (PSSActionInst) getTypeDecl().declInst(getId(), false);
 		fresh.m_recorded = true;
 		fresh.m_handle = m_handle;
+		fresh.copyFlowBindings(this);
 		getParent().replaceInst(this, fresh);
 		m_handle.m_current = fresh;
+		m_handle.m_traversals.add(fresh);
 		return fresh;
+	}
+
+	/**
+	 * Returns the instances the traversals of this action's handle have recorded, in
+	 * order, or this instance alone when no traversal has recorded one.
+	 *
+	 * @return the traversal instances of the handle
+	 */
+	public List<PSSActionInst> getTraversals() {
+		List<PSSActionInst> t = m_handle.m_traversals;
+		return t != null ? t : Collections.singletonList(this);
+	}
+
+	/**
+	 * Binds each flow object reference of this instance to what the same reference of
+	 * another traversal instance of the handle is bound to.
+	 *
+	 * @param from a traversal instance of the same handle
+	 */
+	private void copyFlowBindings(PSSActionInst from) {
+		for (PSSInst ref : from.getInsts()) {
+			if (ref instanceof PSSFlowRefInst && ((PSSFlowRefInst) ref).isBound()) {
+				PSSInst mine = findChild(ref.getId());
+				if (mine instanceof PSSFlowRefInst) {
+					((PSSFlowRefInst) mine).bind(((PSSFlowRefInst) ref).getVar());
+				}
+			}
+		}
 	}
 
 	/**
