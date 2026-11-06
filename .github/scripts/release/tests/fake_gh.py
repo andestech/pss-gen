@@ -1,6 +1,8 @@
 """In-memory stand-in for gh.GitHub that records every call."""
 import os
 
+from gh import GitHubError
+
 
 class FakeGitHub:
     def __init__(self, issues=None, pulls=None, releases=None,
@@ -37,17 +39,21 @@ class FakeGitHub:
         self._next_release_id += 1
         self.releases[tag] = {
             "id": rid, "tag_name": tag, "name": tag, "body": body,
-            "draft": draft, "latest": latest,
+            "draft": draft, "latest": latest, "assets": [],
             "upload_url": "https://uploads.example/%d/assets{?name,label}"
                           % rid}
         return self.releases[tag]
 
     def issue(self, n):
         self.calls.append(("issue", n))
+        if n not in self.issues:
+            raise GitHubError(404, "issues/%d" % n, "Not Found")
         return self.issues[n]
 
     def pull(self, n):
         self.calls.append(("pull", n))
+        if n not in self.pulls:
+            raise GitHubError(404, "pulls/%d" % n, "Not Found")
         return self.pulls[n]
 
     def pulls_of_commit(self, sha):
@@ -92,8 +98,16 @@ class FakeGitHub:
 
     def upload_asset(self, release, path):
         self.calls.append(("upload_asset", release["id"], path))
-        self.assets.setdefault(release["id"], {})[os.path.basename(path)] = \
-            open(path, "rb").read()
+        name = os.path.basename(path)
+        rel = next(r for r in self.releases.values()
+                   if r["id"] == release["id"])
+        if any(a["name"] == name for a in rel["assets"]):
+            raise GitHubError(422, "uploads/%d" % rel["id"],
+                              "already_exists: " + name)
+        with open(path, "rb") as f:
+            self.assets.setdefault(rel["id"], {})[name] = f.read()
+        asset_id = sum(len(v) for v in self.assets.values())
+        rel["assets"].append({"id": asset_id, "name": name})
 
     def download(self, url, path):
         self.calls.append(("download", url, path))

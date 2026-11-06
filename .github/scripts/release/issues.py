@@ -6,6 +6,7 @@ An issue is a feature or a bug by its GitHub issue type, falling back to the
 from dataclasses import dataclass
 
 import gitrange
+from gh import GitHubError
 
 TYPE_KINDS = {"Feature": "feature", "Bug": "bug"}
 LABEL_KINDS = {"enhancement": "feature", "bug": "bug"}
@@ -37,15 +38,37 @@ def to_issue(payload):
 
 
 def resolve(gh, refs):
-    """(issues, prs): a PR ref contributes the issues its body closes."""
-    prs = set()
-    numbers = set()
+    """(issues, prs, missing): a PR ref contributes the issues its body closes.
+
+    A ref GitHub answers with 404 is reported in missing; other errors raise.
+    """
+    cache = {}
+
+    def fetch(n):
+        if n not in cache:
+            try:
+                cache[n] = gh.issue(n)
+            except GitHubError as e:
+                if e.status != 404:
+                    raise
+                cache[n] = None
+        return cache[n]
+
+    prs, missing, numbers = set(), set(), set()
     for n in sorted(refs):
-        payload = gh.issue(n)
-        if "pull_request" in payload:
+        payload = fetch(n)
+        if payload is None:
+            missing.add(n)
+        elif "pull_request" in payload:
             prs.add(n)
             numbers |= gitrange.closing_refs(payload.get("body") or "")
         else:
             numbers.add(n)
-    found = [to_issue(gh.issue(n)) for n in sorted(numbers)]
-    return found, prs
+    found = []
+    for n in sorted(numbers):
+        payload = fetch(n)
+        if payload is None:
+            missing.add(n)
+        else:
+            found.append(to_issue(payload))
+    return found, prs, missing

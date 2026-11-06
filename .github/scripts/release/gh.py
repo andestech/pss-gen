@@ -16,6 +16,23 @@ SLUG_RES = (
 )
 
 
+class _DropAuthOnCrossHost(urllib.request.HTTPRedirectHandler):
+    """Never forward the token to a host other than the original one."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        new = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if new is not None and (urllib.parse.urlsplit(newurl).netloc
+                                != urllib.parse.urlsplit(req.full_url).netloc):
+            for name in list(new.headers):
+                if name.lower() == "authorization":
+                    del new.headers[name]
+        return new
+
+
+OPENER = urllib.request.build_opener(_DropAuthOnCrossHost)
+TIMEOUT = 60
+
+
 class GitHubError(RuntimeError):
     def __init__(self, status, url, message):
         super().__init__("HTTP %s for %s: %s" % (status, url, message))
@@ -56,7 +73,7 @@ class GitHub:
         req = urllib.request.Request(url, data=data, method=method,
                                      headers=self._headers(headers))
         try:
-            return urllib.request.urlopen(req)
+            return OPENER.open(req, timeout=TIMEOUT)
         except urllib.error.HTTPError as e:
             if e.code == 404 and allow_404:
                 return None
@@ -84,7 +101,7 @@ class GitHub:
         return self._json("GET", self._repo("/pulls/%d" % n))
 
     def pulls_of_commit(self, sha):
-        return self._json("GET", self._repo("/commits/%s/pulls" % sha))
+        return self._json("GET", self._repo("/commits/%s/pulls?per_page=100" % sha))
 
     def set_issue_state(self, n, state, reason=None):
         body = {"state": state}
