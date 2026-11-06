@@ -2,6 +2,8 @@
 #   make        builds $(PSS_HOME)/src/pssgen_<name>.jar
 #   make bin    additionally builds the native image $(PSS_HOME)/src/pssgen_<name>
 #   make unit-test  runs the unit tests (src/test/java); reports in $(PSS_HOME)/build/reports/tests
+#   make clean  removes build/ and every installed jar and native image, whatever its name,
+#               since each commit names its build after git describe
 # The first build downloads Gradle and ANTLR. GRADLE_USER_HOME is honoured; the JDK
 # is chosen in ../make/jdk.mk (GraalVM CE when installed, else java on PATH or JAVA_HOME).
 SHELL := /bin/bash
@@ -50,6 +52,7 @@ bin: jar
 clean:
 	rm -rf $(PSS_HOME)/build
 	rm $(SRC_PATH)/*.class -f
+	rm -f $(SRC_PATH)/pssgen_v*
 
 hello_world: jar
 	$(PSSGEN) hello_world.pss -o test.s -root pss_top::hello_world_a

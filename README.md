@@ -68,7 +68,8 @@ $ make -C src
 - `antlr4/antlr-4.9.3-complete.jar`: the ANTLR runtime that the jar needs on the classpath.
 
 `<name>` is the content of the file `VERSION` on a release commit, else the output of
-`git describe` (`bash make/build-name.sh` prints it). `make -C src clean` removes `build/`.
+`git describe` (`bash make/build-name.sh` prints it), so every commit installs a jar of its
+own name. `make -C src clean` removes `build/` and every `src/pssgen_v*` jar and executable.
 
 ### Native executable
 
