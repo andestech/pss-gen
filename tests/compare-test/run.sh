@@ -13,8 +13,8 @@ trap 'rm -rf "$WORK"' EXIT
 
 fails=0
 check() {
-    local name=$1 pattern=$2
-    if grep -qE -- "$pattern" "$WORK/out/report.md"; then
+    local name=$1 pattern=$2 report=${3:-$WORK/out/report.md}
+    if grep -qE -- "$pattern" "$report"; then
         echo "PASS: $name"
     else
         echo "FAIL: $name (no line matching '$pattern' in report.md)"
@@ -44,6 +44,7 @@ case "$test" in
     msg)     echo ".text" > test.s
              echo "[0.$stamp""s] PSS-WARNING: from $version" ;;
     onlyone) [[ "$version" == base ]] || echo ".text" > test.s ;;
+    kept|updated) echo "code $version" > test.s ;;
 esac
 echo "[0.$stamp""s] PSS-INFO: done"
 FAKE
@@ -92,5 +93,39 @@ fi
 bash "$COMPARE" --base-cmd "$WORK/base-cmd" --new-cmd "$WORK/new-cmd" \
     --base-name base --new-name new --out "$WORK/out" "$SUITE" > /dev/null 2>&1
 check cmp_rerun '^SAME: 1$'
+
+# The golden cross-check resolves goldens in the git checkout that holds the script,
+# so it runs on a copy of the script inside a temporary repository: both tests change
+# their output, but only "updated" has its golden changed since the tag "base".
+REPO=$WORK/repo
+mkdir -p "$REPO/tests"
+cp "$COMPARE" "$HERE/../lib-cfg.sh" "$REPO/tests/"
+for t in kept updated; do
+    mkdir -p "$REPO/tests/suite/$t"
+    touch "$REPO/tests/suite/$t/test.pss"
+    echo "code base" > "$REPO/tests/suite/$t/test.s.golden"
+done
+repo_git() {
+    git -C "$REPO" -c user.name=compare-test -c user.email=compare-test@localhost "$@"
+}
+repo_git -c init.defaultBranch=main init -q
+repo_git add -A
+repo_git commit -q -m base
+repo_git tag base
+echo "code new" > "$REPO/tests/suite/updated/test.s.golden"
+repo_git commit -q -am update
+
+bash "$REPO/tests/compare-versions.sh" --base-cmd "$WORK/base-cmd" --new-cmd "$WORK/new-cmd" \
+    --base-name base --new-name new --out "$WORK/gout" --golden-rev base \
+    "$REPO/tests/suite" > "$WORK/golden.log" 2>&1 || cat "$WORK/golden.log"
+check cmp_golden_counts '^OUTPUT: 2$' "$WORK/gout/report.md"
+flagged=$(sed -n '/^## Output changed but golden unchanged$/,/^## Differences$/p' \
+    "$WORK/gout/report.md")
+if grep -qxF -- '- suite/kept' <<< "$flagged" && ! grep -qF -- 'suite/updated' <<< "$flagged"; then
+    echo "PASS: cmp_golden_cross_check"
+else
+    echo "FAIL: cmp_golden_cross_check (flagged section: $(tr '\n' ' ' <<< "$flagged"))"
+    fails=$((fails + 1))
+fi
 
 [[ "$fails" -eq 0 ]]
