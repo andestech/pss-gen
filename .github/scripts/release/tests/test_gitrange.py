@@ -39,6 +39,13 @@ class FixedIssuesTest(unittest.TestCase):
         self.assertIn(49, fixed)
         self.assertNotIn(49, reverted)
 
+    def test_body_mention_not_fix(self):
+        fixed, reverted = gitrange.fixed_issues([
+            c("[ISSUE] Fix #49"), c('Revert "[ISSUE] Fix #49"'),
+            c("[DOC] Note the limits", "Known issue (#49)")])
+        self.assertNotIn(49, fixed)
+        self.assertIn(49, reverted)
+
     def test_merge_skipped(self):
         fixed, reverted = gitrange.fixed_issues([
             c("Merge branch x (#7)", merge=True)])
@@ -52,6 +59,10 @@ class UnreferencedTest(unittest.TestCase):
             plain, c("[BUILD] has #3"), c("[RELEASE] v2.4.2"),
             c("Merge x", merge=True)])
         self.assertEqual(got, [plain])
+
+    def test_body_only_ref_unreferenced(self):
+        found = gitrange.unreferenced([c("[X] no ref", "mentions #3")])
+        self.assertEqual(len(found), 1)
 
     def test_is_release_commit(self):
         self.assertTrue(gitrange.is_release_commit(c("[RELEASE] v2.4.2")))

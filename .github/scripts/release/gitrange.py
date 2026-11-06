@@ -43,6 +43,11 @@ def refs(c):
     return {int(n) for n in REF_RE.findall(c.subject + "\n" + c.body)}
 
 
+def subject_refs(c):
+    """Refs of the subject only; a ref in the body is a mention, not a fix."""
+    return {int(n) for n in REF_RE.findall(c.subject)}
+
+
 def closing_refs(text):
     return {int(n) for n in CLOSING_RE.findall(text)}
 
@@ -53,7 +58,7 @@ def fixed_issues(cs):
     for c in cs:
         if c.is_merge:
             continue
-        found = refs(c)
+        found = subject_refs(c)
         if c.subject.startswith(REVERT_PREFIX):
             reverted |= found
             fixed -= found
@@ -69,4 +74,5 @@ def is_release_commit(c):
 
 def unreferenced(cs):
     return [c for c in cs
-            if not c.is_merge and not is_release_commit(c) and not refs(c)]
+            if not c.is_merge and not is_release_commit(c)
+            and not subject_refs(c)]
