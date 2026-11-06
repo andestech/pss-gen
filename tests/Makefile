@@ -40,7 +40,7 @@ bin:
 clean:
 	@cd $(TESTS_DIR) && $(RUN_TESTS) --clean $(TESTS)
 
-# The repository slug (owner/name) comes from the URL of origin, https or ssh form.
+# The repository slug (owner/name) is GITHUB_REPOSITORY, else the URL of origin, https or ssh form.
 compare:
 	@test -n '$(BASE)' || { echo "usage: make compare BASE=<jar|vX.Y.Z> [NEW=<jar>] [SUITES=...|TESTS=...]" >&2; exit 2; }
 	@test -f '$(NEW)' || { echo "No $(NEW); run 'make -C src' first or set NEW=<jar>." >&2; exit 2; }
@@ -48,7 +48,8 @@ compare:
 	if [[ "$$base" =~ $(TAG_RE) ]]; then \
 	    tag=$$base; jar=$(COMPARE_DIR)/jars/pssgen_$$tag.jar; golden="--golden-rev $$tag"; \
 	    if [[ ! -f "$$jar" ]]; then \
-	        slug=$$(git -C $(PSS_HOME) remote get-url origin | sed -E 's#^(https?://[^/]+/|ssh://[^/]+/|[^@/]+@[^:/]+:)##; s#\.git$$##'); \
+	        slug="$$GITHUB_REPOSITORY"; \
+	        [[ -n "$$slug" ]] || slug=$$(git -C $(PSS_HOME) remote get-url origin | sed -E 's#^(https?://[^/]+/|ssh://[^/]+/|[^@/]+@[^:/]+:)##; s#\.git$$##'); \
 	        mkdir -p $(COMPARE_DIR)/jars; \
 	        curl -fsSL -o "$$jar.part" "https://github.com/$$slug/releases/download/$$tag/pssgen_$$tag.jar"; \
 	        mv "$$jar.part" "$$jar"; \
