@@ -46,9 +46,18 @@ def cmd_prepare(args):
         sys.exit("a patch release is cut from hot_fix")
     if branch == "hot_fix" and args.kind != "patch":
         sys.exit("a %s release is cut from develop" % args.kind)
-    prev = version.previous_release(repo, "HEAD")
+    has_main = subprocess.run(
+        ["git", "-C", repo, "rev-parse", "--verify", "-q", "origin/main"],
+        capture_output=True).returncode == 0
+    prev = version.previous_release(repo, "origin/main" if has_main else "HEAD")
     if prev is None:
-        sys.exit("no release tag is reachable from HEAD")
+        sys.exit("no release tag is reachable from main")
+    contains = subprocess.run(
+        ["git", "-C", repo, "merge-base", "--is-ancestor", version.fmt(prev),
+         "HEAD"]).returncode == 0
+    if not contains:
+        sys.exit("%s does not contain the previous release %s; merge main "
+                 "into it first" % (branch, version.fmt(prev)))
     new = version.next_version(prev, args.kind)
     api = gh.GitHub(gh.slug_from_env(repo), os.environ.get("GITHUB_TOKEN"))
     rng = check.collect(repo, api, "%s..HEAD" % version.fmt(prev))

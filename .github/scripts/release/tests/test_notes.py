@@ -2,6 +2,7 @@
 import unittest
 
 import gitrange
+import gitrange
 import notes
 from issues import Issue
 
@@ -26,6 +27,19 @@ class DraftTest(unittest.TestCase):
                            [issue(2, "Resolve crash", "bug")],
                            [issue(3, "Close gap")])
         self.assertEqual(gitrange.closing_refs(text), set())
+
+    def test_title_closing_keyword_neutralised(self):
+        text = notes.draft([issue(1, "Fix #5 crash")], [], [])
+        self.assertEqual(gitrange.closing_refs(text), set())
+        self.assertIn("- #1 Fix issue 5 crash", text)
+
+    def test_validate_closing_keyword_in_body(self):
+        body = notes.draft([], [], []).replace("<!-- write -->", "text")
+        self.assertEqual(notes.validate(body), [])
+        bad = body.replace("text", "Closes #7", 1)
+        errs = notes.validate(bad)
+        self.assertEqual(len(errs), 1)
+        self.assertIn("#7", errs[0])
 
     def test_validate_missing_and_placeholder(self):
         body = notes.draft([], [], [])

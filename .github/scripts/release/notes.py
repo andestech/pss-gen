@@ -5,6 +5,8 @@ body; it has six fixed sections.
 """
 import re
 
+import gitrange
+
 SECTIONS = ["Summary", "Notable changes", "Features", "Bug fixes",
             "Known issues / limitations", "Artifacts"]
 PLACEHOLDER = "<!-- write -->"
@@ -15,10 +17,18 @@ HEADING_RE = re.compile(r"^## +(.*?) *$")
 REF_RE = re.compile(r"#(\d+)")
 
 
+def _title(title):
+    """A closing keyword before a #N in a title would close that issue."""
+    if gitrange.closing_refs(title):
+        return REF_RE.sub(r"issue \1", title)
+    return title
+
+
 def _items(issues):
     if not issues:
         return "None"
-    return "\n".join("- #%d %s" % (i.number, i.title) for i in issues)
+    return "\n".join("- #%d %s" % (i.number, _title(i.title))
+                     for i in issues)
 
 
 def draft(features, bugs, incompatible):
@@ -52,6 +62,11 @@ def parse(body):
 def validate(body):
     found = parse(body or "")
     errors = []
+    closing = gitrange.closing_refs(body or "")
+    if closing:
+        errors.append("release note: a closing keyword before %s would close "
+                      "the issue when the PR merges; reword it"
+                      % ", ".join("#%d" % n for n in sorted(closing)))
     for name in SECTIONS:
         if name not in found:
             errors.append("release note: section '## %s' is missing" % name)

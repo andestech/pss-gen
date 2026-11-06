@@ -126,6 +126,13 @@ class CheckTest(unittest.TestCase):
         self.assertEqual(rep.autoclose, [(9, True)])
         self.assertIn("## Features", check.render(rep))
 
+    def test_autoclose_from_pr_body(self):
+        pr = self.release("develop", "v1.1.0")
+        pr["body"] = self.good_body().replace("text", "Fixes #12", 1)
+        rep = self.run_check(pr)
+        self.assertEqual(rep.autoclose, [(12, False)])
+        self.assertTrue(any("closing keyword" in e for e in rep.errors))
+
     def test_bad_note_rejected(self):
         pr = self.release("develop", "v1.1.0")
         pr["body"] = "nothing"

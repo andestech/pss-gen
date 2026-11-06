@@ -72,6 +72,25 @@ jobs:
         if: ${{ !cancelled() }}
         run: python3 -m unittest discover -s .github/scripts/release -p 'test_*.py' -v
 
+      - name: Compare flow self-test
+        if: ${{ !cancelled() }}
+        run: bash tests/compare-test/run.sh
+
+      - name: Upload regression logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: regression-logs
+          if-no-files-found: warn
+          overwrite: true
+          path: |
+            tests/*/summary.log
+            tests/**/run.log
+            tests/**/result.log
+            tests/**/diff.log
+            build/reports/tests/
+            build/test-results/
+
   # The comparison is information for the reviewer, not a gate.
   compare:
     name: Version comparison
@@ -97,9 +116,9 @@ jobs:
 
       - name: Compare with the previous release
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          base=$(python3 .github/scripts/release/release.py previous-tag "${{ github.event.pull_request.base.sha }}")
+          base=$(python3 .github/scripts/release/release.py previous-tag "$BASE_SHA")
           make -C tests compare BASE="$base"
 
       - name: Add the report to the summary

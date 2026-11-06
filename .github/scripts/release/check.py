@@ -123,7 +123,7 @@ def run(repo, gh, pr):
 
     body = pr.get("body") or ""
     in_note = notes.listed(body, "Features") | notes.listed(body, "Bug fixes")
-    closing = set()
+    closing = gitrange.closing_refs(body)
     for c in rng.commits:
         closing |= gitrange.closing_refs(c.subject + "\n" + c.body)
     rep.autoclose = [(n, n in in_note) for n in sorted(closing)]
