@@ -17,7 +17,7 @@ the commit, publishes the GitHub Release and brings the other branches up to dat
 
 | Branch | Content | Released as |
 |---|---|---|
-| `main` | Released code only. Every release is a merge commit with an annotated tag. | |
+| `main` | Released code only. Every release is a merge commit with an annotated tag. | `vX.Y.Z` |
 | `develop` | Features and fixes for the next minor or major version. | `vX.(Y+1).0` or `v(X+1).0.0` |
 | `hot_fix` | Bug fixes only, for the next patch version. | `vX.Y.(Z+1)` |
 
@@ -91,7 +91,8 @@ name `pssgen_vX.Y.Z.jar`. `bash make/build-name.sh` prints the name; `build.grad
 ## Cutting a release
 
 1. Check out the release branch (`develop` or `hot_fix`), up to date, with a clean tree.
-   It must contain the previous release tag.
+   It must contain the previous release tag; when `prepare` refuses because it does
+   not, finish the pending sync first (see [Recovery](#recovery)).
 2. Run the script with the kind of release:
 
    ```
@@ -106,10 +107,10 @@ name `pssgen_vX.Y.Z.jar`. `bash make/build-name.sh` prints the name; `build.grad
 4. Open a pull request from the branch into `main` with the release template:
 
    ```
-   https://github.com/andestech/pss-gen/compare/main...<branch>?template=release.md
+   https://github.com/andestech/pss-gen/compare/main...<branch>?quick_pull=1&template=release.md
    ```
 
-   Finish the release note in the description (see below). The description must not
+   Finish the release note in the description (see [The release note](#the-release-note)). The description must not
    contain a closing keyword before an issue number (see [Issues](#issues)).
 5. Wait for the release-check workflow. It fails the pull request when
 

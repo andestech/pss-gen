@@ -290,9 +290,10 @@ To see which results differ between two versions, run the tests with both:
 
 ```
 $ make -C tests compare BASE=vX.Y.Z                 # BASE: a release tag or the path of a jar
-$ make -C tests compare BASE=old.jar NEW=new.jar    # NEW defaults to the jar of this checkout
+$ make -C tests compare BASE=/abs/old.jar NEW=/abs/new.jar   # NEW defaults to the jar of this checkout
 ```
 
+Jar paths must be absolute, because `make -C tests` resolves relative paths from `tests/`.
 A tag as `BASE` downloads that release's jar. `SUITES` and `TESTS` select tests as above. The
 output is in `build/compare/<base>_vs_<new>/`; `report.md` there counts the tests per class
 (`STATUS`, `OUTPUT`, `MESSAGE`, `SAME`, `SKIP`) and shows the first lines of each difference.
