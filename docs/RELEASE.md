@@ -48,6 +48,15 @@ the commit, publishes the GitHub Release and brings the other branches up to dat
 Never target `main` with anything else. A pull request from a fork is retargeted to
 `develop` or `hot_fix` by a maintainer.
 
+A contribution brings its tests and its line of the release note, nothing about the
+release itself:
+
+| The contributor | The maintainer |
+|---|---|
+| Adds or updates the tests of the change: a regression test under `tests/` with its reviewed `test.s.golden`, or a unit test, and runs `make -C src unit-test` and `make -C tests`. | Chooses the version when the next release is cut. |
+| Writes the change's line for the release note under "Release note" in the pull request description, saying whether it is a feature, a bug fix or a notable change (incompatible or changing output), or `None`. | Collects those lines into the release note. |
+| Never changes `VERSION`, and commits no jar, executable or other build output. | Lets the release workflow build and publish the jar. |
+
 A commit that fixes issue `#N` names it in its subject, as `[ISSUE] Fix #N: summary`
 or `summary (#N)`. Only a `#N` in a subject counts as a fix; a `#N` in the body is a
 mention. On `hot_fix` every commit must name an issue, and every named issue must be a
@@ -60,7 +69,8 @@ close the issue again when the revert reaches `main`.
 `VERSION` is the only file that names the version, in the form `vMAJOR.MINOR.PATCH`
 (no leading zeros, no suffix). Between releases it keeps the last release: the branches
 get it from the sync, and only `release.py prepare` changes it, in the
-`[RELEASE] vX.Y.Z` commit of a release pull request.
+`[RELEASE] vX.Y.Z` commit that the maintainer adds to an open release pull request.
+Contributors never change it.
 
 The previous release is the highest version among the tags reachable from `main`.
 With previous release vX.Y.Z:
@@ -90,28 +100,40 @@ name `pssgen_vX.Y.Z.jar`. `bash make/build-name.sh` prints the name; `build.grad
 
 ## Cutting a release
 
-1. Check out the release branch (`develop` or `hot_fix`), up to date, with a clean tree.
-   It must contain the previous release tag; when `prepare` refuses because it does
-   not, finish the pending sync first (see [Recovery](#recovery)).
-2. Run the script with the kind of release:
+The version is chosen last, once the release pull request shows what the release
+contains.
 
-   ```
-   $ python3 .github/scripts/release/release.py prepare <major|minor|patch>
-   ```
-
-   `patch` is for `hot_fix`; `major` and `minor` are for `develop`. The script writes
-   the next version to `VERSION` and prints a release-note draft whose Features and
-   Bug fixes are filled from the issue range. It reads GitHub anonymously, or with
-   `GITHUB_TOKEN` when that is set, and warns about references it cannot classify.
-3. Commit `VERSION` as `[RELEASE] vX.Y.Z` and push the branch.
-4. Open a pull request from the branch into `main` with the release template:
+1. Open a draft pull request from the release branch (`develop` or `hot_fix`) into
+   `main` with the release template:
 
    ```
    https://github.com/andestech/pss-gen/compare/main...<branch>?quick_pull=1&template=release.md
    ```
 
-   Finish the release note in the description (see [The release note](#the-release-note)). The description must not
-   contain a closing keyword before an issue number (see [Issues](#issues)).
+   The release-check workflow runs on it. Its job summary holds the release-note
+   draft and the issues the merge will close, and the version-comparison job reports
+   which test results differ from the previous release. Until step 3 the check fails
+   on `VERSION`, which still names the previous release; that is expected.
+2. Choose the version: `patch` for `hot_fix`; `major` or `minor` for `develop`, by the
+   rules under [Versions](#versions), from the comparison report and the release-note
+   lines of the merged contributions.
+3. On an up-to-date checkout of the release branch with a clean tree, run
+
+   ```
+   $ python3 .github/scripts/release/release.py prepare <major|minor|patch>
+   ```
+
+   commit `VERSION` as `[RELEASE] vX.Y.Z` and push the branch; the pull request picks
+   the commit up. The script writes the next version to `VERSION` and prints the
+   release-note draft whose Features and Bug fixes are filled from the issue range. It
+   reads GitHub anonymously, or with `GITHUB_TOKEN` when that is set, and warns about
+   references it cannot classify. The branch must contain the previous release tag;
+   when `prepare` refuses because it does not, finish the pending sync first (see
+   [Recovery](#recovery)).
+4. Write the release note in the description (see
+   [The release note](#the-release-note)) from the draft and the release-note lines of
+   the merged contributions. The description must not contain a closing keyword before
+   an issue number (see [Issues](#issues)).
 5. Wait for the release-check workflow. It fails the pull request when
 
    - the head branch is not `develop` or `hot_fix` of this repository;
@@ -131,8 +153,8 @@ name `pssgen_vX.Y.Z.jar`. `bash make/build-name.sh` prints the name; `build.grad
    description lists each as fixed, and it prints the release-note draft again, for a
    maintainer who cannot reach GitHub from the shell. The version comparison runs as a
    separate job; its result is information and does not fail the pull request.
-6. Review with the checklist at the top of the release template, then merge with
-   "Create a merge commit".
+6. Review with the checklist at the top of the release template, mark the pull request
+   ready for review, then merge with "Create a merge commit".
 
 ## The release note
 
@@ -142,9 +164,9 @@ GitHub Release. It has these sections, in this order:
 | Section | Content |
 |---|---|
 | `## Summary` | Hand-written. |
-| `## Notable changes` | Hand-written: every incompatibility and every output change. The draft starts with the issues and pull requests labelled `incompatible`. `None` is allowed. |
-| `## Features` | The feature issues of the range, from the draft; edit as needed. `None` is allowed. |
-| `## Bug fixes` | The bug issues of the range, from the draft; edit as needed. `None` is allowed. |
+| `## Notable changes` | Every incompatibility and every output change: the contributions' notable-change lines and the comparison report. The draft starts with the issues and pull requests labelled `incompatible`. `None` is allowed. |
+| `## Features` | The feature issues of the range, from the draft, with the contributions' feature lines; edit as needed. `None` is allowed. |
+| `## Bug fixes` | The bug issues of the range, from the draft, with the contributions' bug-fix lines; edit as needed. `None` is allowed. |
 | `## Known issues / limitations` | Hand-written: open issues labelled `known-issue`, and the README "Known limitations" and `docs/SUPPORT.md`. `None` is allowed. |
 | `## Artifacts` | Leave the filler line; the release workflow replaces it with the checksum of each attached file. |
 
