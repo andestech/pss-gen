@@ -105,6 +105,82 @@ class FakeFidelityTest(unittest.TestCase):
         self.assertEqual(cm.exception.status, 422)
 
 
+    def test_draft_publish_and_delete_asset(self):
+        fake = FakeGitHub()
+        old = fake.create_release("v1.0.0", "n", "b", True)
+        rel = fake.create_release("v1.1.0", "n", "b", True, draft=True)
+        self.assertTrue(rel["draft"])
+        self.assertFalse(rel["latest"])
+        with self.assertRaises(gh.GitHubError) as cm:
+            fake.create_release("v1.1.0", "n", "b", True, draft=True)
+        self.assertEqual(cm.exception.status, 422)
+        path = os.path.join(tempfile.mkdtemp(), "a.jar")
+        self.addCleanup(shutil.rmtree, os.path.dirname(path), True)
+        with open(path, "wb") as f:
+            f.write(b"x")
+        fake.upload_asset(rel, path)
+        fake.upload_asset(old, path)
+        ids = [a["id"] for a in rel["assets"] + old["assets"]]
+        self.assertEqual(len(set(ids)), 2)
+        self.assertEqual(rel["assets"][0]["state"], "uploaded")
+        fake.delete_asset(rel["assets"][0]["id"])
+        self.assertEqual(rel["assets"], [])
+        self.assertEqual(fake.assets[rel["id"]], {})
+        with self.assertRaises(gh.GitHubError) as cm:
+            fake.delete_asset(ids[0])
+        self.assertEqual(cm.exception.status, 404)
+        fake.publish_release(rel["id"], "final")
+        self.assertEqual((rel["draft"], rel["latest"], rel["body"]),
+                         (False, True, "final"))
+        self.assertFalse(old["latest"])
+
+
+class ReleaseApiTest(unittest.TestCase):
+    """Requests gh.GitHub sends for the release calls."""
+
+    def client(self, answers):
+        api = gh.GitHub("o/r", "t")
+        sent = []
+
+        def fake_json(method, path, body=None, allow_404=False):
+            sent.append((method, path, body))
+            return answers.pop(0) if answers else None
+        api._json = fake_json
+        return api, sent
+
+    def test_create_draft(self):
+        api, sent = self.client([{}])
+        api.create_release("v1.1.0", "v1.1.0", "b", True, draft=True)
+        self.assertEqual(sent[0][2]["draft"], True)
+        self.assertEqual(sent[0][2]["make_latest"], "false")
+
+    def test_publish_release(self):
+        api, sent = self.client([{}])
+        api.publish_release(7, "body")
+        self.assertEqual(sent, [("PATCH", "/repos/o/r/releases/7", {
+            "draft": False, "make_latest": "true", "body": "body"})])
+
+    def test_delete_asset(self):
+        api, sent = self.client([])
+        api.delete_asset(12)
+        self.assertEqual(sent, [("DELETE", "/repos/o/r/releases/assets/12",
+                                 None)])
+
+    def test_release_by_tag_finds_draft_in_list(self):
+        page1 = [{"tag_name": "v%d" % i} for i in range(100)]
+        page2 = [{"tag_name": "v1.1.0", "draft": True}]
+        api, sent = self.client([None, page1, page2])
+        self.assertEqual(api.release_by_tag("v1.1.0"), page2[0])
+        self.assertEqual([p for _, p, _ in sent], [
+            "/repos/o/r/releases/tags/v1.1.0",
+            "/repos/o/r/releases?per_page=100&page=1",
+            "/repos/o/r/releases?per_page=100&page=2"])
+
+    def test_release_by_tag_none(self):
+        api, sent = self.client([None, []])
+        self.assertIsNone(api.release_by_tag("v1.1.0"))
+
+
 class RedirectTest(unittest.TestCase):
     def redirect(self, new_url):
         import urllib.request

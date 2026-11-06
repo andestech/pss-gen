@@ -5,6 +5,11 @@ build (so the jar carries the plain version name), run after it. Every step
 first checks whether it is already done, so a re-run after a partial failure
 completes the missing steps and repeats none. Everything that can refuse the
 release is checked before the first push or API write.
+
+The GitHub Release stays a draft until all of its assets are uploaded. The
+jar is rebuilt on every run and need not be byte-identical, so a draft gets
+the assets and the checksums of the current build, all replaced together;
+a published release is never changed.
 """
 import hashlib
 import os
@@ -25,6 +30,15 @@ KNOWN_LABEL = "known-issue"
 
 class PublishError(RuntimeError):
     pass
+
+
+def _warn(msg):
+    """A warning on stderr and, in a workflow, in the job summary."""
+    print("warning: " + msg, file=sys.stderr)
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        with open(summary, "a") as f:
+            f.write("- warning: %s\n" % msg)
 
 
 def _git(repo, *args):
@@ -169,8 +183,7 @@ def _issue(gh, n):
     except GitHubError as e:
         if e.status != 404:
             raise
-        print("warning: #%d is not known to GitHub; skipped" % n,
-              file=sys.stderr)
+        _warn("#%d is not known to GitHub; skipped" % n)
         return None
     if "pull_request" in payload:
         return None
@@ -186,9 +199,8 @@ def _issue_plan(repo, gh, sha, pr):
     known = notes.listed(body, KNOWN_SECTION)
     both = fixed & known
     if both:
-        print("warning: listed both as fixed and as known issues, left as "
-              "they are: %s" % ", ".join("#%d" % n for n in sorted(both)),
-              file=sys.stderr)
+        _warn("listed both as fixed and as known issues, left as they are: "
+              "%s" % ", ".join("#%d" % n for n in sorted(both)))
     closing = gitrange.closing_refs(body)
     for c in gitrange.commits(repo, "%s^1..%s" % (sha, sha)):
         closing |= gitrange.closing_refs(c.subject + "\n" + c.body)
@@ -217,6 +229,26 @@ def _issue_plan(repo, gh, sha, pr):
     return plan
 
 
+def _check_published(release, assets):
+    """Refuse when a published release does not hold this build's assets."""
+    present = {a["name"]: a for a in release.get("assets") or []}
+    problems = []
+    for name, _, digest in assets:
+        a = present.get(name)
+        if a is None:
+            problems.append("%s is missing" % name)
+        elif a.get("state") != "uploaded":
+            problems.append("%s is not fully uploaded (state %s)"
+                            % (name, a.get("state")))
+        elif a.get("digest") and a["digest"] != "sha256:" + digest:
+            problems.append("%s differs from this build" % name)
+    if problems:
+        raise PublishError(
+            "release %s is published and is left as it is: %s; the "
+            "maintainer decides how to correct it"
+            % (release["tag_name"], "; ".join(problems)))
+
+
 def run(repo, gh, sha, dist, dry_run):
     """Publish the release merged as sha; returns the actions done.
 
@@ -229,15 +261,11 @@ def run(repo, gh, sha, dist, dry_run):
                            "'release.py tag' before the build" % tag)
     assets = _assets(dist, tag)
     sums = [(name, digest) for name, _, digest in assets]
+    body = release_body(pr.get("body"), sums)
     release = gh.release_by_tag(tag)
-    present = {}
-    for a in (release or {}).get("assets") or []:
-        present[a["name"]] = a.get("digest")
-    for name, _, digest in assets:
-        if present.get(name) and present[name] != "sha256:" + digest:
-            raise PublishError(
-                "the release asset %s differs from the build; delete it from "
-                "release %s and re-run" % (name, tag))
+    published = release is not None and not release.get("draft")
+    if published:
+        _check_published(release, assets)
     issue_plan = _issue_plan(repo, gh, sha, pr)
 
     done = []
@@ -245,18 +273,23 @@ def run(repo, gh, sha, dist, dry_run):
         if not dry_run:
             _git(repo, "push", "origin", "refs/tags/%s" % tag)
         done.append("push tag %s" % tag)
-    if release is None:
+    if not published:
+        stale = (release or {}).get("assets") or []
+        if release is None:
+            if not dry_run:
+                release = gh.create_release(tag, tag, body, False, draft=True)
+            done.append("create draft release %s" % tag)
+        for a in stale:
+            if not dry_run:
+                gh.delete_asset(a["id"])
+            done.append("delete %s" % a["name"])
+        for name, path, _ in assets:
+            if not dry_run:
+                gh.upload_asset(release, path)
+            done.append("upload %s" % name)
         if not dry_run:
-            release = gh.create_release(tag, tag,
-                                        release_body(pr.get("body"), sums),
-                                        True)
-        done.append("create release %s" % tag)
-    for name, path, _ in assets:
-        if name in present:
-            continue
-        if not dry_run:
-            gh.upload_asset(release, path)
-        done.append("upload %s" % name)
+            gh.publish_release(release["id"], body)
+        done.append("publish release %s" % tag)
     for action, write in issue_plan:
         if not dry_run:
             write()

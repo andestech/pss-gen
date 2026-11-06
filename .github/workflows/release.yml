@@ -10,7 +10,8 @@ on:
   push:
     branches: [main]
 
-# One release at a time; a new run waits and never cancels the running one.
+# One release at a time: a new run waits for the running one, which is never
+# cancelled, and a newer pending run replaces an older pending one.
 concurrency: release
 
 permissions:

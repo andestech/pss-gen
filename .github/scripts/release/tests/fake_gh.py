@@ -90,25 +90,47 @@ class FakeGitHub:
         self.calls.append(("release_by_tag", tag))
         return self.releases.get(tag)
 
-    def create_release(self, tag, name, body, latest):
-        self.calls.append(("create_release", tag, name, body, latest))
-        rel = self.add_release(tag, body=body, latest=latest)
+    def create_release(self, tag, name, body, latest, draft=False):
+        self.calls.append(("create_release", tag, name, body, latest, draft))
+        if tag in self.releases:
+            raise GitHubError(422, "releases", "already_exists: " + tag)
+        rel = self.add_release(tag, body=body, draft=draft,
+                               latest=latest and not draft)
         rel["name"] = name
         return rel
 
-    def update_release(self, release_id, body):
-        self.calls.append(("update_release", release_id, body))
+    def _release(self, release_id):
         for rel in self.releases.values():
             if rel["id"] == release_id:
-                rel["body"] = body
-                return
-        raise KeyError(release_id)
+                return rel
+        raise GitHubError(404, "releases/%d" % release_id, "Not Found")
+
+    def publish_release(self, release_id, body):
+        self.calls.append(("publish_release", release_id, body))
+        rel = self._release(release_id)
+        for other in self.releases.values():
+            other["latest"] = False
+        rel.update(draft=False, latest=True, body=body)
+        return rel
+
+    def delete_asset(self, asset_id):
+        self.calls.append(("delete_asset", asset_id))
+        for rel in self.releases.values():
+            for a in rel["assets"]:
+                if a["id"] == asset_id:
+                    rel["assets"].remove(a)
+                    self.assets.get(rel["id"], {}).pop(a["name"], None)
+                    return
+        raise GitHubError(404, "releases/assets/%d" % asset_id, "Not Found")
+
+    def update_release(self, release_id, body):
+        self.calls.append(("update_release", release_id, body))
+        self._release(release_id)["body"] = body
 
     def upload_asset(self, release, path):
         self.calls.append(("upload_asset", release["id"], path))
         name = os.path.basename(path)
-        rel = next(r for r in self.releases.values()
-                   if r["id"] == release["id"])
+        rel = self._release(release["id"])
         if any(a["name"] == name for a in rel["assets"]):
             raise GitHubError(422, "uploads/%d" % rel["id"],
                               "already_exists: " + name)
@@ -118,7 +140,7 @@ class FakeGitHub:
         asset_id = self._next_asset_id
         self._next_asset_id += 1
         rel["assets"].append({
-            "id": asset_id, "name": name,
+            "id": asset_id, "name": name, "state": "uploaded",
             "digest": "sha256:" + hashlib.sha256(data).hexdigest()})
 
     def download(self, url, path):

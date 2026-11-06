@@ -119,13 +119,37 @@ class GitHub:
         return r["number"]
 
     def release_by_tag(self, tag):
-        return self._json("GET", self._repo("/releases/tags/%s" % tag),
-                          allow_404=True)
+        """The release of tag, a draft included, or None."""
+        rel = self._json("GET", self._repo("/releases/tags/%s" % tag),
+                         allow_404=True)
+        if rel is not None:
+            return rel
+        # The by-tag endpoint only knows published releases; a draft is
+        # found in the list, which shows drafts to a token with push access.
+        page = 1
+        while True:
+            batch = self._json("GET", self._repo(
+                "/releases?per_page=100&page=%d" % page)) or []
+            for rel in batch:
+                if rel.get("tag_name") == tag:
+                    return rel
+            if len(batch) < 100:
+                return None
+            page += 1
 
-    def create_release(self, tag, name, body, latest):
+    def create_release(self, tag, name, body, latest, draft=False):
         return self._json("POST", self._repo("/releases"), {
-            "tag_name": tag, "name": name, "body": body,
-            "make_latest": "true" if latest else "false"})
+            "tag_name": tag, "name": name, "body": body, "draft": draft,
+            "make_latest": "true" if latest and not draft else "false"})
+
+    def publish_release(self, release_id, body):
+        """Make a draft public as the latest release, with its final body."""
+        return self._json("PATCH", self._repo("/releases/%d" % release_id),
+                          {"draft": False, "make_latest": "true",
+                           "body": body})
+
+    def delete_asset(self, asset_id):
+        self._json("DELETE", self._repo("/releases/assets/%d" % asset_id))
 
     def update_release(self, release_id, body):
         self._json("PATCH", self._repo("/releases/%d" % release_id),

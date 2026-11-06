@@ -16,7 +16,8 @@ from tests.fake_gh import FakeGitHub
 from tests.gitutil import TempRepo
 
 WRITES = {"set_issue_state", "add_labels", "create_issue", "create_release",
-          "update_release", "upload_asset"}
+          "update_release", "upload_asset", "publish_release", "delete_asset"}
+ASSETS = ["SHA256SUMS", "antlr-4.9.3-complete.jar", "pssgen_v1.1.0.jar"]
 MERGED_AT = "2029-12-31T23:00:00Z"
 BEFORE_MERGE = "2029-12-01T00:00:00Z"
 AFTER_MERGE = "2029-12-31T23:00:05Z"
@@ -160,22 +161,36 @@ class PublishTest(unittest.TestCase):
                       self.remote_git("cat-file", "-p", "v1.1.0"))
         rel = self.fake.releases["v1.1.0"]
         self.assertEqual(rel["name"], "v1.1.0")
+        self.assertFalse(rel["draft"])
         self.assertTrue(rel["latest"])
+        self.assert_body_matches_dist(rel)
         self.assertTrue(rel["body"].startswith("## Summary\n"))
         self.assertNotIn("checklist", rel["body"])
         self.assertNotIn("Filled in by the release workflow", rel["body"])
-        for name in ("pssgen_v1.1.0.jar", "antlr-4.9.3-complete.jar",
-                     "SHA256SUMS"):
-            self.assertIn("- `%s`  %s" % (
-                name, sha256(os.path.join(self.dist, name))), rel["body"])
-        self.assertEqual(sorted(a["name"] for a in rel["assets"]),
-                         ["SHA256SUMS", "antlr-4.9.3-complete.jar",
-                          "pssgen_v1.1.0.jar"])
         self.assertEqual(self.fake.assets[rel["id"]]["pssgen_v1.1.0.jar"],
                          b"pssgen jar")
-        self.assertEqual(actions[:2], ["push tag v1.1.0",
-                                       "create release v1.1.0"])
-        self.assertIn("upload SHA256SUMS", actions)
+        create = [c for c in self.fake.calls if c[0] == "create_release"]
+        self.assertEqual([c[4:] for c in create], [(False, True)])
+        self.assertEqual(actions[:5], [
+            "push tag v1.1.0", "create draft release v1.1.0",
+            "upload antlr-4.9.3-complete.jar", "upload pssgen_v1.1.0.jar",
+            "upload SHA256SUMS"])
+        self.assertEqual(actions[5], "publish release v1.1.0")
+        last_upload = max(i for i, c in enumerate(self.fake.calls)
+                          if c[0] == "upload_asset")
+        published = [i for i, c in enumerate(self.fake.calls)
+                     if c[0] == "publish_release"]
+        self.assertEqual(len(published), 1)
+        self.assertGreater(published[0], last_upload)
+
+    def assert_body_matches_dist(self, rel):
+        """Assets, the body's sums and SHA256SUMS all come from dist."""
+        self.assertEqual(sorted(a["name"] for a in rel["assets"]), ASSETS)
+        for name in ASSETS:
+            path = os.path.join(self.dist, name)
+            self.assertIn("- `%s`  %s" % (name, sha256(path)), rel["body"])
+            with open(path, "rb") as f:
+                self.assertEqual(self.fake.assets[rel["id"]][name], f.read())
 
     def test_closes_listed(self):
         actions = self.tag_and_publish()
@@ -202,7 +217,8 @@ class PublishTest(unittest.TestCase):
         self.assertIn("reopen #7", actions)
         self.assertEqual(self.state_calls(9), [])
 
-    def test_publish_idempotent(self):
+    def fail_second_upload(self):
+        """First run: tag pushed, draft created, one asset uploaded."""
         upload = self.fake.upload_asset
         uploads = []
 
@@ -217,33 +233,94 @@ class PublishTest(unittest.TestCase):
         with self.assertRaises(GitHubError):
             self.run_publish()
         self.fake.upload_asset = upload
-        self.assertEqual(len(self.fake.releases["v1.1.0"]["assets"]), 1)
-
+        rel = self.fake.releases["v1.1.0"]
+        self.assertTrue(rel["draft"])
+        self.assertFalse(rel["latest"])
+        self.assertEqual(len(rel["assets"]), 1)
         # A re-run of the workflow starts from a fresh checkout that fetched
         # the pushed tag.
         self.repo.git("tag", "-d", "v1.1.0")
         self.repo.git("fetch", "-q", "origin",
                       "refs/tags/v1.1.0:refs/tags/v1.1.0")
         publish.tag_local(self.repo.path, self.fake, self.sha)
+        self.fake.calls.clear()
+        return rel
+
+    def assert_rerun_completes(self, rel):
         actions = self.run_publish()
         self.assertNotIn("push tag v1.1.0", actions)
-        self.assertNotIn("create release v1.1.0", actions)
-        self.assertEqual(len([a for a in actions if a.startswith("upload ")]),
-                         2)
+        self.assertNotIn("create draft release v1.1.0", actions)
         self.assertEqual(
-            len([c for c in self.fake.calls if c[0] == "create_release"]), 1)
-        names = [a["name"] for a in self.fake.releases["v1.1.0"]["assets"]]
-        self.assertEqual(sorted(names), ["SHA256SUMS",
-                                         "antlr-4.9.3-complete.jar",
-                                         "pssgen_v1.1.0.jar"])
-        self.assertEqual(len({a["id"] for a in
-                              self.fake.releases["v1.1.0"]["assets"]}), 3)
+            [c for c in self.fake.calls if c[0] == "create_release"], [])
+        self.assertEqual([a for a in actions if a.startswith("delete ")],
+                         ["delete antlr-4.9.3-complete.jar"])
+        self.assertEqual(len([a for a in actions if a.startswith("upload ")]),
+                         3)
+        self.assertIn("publish release v1.1.0", actions)
+        self.assertFalse(rel["draft"])
+        self.assertTrue(rel["latest"])
+        self.assert_body_matches_dist(rel)
+        self.assertEqual(len({a["id"] for a in rel["assets"]}), 3)
         self.assertEqual(self.remote_git("rev-parse", "v1.1.0^{commit}"),
                          self.sha)
 
+    def test_publish_idempotent(self):
+        rel = self.fail_second_upload()
+        self.assert_rerun_completes(rel)
         self.fake.calls.clear()
         self.assertEqual(self.run_publish(), [])
         self.assertEqual(self.writes(), [])
+        self.assertEqual(len(self.fake.releases), 1)
+
+    def test_rerun_draft_rebuilt_jar(self):
+        rel = self.fail_second_upload()
+        first_sums = rel["body"]
+        write(os.path.join(self.dist, "pssgen_v1.1.0.jar"), "rebuilt jar")
+        self.write_sums()
+        self.assert_rerun_completes(rel)
+        self.assertNotEqual(rel["body"], first_sums)
+        self.assertEqual(self.fake.assets[rel["id"]]["pssgen_v1.1.0.jar"],
+                         b"rebuilt jar")
+
+    def test_published_release_not_modified(self):
+        self.tag_and_publish()
+        rel = self.fake.releases["v1.1.0"]
+        body = rel["body"]
+        write(os.path.join(self.dist, "pssgen_v1.1.0.jar"), "rebuilt jar")
+        self.write_sums()
+        self.fake.calls.clear()
+        for dry_run in (True, False):
+            with self.assertRaises(publish.PublishError) as cm:
+                self.run_publish(dry_run=dry_run)
+            msg = str(cm.exception)
+            self.assertIn("published", msg)
+            self.assertIn("pssgen_v1.1.0.jar differs", msg)
+        self.assertEqual(self.writes(), [])
+        self.assertEqual(rel["body"], body)
+        self.assertEqual(self.fake.assets[rel["id"]]["pssgen_v1.1.0.jar"],
+                         b"pssgen jar")
+
+        rel["assets"] = [a for a in rel["assets"] if a["name"] != "SHA256SUMS"]
+        rel["assets"][0]["state"] = "starter"
+        with self.assertRaises(publish.PublishError) as cm:
+            self.run_publish()
+        self.assertIn("SHA256SUMS is missing", str(cm.exception))
+        self.assertIn("not fully uploaded", str(cm.exception))
+        self.assertEqual(self.writes(), [])
+
+    def test_warnings_in_step_summary(self):
+        summary = os.path.join(self.dist, "..", "summary%d.md" % id(self))
+        self.addCleanup(lambda: os.path.exists(summary) and os.remove(summary))
+        self.fake.commit_pulls[self.sha][1]["body"] = PR_BODY.replace(
+            "- #7 Limitation seven", "- #3 Still slow\n- #77 Unknown")
+        with mock.patch.dict(os.environ, {"GITHUB_STEP_SUMMARY": summary}), \
+                contextlib.redirect_stderr(io.StringIO()) as err:
+            self.run_publish(dry_run=True)
+        with open(summary) as f:
+            text = f.read()
+        for fragment in ("#3", "both as fixed and as known", "#77"):
+            self.assertIn(fragment, text)
+            self.assertIn(fragment, err.getvalue())
 
     def tag_other(self):
         self.repo.git("checkout", "-q", "-b", "side", "develop")
@@ -281,9 +358,10 @@ class PublishTest(unittest.TestCase):
         before = self.repo.git("tag", "--list")
         actions = self.run_publish(dry_run=True)
         self.assertEqual(actions, [
-            "push tag v1.1.0", "create release v1.1.0",
+            "push tag v1.1.0", "create draft release v1.1.0",
             "upload antlr-4.9.3-complete.jar", "upload pssgen_v1.1.0.jar",
-            "upload SHA256SUMS", "close #3", "reopen #5", "reopen #8",
+            "upload SHA256SUMS", "publish release v1.1.0", "close #3",
+            "reopen #5", "reopen #8",
             "reopen #7", "label #7 known-issue", "label #9 known-issue"])
         self.assertEqual(self.writes(), [])
         self.assertEqual(self.fake.releases, {})
@@ -327,16 +405,6 @@ class PublishTest(unittest.TestCase):
         write(os.path.join(self.dist, "pssgen_v1.1.0.jar"), "rebuilt")
         publish.tag_local(self.repo.path, self.fake, self.sha)
         self.refused("SHA256SUMS")
-
-    def test_uploaded_asset_differs_errors(self):
-        publish.tag_local(self.repo.path, self.fake, self.sha)
-        rel = self.fake.add_release("v1.1.0")
-        rel["assets"].append({"id": 99, "name": "pssgen_v1.1.0.jar",
-                              "digest": "sha256:" + "0" * 64})
-        with self.assertRaises(publish.PublishError) as cm:
-            self.run_publish()
-        self.assertIn("pssgen_v1.1.0.jar", str(cm.exception))
-        self.assertEqual(self.writes(), [])
 
     def cli(self, *argv):
         old = os.getcwd()
