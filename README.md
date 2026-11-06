@@ -114,8 +114,8 @@ If it is set, it must point at a checkout that contains `VERSION`.
 ## Usage
 
 ```
-java -classpath pssgen_<version>.jar:antlr-4.9.3-complete.jar PSSGenMain [options] file...
-pssgen_<version> [options] file...
+java -classpath pssgen_<name>.jar:antlr-4.9.3-complete.jar PSSGenMain [options] file...
+pssgen_<name> [options] file...
 ```
 
 | Option | Meaning |
@@ -286,6 +286,18 @@ pass.
 To add a test, create a directory in a suite with `test.pss`, check the output of
 `make -C tests TESTS=<suite>/<test>`, and save the reviewed `test.s` as `test.s.golden`.
 
+To see which results differ between two versions, run the tests with both:
+
+```
+$ make -C tests compare BASE=vX.Y.Z                 # BASE: a release tag or the path of a jar
+$ make -C tests compare BASE=old.jar NEW=new.jar    # NEW defaults to the jar of this checkout
+```
+
+A tag as `BASE` downloads that release's jar. `SUITES` and `TESTS` select tests as above. The
+output is in `build/compare/<base>_vs_<new>/`; `report.md` there counts the tests per class
+(`STATUS`, `OUTPUT`, `MESSAGE`, `SAME`, `SKIP`) and shows the first lines of each difference.
+The exit status is 0 whenever the comparison ran. `docs/RELEASE.md` describes the classes.
+
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on every push, on pull requests and on demand. Its job
@@ -294,9 +306,17 @@ is the wrapper of an official Gradle release, builds the jar, runs `make -C test
 annotates the tests that did not pass with `check-summary.sh`, runs the unit tests (also
 after a failed regression), and uploads the `summary.log` files, the per-test `run.log`,
 `result.log` and `diff.log` and the unit test reports as the artifact `regression-logs`,
-also after a failure.
+also after a failure. It also runs the tests of the release scripts
+(`python3 -m unittest discover -s .github/scripts/release -p 'test_*.py'`) and the self-test of
+the comparison flow (`bash tests/compare-test/run.sh`).
 
-The actions it uses are pinned to full commit SHAs, with the release in a comment. To
+`.github/workflows/release-check.yml` runs on pull requests into `main`: it checks the version,
+the issue range and the release note of a release pull request, runs the build and the tests,
+and compares the outputs with the previous release. `.github/workflows/release.yml` runs on
+every push to `main`: it tags the release merge commit, publishes the GitHub Release and syncs
+`develop` and `hot_fix` to the tag. Both are described in `docs/RELEASE.md`.
+
+The actions the workflows use are pinned to full commit SHAs, with the release in a comment. To
 update one, take the commit of the new release tag from the action's own repository, for
 example `git ls-remote https://github.com/actions/checkout 'refs/tags/v7*'` (for an
 annotated tag, the `^{}` line), and replace both the SHA and the comment.
@@ -311,12 +331,15 @@ annotated tag, the `^{}` line), and replace both the SHA and the comment.
 | `src/test/java/` | Unit tests (JUnit 5), run by `make -C src unit-test` |
 | `src/Makefile` | `make`, `make bin` and `make unit-test`; the jar and the native executable are installed next to it |
 | `make/common.mk`, `make/jdk.mk` | Settings shared by `src/Makefile` and `tests/Makefile`: paths, version, JDK |
+| `make/build-name.sh` | Prints the build name: `VERSION` on the release commit, else `git describe` |
 | `tests/` | Regression tests (`samples/`, `issues/`, `cli/`, `errors/`) and their runner `run-tests.sh` |
 | `antlr4/` | License of ANTLR; `make -C src` installs the ANTLR jar here |
 | `docs/SUPPORT.md` | Support matrix: LRM sections, their status, messages and tests |
+| `docs/RELEASE.md` | Branches, versions and the release flow |
 | `docs/Doxyfile` | API documentation: `mkdir -p build && doxygen docs/Doxyfile` writes `build/doxygen/` |
 | `build.gradle`, `settings.gradle`, `gradlew`, `gradle/` | Gradle build and wrapper |
-| `.github/` | CI workflow, its check script and the issue templates |
+| `.github/` | CI and release workflows, the check script, issue and pull request templates |
+| `.github/scripts/release/` | `release.py` and its modules, the release flow, with their unit tests |
 | `tools/` | Local toolchains such as GraalVM; not stored in git |
 | `build/` | Build output; not stored in git |
 
@@ -338,10 +361,14 @@ PSSGen packages, in pipeline order:
 
 ## Releasing
 
-1. Set the new version, for example `v1.2.3`, in `VERSION`, the only file that names it.
-2. Build and test: `make -C src bin`, `make -C src unit-test`, `make -C tests` and `make -C tests bin`.
-3. Commit, tag the commit with the same version, and publish
-   `src/pssgen_<version>.jar` and `src/pssgen_<version>`.
+`VERSION` is the only file that names the version. A release is a pull request from `develop`
+(minor or major) or `hot_fix` (patch) into `main`, prepared with
+`python3 .github/scripts/release/release.py prepare <major|minor|patch>` and checked by the
+release-check workflow. Merging it tags the commit, publishes the GitHub Release with
+`pssgen_vX.Y.Z.jar`, `antlr-4.9.3-complete.jar` and `SHA256SUMS`, and syncs `develop` and
+`hot_fix` to the tag. Contributors open pull requests into `develop` (features) or `hot_fix`
+(fixes, with an issue), never into `main`. A jar built from any other commit is named after
+`git describe`. See [docs/RELEASE.md](docs/RELEASE.md).
 
 ## Known limitations
 
