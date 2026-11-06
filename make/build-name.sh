@@ -5,7 +5,7 @@
 # <name> is VERSION when HEAD is the commit tagged with exactly that version, or
 # when <repo dir> is not a git work tree (a source archive). Any other commit is
 # named by "git describe", and --dirty keeps an edited tree from looking like a
-# clean build.
+# clean build. Without any reachable v* tag the name is VERSION-g<short sha>.
 # Exits 2 when VERSION is not vMAJOR.MINOR.PATCH (no leading zeros, no suffix).
 set -euo pipefail
 
@@ -27,6 +27,10 @@ fi
 tag=$(git -C "$dir" describe --tags --exact-match --match 'v[0-9]*' HEAD 2>/dev/null || true)
 if [[ $tag == "$version" ]] && [[ -z $(git -C "$dir" status --porcelain --untracked-files=no) ]]; then
     echo "$version"
+elif git -C "$dir" describe --tags --match 'v[0-9]*' --dirty 2>/dev/null; then
+    :
 else
-    git -C "$dir" describe --tags --match 'v[0-9]*' --dirty
+    # No release tag is reachable (shallow clone, fork without tags).
+    echo "$version-g$(git -C "$dir" rev-parse --short HEAD)$(
+        [[ -z $(git -C "$dir" status --porcelain --untracked-files=no) ]] || echo -dirty)"
 fi

@@ -18,6 +18,9 @@ if (buildNameExec.result.get().exitValue != 0) {
     throw new GradleException(buildNameExec.standardError.asText.get().trim())
 }
 def buildName = buildNameExec.standardOutput.asText.get().trim()
+if (buildName.isEmpty()) {
+    throw new GradleException('make/build-name.sh printed no build name')
+}
 version = buildName
 
 def antlrVersion = '4.9.3'

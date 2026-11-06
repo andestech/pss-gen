@@ -63,6 +63,20 @@ class BuildNameTest(unittest.TestCase):
         self.assertEqual(r.returncode, 0)
         self.assertTrue(r.stdout.strip().endswith("-dirty"), r.stdout)
 
+    def test_no_tag_reachable(self):
+        self.init_repo()
+        r = self.run_script()
+        self.assertEqual(r.returncode, 0)
+        self.assertRegex(r.stdout.strip(), r"^v1\.2\.3-g[0-9a-f]{7,}$")
+
+    def test_other_tag_describe(self):
+        self.init_repo()
+        self.git("tag", "-a", "v1.2.2", "-m", "old")
+        r = self.run_script()
+        self.assertEqual(r.returncode, 0)
+        self.assertTrue(r.stdout.startswith("v1.2.2"), r.stdout)
+        self.assertNotEqual(r.stdout, "v1.2.3\n")
+
     def test_no_git_plain(self):
         self.write_version("v1.2.3\n")
         r = self.run_script()

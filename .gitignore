@@ -11,3 +11,4 @@ src/*.jar
 tests/**/*.log
 tests/**/test.s
 /tools/graalvm-community-openjdk-*/
+__pycache__/
