@@ -31,6 +31,7 @@ class Range:
     incompatible: list
     unclassified: list
     missing: set
+    empty_prs: list
     reverted: set
     commits: list
 
@@ -46,8 +47,12 @@ def collect(repo, gh, rev_range):
     fixed, reverted = gitrange.fixed_issues(cs)
     found, prs, missing = issues.resolve(gh, fixed)
     incompatible = [i for i in found if "incompatible" in i.labels]
+    empty_prs = []
     for n in sorted(prs):
-        pr_issue = issues.to_issue(gh.issue(n))
+        payload = gh.issue(n)
+        if not gitrange.closing_refs(payload.get("body") or ""):
+            empty_prs.append(n)
+        pr_issue = issues.to_issue(payload)
         if "incompatible" in pr_issue.labels:
             incompatible.append(pr_issue)
     return Range(
@@ -55,7 +60,7 @@ def collect(repo, gh, rev_range):
         [i for i in found if i.kind == "bug"],
         incompatible,
         [i for i in found if i.kind == "unclassified"],
-        missing, reverted, cs)
+        missing, empty_prs, reverted, cs)
 
 
 def _refs(numbers):
@@ -114,6 +119,13 @@ def run(repo, gh, pr):
         if bare:
             rep.errors.append("commits without an issue in a hot fix: %s"
                               % ", ".join(c.sha[:9] for c in bare))
+        empty = [c for c in rng.commits
+                 if gitrange.named_refs(c)
+                 and gitrange.named_refs(c) <= set(rng.empty_prs)]
+        if empty:
+            rep.errors.append("commits that name only a PR whose description "
+                              "closes no issue, so they name no bug: %s"
+                              % ", ".join(c.sha[:9] for c in empty))
     if rng.reverted:
         rep.warnings.append("fixes reverted in this range, not counted as "
                             "fixed (move to Known issues if still open): %s"

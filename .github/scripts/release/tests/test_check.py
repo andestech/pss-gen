@@ -77,6 +77,38 @@ class CheckTest(unittest.TestCase):
         errs = self.run_check(pr).errors
         self.assertTrue(any("#99" in e for e in errs), errs)
 
+    def merge_pr(self, number, branch):
+        self.repo.git("checkout", "-q", "-b", branch)
+        self.repo.commit("work on %s" % branch)
+        self.repo.git("checkout", "-q", "-")
+        self.repo.git("merge", "-q", "--no-ff", "-m",
+                      "Merge pull request #%d from a/%s" % (number, branch),
+                      branch)
+
+    def test_pr_merge_commit_resolved(self):
+        self.gh.add_issue(9, "bug", type_name="Bug")
+        self.gh.add_pull(12, body="Fixes #9")
+        base = self.repo.git("rev-parse", "main")
+        self.repo.git("checkout", "-q", "-b", "develop")
+        self.merge_pr(12, "contrib")
+        write_version(self.repo, "v1.1.0")
+        self.repo.commit("[RELEASE] v1.1.0")
+        rng = check.collect(self.repo.path, self.gh, "v1.0.0..HEAD")
+        self.assertEqual([i.number for i in rng.bugs], [9])
+        self.assertIn("#9 bug", notes.parse(
+            check.run(self.repo.path, self.gh, self.pr("develop", base)).draft
+        )["Bug fixes"])
+
+    def test_hotfix_pr_without_issue_rejected(self):
+        self.gh.add_pull(13, body="no closing ref")
+        base = self.repo.git("rev-parse", "main")
+        self.repo.git("checkout", "-q", "-b", "hot_fix")
+        self.repo.commit("Tidy (#13)")
+        write_version(self.repo, "v1.0.1")
+        self.repo.commit("[RELEASE] v1.0.1")
+        errs = self.run_check(self.pr("hot_fix", base)).errors
+        self.assertTrue(any("closes no issue" in e for e in errs), errs)
+
     def test_develop_unclassified_warns(self):
         self.gh.add_issue(6, "q", labels=["question"])
         pr = self.release("develop", "v1.1.0", "Fix #6: thing")

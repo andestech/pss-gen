@@ -52,6 +52,23 @@ class FixedIssuesTest(unittest.TestCase):
         self.assertEqual((fixed, reverted), (set(), set()))
 
 
+class PrMergeTest(unittest.TestCase):
+    def test_pr_merge_counts_pr_as_fixed(self):
+        fixed, reverted = gitrange.fixed_issues([
+            c("Merge pull request #12 from a/b", merge=True)])
+        self.assertEqual((fixed, reverted), ({12}, set()))
+
+    def test_sync_merge_still_skipped(self):
+        fixed, reverted = gitrange.fixed_issues([
+            c("Merge v1.2.3 into develop", merge=True)])
+        self.assertEqual((fixed, reverted), (set(), set()))
+
+    def test_named_refs(self):
+        self.assertEqual(gitrange.named_refs(
+            c("Merge pull request #4 from a/b", merge=True)), {4})
+        self.assertEqual(gitrange.named_refs(c("Fix #3 (#4)")), {3, 4})
+
+
 class UnreferencedTest(unittest.TestCase):
     def test_unreferenced(self):
         plain = c("[BUILD] no ref")

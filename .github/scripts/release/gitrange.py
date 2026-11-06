@@ -12,6 +12,7 @@ CLOSING_RE = re.compile(
     r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b:?[ \t]*#(\d+)",
     re.IGNORECASE)
 RELEASE_RE = re.compile(r"^\[RELEASE\] v\d+\.\d+\.\d+$")
+PR_MERGE_RE = re.compile(r"^Merge pull request #(\d+) from ")
 REVERT_PREFIX = 'Revert "'
 
 
@@ -48,6 +49,14 @@ def subject_refs(c):
     return {int(n) for n in REF_RE.findall(c.subject)}
 
 
+def named_refs(c):
+    """Refs a commit stands for: its subject refs, or the PR of a PR merge."""
+    if c.is_merge:
+        m = PR_MERGE_RE.match(c.subject)
+        return {int(m.group(1))} if m else set()
+    return subject_refs(c)
+
+
 def closing_refs(text):
     return {int(n) for n in CLOSING_RE.findall(text)}
 
@@ -57,6 +66,12 @@ def fixed_issues(cs):
     fixed, reverted = set(), set()
     for c in cs:
         if c.is_merge:
+            # A PR merge commit names the PR; any other merge (a sync of a
+            # release back into a branch) carries no change of its own.
+            m = PR_MERGE_RE.match(c.subject)
+            if m:
+                fixed.add(int(m.group(1)))
+                reverted.discard(int(m.group(1)))
             continue
         found = subject_refs(c)
         if c.subject.startswith(REVERT_PREFIX):

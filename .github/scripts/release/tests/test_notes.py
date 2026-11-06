@@ -2,7 +2,6 @@
 import unittest
 
 import gitrange
-import gitrange
 import notes
 from issues import Issue
 
@@ -75,6 +74,24 @@ class DraftTest(unittest.TestCase):
         self.assertNotIn("a.jar", again)
         self.assertEqual(notes.parse(again)["Summary"],
                          notes.parse(text)["Summary"])
+
+
+class PreambleTest(unittest.TestCase):
+    CHECKLIST = "- [ ] Read the comparison report\n\n"
+
+    def test_text_before_first_heading_ignored(self):
+        body = self.CHECKLIST + notes.draft([], [], []).replace(
+            "<!-- write -->", "text")
+        self.assertEqual(notes.validate(body), [])
+        self.assertNotIn("Read the comparison", " ".join(
+            notes.parse(body).values()))
+
+    def test_release_body_drops_checklist(self):
+        import publish
+        body = self.CHECKLIST + "## Summary\n\ntext\n"
+        out = publish.release_body(body, [("a.jar", "00")])
+        self.assertNotIn("comparison report", out)
+        self.assertTrue(out.startswith("## Summary"))
 
 
 if __name__ == "__main__":
