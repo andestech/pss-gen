@@ -1,6 +1,6 @@
 # Thin wrapper over the Gradle build in the repository root (../build.gradle):
-#   make        builds $(PSS_HOME)/src/pssgen_<version>.jar
-#   make bin    additionally builds the native image $(PSS_HOME)/src/pssgen_<version>
+#   make        builds $(PSS_HOME)/src/pssgen_<name>.jar
+#   make bin    additionally builds the native image $(PSS_HOME)/src/pssgen_<name>
 #   make unit-test  runs the unit tests (src/test/java); reports in $(PSS_HOME)/build/reports/tests
 # The first build downloads Gradle and ANTLR. GRADLE_USER_HOME is honoured; the JDK
 # is chosen in ../make/jdk.mk (GraalVM CE when installed, else java on PATH or JAVA_HOME).

@@ -25,14 +25,14 @@ executable built with GraalVM.
 ```
 $ git clone https://github.com/andestech/pss-gen.git
 $ cd pss-gen
-$ make -C src                    # builds src/pssgen_<version>.jar
+$ make -C src                    # builds src/pssgen_<name>.jar
 $ make -C tests                  # runs the regression tests
 ```
 
 Generate a test from a PSS file:
 
 ```
-$ java -classpath src/pssgen_$(cat VERSION).jar:antlr4/antlr-4.9.3-complete.jar \
+$ java -classpath src/pssgen_$(bash make/build-name.sh).jar:antlr4/antlr-4.9.3-complete.jar \
        PSSGenMain tests/samples/test_hello_world/test.pss -o test.s -root pss_top::root_a
 ```
 
@@ -64,10 +64,11 @@ $ make -C src
 (package `pssgen.parser`) from `src/main/antlr/PSS.g4`, compiles `src/main/java` into
 `build/`, and installs
 
-- `src/pssgen_<version>.jar`: PSSGen, without its dependencies;
+- `src/pssgen_<name>.jar`: PSSGen, without its dependencies;
 - `antlr4/antlr-4.9.3-complete.jar`: the ANTLR runtime that the jar needs on the classpath.
 
-`<version>` is the content of the file `VERSION`. `make -C src clean` removes `build/`.
+`<name>` is the content of the file `VERSION` on a release commit, else the output of
+`git describe` (`bash make/build-name.sh` prints it). `make -C src clean` removes `build/`.
 
 ### Native executable
 
@@ -75,7 +76,7 @@ $ make -C src
 $ make -C src bin
 ```
 
-builds the jar and then `src/pssgen_<version>` with GraalVM `native-image`. When GraalVM is
+builds the jar and then `src/pssgen_<name>` with GraalVM `native-image`. When GraalVM is
 not found, `make bin` prints `Skipping native-image` and builds the jar only.
 
 ### Selecting the JDK
@@ -102,7 +103,7 @@ given as `http://host:port` in these variables to Gradle. Proxy credentials and
 (`systemProp.https.proxyUser`, `systemProp.http.nonProxyHosts`, ...).
 
 On a host without network access, either reuse a Gradle user home that has already run
-a build, or build on another host and copy `src/pssgen_<version>.jar` and
+a build, or build on another host and copy `src/pssgen_<name>.jar` and
 `antlr4/antlr-4.9.3-complete.jar`.
 
 ### PSS_HOME
