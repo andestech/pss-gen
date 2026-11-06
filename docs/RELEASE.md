@@ -3,17 +3,210 @@
 A release is one reviewed pull request into `main`. CI checks it, and merging it tags
 the commit, publishes the GitHub Release and brings the other branches up to date.
 
-- [Branches](#branches)
-- [Where to open a pull request](#where-to-open-a-pull-request)
-- [Versions](#versions)
-- [Cutting a release](#cutting-a-release)
-- [The release note](#the-release-note)
-- [Issues](#issues)
-- [Comparing with the previous release](#comparing-with-the-previous-release)
-- [What the release workflow does](#what-the-release-workflow-does)
-- [Recovery](#recovery)
+Three roles take part, each with its own part of the flow:
 
-## Branches
+| Role | Does | Never does |
+|---|---|---|
+| [User](#users) | Takes a release, checks it, reads its release note, reports issues. | |
+| [Contributor](#contributors) | Opens a pull request into `develop` or `hot_fix` with its tests and its line of the release note. | Changes `VERSION`, commits a jar, targets `main`. |
+| [Repository owner](#repository-owner) | Reviews and merges contributions, cuts releases: chooses the version, writes the release note, merges the release pull request, finishes what the workflow leaves. | Force-pushes, pushes to `main` directly. |
+
+The [Reference](#reference) at the end describes the branches, the version rules, the
+release note, the issue handling, the version comparison and the release workflow that
+all three rely on.
+
+- [Users](#users)
+- [Contributors](#contributors)
+- [Repository owner](#repository-owner)
+- [Reference](#reference)
+
+## Users
+
+Releases are on the repository's GitHub Releases page; the newest one is marked
+Latest. To be told about new releases, use Watch, Custom, Releases on the repository
+page.
+
+Each release has these files:
+
+| File | Content |
+|---|---|
+| `pssgen_vX.Y.Z.jar` | PSSGen |
+| `antlr-4.9.3-complete.jar` | The ANTLR runtime PSSGen needs on the classpath |
+| `SHA256SUMS` | The SHA-256 of both jars, also listed under Artifacts in the release note |
+
+Check the download and run it with Java 13 or later:
+
+```
+$ sha256sum -c SHA256SUMS
+$ java -classpath pssgen_vX.Y.Z.jar:antlr-4.9.3-complete.jar PSSGenMain [options] file...
+```
+
+A native executable is not part of a release; the README describes how to build one.
+
+The version tells what an upgrade can change (see [Versions](#versions)):
+
+| Upgrade | What to expect |
+|---|---|
+| Patch, `vX.Y.Z` to `vX.Y.(Z+1)` | Bug fixes only, no features. |
+| Minor, to `vX.(Y+1).0` | Features and fixes; may change output or reject input it accepted before. Every such change is listed under Notable changes. |
+| Major, to `v(X+1).0.0` | A change of direction, a severe incompatibility or a major change of the LRM. Read Notable changes before upgrading. |
+
+Known issues / limitations in the release note lists what is known not to work; the
+README section "Known limitations" and `docs/SUPPORT.md` list unsupported constructs.
+Report a problem with the bug or feature issue template. A bug fix is released from an
+issue, so an issue is the way to get one.
+
+## Contributors
+
+### Where to open a pull request
+
+| Change | Target | Needs |
+|---|---|---|
+| Feature or other change for the next minor or major | `develop` | |
+| Bug fix | `hot_fix` | An issue; the commit subject names it |
+
+Never target `main`: it takes only release pull requests from the repository owner. A
+pull request from a fork that targets `main` is retargeted to `develop` or `hot_fix`.
+While a release pull request is open, its head branch takes only fixes for that
+release; other contributions wait until it is merged.
+
+### What a contribution brings
+
+- **Tests.** A regression test under `tests/` with its reviewed `test.s.golden`, or a
+  unit test, that covers the change. `make -C src unit-test` and `make -C tests` pass.
+- **A release-note line** under "Release note" in the pull request description,
+  starting with `Feature:`, `Bug fix:` or `Notable change:` (incompatible or changing
+  output), or `None`. The repository owner collects these lines into the release note.
+- **Issue references in commit subjects.** A commit that fixes issue `#N` names it in
+  its subject, as `[ISSUE] Fix #N: summary` or `summary (#N)`. Only a `#N` in a subject
+  counts as a fix; a `#N` in the body is a mention. On `hot_fix` every commit names an
+  issue, and every named issue is a bug.
+- **Revert subjects without a closing keyword**: `Revert "[ISSUE] #N: summary"`, not
+  `Revert "[ISSUE] Fix #N: summary"`, because the keyword in a quoted subject would
+  close the issue again when the revert reaches `main`.
+
+### What a contribution leaves out
+
+- `VERSION`: the repository owner chooses the version when a release is cut.
+- Jars, executables and other build output: the release workflow builds and publishes
+  the jar. A jar built from a working tree is named after `git describe`, so it is
+  never taken for a release.
+
+## Repository owner
+
+### Taking a contribution
+
+1. Check the target branch (`develop` or `hot_fix`; retarget a pull request into
+   `main`), the tests, the release-note line, the issue in each commit subject, and
+   that `VERSION` and build output are untouched.
+2. Wait for CI, then merge into `develop` or `hot_fix`.
+
+### Cutting a release
+
+The version is chosen last, once the release pull request shows what the release
+contains.
+
+1. Open a draft pull request from the release branch (`develop` or `hot_fix`) into
+   `main` with the release template:
+
+   ```
+   https://github.com/andestech/pss-gen/compare/main...<branch>?quick_pull=1&template=release.md
+   ```
+
+   The release-check workflow runs on it. Its job summary holds the release-note
+   draft and the issues the merge will close, and the version-comparison job reports
+   which test results differ from the previous release (see
+   [Version comparison](#version-comparison)). Until step 3 the check fails on
+   `VERSION`, which still names the previous release; that is expected.
+2. Choose the version: `patch` for `hot_fix`; `major` or `minor` for `develop`, by the
+   rules under [Versions](#versions), from the comparison report and the release-note
+   lines of the merged contributions.
+3. On an up-to-date checkout of the release branch with a clean tree, run
+
+   ```
+   $ python3 .github/scripts/release/release.py prepare <major|minor|patch>
+   ```
+
+   commit `VERSION` as `[RELEASE] vX.Y.Z` and push the branch; the pull request picks
+   the commit up. The script writes the next version to `VERSION` and prints the
+   release-note draft whose Features and Bug fixes are filled from the issue range. It
+   reads GitHub anonymously, or with `GITHUB_TOKEN` when that is set, and warns about
+   references it cannot classify. The branch must contain the previous release tag;
+   when `prepare` refuses because it does not, finish the pending sync first (see
+   [A sync left to the repository owner](#a-sync-left-to-the-repository-owner)).
+4. Write the release note in the description (see [Release note](#release-note)) from
+   the draft and the release-note lines of the merged contributions. The description
+   must not contain a closing keyword before an issue number (see [Issues](#issues)).
+5. Wait for the release-check workflow. It fails the pull request when
+
+   - the head branch is not `develop` or `hot_fix` of this repository;
+   - the head branch does not contain the previous release tag;
+   - `VERSION` is not a legal successor of the previous release for that branch;
+   - the issue range has a reference GitHub does not know, or an issue that is neither
+     a feature nor a bug, on `hot_fix` (a warning on `develop`);
+   - the `hot_fix` range has a feature, or a commit other than the `[RELEASE]` commit
+     without an issue in its subject;
+   - the description misses a release-note section, leaves a section empty or at the
+     placeholder `<!-- write -->`, writes `None` under Summary or Artifacts, or has a
+     closing keyword before an issue number;
+   - the build, the regression tests (`make -C tests`), the unit tests or the release
+     script tests fail.
+
+   It also lists, in the job summary, the issues the merge will close and whether the
+   description lists each as fixed, and it prints the release-note draft again, for an
+   owner who cannot reach GitHub from the shell. The version comparison runs as a
+   separate job; its result is information and does not fail the pull request.
+6. Review with the checklist at the top of the release template, mark the pull request
+   ready for review, then merge with "Create a merge commit" (no squash, no rebase).
+
+The [release workflow](#release-workflow) then tags, builds, publishes and syncs.
+
+### After the merge
+
+- Check the release workflow run and the published release.
+- When the workflow opened an issue "Sync vX.Y.Z into <branch>", do that sync (see
+  below) and close the issue.
+
+### A sync left to the repository owner
+
+When a sync merge changes anything under `.github/workflows/`, conflicts, fails the
+tests, or is rejected by `origin` (for example because the branch moved on), the
+workflow leaves the branch as it is and opens an issue "Sync vX.Y.Z into <branch>"
+with the exact commands. The sync is done by hand, with a normal push and never a
+force push:
+
+```
+$ git fetch origin
+$ git switch <branch>
+$ git merge --ff-only origin/<branch>
+$ git merge --no-ff vX.Y.Z          # --ff-only when <branch> is an ancestor of the tag
+$ make -C src && make -C tests      # resolve conflicts and commit the merge first
+$ git push origin <branch>
+```
+
+Close the issue once the branch contains the tag. Until then no new release pull
+request from that branch passes release-check.
+
+### Recovery
+
+Every step first checks what is already done, so re-running the release workflow from
+the Actions tab is the recovery for a failed run. A re-run builds again, and:
+
+- A draft release gets all its assets replaced by the new build and is then published.
+- A published release is never modified. A re-run only checks that it is complete
+  (every asset uploaded, the checksums in its body matching) and stops with an error
+  when it is not; correct such a release by hand.
+- Issue state is recomputed from GitHub, so an issue changed by hand after the merge
+  may be changed back.
+
+The workflow keeps at most one run waiting behind the running one. When several release
+pull requests are merged in quick succession, a newer run can replace an older pending
+run, which is then cancelled and has to be re-run by hand (use the workflow's "Re-run"
+for the merge commit that was skipped).
+
+## Reference
+
+### Branches
 
 | Branch | Content | Released as |
 |---|---|---|
@@ -32,45 +225,17 @@ the commit, publishes the GitHub Release and brings the other branches up to dat
   `hot_fix` and merges into `develop`. A `develop` release fast-forwards `develop` and
   merges into `hot_fix` when it holds unreleased fixes; those fixes later ship as a
   patch of the new version.
-- One release pull request into `main` is open at a time. While it is open, its head
-  branch takes only fixes for that release, so the reviewed content does not move.
-  release-check requires the head branch to contain the previous release tag, which is
-  the case once the sync after the last release has run.
+- One release pull request into `main` is open at a time. release-check requires the
+  head branch to contain the previous release tag, which is the case once the sync
+  after the last release has run.
 
-## Where to open a pull request
-
-| Change | Target | Needs |
-|---|---|---|
-| Feature or other change for the next minor or major | `develop` | |
-| Bug fix | `hot_fix` | An issue; the commit subject names it |
-| Release | `main` | A maintainer; head branch `develop` or `hot_fix` |
-
-Never target `main` with anything else. A pull request from a fork is retargeted to
-`develop` or `hot_fix` by a maintainer.
-
-A contribution brings its tests and its line of the release note, nothing about the
-release itself:
-
-| The contributor | The maintainer |
-|---|---|
-| Adds or updates the tests of the change: a regression test under `tests/` with its reviewed `test.s.golden`, or a unit test, and runs `make -C src unit-test` and `make -C tests`. | Chooses the version when the next release is cut. |
-| Writes the change's line for the release note under "Release note" in the pull request description, saying whether it is a feature, a bug fix or a notable change (incompatible or changing output), or `None`. | Collects those lines into the release note. |
-| Never changes `VERSION`, and commits no jar, executable or other build output. | Lets the release workflow build and publish the jar. |
-
-A commit that fixes issue `#N` names it in its subject, as `[ISSUE] Fix #N: summary`
-or `summary (#N)`. Only a `#N` in a subject counts as a fix; a `#N` in the body is a
-mention. On `hot_fix` every commit must name an issue, and every named issue must be a
-bug. A revert subject drops the closing keyword (`Revert "[ISSUE] #N: summary"`, not
-`Revert "[ISSUE] Fix #N: summary"`), because the keyword in a quoted subject would
-close the issue again when the revert reaches `main`.
-
-## Versions
+### Versions
 
 `VERSION` is the only file that names the version, in the form `vMAJOR.MINOR.PATCH`
 (no leading zeros, no suffix). Between releases it keeps the last release: the branches
 get it from the sync, and only `release.py prepare` changes it, in the
-`[RELEASE] vX.Y.Z` commit that the maintainer adds to an open release pull request.
-Contributors never change it.
+`[RELEASE] vX.Y.Z` commit that the repository owner adds to an open release pull
+request. Contributors never change it.
 
 The previous release is the highest version among the tags reachable from `main`.
 With previous release vX.Y.Z:
@@ -83,14 +248,13 @@ With previous release vX.Y.Z:
 A version cannot be skipped, and a `develop` release is never a patch, even when it
 holds only fixes.
 
-The maintainer who opens the release pull request chooses major or minor; CI checks
-only that the number is a legal successor.
+The repository owner chooses major or minor; CI checks only that the number is a legal
+successor.
 
 - Major: a change of overall direction, a severe incompatibility with the previous
   version, or a major change of the LRM.
 - Minor: may include partial incompatibility or changed output, but every such change
-  must be listed under Notable changes (see
-  [Comparing with the previous release](#comparing-with-the-previous-release)).
+  must be listed under Notable changes (see [Version comparison](#version-comparison)).
 
 A jar built from a commit that is not the tagged release commit is named after
 `git describe` (`pssgen_vX.Y.Z-N-gSHA.jar`, with `-dirty` for an edited tree), so a
@@ -98,65 +262,7 @@ development jar is never taken for the release jar. The release jar has the plai
 name `pssgen_vX.Y.Z.jar`. `bash make/build-name.sh` prints the name; `build.gradle` and
 `make/common.mk` use it.
 
-## Cutting a release
-
-The version is chosen last, once the release pull request shows what the release
-contains.
-
-1. Open a draft pull request from the release branch (`develop` or `hot_fix`) into
-   `main` with the release template:
-
-   ```
-   https://github.com/andestech/pss-gen/compare/main...<branch>?quick_pull=1&template=release.md
-   ```
-
-   The release-check workflow runs on it. Its job summary holds the release-note
-   draft and the issues the merge will close, and the version-comparison job reports
-   which test results differ from the previous release. Until step 3 the check fails
-   on `VERSION`, which still names the previous release; that is expected.
-2. Choose the version: `patch` for `hot_fix`; `major` or `minor` for `develop`, by the
-   rules under [Versions](#versions), from the comparison report and the release-note
-   lines of the merged contributions.
-3. On an up-to-date checkout of the release branch with a clean tree, run
-
-   ```
-   $ python3 .github/scripts/release/release.py prepare <major|minor|patch>
-   ```
-
-   commit `VERSION` as `[RELEASE] vX.Y.Z` and push the branch; the pull request picks
-   the commit up. The script writes the next version to `VERSION` and prints the
-   release-note draft whose Features and Bug fixes are filled from the issue range. It
-   reads GitHub anonymously, or with `GITHUB_TOKEN` when that is set, and warns about
-   references it cannot classify. The branch must contain the previous release tag;
-   when `prepare` refuses because it does not, finish the pending sync first (see
-   [Recovery](#recovery)).
-4. Write the release note in the description (see
-   [The release note](#the-release-note)) from the draft and the release-note lines of
-   the merged contributions. The description must not contain a closing keyword before
-   an issue number (see [Issues](#issues)).
-5. Wait for the release-check workflow. It fails the pull request when
-
-   - the head branch is not `develop` or `hot_fix` of this repository;
-   - the head branch does not contain the previous release tag;
-   - `VERSION` is not a legal successor of the previous release for that branch;
-   - the issue range has a reference GitHub does not know, or an issue that is neither
-     a feature nor a bug, on `hot_fix` (a warning on `develop`);
-   - the `hot_fix` range has a feature, or a commit other than the `[RELEASE]` commit
-     without an issue in its subject;
-   - the description misses a release-note section, leaves a section empty or at the
-     placeholder `<!-- write -->`, writes `None` under Summary or Artifacts, or has a
-     closing keyword before an issue number;
-   - the build, the regression tests (`make -C tests`), the unit tests or the release
-     script tests fail.
-
-   It also lists, in the job summary, the issues the merge will close and whether the
-   description lists each as fixed, and it prints the release-note draft again, for a
-   maintainer who cannot reach GitHub from the shell. The version comparison runs as a
-   separate job; its result is information and does not fail the pull request.
-6. Review with the checklist at the top of the release template, mark the pull request
-   ready for review, then merge with "Create a merge commit".
-
-## The release note
+### Release note
 
 The release pull request description is the release note, and becomes the body of the
 GitHub Release. It has these sections, in this order:
@@ -170,10 +276,11 @@ GitHub Release. It has these sections, in this order:
 | `## Known issues / limitations` | Hand-written: open issues labelled `known-issue`, and the README "Known limitations" and `docs/SUPPORT.md`. `None` is allowed. |
 | `## Artifacts` | Leave the filler line; the release workflow replaces it with the checksum of each attached file. |
 
-After the merge the edited lists in the description are the authority for what the
-release fixed.
+Text above `## Summary`, such as the template's checklist, is not published. After the
+merge the edited lists in the description are the authority for what the release
+fixed.
 
-## Issues
+### Issues
 
 The issue range of a release is the set of issues named in the subjects of the
 non-merge commits in `<previous tag>..<head>`, plus the issues that a named pull
@@ -199,7 +306,7 @@ flow handles that:
 The labels `bug` and `enhancement` (or the issue types `Bug` and `Feature`) classify an
 issue; `incompatible` marks an issue or pull request for Notable changes.
 
-## Comparing with the previous release
+### Version comparison
 
 ```
 $ make -C tests compare BASE=vX.Y.Z
@@ -207,10 +314,10 @@ $ make -C tests compare BASE=vX.Y.Z
 
 runs the regression tests with two PSSGen versions and reports the tests whose results
 differ. `BASE` is a release tag, which downloads that release's jar into
-`build/compare/jars/`, or the path of a jar. `NEW` is the jar of the checkout by
-default (`make -C src` first). `SUITES` and `TESTS` select tests as for `make -C tests`.
-The output goes to `build/compare/<base>_vs_<new>/`; `report.md` there counts the tests
-per class and shows the first lines of each difference.
+`build/compare/jars/`, or the absolute path of a jar. `NEW` is the jar of the checkout
+by default (`make -C src` first). `SUITES` and `TESTS` select tests as for
+`make -C tests`. The output goes to `build/compare/<base>_vs_<new>/`; `report.md` there
+counts the tests per class and shows the first lines of each difference.
 
 | Class | Meaning |
 |---|---|
@@ -227,10 +334,9 @@ the differences are.
 
 The release-check workflow runs the comparison against the previous release, puts
 `report.md` in the job summary and uploads the directory as the artifact
-`version-compare`. Use it to decide major or minor and to write Notable changes. It
-compares only the repository's own tests, not users' patterns.
+`version-compare`. It compares only the repository's own tests, not users' patterns.
 
-## What the release workflow does
+### Release workflow
 
 `.github/workflows/release.yml` runs on every push to `main`, that is, on the merge
 commit of a release pull request:
@@ -254,40 +360,3 @@ commit of a release pull request:
 The two syncs are independent: a failure of the first does not skip the second.
 A tag or branch pushed by the workflow starts no other workflow, which is why all of
 this is in one workflow.
-
-## Recovery
-
-Every step first checks what is already done, so re-running the release workflow from
-the Actions tab is the recovery for a failed run. A re-run builds again, and:
-
-- A draft release gets all its assets replaced by the new build and is then published.
-- A published release is never modified. A re-run only checks that it is complete
-  (every asset uploaded, the checksums in its body matching) and stops with an error
-  when it is not; correct such a release by hand.
-- Issue state is recomputed from GitHub, so an issue changed by hand after the merge
-  may be changed back.
-
-The workflow keeps at most one run waiting behind the running one. When several release
-pull requests are merged in quick succession, a newer run can replace an older pending
-run, which is then cancelled and has to be re-run by hand (use the workflow's "Re-run"
-for the merge commit that was skipped).
-
-### A sync that needs a maintainer
-
-When a sync merge changes anything under `.github/workflows/`, conflicts, fails the
-tests, or is rejected by `origin` (for example because the branch moved on), the
-workflow leaves the branch as it is and opens an issue "Sync vX.Y.Z into <branch>"
-with the exact commands. The sync is done by hand, with a normal push and never a
-force push:
-
-```
-$ git fetch origin
-$ git switch <branch>
-$ git merge --ff-only origin/<branch>
-$ git merge --no-ff vX.Y.Z          # --ff-only when <branch> is an ancestor of the tag
-$ make -C src && make -C tests      # resolve conflicts and commit the merge first
-$ git push origin <branch>
-```
-
-Close the issue once the branch contains the tag. Until then no new release pull
-request from that branch passes release-check.

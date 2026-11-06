@@ -367,7 +367,7 @@ PSSGen packages, in pipeline order:
 `develop` (features) or `hot_fix` (fixes, with an issue), never into `main`; a contribution
 brings its tests and its line of the release note, and never changes `VERSION` or commits a
 jar. A release is a pull request from `develop` (minor or major) or `hot_fix` (patch) into
-`main`, opened as a draft by the maintainer, who then chooses the version with
+`main`, opened as a draft by the repository owner, who then chooses the version with
 `python3 .github/scripts/release/release.py prepare <major|minor|patch>`; the release-check
 workflow checks it. Merging it tags the commit, publishes the GitHub Release with
 `pssgen_vX.Y.Z.jar`, `antlr-4.9.3-complete.jar` and `SHA256SUMS`, and syncs `develop` and
