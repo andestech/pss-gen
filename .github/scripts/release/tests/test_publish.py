@@ -282,31 +282,59 @@ class PublishTest(unittest.TestCase):
         self.assertEqual(self.fake.assets[rel["id"]]["pssgen_v1.1.0.jar"],
                          b"rebuilt jar")
 
-    def test_published_release_not_modified(self):
+    def publish_then_reopen_3(self):
+        """A published release whose issue step has not run yet."""
         self.tag_and_publish()
+        self.fake.issues[3].update(state="open", closed_at=None)
+        self.fake.calls.clear()
         rel = self.fake.releases["v1.1.0"]
-        body = rel["body"]
+        return rel, rel["body"], dict(self.fake.assets[rel["id"]])
+
+    def release_writes(self):
+        return [c for c in self.writes()
+                if c[0] not in ("set_issue_state", "add_labels")]
+
+    def test_published_release_not_modified(self):
+        rel, body, files = self.publish_then_reopen_3()
         write(os.path.join(self.dist, "pssgen_v1.1.0.jar"), "rebuilt jar")
         self.write_sums()
-        self.fake.calls.clear()
+        self.assertEqual(self.run_publish(dry_run=True), ["close #3"])
+        self.assertEqual(self.writes(), [])
+        self.assertEqual(self.run_publish(), ["close #3"])
+        self.assertEqual(self.release_writes(), [])
+        self.assertEqual(self.fake.issues[3]["state"], "closed")
+        self.assertEqual(rel["body"], body)
+        self.assertEqual(self.fake.assets[rel["id"]], files)
+        self.assertFalse(rel["draft"])
+
+    def assert_published_refused(self, *fragments):
         for dry_run in (True, False):
             with self.assertRaises(publish.PublishError) as cm:
                 self.run_publish(dry_run=dry_run)
             msg = str(cm.exception)
-            self.assertIn("published", msg)
-            self.assertIn("pssgen_v1.1.0.jar differs", msg)
+            for fragment in ("published", "v1.1.0") + fragments:
+                self.assertIn(fragment, msg)
         self.assertEqual(self.writes(), [])
-        self.assertEqual(rel["body"], body)
-        self.assertEqual(self.fake.assets[rel["id"]]["pssgen_v1.1.0.jar"],
-                         b"pssgen jar")
+        self.assertEqual(self.fake.issues[3]["state"], "open")
 
-        rel["assets"] = [a for a in rel["assets"] if a["name"] != "SHA256SUMS"]
+    def test_published_body_asset_mismatch_errors(self):
+        rel, body, _ = self.publish_then_reopen_3()
+        digest = sha256(os.path.join(self.dist, "pssgen_v1.1.0.jar"))
+        rel["body"] = body.replace(digest, "0" * 64)
+        self.assert_published_refused(
+            "checksum of pssgen_v1.1.0.jar in the body")
+
+        rel["body"] = "\n".join(line for line in body.split("\n")
+                                if "antlr" not in line)
+        self.assert_published_refused(
+            "lists no checksum of antlr-4.9.3-complete.jar")
+
+        rel["body"] = body
+        rel["assets"] = [a for a in rel["assets"]
+                         if a["name"] != "SHA256SUMS"]
         rel["assets"][0]["state"] = "starter"
-        with self.assertRaises(publish.PublishError) as cm:
-            self.run_publish()
-        self.assertIn("SHA256SUMS is missing", str(cm.exception))
-        self.assertIn("not fully uploaded", str(cm.exception))
-        self.assertEqual(self.writes(), [])
+        self.assert_published_refused("SHA256SUMS is missing",
+                                      "not fully uploaded")
 
     def test_warnings_in_step_summary(self):
         summary = os.path.join(self.dist, "..", "summary%d.md" % id(self))

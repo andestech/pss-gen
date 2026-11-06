@@ -8,11 +8,13 @@ release is checked before the first push or API write.
 
 The GitHub Release stays a draft until all of its assets are uploaded. The
 jar is rebuilt on every run and need not be byte-identical, so a draft gets
-the assets and the checksums of the current build, all replaced together;
-a published release is never changed.
+the assets and the checksums of the current build, all replaced together.
+A published release is never changed: its assets are the released build, so
+a re-run checks the release against itself, not against its own rebuild.
 """
 import hashlib
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime
@@ -26,6 +28,7 @@ SUMS = "SHA256SUMS"
 FIXED_SECTIONS = ("Features", "Bug fixes")
 KNOWN_SECTION = "Known issues / limitations"
 KNOWN_LABEL = "known-issue"
+SUM_LINE_RE = re.compile(r"^- `([^`]+)` +([0-9a-f]{64})$")
 
 
 class PublishError(RuntimeError):
@@ -229,19 +232,38 @@ def _issue_plan(repo, gh, sha, pr):
     return plan
 
 
+def _body_sums(body):
+    """{name: sha256} listed in the Artifacts section of a release body."""
+    text = notes.parse(body or "").get("Artifacts", "")
+    found = {}
+    for line in text.split("\n"):
+        m = SUM_LINE_RE.match(line.strip())
+        if m:
+            found[m.group(1)] = m.group(2)
+    return found
+
+
 def _check_published(release, assets):
-    """Refuse when a published release does not hold this build's assets."""
+    """Refuse when a published release is not consistent in itself.
+
+    Every asset name of the build must be uploaded, and the checksum its
+    body lists must be the digest GitHub reports for that asset.
+    """
     present = {a["name"]: a for a in release.get("assets") or []}
+    listed = _body_sums(release.get("body"))
     problems = []
-    for name, _, digest in assets:
+    for name, _, _ in assets:
         a = present.get(name)
         if a is None:
             problems.append("%s is missing" % name)
         elif a.get("state") != "uploaded":
             problems.append("%s is not fully uploaded (state %s)"
                             % (name, a.get("state")))
-        elif a.get("digest") and a["digest"] != "sha256:" + digest:
-            problems.append("%s differs from this build" % name)
+        elif name not in listed:
+            problems.append("the body lists no checksum of %s" % name)
+        elif a.get("digest") and a["digest"] != "sha256:" + listed[name]:
+            problems.append("the checksum of %s in the body is not the "
+                            "uploaded file's" % name)
     if problems:
         raise PublishError(
             "release %s is published and is left as it is: %s; the "
