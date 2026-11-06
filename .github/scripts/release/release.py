@@ -7,6 +7,13 @@
                                            goes to stdout and $GITHUB_STEP_SUMMARY
   release.py previous-tag [<rev>]          print the previous release tag of rev
                                            (default HEAD); exit 1 when there is none
+  release.py tag [--sha <sha>]             check the release merged into main as sha
+                                           (default HEAD) and create its annotated
+                                           tag locally unless it exists
+  release.py publish [--sha <sha>] [--dist <dir>] [--dry-run]
+                                           push the tag, create the GitHub Release
+                                           with the files of dist (default dist)
+                                           and update the listed issues
 
 The GitHub API is read with GITHUB_TOKEN when set, anonymously otherwise.
 """
@@ -19,6 +26,7 @@ import sys
 import check
 import gh
 import notes
+import publish
 import version
 
 
@@ -108,6 +116,37 @@ def cmd_previous_tag(args):
     return 0
 
 
+def _publish_args(args):
+    repo = _toplevel()
+    sha = _git(repo, "rev-parse", "--verify", args.sha + "^{commit}")
+    api = gh.GitHub(gh.slug_from_env(repo), os.environ.get("GITHUB_TOKEN"))
+    return repo, api, sha
+
+
+def cmd_tag(args):
+    repo, api, sha = _publish_args(args)
+    try:
+        done = publish.tag_local(repo, api, sha)
+    except publish.PublishError as e:
+        sys.exit("tag: %s" % e)
+    print(done or "the release tag of %s exists already" % sha)
+    return 0
+
+
+def cmd_publish(args):
+    repo, api, sha = _publish_args(args)
+    try:
+        done = publish.run(repo, api, sha, args.dist, args.dry_run)
+    except publish.PublishError as e:
+        sys.exit("publish: %s" % e)
+    prefix = "would " if args.dry_run else ""
+    if not done:
+        print("nothing left to do")
+    for action in done:
+        print(prefix + action)
+    return 0
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -120,6 +159,14 @@ def main(argv=None):
     s = sub.add_parser("previous-tag")
     s.add_argument("rev", nargs="?", default="HEAD")
     s.set_defaults(fn=cmd_previous_tag)
+    s = sub.add_parser("tag")
+    s.add_argument("--sha", default="HEAD")
+    s.set_defaults(fn=cmd_tag)
+    s = sub.add_parser("publish")
+    s.add_argument("--sha", default="HEAD")
+    s.add_argument("--dist", default="dist")
+    s.add_argument("--dry-run", action="store_true")
+    s.set_defaults(fn=cmd_publish)
     args = p.parse_args(argv)
     return args.fn(args)
 

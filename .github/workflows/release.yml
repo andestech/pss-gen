@@ -1,0 +1,123 @@
+name: Release
+
+# A release PR from develop or hot_fix merged into main lands here as a merge
+# commit: it is tagged, built and tested, published as the GitHub Release with
+# its issues updated, and then both long-lived branches are synced to the tag.
+# A tag or branch pushed with GITHUB_TOKEN starts no other workflow, so every
+# step of the release runs in this one. Each step skips what is already done,
+# so a failed run can be re-run.
+on:
+  push:
+    branches: [main]
+
+# One release at a time; a new run waits and never cancels the running one.
+concurrency: release
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  release:
+    name: Tag and publish
+    runs-on: ubuntu-24.04
+    # The build and regression run once for the release and once more for each
+    # branch that needs a sync merge.
+    timeout-minutes: 120
+    # Actions are pinned to full commit SHAs, because a tag can be moved to other
+    # code; the comment names the release the SHA belongs to.
+    steps:
+      # Full history and tags: the previous release is found from the tags, and
+      # on a re-run the tag pushed by the first run is fetched with them. The
+      # token stays in the checkout to push the tag and the branch syncs.
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set the git identity
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      # Before the build: the jar carries the plain version name only when HEAD
+      # is the commit tagged with it. The release is checked here first, so a
+      # merge that cannot be released fails before the build.
+      - name: Tag the merge commit
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/release/release.py tag --sha "$GITHUB_SHA"
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Build
+        run: make -C src
+
+      - name: Regression
+        run: make -C tests
+
+      # Annotates the tests that did not pass; it also runs when the regression failed.
+      - name: Report test results
+        if: ${{ !cancelled() }}
+        run: bash .github/scripts/check-summary.sh tests/samples tests/issues tests/cli tests/errors
+
+      - name: Unit tests
+        run: make -C src unit-test
+
+      # The jar name is checked here too: a build of a dirty or untagged tree
+      # is named after git describe and is not found.
+      - name: Collect the release files
+        run: |
+          tag=$(tr -d '[:space:]' < VERSION)
+          mkdir dist
+          cp "src/pssgen_$tag.jar" antlr4/antlr-*-complete.jar dist/
+          cd dist
+          sha256sum -- *.jar > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Publish the release
+        id: publish
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/release/release.py publish --sha "$GITHUB_SHA" --dist dist
+
+      - name: Sync develop
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/release/release.py sync develop --test-cmd "make -C src && make -C tests"
+
+      # Also after a failed develop sync: the two branches are independent.
+      - name: Sync hot_fix
+        if: ${{ !cancelled() && steps.publish.outcome == 'success' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/release/release.py sync hot_fix --test-cmd "make -C src && make -C tests"
+
+      - name: Upload regression logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: regression-logs
+          if-no-files-found: warn
+          overwrite: true
+          path: |
+            tests/*/summary.log
+            tests/**/run.log
+            tests/**/result.log
+            tests/**/diff.log
+            build/reports/tests/
+            build/test-results/

@@ -1,10 +1,14 @@
 """In-memory stand-in for gh.GitHub that records every call."""
+import hashlib
 import os
 
 from gh import GitHubError
 
 
 class FakeGitHub:
+    # Server time stamped on issues the fake closes, in GitHub's format.
+    now = "2030-01-01T00:00:00Z"
+
     def __init__(self, issues=None, pulls=None, releases=None,
                  commit_pulls=None):
         self.issues = dict(issues or {})
@@ -17,12 +21,14 @@ class FakeGitHub:
         self._next_number = max(
             [0] + list(self.issues) + list(self.pulls)) + 1
         self._next_release_id = 1
+        self._next_asset_id = 1
 
     def add_issue(self, number, title="", type_name=None, labels=(),
-                  state="open", body="", pull_request=False):
+                  state="open", body="", pull_request=False, closed_at=None):
         data = {"number": number, "title": title, "state": state,
                 "body": body, "labels": [{"name": n} for n in labels],
-                "type": {"name": type_name} if type_name else None}
+                "type": {"name": type_name} if type_name else None,
+                "closed_at": closed_at}
         if pull_request:
             data["pull_request"] = {}
         self.issues[number] = data
@@ -64,6 +70,8 @@ class FakeGitHub:
         self.calls.append(("set_issue_state", n, state, reason))
         self.issues[n]["state"] = state
         self.issues[n]["state_reason"] = reason
+        self.issues[n]["closed_at"] = (self.now if state == "closed"
+                                       else None)
 
     def add_labels(self, n, labels):
         self.calls.append(("add_labels", n, list(labels)))
@@ -105,9 +113,13 @@ class FakeGitHub:
             raise GitHubError(422, "uploads/%d" % rel["id"],
                               "already_exists: " + name)
         with open(path, "rb") as f:
-            self.assets.setdefault(rel["id"], {})[name] = f.read()
-        asset_id = sum(len(v) for v in self.assets.values())
-        rel["assets"].append({"id": asset_id, "name": name})
+            data = f.read()
+        self.assets.setdefault(rel["id"], {})[name] = data
+        asset_id = self._next_asset_id
+        self._next_asset_id += 1
+        rel["assets"].append({
+            "id": asset_id, "name": name,
+            "digest": "sha256:" + hashlib.sha256(data).hexdigest()})
 
     def download(self, url, path):
         self.calls.append(("download", url, path))
