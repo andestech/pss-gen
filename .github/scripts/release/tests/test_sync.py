@@ -2,6 +2,7 @@
 import contextlib
 import io
 import os
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -66,11 +67,12 @@ class SyncTest(unittest.TestCase):
         r.git("switch", "-q", "main")
         return sha
 
-    def release_develop(self):
+    def release_develop(self, extra=None):
         """Release v1.1.0 from develop: a merge commit on main, tagged."""
         r = self.repo
-        self.on_branch("develop", "[RELEASE] v1.1.0",
-                       {"VERSION": "v1.1.0\n", "feature.txt": "f\n"})
+        files = {"VERSION": "v1.1.0\n", "feature.txt": "f\n"}
+        files.update(extra or {})
+        self.on_branch("develop", "[RELEASE] v1.1.0", files)
         r.git("merge", "-q", "--no-ff", "-m", "Merge develop", "develop")
         r.git("tag", "-a", "v1.1.0", "-m", "v1.1.0 (#1)")
         r.git("push", "-q", "origin", "main", "refs/tags/v1.1.0")
@@ -79,6 +81,12 @@ class SyncTest(unittest.TestCase):
     def sync(self, branch, test_cmd=None, tag="v1.1.0"):
         with contextlib.redirect_stdout(io.StringIO()):
             return sync.run(self.repo.path, self.fake, branch, tag, test_cmd)
+
+    def reject_pushes(self, message):
+        """Make origin refuse every push with message on stderr."""
+        hook = os.path.join(self.remote, "hooks", "pre-receive")
+        write(hook, "#!/bin/sh\necho %s >&2\nexit 1\n" % shlex.quote(message))
+        os.chmod(hook, 0o755)
 
     def issues_created(self):
         return [c for c in self.fake.calls if c[0] == "create_issue"]
@@ -124,8 +132,8 @@ class SyncTest(unittest.TestCase):
 
     def test_conflict_opens_issue(self):
         before = self.on_branch("hot_fix", "[RELEASE] v1.0.1",
-                                {"VERSION": "v1.0.1\n"})
-        self.release_develop()
+                                {"VERSION": "v1.0.1\n", "two words": "a\n"})
+        self.release_develop({"two words": "b\n"})
         ran = os.path.join(self.remote, "ran")
         self.assertEqual(self.sync("hot_fix", ["touch", ran]),
                          "needs-manual")
@@ -133,7 +141,8 @@ class SyncTest(unittest.TestCase):
         self.assertEqual(self.remote_tip("hot_fix"), before)
         [(_, title, body)] = self.issues_created()
         self.assertEqual(title, TITLE)
-        self.assertIn("`VERSION`", body)
+        self.assertIn("- `VERSION`\n", body)
+        self.assertIn("- `two words`\n", body)
         for cmd in ("git fetch origin", "git switch hot_fix",
                     "git merge --no-ff v1.1.0", "make -C src && make -C tests",
                     "git push origin hot_fix"):
@@ -177,7 +186,57 @@ class SyncTest(unittest.TestCase):
         self.assertEqual(self.remote_tip("hot_fix"), moved)
         [(_, title, body)] = self.issues_created()
         self.assertEqual(title, TITLE)
-        self.assertIn("rejected", body)
+        self.assertIn("Origin rejected the push", body)
+        self.assertIn("git merge --no-ff v1.1.0", body)
+        self.assert_clean_checkout()
+
+    def test_rejected_ff_issue_uses_ff_only(self):
+        before = self.remote_tip("hot_fix")
+        self.release_develop()
+        self.reject_pushes("denied by a server hook")
+        self.assertEqual(self.sync("hot_fix", ["false"]), "needs-manual")
+        self.assertEqual(self.remote_tip("hot_fix"), before)
+        [(_, title, body)] = self.issues_created()
+        self.assertEqual(title, TITLE)
+        self.assertIn("Origin rejected the push", body)
+        self.assertIn("denied by a server hook", body)
+        self.assertIn("git merge --ff-only v1.1.0", body)
+        self.assertNotIn("git merge --no-ff v1.1.0\n", body)
+        self.assertNotIn(".github/workflows/", body)
+
+    def test_rejected_push_workflows_note(self):
+        self.release_develop()
+        self.reject_pushes("refusing to allow a GitHub App to create or "
+                           "update workflow `.github/workflows/ci.yml` "
+                           "without `workflows` permission")
+        self.assertEqual(self.sync("hot_fix", ["false"]), "needs-manual")
+        [(_, _, body)] = self.issues_created()
+        self.assertIn(sync.WORKFLOWS_NOTE, body)
+
+    def test_workflow_change_needs_manual(self):
+        before = self.on_branch("hot_fix", "Fix a crash", {"fix.txt": "x\n"})
+        os.makedirs(os.path.join(self.repo.path, ".github", "workflows"))
+        self.release_develop({".github/workflows/ci.yml": "on: push\n"})
+        ran = os.path.join(self.remote, "ran")
+        self.assertEqual(self.sync("hot_fix", ["touch", ran]),
+                         "needs-manual")
+        self.assertFalse(os.path.exists(ran))
+        self.assertEqual(self.remote_tip("hot_fix"), before)
+        [(_, title, body)] = self.issues_created()
+        self.assertEqual(title, TITLE)
+        self.assertIn("`.github/workflows/ci.yml`", body)
+        self.assertIn(sync.WORKFLOWS_NOTE, body)
+        self.assertIn("git merge --no-ff v1.1.0", body)
+        self.assert_clean_checkout()
+
+    def test_merge_without_test_cmd_not_pushed(self):
+        before = self.on_branch("hot_fix", "Fix a crash", {"fix.txt": "x\n"})
+        self.release_develop()
+        self.assertEqual(self.sync("hot_fix", None), "needs-manual")
+        self.assertEqual(self.remote_tip("hot_fix"), before)
+        [(_, title, body)] = self.issues_created()
+        self.assertEqual(title, TITLE)
+        self.assertIn("no test command", body)
         self.assert_clean_checkout()
 
     def test_no_force_in_source(self):

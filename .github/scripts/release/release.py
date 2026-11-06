@@ -204,7 +204,10 @@ def main(argv=None):
     s = sub.add_parser("sync")
     s.add_argument("branch", choices=check.RELEASE_BRANCHES)
     s.add_argument("--tag")
-    s.add_argument("--test-cmd")
+    s.add_argument("--test-cmd", help=(
+        "shell command that must pass on a sync merge before it is pushed; "
+        "without it a branch that needs a sync merge is not pushed and an "
+        "issue asks for a manual sync"))
     s.set_defaults(fn=cmd_sync)
     args = p.parse_args(argv)
     return args.fn(args)
