@@ -19,8 +19,8 @@ Bug fix: or Notable change: (incompatible or changing output), or None. -->
 
 - Features: target `develop`.
 - Bug fixes: target `hot_fix`. A hot fix starts from an issue.
-- Never target `main`; maintainers release into it.
+- Never target `main`; the repository owner releases into it.
 
 Reference the issue in the commit subject: `[ISSUE] Fix #N: summary` or a trailing
 `(#N)`. Do not change `VERSION` and do not commit jars or other build output: the
-maintainer chooses the version and the release workflow builds the jar.
+repository owner chooses the version and the release workflow builds the jar.
