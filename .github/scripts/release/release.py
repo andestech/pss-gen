@@ -14,6 +14,12 @@
                                            push the tag, create the GitHub Release
                                            with the files of dist (default dist)
                                            and update the listed issues
+  release.py sync <develop|hot_fix> [--tag <tag>] [--test-cmd <cmd>]
+                                           sync the branch on origin to the release
+                                           tag (default: the VERSION of HEAD); a sync
+                                           merge is pushed only when the shell
+                                           command cmd passes on it, else an issue
+                                           asks for a manual sync
 
 The GitHub API is read with GITHUB_TOKEN when set, anonymously otherwise.
 """
@@ -27,6 +33,7 @@ import check
 import gh
 import notes
 import publish
+import sync
 import version
 
 
@@ -147,6 +154,33 @@ def cmd_publish(args):
     return 0
 
 
+def cmd_sync(args):
+    repo = _toplevel()
+    tag = args.tag
+    if tag is None:
+        try:
+            tag = version.fmt(version.parse(_git(repo, "show", "HEAD:VERSION")))
+        except ValueError as e:
+            sys.exit("sync: VERSION at HEAD: %s" % e)
+    test_cmd = None if args.test_cmd is None else ["bash", "-c", args.test_cmd]
+    api = gh.GitHub(gh.slug_from_env(repo), os.environ.get("GITHUB_TOKEN"))
+    try:
+        outcome = sync.run(repo, api, args.branch, tag, test_cmd)
+    except sync.SyncError as e:
+        sys.exit("sync: %s" % e)
+    print("%s: %s" % (args.branch, outcome))
+    if outcome == sync.NEEDS_MANUAL:
+        msg = ("%s is not synced to %s; the issue '%s' asks for a manual "
+               "sync merge" % (args.branch, tag,
+                               sync.issue_title(tag, args.branch)))
+        print("::warning::" + msg)
+        summary = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary:
+            with open(summary, "a") as f:
+                f.write("- warning: %s\n" % msg)
+    return 0
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -167,6 +201,11 @@ def main(argv=None):
     s.add_argument("--dist", default="dist")
     s.add_argument("--dry-run", action="store_true")
     s.set_defaults(fn=cmd_publish)
+    s = sub.add_parser("sync")
+    s.add_argument("branch", choices=check.RELEASE_BRANCHES)
+    s.add_argument("--tag")
+    s.add_argument("--test-cmd")
+    s.set_defaults(fn=cmd_sync)
     args = p.parse_args(argv)
     return args.fn(args)
 

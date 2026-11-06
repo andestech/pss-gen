@@ -113,6 +113,18 @@ class GitHub:
         self._json("POST", self._repo("/issues/%d/labels" % n),
                    {"labels": list(labels)})
 
+    def open_issues(self):
+        """Every open issue, pull requests left out."""
+        found = []
+        page = 1
+        while True:
+            batch = self._json("GET", self._repo(
+                "/issues?state=open&per_page=100&page=%d" % page)) or []
+            found += [i for i in batch if "pull_request" not in i]
+            if len(batch) < 100:
+                return found
+            page += 1
+
     def create_issue(self, title, body):
         r = self._json("POST", self._repo("/issues"),
                        {"title": title, "body": body})

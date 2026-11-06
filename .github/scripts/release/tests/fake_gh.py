@@ -80,6 +80,11 @@ class FakeGitHub:
             if name not in [x["name"] for x in have]:
                 have.append({"name": name})
 
+    def open_issues(self):
+        self.calls.append(("open_issues",))
+        return [i for i in self.issues.values()
+                if i["state"] == "open" and "pull_request" not in i]
+
     def create_issue(self, title, body):
         self.calls.append(("create_issue", title, body))
         n = self._next_number
