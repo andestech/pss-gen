@@ -1,0 +1,16 @@
+// PSS 2.0 8.4: a rand enum field takes one of its items, with or without constraints.
+component pss_top {
+    enum e_t { A = 5, B = 7, C = 9 };
+    action root_a {
+        rand e_t e;
+        rand e_t f;
+        rand e_t g;
+        rand e_t h;
+        rand array<e_t, 2> arr;
+        constraint g != e_t::A;
+        constraint h in [e_t::B, e_t::C];
+        exec body ASM = """v {{e}} {{f}} {{arr[0]}} {{arr[1]}}
+g {{g}}
+h {{h}}""";
+    }
+}

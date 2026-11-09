@@ -1,0 +1,10 @@
+// PSS 2.0 8.4 g), h), 10.5.1 d): a component data field may be initialized with an enum item,
+// qualified, or unqualified where the field is of the enum type.
+component pss_top {
+    enum mode_e { M0 = 3, M1 = 7 };
+    int cz = mode_e::M1;
+    mode_e cm = M1;
+    action root_a {
+        exec body ASM = """cz={{comp.cz}} cm={{comp.cm}}""";
+    }
+}

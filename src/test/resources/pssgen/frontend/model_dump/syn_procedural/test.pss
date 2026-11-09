@@ -1,0 +1,83 @@
+// Functions and every supported procedural statement and expression form.
+function bit[8] add(bit[8] a, bit[8] b = 1) {
+    return a + b;
+}
+function bit[8] twice(bit[8] a);
+function bit[8] twice(bit[8] a) {
+    return a * 2;
+}
+function void vf(int ... xs) {
+}
+function void tf(type t, ref action r, struct s) {
+}
+component pss_top {
+    action root_a {
+        bit[8] x = 0;
+        list<bit[8]> l;
+        map<bit[8], bit[8]> m;
+        set<bit[8]> s;
+        array<bit[8], 3> arr;
+        string str = "hi";
+        bool ok = true;
+        exec pre_solve {
+            l = {1, 2, 3};
+            m = {1:2, 3:4};
+            s = {5, 6};
+        }
+        exec post_solve {
+            bit[8] t = 1, u, w[2];
+            t += 2;
+            u = 0x1f + 'h10 + 8'd3 + 0b101 + 4'b1001 + 017 + 'o7 + 16'hff + 'b11 + 'd9 + 3'o5 + 1_000;
+            x = (bit[4]) ((bit[8]) x + 1);
+            if (t > 1) x = 1; else x = 2;
+            repeat (3) {
+                x = x + 1;
+            }
+            repeat (j : 2) x = x + j;
+            repeat {
+                x = x + 1;
+            } while (x < 10);
+            while (x < 20) {
+                x = x + 1;
+                if (x == 15) break; else continue;
+            }
+            foreach (e : l[i]) {
+                x = x + e * i;
+            }
+            foreach (l) {
+            }
+            match (x) {
+                [0..3]: x = 0;
+                [4, 5]: {
+                    x = 1;
+                }
+                default: x = 2;
+            }
+            x = add(x);
+            x = twice(x) + add(x, 2);
+            x = (bit[4]) x;
+            x[3:0] = 2;
+            x = -x + ~x;
+            ok = !ok && (x >= 1 || x <= 2) && x != 3;
+            x = x << 1 >> 1;
+            x = (x & 3) | (x ^ 1);
+            x = x % 3 * 2 / 1 - 1;
+            ok = x in [1, 2..4];
+            ok = 3 in l;
+            ok = str == "hi";
+            vf(1, 2);
+            l.push_back(x);
+            x = l.size();
+            sequence {
+                x = 1;
+            }
+            {
+                x = 2;
+            }
+        }
+        exec body ASM = """{{x}}""";
+        exec header ASM = """header""";
+        exec declaration ASM = """declaration""";
+        ;
+    }
+}

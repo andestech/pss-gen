@@ -1,0 +1,65 @@
+// Enums, packages, structs, flow objects, imports and compile if.
+enum e1 { A, B = 2 + 3, C };
+enum e2 { };
+package pk {
+    struct ps {
+        rand bit[4] f;
+        constraint f < 3;
+    }
+    enum pe { P0, P1 = 4 };
+    const bit[4] pc = 2;
+}
+package outer::inner {
+    struct is {
+        bit[4] g;
+    }
+}
+buffer data_b {
+    rand bit[4] d;
+}
+stream data_s {
+    rand bit[4] d;
+}
+state data_st {
+    rand bit[4] d;
+}
+resource data_r {
+    rand bit[4] d;
+}
+component sub_c {
+    bit[4] sc = 1;
+}
+component pss_top {
+    import pk::*;
+    import outer::inner;
+    sub_c s1, s2;
+    static const bit[4] k = 3;
+    public bit[4] pub;
+    compile if (1) {
+        bit[4] c1 = 1;
+    } else {
+        bit[4] c2 = 2;
+    }
+    action producer {
+        output data_b out_b;
+    }
+    action consumer {
+        input data_b in_b;
+    }
+    action root_a {
+        rand e1 v;
+        rand pk::ps p;
+        rand pe q;
+        action bit[4] af;
+        compile if (0) {
+            constraint v == A;
+        } else {
+            constraint v == C;
+        }
+        activity {
+            do producer;
+            do consumer;
+        }
+        exec body ASM = """{{v}}""";
+    }
+}

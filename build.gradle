@@ -1,0 +1,97 @@
+// PSSGen build: generates the PSS parser (package pssgen.parser) from src/main/antlr
+// with ANTLR, compiles src/main/java for Java 13 and packs pssgen_<name>.jar.
+// Usual entry point: "make" in src/, which runs "./gradlew jar installAntlrJar"
+// and copies the jar to src/.
+
+plugins {
+    id 'antlr'      // also applies java-library
+}
+
+// Build name: VERSION (for example v1.2.3) on a release commit, else git describe.
+// make/build-name.sh also validates VERSION and fails the build with its message;
+// make/common.mk runs the same script for src/Makefile and tests/Makefile.
+def buildNameExec = providers.exec {
+    commandLine 'bash', "${rootDir}/make/build-name.sh", rootDir.toString()
+    ignoreExitValue = true
+}
+if (buildNameExec.result.get().exitValue != 0) {
+    throw new GradleException(buildNameExec.standardError.asText.get().trim())
+}
+def buildName = buildNameExec.standardOutput.asText.get().trim()
+if (buildName.isEmpty()) {
+    throw new GradleException('make/build-name.sh printed no build name')
+}
+version = buildName
+
+def antlrVersion = '4.9.3'
+// JUnit 6 needs Java 17 class files; the tests are compiled for Java 13 like the sources.
+def junitVersion = '5.13.4'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // The "complete" jar bundles the ANTLR generator and runtime. It is the
+    // generator classpath, the compile classpath and, once installed by
+    // installAntlrJar, the runtime classpath of every documented command line.
+    antlr("org.antlr:antlr4:${antlrVersion}:complete") {
+        transitive = false
+    }
+    testImplementation platform("org.junit:junit-bom:${junitVersion}")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+sourceSets {
+    main {
+        antlr {
+            // PSS.g4 is the only root grammar; the PSS_*.g4 files next to it
+            // are its imports and are not generated on their own.
+            include 'PSS.g4'
+        }
+    }
+}
+
+tasks.named('generateGrammarSource') {
+    // Also selects the output directory pssgen/parser/ under the generated sources.
+    packageName = 'pssgen.parser'
+    arguments += ['-no-listener', '-visitor']
+    // Imported grammars are not compiled on their own, but editing one must
+    // regenerate the parser.
+    inputs.files(fileTree('src/main/antlr') { include 'PSS_*.g4' })
+        .withPropertyName('importedGrammars')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 13
+    options.encoding = 'UTF-8'
+    // Same debug information as plain javac (source file and line numbers).
+    // PSSMessage.Fatal prints the line number of its caller, so 'lines' must
+    // stay; local-variable tables would change helpful NullPointerException texts.
+    options.debugOptions.debugLevel = 'source,lines'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+    testLogging {
+        events 'failed'
+        exceptionFormat = 'full'
+    }
+}
+
+tasks.named('jar', Jar) {
+    archiveFileName = "pssgen_${project.version}.jar"
+    manifest {
+        attributes('Main-Class': 'pssgen.cli.PSSGenMain')
+    }
+}
+
+// The regression Makefiles, "make bin" and the documented command lines expect
+// the ANTLR jar at antlr4/antlr-<version>-complete.jar.
+tasks.register('installAntlrJar', Copy) {
+    from configurations.antlr
+    into 'antlr4'
+    rename { "antlr-${antlrVersion}-complete.jar" }
+}

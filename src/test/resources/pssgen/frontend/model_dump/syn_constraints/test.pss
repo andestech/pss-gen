@@ -1,0 +1,46 @@
+// Constraint declarations; default constraints inside if, foreach and an inline with block.
+component pss_top {
+    action sub_a {
+        rand bit[4] v;
+        rand bit[4] w;
+        constraint {
+            default v == 3;
+            w < 9;
+        }
+    }
+    action root_a {
+        rand bit[4] arr[3];
+        rand bit[4] x;
+        rand bit[4] y;
+        rand bool flag;
+        constraint c1 {
+            x < 10;
+            if (flag) {
+                y == x + 1;
+                default x == 2;
+            } else {
+                y == 0;
+            }
+            foreach (e : arr[i]) {
+                e != i;
+                default e == 1;
+            }
+            unique { x, y };
+            x in [1, 3..5];
+        }
+        dynamic constraint dc {
+            y > 2;
+        }
+        activity {
+            do sub_a with {
+                v == 1;
+                default w == 4;
+            };
+            do sub_a;
+        }
+        constraint {
+            x != 7;
+        }
+        constraint y != 8;
+    }
+}

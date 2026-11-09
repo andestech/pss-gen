@@ -1,0 +1,22 @@
+// PSS 2.0 4.8.1: {} inside a map literal is the empty value of a collection value type.
+component pss_top {
+    action root_a {
+        map<int, list<int> > ml;
+        map<int, map<int, int> > mm;
+        int ml_n = -1;
+        int ml_1 = -1;
+        int ml_2 = -1;
+        int mm_1 = -1;
+        int mm_2 = -1;
+        exec post_solve {
+            ml = {1 : {}, 2 : {5, 6}};
+            mm = {1 : {}, 2 : {3 : 4}};
+            ml_n = ml.size();
+            ml_1 = ml[1].size();
+            ml_2 = ml[2].size();
+            mm_1 = mm[1].size();
+            mm_2 = mm[2].size();
+        }
+        exec body ASM = """ml_n={{ml_n}} ml_1={{ml_1}} ml_2={{ml_2}} mm_1={{mm_1}} mm_2={{mm_2}}""";
+    }
+}

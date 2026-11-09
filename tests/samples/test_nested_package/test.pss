@@ -1,0 +1,41 @@
+// PSS 2.0 21.1.1, 21.3: 'package outer::inner' declares a package inside outer; a leading
+// '::' starts a qualified name at the outermost namespace.
+package outer::inner {
+    function int get() {
+        return 5;
+    }
+    enum e_t { A = 3, B = 4 };
+}
+package p {
+    function int f() {
+        return 1;
+    }
+}
+package outer {
+    package p {
+        function int f() {
+            return 2;
+        }
+    }
+    function int near() {
+        return p::f();
+    }
+    function int top() {
+        return ::p::f();
+    }
+}
+component pss_top {
+    action root_a {
+        int v = 0;
+        int w = 0;
+        int n = 0;
+        int t = 0;
+        exec post_solve {
+            v = outer::inner::get();
+            w = outer::inner::e_t::B;
+            n = outer::near();
+            t = outer::top();
+        }
+        exec body ASM = """v={{v}} w={{w}} n={{n}} t={{t}}""";
+    }
+}

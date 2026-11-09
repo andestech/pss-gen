@@ -1,0 +1,555 @@
+--- messages
+--- model
+#1 PSSModel
+  children: #2 ArrayList[5]
+    - #3 PSSStructModel
+      children: #4 ArrayList[1]
+        - #5 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "params_s::int[65]"
+          m_id: "int[65]"
+          m_parent: @3
+          m_static_insts: ArrayList[0]
+          m_sign: true
+          m_width: 65
+      m_hierarchy_id: "params_s"
+      m_id: "params_s"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_attrfield: #6 ArrayList[1]
+        - #7 PSSAttrField
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_parent: @3
+          m_static_insts: ArrayList[0]
+          m_data_decl: #8 PSSDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_inst_list: #9 PSSDataInstListModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_list: #10 ArrayList[1]
+                - #11 PSSDataInstModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: "x"
+                  m_id: "x"
+                  m_static_insts: ArrayList[0]
+            m_type: @5
+          m_rand: false
+      m_constraint: #12 PSSConstraintList
+        m_list: ArrayList[0]
+      m_default_constraint: #13 PSSConstraintList
+        m_list: ArrayList[0]
+      m_struct_kind: #14 PSSStructKind
+    - #15 PSSFunctionModel
+      children: ArrayList[0]
+      m_hierarchy_id: "set_val0"
+      m_id: "set_val0"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_is_defined: true
+      m_prototype: #16 PSSFunctionPrototype
+        m_id: "set_val0"
+        m_params: #17 ArrayList[2]
+          - #18 PSSFunctionParameter
+            m_data_type: #19 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_location: @1
+              m_type: "params_s"
+            m_id: "p"
+            m_struct: false
+            m_type: false
+            m_varargs: false
+          - #20 PSSFunctionParameter
+            m_data_type: #21 PSSIntModel
+              children: ArrayList[0]
+              m_hierarchy_id: "int[65]"
+              m_id: "int[65]"
+              m_static_insts: ArrayList[0]
+              m_sign: true
+              m_width: 65
+            m_id: "a"
+            m_struct: false
+            m_type: false
+            m_varargs: false
+        m_return_type: #22 PSSFunctionReturnType
+      m_pure: false
+      m_stmts: #23 ArrayList[2]
+        - #24 PSSAssignProcStmt
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_static_insts: ArrayList[0]
+          m_expression: #25 PSSRefPathExpression
+            m_ref_path: #26 PSSMemberPathElemExpression
+              m_context: Context.FUNCTION_BODY
+              m_id: "a"
+            m_type_identifier_elems: ""
+          m_op: "="
+          m_ref: #27 PSSRefPathExpression
+            m_ref_path: #28 PSSMemberPathElemExpression
+              m_child: #29 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
+                m_id: "x"
+                m_parent: @28
+              m_context: Context.FUNCTION_BODY
+              m_id: "p"
+            m_type_identifier_elems: ""
+        - #30 PSSAssignProcStmt
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_static_insts: ArrayList[0]
+          m_expression: #31 PSSPrimaryExpression
+            m_val: #32 PSSIntVal
+              m_type: #33 PSSIntModel
+                children: ArrayList[0]
+                m_hierarchy_id: "int[65]"
+                m_id: "int[65]"
+                m_static_insts: ArrayList[0]
+                m_sign: true
+                m_width: 65
+              m_val: 0
+          m_op: "="
+          m_ref: #34 PSSRefPathExpression
+            m_ref_path: #35 PSSMemberPathElemExpression
+              m_context: Context.FUNCTION_BODY
+              m_id: "a"
+            m_type_identifier_elems: ""
+    - #36 PSSFunctionModel
+      children: ArrayList[0]
+      m_hierarchy_id: "set_val1"
+      m_id: "set_val1"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_is_defined: true
+      m_prototype: #37 PSSFunctionPrototype
+        m_id: "set_val1"
+        m_params: #38 ArrayList[2]
+          - #39 PSSFunctionParameter
+            m_data_type: #40 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_location: @1
+              m_type: "params_s"
+            m_id: "p_dst"
+            m_struct: false
+            m_type: false
+            m_varargs: false
+          - #41 PSSFunctionParameter
+            m_data_type: #42 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_location: @1
+              m_type: "params_s"
+            m_id: "p_src"
+            m_struct: false
+            m_type: false
+            m_varargs: false
+        m_return_type: @22
+      m_pure: false
+      m_stmts: #43 ArrayList[1]
+        - #44 PSSAssignProcStmt
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_static_insts: ArrayList[0]
+          m_expression: #45 PSSRefPathExpression
+            m_ref_path: #46 PSSMemberPathElemExpression
+              m_child: #47 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
+                m_id: "x"
+                m_parent: @46
+              m_context: Context.FUNCTION_BODY
+              m_id: "p_src"
+            m_type_identifier_elems: ""
+          m_op: "="
+          m_ref: #48 PSSRefPathExpression
+            m_ref_path: #49 PSSMemberPathElemExpression
+              m_child: #50 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
+                m_id: "x"
+                m_parent: @49
+              m_context: Context.FUNCTION_BODY
+              m_id: "p_dst"
+            m_type_identifier_elems: ""
+    - #51 PSSFunctionModel
+      children: ArrayList[0]
+      m_hierarchy_id: "zero_attributes"
+      m_id: "zero_attributes"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_is_defined: true
+      m_prototype: #52 PSSFunctionPrototype
+        m_id: "zero_attributes"
+        m_params: ArrayList[0]
+        m_return_type: #53 PSSFunctionReturnType
+          m_data_type: #54 PSSDataTypeModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_location: @1
+            m_type: "params_s"
+      m_pure: false
+      m_stmts: #55 ArrayList[3]
+        - #56 PSSDataDeclProcStmt
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_static_insts: ArrayList[0]
+          m_list: #57 ArrayList[1]
+            - #58 PSSDataInstProcStmt
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_id: "s"
+          m_type: #59 PSSDataTypeModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_location: @1
+            m_type: "params_s"
+        - #60 PSSAssignProcStmt
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_static_insts: ArrayList[0]
+          m_expression: #61 PSSPrimaryExpression
+            m_val: #62 PSSIntVal
+              m_type: #63 PSSIntModel
+                children: ArrayList[0]
+                m_hierarchy_id: "int[65]"
+                m_id: "int[65]"
+                m_static_insts: ArrayList[0]
+                m_sign: true
+                m_width: 65
+              m_val: 0
+          m_op: "="
+          m_ref: #64 PSSRefPathExpression
+            m_ref_path: #65 PSSMemberPathElemExpression
+              m_child: #66 PSSMemberPathElemExpression
+                m_context: Context.FUNCTION_BODY
+                m_id: "x"
+                m_parent: @65
+              m_context: Context.FUNCTION_BODY
+              m_id: "s"
+            m_type_identifier_elems: ""
+        - #67 PSSReturnProcStmt
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_static_insts: ArrayList[0]
+          m_expression: #68 PSSRefPathExpression
+            m_ref_path: #69 PSSMemberPathElemExpression
+              m_context: Context.FUNCTION_BODY
+              m_id: "s"
+            m_type_identifier_elems: ""
+    - #70 PSSComponentModel
+      children: #71 ArrayList[4]
+        - #72 PSSDataTypeModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::"
+          m_id: ""
+          m_parent: @70
+          m_static_insts: ArrayList[0]
+          m_location: @70
+          m_type: "params_s"
+        - #73 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::int[65]"
+          m_id: "int[65]"
+          m_parent: @70
+          m_static_insts: ArrayList[0]
+          m_sign: true
+          m_width: 65
+        - #74 PSSActionModel
+          children: #75 ArrayList[1]
+            - #76 PSSIntModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::A::int[65]"
+              m_id: "int[65]"
+              m_parent: @74
+              m_static_insts: ArrayList[0]
+              m_sign: true
+              m_width: 65
+          m_hierarchy_id: "pss_top::A"
+          m_id: "A"
+          m_parent: @70
+          m_static_insts: ArrayList[0]
+          m_activity: ArrayList[0]
+          m_attrfield: #77 ArrayList[1]
+            - #78 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @74
+              m_static_insts: ArrayList[0]
+              m_data_decl: #79 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #80 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #81 ArrayList[1]
+                    - #82 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "x"
+                      m_id: "x"
+                      m_static_insts: ArrayList[0]
+                m_type: @76
+              m_rand: true
+          m_constraint: #83 PSSConstraintList
+            m_list: ArrayList[0]
+          m_default_constraint: #84 PSSConstraintList
+            m_list: ArrayList[0]
+          m_exec_list: ArrayList[0]
+          m_flowref: ArrayList[0]
+          m_target_code: #85 PSSTargetCodeList
+            m_list: #86 ArrayList[1]
+              - #87 PSSTargetCode
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_code: "x = {{x}}"
+                m_exec_kind: PSSExecKind.body
+                m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
+                m_root: @74
+        - #88 PSSActionModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::root_a"
+          m_id: "root_a"
+          m_parent: @70
+          m_static_insts: ArrayList[0]
+          m_activity: #89 ArrayList[1]
+            - #90 PSSTraversalActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @88
+              m_static_insts: ArrayList[0]
+              m_constraint: #91 PSSConstraintList
+                m_list: #92 ArrayList[1]
+                  - #93 PSSExpressionConstraint
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_parent: @90
+                    m_static_insts: ArrayList[0]
+                    m_expression: #94 PSSEqualExpression
+                      m_left: #95 PSSRefPathExpression
+                        m_ref_path: #96 PSSMemberPathElemExpression
+                          m_context: Context.INLINE_CONSTRAINT
+                          m_id: "x"
+                        m_type_identifier_elems: ""
+                      m_right: #97 PSSRefPathExpression
+                        m_ref_path: #98 PSSMemberPathElemExpression
+                          m_child: #99 PSSMemberPathElemExpression
+                            m_child: #100 PSSMemberPathElemExpression
+                              m_child: #101 PSSMemberPathElemExpression
+                                m_context: Context.INLINE_CONSTRAINT
+                                m_id: "x"
+                                m_parent: @100
+                              m_context: Context.INLINE_CONSTRAINT
+                              m_id: "p"
+                              m_parent: @99
+                            m_context: Context.INLINE_CONSTRAINT
+                            m_id: "comp"
+                            m_parent: @98
+                          m_context: Context.INLINE_CONSTRAINT
+                          m_id: "this"
+                        m_type_identifier_elems: ""
+              m_default_constraint: #102 PSSConstraintList
+                m_list: ArrayList[0]
+              m_handle_id: ""
+              m_type_id: "A"
+          m_attrfield: ArrayList[0]
+          m_constraint: #103 PSSConstraintList
+            m_list: ArrayList[0]
+          m_default_constraint: #104 PSSConstraintList
+            m_list: ArrayList[0]
+          m_exec_list: ArrayList[0]
+          m_flowref: ArrayList[0]
+          m_target_code: #105 PSSTargetCodeList
+            m_list: ArrayList[0]
+      m_hierarchy_id: "pss_top"
+      m_id: "pss_top"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_data_list: #106 PSSComponentDataDeclListModel
+        children: ArrayList[0]
+        m_hierarchy_id: ""
+        m_id: ""
+        m_static_insts: ArrayList[0]
+        m_list: #107 ArrayList[2]
+          - #108 PSSComponentDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_const: false
+            m_data_decl: #109 PSSDataDeclModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_inst_list: #110 PSSDataInstListModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_list: #111 ArrayList[1]
+                  - #112 PSSDataInstModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "p"
+                    m_id: "p"
+                    m_static_insts: ArrayList[0]
+              m_type: @72
+            m_static: false
+          - #113 PSSComponentDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_const: false
+            m_data_decl: #114 PSSDataDeclModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_inst_list: #115 PSSDataInstListModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_list: #116 ArrayList[1]
+                  - #117 PSSDataInstModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "a"
+                    m_id: "a"
+                    m_static_insts: ArrayList[0]
+              m_type: @73
+            m_static: false
+      m_exec_list: #118 ArrayList[1]
+        - #119 PSSExecBlock
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_parent: @70
+          m_static_insts: ArrayList[0]
+          m_kind: PSSExecKind.init_up
+          m_list: #120 ArrayList[4]
+            - #121 PSSAssignProcStmt
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @119
+              m_static_insts: ArrayList[0]
+              m_expression: #122 PSSPrimaryExpression
+                m_val: #123 PSSIntVal
+                  m_type: #124 PSSIntModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "int[65]"
+                    m_id: "int[65]"
+                    m_static_insts: ArrayList[0]
+                    m_sign: true
+                    m_width: 65
+                  m_val: 10
+              m_op: "="
+              m_ref: #125 PSSRefPathExpression
+                m_ref_path: #126 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
+                  m_id: "a"
+                m_type_identifier_elems: ""
+            - #127 PSSAssignProcStmt
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @119
+              m_static_insts: ArrayList[0]
+              m_expression: #128 PSSPrimaryExpression
+                m_val: #129 PSSIntVal
+                  m_type: #130 PSSIntModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "int[65]"
+                    m_id: "int[65]"
+                    m_static_insts: ArrayList[0]
+                    m_sign: true
+                    m_width: 65
+                  m_val: 20
+              m_op: "="
+              m_ref: #131 PSSRefPathExpression
+                m_ref_path: #132 PSSMemberPathElemExpression
+                  m_child: #133 PSSMemberPathElemExpression
+                    m_context: Context.EXEC_BLOCK
+                    m_id: "x"
+                    m_parent: @132
+                  m_context: Context.EXEC_BLOCK
+                  m_id: "p"
+                m_type_identifier_elems: ""
+            - #134 PSSVoidFunctionCallProcStmt
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @119
+              m_static_insts: ArrayList[0]
+              func: #135 PSSFunctionCallExpression
+                m_path: #136 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
+                  m_function_parameter_list: #137 ArrayList[2]
+                    - #138 PSSRefPathExpression
+                      m_ref_path: #139 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
+                        m_id: "p"
+                      m_type_identifier_elems: ""
+                    - #140 PSSRefPathExpression
+                      m_ref_path: #141 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
+                        m_id: "a"
+                      m_type_identifier_elems: ""
+                  m_id: "set_val0"
+            - #142 PSSVoidFunctionCallProcStmt
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @119
+              m_static_insts: ArrayList[0]
+              func: #143 PSSFunctionCallExpression
+                m_path: #144 PSSMemberPathElemExpression
+                  m_context: Context.EXEC_BLOCK
+                  m_function_parameter_list: #145 ArrayList[2]
+                    - #146 PSSRefPathExpression
+                      m_ref_path: #147 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
+                        m_id: "p"
+                      m_type_identifier_elems: ""
+                    - #148 PSSRefPathExpression
+                      m_ref_path: #149 PSSMemberPathElemExpression
+                        m_context: Context.EXEC_BLOCK
+                        m_function_parameter_list: ArrayList[0]
+                        m_id: "zero_attributes"
+                      m_type_identifier_elems: ""
+                  m_id: "set_val1"
+  m_hierarchy_id: ""
+  m_id: ""
+  m_static_insts: ArrayList[0]

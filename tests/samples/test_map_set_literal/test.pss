@@ -1,0 +1,18 @@
+// PSS 2.0 4.8.2, 4.8.5: a value list literal inside a map literal is a set value for a map of
+// sets; each value is counted once.
+component pss_top {
+    action root_a {
+        map<int, set<int> > ms;
+        map<int, set<int> > mi = {7 : {1, 2, 3}};
+        int n1 = -1;
+        int n2 = -1;
+        int n7 = -1;
+        exec post_solve {
+            ms = {1 : {5, 6, 5}, 2 : {}};
+            n1 = ms[1].size();
+            n2 = ms[2].size();
+            n7 = mi[7].size();
+        }
+        exec body ASM = """n1={{n1}} n2={{n2}} n7={{n7}}""";
+    }
+}

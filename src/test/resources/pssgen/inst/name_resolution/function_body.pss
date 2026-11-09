@@ -1,0 +1,15 @@
+// A function body names a parameter, a local and a field of the component.
+component pss_top {
+    bit[4] cv = 3;
+    function bit[8] f(bit[4] p) {
+        bit[8] l = p + 1;
+        return l + cv;
+    }
+    action root_a {
+        bit[8] r = 0;
+        exec post_solve {
+            r = f(4);
+        }
+        exec body ASM = """r={{r}}""";
+    }
+}

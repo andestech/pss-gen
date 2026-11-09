@@ -1,0 +1,60 @@
+// Every supported activity statement, with and without inline constraints.
+component pss_top {
+    action leaf_a {
+        rand bit[4] v;
+    }
+    action root_a {
+        rand bit[4] n;
+        leaf_a h1;
+        leaf_a h2;
+        bit[4] arr[2];
+        activity {
+            do leaf_a;
+            do leaf_a with { v == 1; };
+            h1;
+            h2 with { v == 2; };
+            L1: do leaf_a;
+            sequence {
+                do leaf_a;
+                do leaf_a with { v < 3; };
+            }
+            {
+                do leaf_a;
+            }
+            schedule {
+                do leaf_a;
+                do leaf_a with { v > 1; };
+            }
+            repeat (2) {
+                do leaf_a;
+            }
+            repeat (i : n) do leaf_a with { v == i; };
+            repeat {
+                do leaf_a;
+            } while (n < 2);
+            foreach (e : arr[k]) {
+                do leaf_a with { v == e + k; };
+            }
+            select {
+                do leaf_a;
+                (n > 2) [3]: do leaf_a with { v == 3; };
+                [1]: {
+                    do leaf_a;
+                }
+            }
+            if (n > 1) do leaf_a; else {
+                do leaf_a with { v == 9; };
+            }
+            if (n > 5) {
+                do leaf_a;
+            }
+            match (n) {
+                [0..3]: do leaf_a;
+                [4]: do leaf_a with { v == 4; };
+                default: {
+                    do leaf_a;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+// PSS 2.0 8.2.1 e), 8.8.5: a set element has the domain of the element type; 7 is outside it.
+component pss_top {
+    action root_a {
+        set<bit[8] in [1..3]> s = {7};
+        exec body ASM = """s""";
+    }
+}

@@ -1,0 +1,7 @@
+// PSS 2.0 4.7: an escape character may only be followed by a character of Table 3.
+component pss_top {
+    action root_a {
+        string s = "a\qb";
+        exec body ASM = """{{s}}""";
+    }
+}

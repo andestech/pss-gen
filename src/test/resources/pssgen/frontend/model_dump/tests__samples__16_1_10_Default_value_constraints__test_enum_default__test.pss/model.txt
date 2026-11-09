@@ -1,0 +1,262 @@
+--- messages
+--- model
+#1 PSSModel
+  children: #2 ArrayList[2]
+    - #3 PSSEnumModel
+      children: ArrayList[0]
+      m_hierarchy_id: "color_e"
+      m_id: "color_e"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_default_val: 3
+      m_items: #4 LinkedHashMap[3]
+        key: "RED"
+        val: 0
+        key: "GREEN"
+        val: 1
+        key: "BLUE"
+        val: 2
+    - #5 PSSComponentModel
+      children: #6 ArrayList[1]
+        - #7 PSSActionModel
+          children: #8 ArrayList[2]
+            - #9 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::root_a::"
+              m_id: ""
+              m_parent: @7
+              m_static_insts: ArrayList[0]
+              m_location: @7
+              m_type: "color_e"
+            - #10 PSSIntModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::root_a::int[65]"
+              m_id: "int[65]"
+              m_parent: @7
+              m_static_insts: ArrayList[0]
+              m_sign: true
+              m_width: 65
+          m_hierarchy_id: "pss_top::root_a"
+          m_id: "root_a"
+          m_parent: @5
+          m_static_insts: ArrayList[0]
+          m_activity: ArrayList[0]
+          m_attrfield: #11 ArrayList[2]
+            - #12 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @7
+              m_static_insts: ArrayList[0]
+              m_data_decl: #13 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #14 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #15 ArrayList[1]
+                    - #16 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "color_val"
+                      m_id: "color_val"
+                      m_static_insts: ArrayList[0]
+                m_type: @9
+              m_rand: true
+            - #17 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @7
+              m_static_insts: ArrayList[0]
+              m_data_decl: #18 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #19 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #20 ArrayList[1]
+                    - #21 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "res_val"
+                      m_id: "res_val"
+                      m_static_insts: ArrayList[0]
+                m_type: @10
+              m_rand: true
+          m_constraint: #22 PSSConstraintList
+            m_list: #23 ArrayList[3]
+              - #24 PSSIfConstraint
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_parent: @7
+                m_static_insts: ArrayList[0]
+                m_cond: #25 PSSEqualExpression
+                  m_left: #26 PSSRefPathExpression
+                    m_ref_path: #27 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "color_val"
+                    m_type_identifier_elems: ""
+                  m_right: #28 PSSRefPathExpression
+                    m_ref_path: #29 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "RED"
+                    m_type_identifier_elems: ""
+                m_false: ArrayList[0]
+                m_true: #30 ArrayList[1]
+                  - #31 PSSExpressionConstraint
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_parent: @24
+                    m_static_insts: ArrayList[0]
+                    m_expression: #32 PSSEqualExpression
+                      m_left: #33 PSSRefPathExpression
+                        m_ref_path: #34 PSSMemberPathElemExpression
+                          m_context: Context.MEMBER_CONSTRAINT
+                          m_id: "res_val"
+                        m_type_identifier_elems: ""
+                      m_right: #35 PSSPrimaryExpression
+                        m_val: #36 PSSIntVal
+                          m_type: #37 PSSIntModel
+                            children: ArrayList[0]
+                            m_hierarchy_id: "int[65]"
+                            m_id: "int[65]"
+                            m_static_insts: ArrayList[0]
+                            m_sign: true
+                            m_width: 65
+                          m_val: 0
+              - #38 PSSIfConstraint
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_parent: @7
+                m_static_insts: ArrayList[0]
+                m_cond: #39 PSSEqualExpression
+                  m_left: #40 PSSRefPathExpression
+                    m_ref_path: #41 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "color_val"
+                    m_type_identifier_elems: ""
+                  m_right: #42 PSSRefPathExpression
+                    m_ref_path: #43 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "GREEN"
+                    m_type_identifier_elems: ""
+                m_false: ArrayList[0]
+                m_true: #44 ArrayList[1]
+                  - #45 PSSExpressionConstraint
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_parent: @38
+                    m_static_insts: ArrayList[0]
+                    m_expression: #46 PSSEqualExpression
+                      m_left: #47 PSSRefPathExpression
+                        m_ref_path: #48 PSSMemberPathElemExpression
+                          m_context: Context.MEMBER_CONSTRAINT
+                          m_id: "res_val"
+                        m_type_identifier_elems: ""
+                      m_right: #49 PSSPrimaryExpression
+                        m_val: #50 PSSIntVal
+                          m_type: #51 PSSIntModel
+                            children: ArrayList[0]
+                            m_hierarchy_id: "int[65]"
+                            m_id: "int[65]"
+                            m_static_insts: ArrayList[0]
+                            m_sign: true
+                            m_width: 65
+                          m_val: 1
+              - #52 PSSIfConstraint
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_parent: @7
+                m_static_insts: ArrayList[0]
+                m_cond: #53 PSSEqualExpression
+                  m_left: #54 PSSRefPathExpression
+                    m_ref_path: #55 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "color_val"
+                    m_type_identifier_elems: ""
+                  m_right: #56 PSSRefPathExpression
+                    m_ref_path: #57 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "BLUE"
+                    m_type_identifier_elems: ""
+                m_false: ArrayList[0]
+                m_true: #58 ArrayList[1]
+                  - #59 PSSExpressionConstraint
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_parent: @52
+                    m_static_insts: ArrayList[0]
+                    m_expression: #60 PSSEqualExpression
+                      m_left: #61 PSSRefPathExpression
+                        m_ref_path: #62 PSSMemberPathElemExpression
+                          m_context: Context.MEMBER_CONSTRAINT
+                          m_id: "res_val"
+                        m_type_identifier_elems: ""
+                      m_right: #63 PSSPrimaryExpression
+                        m_val: #64 PSSIntVal
+                          m_type: #65 PSSIntModel
+                            children: ArrayList[0]
+                            m_hierarchy_id: "int[65]"
+                            m_id: "int[65]"
+                            m_static_insts: ArrayList[0]
+                            m_sign: true
+                            m_width: 65
+                          m_val: 2
+          m_default_constraint: #66 PSSConstraintList
+            m_list: #67 ArrayList[1]
+              - #68 PSSExpressionConstraint
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_parent: @7
+                m_static_insts: ArrayList[0]
+                m_expression: #69 PSSEqualExpression
+                  m_left: #70 PSSMemberPathElemExpression
+                    m_context: Context.MEMBER_CONSTRAINT
+                    m_id: "color_val"
+                  m_right: #71 PSSRefPathExpression
+                    m_ref_path: #72 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "GREEN"
+                    m_type_identifier_elems: ""
+          m_exec_list: ArrayList[0]
+          m_flowref: ArrayList[0]
+          m_target_code: #73 PSSTargetCodeList
+            m_list: #74 ArrayList[1]
+              - #75 PSSTargetCode
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_code: "Result: {{res_val}}"
+                m_exec_kind: PSSExecKind.body
+                m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
+                m_root: @7
+      m_hierarchy_id: "pss_top"
+      m_id: "pss_top"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_data_list: #76 PSSComponentDataDeclListModel
+        children: ArrayList[0]
+        m_hierarchy_id: ""
+        m_id: ""
+        m_static_insts: ArrayList[0]
+        m_list: ArrayList[0]
+      m_exec_list: ArrayList[0]
+  m_hierarchy_id: ""
+  m_id: ""
+  m_static_insts: ArrayList[0]

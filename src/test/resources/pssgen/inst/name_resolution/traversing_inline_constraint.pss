@@ -1,0 +1,13 @@
+// An inline constraint of a traversal resolves a field of the traversing action.
+component pss_top {
+    action root_a {
+        bit[5] root_val = 7;
+        activity {
+            do sub_a with { val == root_val + 2; };
+        }
+    }
+    action sub_a {
+        rand int val;
+        exec body ASM = """val={{val}}""";
+    }
+}

@@ -1,0 +1,8 @@
+
+            p::put            appends 7
+            p2::put           appends 8
+            put               appends 9
+            q::only           appends 6
+            ::p2::put         appends 8
+            p2::put_twice     calls put of p2 twice: size 8
+        

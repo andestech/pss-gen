@@ -1,0 +1,17 @@
+// An activity names a field of its action (repeat count) and an action handle.
+component pss_top {
+    action root_a {
+        bit[4] n = 2;
+        sub_a h;
+        activity {
+            repeat (n) {
+                do sub_a with { val == 1; };
+            }
+            h with { val == 2; };
+        }
+    }
+    action sub_a {
+        rand bit[4] val;
+        exec body ASM = """val={{val}}""";
+    }
+}

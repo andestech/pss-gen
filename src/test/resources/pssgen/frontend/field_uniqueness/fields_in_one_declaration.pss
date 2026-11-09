@@ -1,0 +1,10 @@
+// The same name twice in one declaration of a struct.
+component pss_top {
+    struct s_t {
+        rand bit[4] a, a;
+    }
+    action root_a {
+        rand s_t s;
+        exec body ASM = """{{s.a}}""";
+    }
+}

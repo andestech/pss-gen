@@ -1,0 +1,11 @@
+// PSS 2.0 4.2, 22.7.2: pss_top is no keyword; a block may declare a local named pss_top.
+component pss_top {
+    action root_a {
+        int v = 0;
+        exec post_solve {
+            int pss_top = 3;
+            v = pss_top + 1;
+        }
+        exec body ASM = """v={{v}}""";
+    }
+}

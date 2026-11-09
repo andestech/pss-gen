@@ -1,0 +1,53 @@
+// PSS 2.0 21.3 b) 5), 22.2.1 b): an unqualified call in an action names a function of the
+// action's own component, called on comp, also when an action of another component traverses
+// it. A member of another kind with that name, such as an action, is passed over, so a
+// wrapper action calls the global function it is named after.
+function int twice(int x) {
+    return 2 * x;
+}
+
+component lib_c {
+    action twice {
+        int r = 0;
+        exec post_solve {
+            r = twice(21);
+        }
+        exec body ASM = """wrapper r={{r}}""";
+    }
+}
+
+component sub_c {
+    int tag = 5;
+    function int get() {
+        return 10 * tag;
+    }
+    action sub_a {
+        int s = 0;
+        exec post_solve {
+            s = get();
+        }
+        exec body ASM = """sub s={{s}}""";
+    }
+}
+
+component pss_top {
+    sub_c sub;
+    int tag = 9;
+    function int get() {
+        return 10 * tag;
+    }
+    action top_a {
+        int s = 0;
+        exec post_solve {
+            s = get();
+        }
+        exec body ASM = """top s={{s}}""";
+    }
+    action root_a {
+        activity {
+            do sub_c::sub_a;
+            do top_a;
+            do lib_c::twice;
+        }
+    }
+}

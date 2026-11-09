@@ -1,0 +1,61 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2026/10/29
+@brief          Test issue 46: ==, != and in compare struct values field by field.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    struct s_t {
+        string stringVal = "NULL";
+        int intVal = 0;
+    };
+
+    action root_a {
+        array<s_t, 2> arr_0;
+        s_t           arr_1 [2];
+        s_t           one;
+        s_t           two;
+        s_t           other;
+
+        bit e_struct = 0;
+        bit e_elem   = 0;
+        bit e_array  = 0;
+        bit in_array = 0;
+        bit ne_other = 0;
+        bit in_other = 0;
+        exec post_solve {
+            other.intVal = 5;
+            if (one == two)        e_struct = 1;
+            if (one == arr_0[0])   e_elem   = 1;
+            if (arr_0 == arr_1)    e_array  = 1;
+            if (one in arr_0)      in_array = 1;
+            if (one != other)      ne_other = 1;
+            if (other in arr_0)    in_other = 1;
+        }
+
+        exec body ASM =
+        """
+            e_struct = {{e_struct}}
+            e_elem   = {{e_elem}}
+            e_array  = {{e_array}}
+            in_array = {{in_array}}
+            ne_other = {{ne_other}}
+            in_other = {{in_other}}
+        """;
+    }
+}
+
+/**@}*/

@@ -1,0 +1,13 @@
+// An enum item of the package that encloses the component, unqualified and qualified.
+package p {
+    enum mode_e { M0 = 1, M1 = 2 };
+    component pss_top {
+        action root_a {
+            rand mode_e m;
+            rand mode_e n;
+            constraint m == M1;
+            constraint n == mode_e::M0;
+            exec body ASM = """m={{m}} n={{n}}""";
+        }
+    }
+}

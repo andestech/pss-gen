@@ -1,0 +1,916 @@
+--- messages
+--- model
+#1 PSSModel
+  children: #2 ArrayList[10]
+    - #3 PSSEnumModel
+      children: ArrayList[0]
+      m_hierarchy_id: "e1"
+      m_id: "e1"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_default_val: 7
+      m_items: #4 LinkedHashMap[3]
+        key: "A"
+        val: 0
+        key: "B"
+        val: 5
+        key: "C"
+        val: 6
+    - #5 PSSEnumModel
+      children: ArrayList[0]
+      m_hierarchy_id: "e2"
+      m_id: "e2"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_default_val: 0
+      m_items: #6 LinkedHashMap[0]
+    - #7 PSSPackageModel
+      children: #8 ArrayList[3]
+        - #9 PSSStructModel
+          children: #10 ArrayList[1]
+            - #11 PSSIntModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pk::ps::bit[4]"
+              m_id: "bit[4]"
+              m_parent: @9
+              m_static_insts: ArrayList[0]
+              m_sign: false
+              m_width: 4
+          m_hierarchy_id: "pk::ps"
+          m_id: "ps"
+          m_parent: @7
+          m_static_insts: ArrayList[0]
+          m_attrfield: #12 ArrayList[1]
+            - #13 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @9
+              m_static_insts: ArrayList[0]
+              m_data_decl: #14 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #15 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #16 ArrayList[1]
+                    - #17 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "f"
+                      m_id: "f"
+                      m_static_insts: ArrayList[0]
+                m_type: @11
+              m_rand: true
+          m_constraint: #18 PSSConstraintList
+            m_list: #19 ArrayList[1]
+              - #20 PSSExpressionConstraint
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_parent: @9
+                m_static_insts: ArrayList[0]
+                m_expression: #21 PSSLessThanExpression
+                  m_left: #22 PSSRefPathExpression
+                    m_ref_path: #23 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "f"
+                    m_type_identifier_elems: ""
+                  m_right: #24 PSSPrimaryExpression
+                    m_val: #25 PSSIntVal
+                      m_type: #26 PSSIntModel
+                        children: ArrayList[0]
+                        m_hierarchy_id: "int[65]"
+                        m_id: "int[65]"
+                        m_static_insts: ArrayList[0]
+                        m_sign: true
+                        m_width: 65
+                      m_val: 3
+          m_default_constraint: #27 PSSConstraintList
+            m_list: ArrayList[0]
+          m_struct_kind: #28 PSSStructKind
+        - #29 PSSEnumModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pk::pe"
+          m_id: "pe"
+          m_parent: @7
+          m_static_insts: ArrayList[0]
+          m_default_val: 5
+          m_items: #30 LinkedHashMap[2]
+            key: "P0"
+            val: 0
+            key: "P1"
+            val: 4
+        - #31 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pk::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @7
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+      m_hierarchy_id: "pk"
+      m_id: "pk"
+      m_parent: @1
+      m_static_insts: #32 ArrayList[1]
+        - #33 PSSStaticConstInst
+          m_constant: false
+          m_id: "pc"
+          m_initialized: false
+          m_insts: ArrayList[0]
+          m_native_methods: #34 HashMap[0]
+          m_rand: false
+          m_readonly: false
+          m_traversed: false
+          m_type: ""
+          m_data_type: @31
+          m_decl: #35 PSSDataInstModel
+            children: ArrayList[0]
+            m_hierarchy_id: "pc"
+            m_id: "pc"
+            m_static_insts: ArrayList[0]
+            m_init_exp: #36 PSSPrimaryExpression
+              m_val: #37 PSSIntVal
+                m_type: #38 PSSIntModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: "int[65]"
+                  m_id: "int[65]"
+                  m_static_insts: ArrayList[0]
+                  m_sign: true
+                  m_width: 65
+                m_val: 2
+          m_evaluating: false
+          m_scope: @7
+    - #39 PSSPackageModel
+      children: #40 ArrayList[1]
+        - #41 PSSPackageModel
+          children: #42 ArrayList[1]
+            - #43 PSSStructModel
+              children: #44 ArrayList[1]
+                - #45 PSSIntModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: "outer::inner::is::bit[4]"
+                  m_id: "bit[4]"
+                  m_parent: @43
+                  m_static_insts: ArrayList[0]
+                  m_sign: false
+                  m_width: 4
+              m_hierarchy_id: "outer::inner::is"
+              m_id: "is"
+              m_parent: @41
+              m_static_insts: ArrayList[0]
+              m_attrfield: #46 ArrayList[1]
+                - #47 PSSAttrField
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_parent: @43
+                  m_static_insts: ArrayList[0]
+                  m_data_decl: #48 PSSDataDeclModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: ""
+                    m_id: ""
+                    m_static_insts: ArrayList[0]
+                    m_inst_list: #49 PSSDataInstListModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: ""
+                      m_id: ""
+                      m_static_insts: ArrayList[0]
+                      m_list: #50 ArrayList[1]
+                        - #51 PSSDataInstModel
+                          children: ArrayList[0]
+                          m_hierarchy_id: "g"
+                          m_id: "g"
+                          m_static_insts: ArrayList[0]
+                    m_type: @45
+                  m_rand: false
+              m_constraint: #52 PSSConstraintList
+                m_list: ArrayList[0]
+              m_default_constraint: #53 PSSConstraintList
+                m_list: ArrayList[0]
+              m_struct_kind: @28
+          m_hierarchy_id: "outer::inner"
+          m_id: "inner"
+          m_parent: @39
+          m_static_insts: ArrayList[0]
+      m_hierarchy_id: "outer"
+      m_id: "outer"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+    - #54 PSSStructModel
+      children: #55 ArrayList[1]
+        - #56 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "data_b::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @54
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+      m_hierarchy_id: "data_b"
+      m_id: "data_b"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_attrfield: #57 ArrayList[1]
+        - #58 PSSAttrField
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_parent: @54
+          m_static_insts: ArrayList[0]
+          m_data_decl: #59 PSSDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_inst_list: #60 PSSDataInstListModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_list: #61 ArrayList[1]
+                - #62 PSSDataInstModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: "d"
+                  m_id: "d"
+                  m_static_insts: ArrayList[0]
+            m_type: @56
+          m_rand: true
+      m_constraint: #63 PSSConstraintList
+        m_list: ArrayList[0]
+      m_default_constraint: #64 PSSConstraintList
+        m_list: ArrayList[0]
+      m_struct_kind: #65 PSSStructKind
+        m_object_kind: PSSObjectKind.buffer
+    - #66 PSSStructModel
+      children: #67 ArrayList[1]
+        - #68 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "data_s::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @66
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+      m_hierarchy_id: "data_s"
+      m_id: "data_s"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_attrfield: #69 ArrayList[1]
+        - #70 PSSAttrField
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_parent: @66
+          m_static_insts: ArrayList[0]
+          m_data_decl: #71 PSSDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_inst_list: #72 PSSDataInstListModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_list: #73 ArrayList[1]
+                - #74 PSSDataInstModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: "d"
+                  m_id: "d"
+                  m_static_insts: ArrayList[0]
+            m_type: @68
+          m_rand: true
+      m_constraint: #75 PSSConstraintList
+        m_list: ArrayList[0]
+      m_default_constraint: #76 PSSConstraintList
+        m_list: ArrayList[0]
+      m_struct_kind: #77 PSSStructKind
+        m_object_kind: PSSObjectKind.stream
+    - #78 PSSStructModel
+      children: #79 ArrayList[1]
+        - #80 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "data_st::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @78
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+      m_hierarchy_id: "data_st"
+      m_id: "data_st"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_attrfield: #81 ArrayList[1]
+        - #82 PSSAttrField
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_parent: @78
+          m_static_insts: ArrayList[0]
+          m_data_decl: #83 PSSDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_inst_list: #84 PSSDataInstListModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_list: #85 ArrayList[1]
+                - #86 PSSDataInstModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: "d"
+                  m_id: "d"
+                  m_static_insts: ArrayList[0]
+            m_type: @80
+          m_rand: true
+      m_constraint: #87 PSSConstraintList
+        m_list: ArrayList[0]
+      m_default_constraint: #88 PSSConstraintList
+        m_list: ArrayList[0]
+      m_struct_kind: #89 PSSStructKind
+        m_object_kind: PSSObjectKind.state
+    - #90 PSSStructModel
+      children: #91 ArrayList[1]
+        - #92 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "data_r::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @90
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+      m_hierarchy_id: "data_r"
+      m_id: "data_r"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_attrfield: #93 ArrayList[1]
+        - #94 PSSAttrField
+          children: ArrayList[0]
+          m_hierarchy_id: ""
+          m_id: ""
+          m_parent: @90
+          m_static_insts: ArrayList[0]
+          m_data_decl: #95 PSSDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_inst_list: #96 PSSDataInstListModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_list: #97 ArrayList[1]
+                - #98 PSSDataInstModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: "d"
+                  m_id: "d"
+                  m_static_insts: ArrayList[0]
+            m_type: @92
+          m_rand: true
+      m_constraint: #99 PSSConstraintList
+        m_list: ArrayList[0]
+      m_default_constraint: #100 PSSConstraintList
+        m_list: ArrayList[0]
+      m_struct_kind: #101 PSSStructKind
+        m_object_kind: PSSObjectKind.resource
+    - #102 PSSComponentModel
+      children: #103 ArrayList[1]
+        - #104 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "sub_c::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @102
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+      m_hierarchy_id: "sub_c"
+      m_id: "sub_c"
+      m_parent: @1
+      m_static_insts: ArrayList[0]
+      m_data_list: #105 PSSComponentDataDeclListModel
+        children: ArrayList[0]
+        m_hierarchy_id: ""
+        m_id: ""
+        m_static_insts: ArrayList[0]
+        m_list: #106 ArrayList[1]
+          - #107 PSSComponentDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_const: false
+            m_data_decl: #108 PSSDataDeclModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_inst_list: #109 PSSDataInstListModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_list: #110 ArrayList[1]
+                  - #111 PSSDataInstModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "sc"
+                    m_id: "sc"
+                    m_static_insts: ArrayList[0]
+                    m_init_exp: #112 PSSPrimaryExpression
+                      m_val: #113 PSSIntVal
+                        m_type: #114 PSSIntModel
+                          children: ArrayList[0]
+                          m_hierarchy_id: "int[65]"
+                          m_id: "int[65]"
+                          m_static_insts: ArrayList[0]
+                          m_sign: true
+                          m_width: 65
+                        m_val: 1
+              m_type: @104
+            m_static: false
+      m_exec_list: ArrayList[0]
+    - #115 PSSComponentModel
+      children: #116 ArrayList[10]
+        - #117 PSSImportStmtModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::"
+          m_id: ""
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_searching: false
+          m_type_id: "pk"
+          m_wildcard: true
+        - #118 PSSImportStmtModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::"
+          m_id: ""
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_searching: false
+          m_type_id: "outer::inner"
+          m_wildcard: false
+        - #119 PSSDataTypeModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::"
+          m_id: ""
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_location: @115
+          m_type: "sub_c"
+        - #120 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+        - #121 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+        - #122 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+        - #123 PSSIntModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::bit[4]"
+          m_id: "bit[4]"
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_sign: false
+          m_width: 4
+        - #124 PSSActionModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::producer"
+          m_id: "producer"
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_activity: ArrayList[0]
+          m_attrfield: ArrayList[0]
+          m_constraint: #125 PSSConstraintList
+            m_list: ArrayList[0]
+          m_default_constraint: #126 PSSConstraintList
+            m_list: ArrayList[0]
+          m_exec_list: ArrayList[0]
+          m_flowref: #127 ArrayList[1]
+            - #128 PSSFlowRefModel
+              children: ArrayList[0]
+              m_hierarchy_id: "out_b"
+              m_id: "out_b"
+              m_parent: @124
+              m_static_insts: ArrayList[0]
+              m_output: true
+              m_type: "data_b"
+          m_target_code: #129 PSSTargetCodeList
+            m_list: ArrayList[0]
+        - #130 PSSActionModel
+          children: ArrayList[0]
+          m_hierarchy_id: "pss_top::consumer"
+          m_id: "consumer"
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_activity: ArrayList[0]
+          m_attrfield: ArrayList[0]
+          m_constraint: #131 PSSConstraintList
+            m_list: ArrayList[0]
+          m_default_constraint: #132 PSSConstraintList
+            m_list: ArrayList[0]
+          m_exec_list: ArrayList[0]
+          m_flowref: #133 ArrayList[1]
+            - #134 PSSFlowRefModel
+              children: ArrayList[0]
+              m_hierarchy_id: "in_b"
+              m_id: "in_b"
+              m_parent: @130
+              m_static_insts: ArrayList[0]
+              m_output: false
+              m_type: "data_b"
+          m_target_code: #135 PSSTargetCodeList
+            m_list: ArrayList[0]
+        - #136 PSSActionModel
+          children: #137 ArrayList[4]
+            - #138 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::root_a::"
+              m_id: ""
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_location: @136
+              m_type: "e1"
+            - #139 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::root_a::"
+              m_id: ""
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_location: @136
+              m_type: "pk::ps"
+            - #140 PSSDataTypeModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::root_a::"
+              m_id: ""
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_location: @136
+              m_type: "pe"
+            - #141 PSSIntModel
+              children: ArrayList[0]
+              m_hierarchy_id: "pss_top::root_a::bit[4]"
+              m_id: "bit[4]"
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_sign: false
+              m_width: 4
+          m_hierarchy_id: "pss_top::root_a"
+          m_id: "root_a"
+          m_parent: @115
+          m_static_insts: ArrayList[0]
+          m_activity: #142 ArrayList[2]
+            - #143 PSSTraversalActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_constraint: #144 PSSConstraintList
+                m_list: ArrayList[0]
+              m_default_constraint: #145 PSSConstraintList
+                m_list: ArrayList[0]
+              m_handle_id: ""
+              m_type_id: "producer"
+            - #146 PSSTraversalActivity
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_constraint: #147 PSSConstraintList
+                m_list: ArrayList[0]
+              m_default_constraint: #148 PSSConstraintList
+                m_list: ArrayList[0]
+              m_handle_id: ""
+              m_type_id: "consumer"
+          m_attrfield: #149 ArrayList[3]
+            - #150 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_data_decl: #151 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #152 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #153 ArrayList[1]
+                    - #154 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "v"
+                      m_id: "v"
+                      m_static_insts: ArrayList[0]
+                m_type: @138
+              m_rand: true
+            - #155 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_data_decl: #156 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #157 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #158 ArrayList[1]
+                    - #159 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "p"
+                      m_id: "p"
+                      m_static_insts: ArrayList[0]
+                m_type: @139
+              m_rand: true
+            - #160 PSSAttrField
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_parent: @136
+              m_static_insts: ArrayList[0]
+              m_data_decl: #161 PSSDataDeclModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_inst_list: #162 PSSDataInstListModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: ""
+                  m_id: ""
+                  m_static_insts: ArrayList[0]
+                  m_list: #163 ArrayList[1]
+                    - #164 PSSDataInstModel
+                      children: ArrayList[0]
+                      m_hierarchy_id: "q"
+                      m_id: "q"
+                      m_static_insts: ArrayList[0]
+                m_type: @140
+              m_rand: true
+          m_constraint: #165 PSSConstraintList
+            m_list: #166 ArrayList[2]
+              - #167 PSSExpressionConstraint
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_parent: @136
+                m_static_insts: ArrayList[0]
+                m_expression: #168 PSSEqualExpression
+                  m_left: #169 PSSRefPathExpression
+                    m_ref_path: #170 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "v"
+                    m_type_identifier_elems: ""
+                  m_right: #171 PSSRefPathExpression
+                    m_ref_path: #172 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "A"
+                    m_type_identifier_elems: ""
+              - #173 PSSExpressionConstraint
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_parent: @136
+                m_static_insts: ArrayList[0]
+                m_expression: #174 PSSEqualExpression
+                  m_left: #175 PSSRefPathExpression
+                    m_ref_path: #176 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "v"
+                    m_type_identifier_elems: ""
+                  m_right: #177 PSSRefPathExpression
+                    m_ref_path: #178 PSSMemberPathElemExpression
+                      m_context: Context.MEMBER_CONSTRAINT
+                      m_id: "C"
+                    m_type_identifier_elems: ""
+          m_default_constraint: #179 PSSConstraintList
+            m_list: ArrayList[0]
+          m_exec_list: ArrayList[0]
+          m_flowref: ArrayList[0]
+          m_target_code: #180 PSSTargetCodeList
+            m_list: #181 ArrayList[1]
+              - #182 PSSTargetCode
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_code: "{{v}}"
+                m_exec_kind: PSSExecKind.body
+                m_language: "ASM"
+                m_ref_parser: PSSTemplateRefParser {}
+                m_root: @136
+      m_hierarchy_id: "pss_top"
+      m_id: "pss_top"
+      m_parent: @1
+      m_static_insts: #183 ArrayList[1]
+        - #184 PSSStaticConstInst
+          m_constant: false
+          m_id: "k"
+          m_initialized: false
+          m_insts: ArrayList[0]
+          m_native_methods: #185 HashMap[0]
+          m_rand: false
+          m_readonly: false
+          m_traversed: false
+          m_type: ""
+          m_data_type: @120
+          m_decl: #186 PSSDataInstModel
+            children: ArrayList[0]
+            m_hierarchy_id: "k"
+            m_id: "k"
+            m_static_insts: ArrayList[0]
+            m_init_exp: #187 PSSPrimaryExpression
+              m_val: #188 PSSIntVal
+                m_type: #189 PSSIntModel
+                  children: ArrayList[0]
+                  m_hierarchy_id: "int[65]"
+                  m_id: "int[65]"
+                  m_static_insts: ArrayList[0]
+                  m_sign: true
+                  m_width: 65
+                m_val: 3
+          m_evaluating: false
+          m_scope: @115
+      m_data_list: #190 PSSComponentDataDeclListModel
+        children: ArrayList[0]
+        m_hierarchy_id: ""
+        m_id: ""
+        m_static_insts: ArrayList[0]
+        m_list: #191 ArrayList[5]
+          - #192 PSSComponentDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_const: false
+            m_data_decl: #193 PSSDataDeclModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_inst_list: #194 PSSDataInstListModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_list: #195 ArrayList[2]
+                  - #196 PSSDataInstModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "s1"
+                    m_id: "s1"
+                    m_static_insts: ArrayList[0]
+                  - #197 PSSDataInstModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "s2"
+                    m_id: "s2"
+                    m_static_insts: ArrayList[0]
+              m_type: @119
+            m_static: false
+          - #198 PSSComponentDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_const: false
+            m_data_decl: #199 PSSDataDeclModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_inst_list: #200 PSSDataInstListModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_list: #201 ArrayList[1]
+                  - @186
+              m_type: @120
+            m_static: false
+          - #202 PSSComponentDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_const: false
+            m_data_decl: #203 PSSDataDeclModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_inst_list: #204 PSSDataInstListModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_list: #205 ArrayList[1]
+                  - #206 PSSDataInstModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "pub"
+                    m_id: "pub"
+                    m_static_insts: ArrayList[0]
+              m_type: @121
+            m_static: false
+          - #207 PSSComponentDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_const: false
+            m_data_decl: #208 PSSDataDeclModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_inst_list: #209 PSSDataInstListModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_list: #210 ArrayList[1]
+                  - #211 PSSDataInstModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "c1"
+                    m_id: "c1"
+                    m_static_insts: ArrayList[0]
+                    m_init_exp: #212 PSSPrimaryExpression
+                      m_val: #213 PSSIntVal
+                        m_type: #214 PSSIntModel
+                          children: ArrayList[0]
+                          m_hierarchy_id: "int[65]"
+                          m_id: "int[65]"
+                          m_static_insts: ArrayList[0]
+                          m_sign: true
+                          m_width: 65
+                        m_val: 1
+              m_type: @122
+            m_static: false
+          - #215 PSSComponentDataDeclModel
+            children: ArrayList[0]
+            m_hierarchy_id: ""
+            m_id: ""
+            m_static_insts: ArrayList[0]
+            m_const: false
+            m_data_decl: #216 PSSDataDeclModel
+              children: ArrayList[0]
+              m_hierarchy_id: ""
+              m_id: ""
+              m_static_insts: ArrayList[0]
+              m_inst_list: #217 PSSDataInstListModel
+                children: ArrayList[0]
+                m_hierarchy_id: ""
+                m_id: ""
+                m_static_insts: ArrayList[0]
+                m_list: #218 ArrayList[1]
+                  - #219 PSSDataInstModel
+                    children: ArrayList[0]
+                    m_hierarchy_id: "c2"
+                    m_id: "c2"
+                    m_static_insts: ArrayList[0]
+                    m_init_exp: #220 PSSPrimaryExpression
+                      m_val: #221 PSSIntVal
+                        m_type: #222 PSSIntModel
+                          children: ArrayList[0]
+                          m_hierarchy_id: "int[65]"
+                          m_id: "int[65]"
+                          m_static_insts: ArrayList[0]
+                          m_sign: true
+                          m_width: 65
+                        m_val: 2
+              m_type: @123
+            m_static: false
+      m_exec_list: ArrayList[0]
+  m_hierarchy_id: ""
+  m_id: ""
+  m_static_insts: ArrayList[0]

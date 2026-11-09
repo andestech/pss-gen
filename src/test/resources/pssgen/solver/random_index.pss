@@ -1,0 +1,9 @@
+// A constraint on an array element whose index is random.
+component pss_top {
+    action root_a {
+        rand bit[4] a[4];
+        rand bit[2] i;
+        constraint a[i] < 3;
+        exec body ASM = """i={{i}} a={{a[0]}},{{a[1]}},{{a[2]}},{{a[3]}}""";
+    }
+}

@@ -1,0 +1,83 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2026/10/29
+@brief          Test issue 54: a function call statement keeps its package qualifier.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+package p {
+    function void put(list<int> l) {
+        l.push_back(7);
+    }
+}
+
+package p2 {
+    function void put(list<int> l) {
+        l.push_back(8);
+    }
+    function void put_twice(list<int> l) {
+        put(l);
+        put(l);
+    }
+}
+
+package q {
+    function void only(list<int> l) {
+        l.push_back(6);
+    }
+}
+
+component pss_top {
+    import q::*;
+
+    function void put(list<int> l) {
+        l.push_back(9);
+    }
+
+    action root_a {
+        list<int> li = {1};
+        int e0 = 0;
+        int e1 = 0;
+        int e2 = 0;
+        int e3 = 0;
+        int e4 = 0;
+        int n  = 0;
+        exec post_solve {
+            p::put(li);
+            p2::put(li);
+            put(li);
+            q::only(li);
+            ::p2::put(li);
+            e0 = li[1];
+            e1 = li[2];
+            e2 = li[3];
+            e3 = li[4];
+            e4 = li[5];
+            p2::put_twice(li);
+            n = li.size();
+        }
+        exec body ASM =
+        """
+            p::put            appends {{e0}}
+            p2::put           appends {{e1}}
+            put               appends {{e2}}
+            q::only           appends {{e3}}
+            ::p2::put         appends {{e4}}
+            p2::put_twice     calls put of p2 twice: size {{n}}
+        """;
+    }
+}
+
+/**@}*/

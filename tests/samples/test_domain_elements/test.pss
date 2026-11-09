@@ -1,0 +1,23 @@
+// PSS 2.0 8.2.1 e), 8.8.2: the domain of an element type holds for every element of an
+// array or list, and the domain of 'T x[N]' for every element of x.
+component pss_top {
+    action root_a {
+        rand array<bit[8] in [20..22], 3> arr;
+        rand bit[8] in [30..31, 200..] sq[2];
+        bit ok = 0;
+        exec post_solve {
+            ok = 1;
+            foreach (arr[i]) {
+                if (arr[i] < 20 || arr[i] > 22) {
+                    ok = 0;
+                }
+            }
+            foreach (sq[i]) {
+                if ((sq[i] < 30 || sq[i] > 31) && sq[i] < 200) {
+                    ok = 0;
+                }
+            }
+        }
+        exec body ASM = """ok={{ok}}""";
+    }
+}

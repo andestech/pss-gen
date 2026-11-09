@@ -1,0 +1,12 @@
+// PSS 2.0 8.4: an enum item has the integer value of its constant expression, and the values
+// of the items are distinct (8.4 d)), so 0xFFFFFFFE is 4294967294, not -2.
+component pss_top {
+    enum big_e { NEG = -2, LO = 1, TOP = 0x80000000, HI = 0xFFFFFFFE };
+    action root_a {
+        rand big_e e;
+        big_e      f = big_e::TOP;
+        constraint e == HI;
+        exec body C   = """C:   e={{e}} f={{f}}""";
+        exec body ASM = """ASM: e={{e}} f={{f}} hi={{big_e::HI}} neg={{big_e::NEG}}""";
+    }
+}

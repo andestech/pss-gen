@@ -1,0 +1,11 @@
+// PSS 2.0 9.5.1: modulus by zero is illegal.
+component pss_top {
+    action root_a {
+        int z = 0;
+        int a = 0;
+        exec post_solve {
+            a = 7 % z;
+        }
+        exec body ASM = """a={{a}}""";
+    }
+}

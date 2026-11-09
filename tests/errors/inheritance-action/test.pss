@@ -1,0 +1,10 @@
+component pss_top {
+    action base_a {
+        rand bit [4] i;
+    }
+    action root_a : base_a {
+        exec body ASM = """
+i={{i}}
+""";
+    }
+}

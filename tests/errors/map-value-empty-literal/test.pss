@@ -1,0 +1,10 @@
+// PSS 2.0 4.8.1: {} is no value of a scalar map value type.
+component pss_top {
+    action root_a {
+        map<int, int> m;
+        exec post_solve {
+            m = {1 : {}};
+        }
+        exec body ASM = """m""";
+    }
+}

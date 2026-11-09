@@ -1,27 +1,46 @@
-TAGS = $(shell git describe --abbrev=0 --tags)
-PSSGEN_NAME = pssgen_${TAGS}
+# Thin wrapper over the Gradle build in the repository root (../build.gradle):
+#   make        builds $(PSS_HOME)/src/pssgen_<name>.jar
+#   make bin    additionally builds the native image $(PSS_HOME)/src/pssgen_<name>
+#   make unit-test  runs the unit tests (src/test/java); reports in $(PSS_HOME)/build/reports/tests
+#   make clean  removes build/ and every installed jar and native image, whatever its name,
+#               since each commit names its build after git describe
+# The first build downloads Gradle and ANTLR. GRADLE_USER_HOME is honoured; the JDK
+# is chosen in ../make/jdk.mk (GraalVM CE when installed, else java on PATH or JAVA_HOME).
+SHELL := /bin/bash
 
-GRAALVM_PATH = ${PSS_HOME}/graalvm-community-openjdk-17.0.9+9.1/bin
-ANTLR4_JAR_PATH = ${PSS_HOME}/antlr4/antlr-4.9.3-complete.jar
-PSSGEN_JAR_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}.jar
-PSSGEN_BIN_PATH = ${PSS_HOME}/src/${PSSGEN_NAME}
+# PSS_HOME, PSSGEN_NAME, the jar, native image and ANTLR jar paths, and JAVA.
+include $(dir $(lastword $(MAKEFILE_LIST)))../make/common.mk
 
 SRC_PATH = ${PSS_HOME}/src
-#CLASSPATH="$ANTLR4_JAR_PATH:$SRC_PATH:$CLASSPATH"
 
 NATIVE_IMAGE = $(GRAALVM_PATH)/native-image
-ANTLR4 = java -jar $(ANTLR4_JAR_PATH)
-GRUN = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) org.antlr.v4.gui.TestRig PSS model -gui -f
-JAVAC = javac --release 13 -classpath $(SRC_PATH):$(ANTLR4_JAR_PATH)
+GRUN = $(JAVA) -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) org.antlr.v4.gui.TestRig pssgen.parser.PSS model -gui
 
-PSSGEN_JAR = java -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
+# Java ignores http_proxy/https_proxy, so a "scheme://[user@]host:port" proxy
+# from the environment is handed to Gradle as system properties. Credentials
+# and no_proxy are not forwarded; they belong in $GRADLE_USER_HOME/gradle.properties
+# (systemProp.https.proxyUser, systemProp.http.nonProxyHosts, ...).
+proxy_hostport = $(subst :, ,$(patsubst %/,%,$(lastword $(subst @, ,$(subst ://, ,$(1))))))
+proxy_flags = $(if $(filter 2,$(words $(call proxy_hostport,$(2)))),-D$(1).proxyHost=$(word 1,$(call proxy_hostport,$(2))) -D$(1).proxyPort=$(word 2,$(call proxy_hostport,$(2))))
+GRADLE_PROXY_FLAGS := $(strip $(call proxy_flags,https,$(or $(https_proxy),$(HTTPS_PROXY))) $(call proxy_flags,http,$(or $(http_proxy),$(HTTP_PROXY))))
+
+GRADLE_FLAGS ?= --no-daemon --console=plain
+# gradlew itself downloads Gradle and reads -D options only up to the first
+# non-option argument, so the proxy flags come first and -p <dir> last.
+GRADLE = $(if $(PSS_JDK),JAVA_HOME=$(PSS_JDK)) $(PSS_HOME)/gradlew $(GRADLE_PROXY_FLAGS) $(GRADLE_FLAGS) -p $(PSS_HOME)
+
+PSSGEN_JAR = $(JAVA) -classpath $(PSSGEN_JAR_PATH):$(ANTLR4_JAR_PATH) PSSGenMain
 PSSGEN_BIN = $(PSSGEN_BIN_PATH)
 PSSGEN = $(PSSGEN_JAR)
 
-jar: guard-PSS_HOME
-	$(ANTLR4) -no-listener -visitor PSS.g4;
-	$(JAVAC) PSS*.java
-	jar --create --file ${PSSGEN_JAR_PATH} --main-class PSSGenMain -c .
+.PHONY: jar bin unit-test clean hello_world test test2 test3 grun
+
+jar:
+	$(GRADLE) jar installAntlrJar
+	cp -f $(PSS_HOME)/build/libs/$(PSSGEN_NAME).jar $(PSSGEN_JAR_PATH)
+
+unit-test:
+	$(GRADLE) test
 
 bin: jar
 	if [ -x "$(NATIVE_IMAGE)" ]; then \
@@ -31,7 +50,9 @@ bin: jar
 	fi
 
 clean:
+	rm -rf $(PSS_HOME)/build
 	rm $(SRC_PATH)/*.class -f
+	rm -f $(SRC_PATH)/pssgen_v*
 
 hello_world: jar
 	$(PSSGEN) hello_world.pss -o test.s -root pss_top::hello_world_a
@@ -47,9 +68,3 @@ test3: jar
 
 grun:
 	$(GRUN) test.pss
-
-guard-%:
-	@ if [ "${${*}}" = "" ]; then \
-		echo "Environment variable $* not set"; \
-		exit 1; \
-	fi

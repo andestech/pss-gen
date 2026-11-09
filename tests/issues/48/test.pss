@@ -1,0 +1,30 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2026/10/29
+@brief          Test issue 48: a second field of the same name in one type is an error.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    action root_a {
+        int val = 1;
+        int val = 5;
+        rand bit [4] r;
+        constraint { r == 3; }
+        exec body ASM = """val = {{val}} r = {{r}}""";
+    }
+}
+
+/**@}*/

@@ -1,0 +1,11 @@
+// Enum items, unqualified and qualified with the enum type.
+enum color_e { RED, GREEN = 5, BLUE };
+component pss_top {
+    action root_a {
+        rand color_e c;
+        rand color_e d;
+        constraint c == GREEN;
+        constraint d == color_e::BLUE;
+        exec body ASM = """c={{c}} d={{d}}""";
+    }
+}

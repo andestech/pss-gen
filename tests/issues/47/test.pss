@@ -1,0 +1,35 @@
+/*!
+@weakgroup      issue
+@{
+@file
+@author         Luther Lee
+@data           2026/10/29
+@brief          Test issue 47: an unqualified enum item on the left of in is an error.
+
+
+---------------------------------------------------------------------------------------------------
+
+### Test Command
+@code{.unparsed}
+make
+@endcode
+
+@cond
+*/
+
+component pss_top {
+    enum e_t { ZERO, ONE, TWO };
+
+    action root_a {
+        array<e_t, 2> arr;
+        bit qual_arr = 0;
+        bit bare_arr = 0;
+        exec post_solve {
+            if (e_t::ZERO in arr) qual_arr = 1;
+            if (ZERO in arr)      bare_arr = 1;
+        }
+        exec body ASM = """qual_arr = {{qual_arr}} bare_arr = {{bare_arr}}""";
+    }
+}
+
+/**@}*/

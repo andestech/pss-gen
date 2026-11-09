@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  regression:
+    name: Build and regression (JDK 17)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # Actions are pinned to full commit SHAs, because a tag can be moved to other
+    # code; the comment names the release the SHA belongs to.
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # gradle-wrapper.jar is a binary that every build runs; it must be the jar of
+      # an official Gradle release.
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Build
+        run: make -C src
+
+      - name: Regression
+        run: make -C tests
+
+      # Annotates the tests that did not pass; it also runs when the regression failed.
+      - name: Report test results
+        if: ${{ !cancelled() }}
+        run: bash .github/scripts/check-summary.sh tests/samples tests/issues tests/cli tests/errors
+
+      # Also after a failed regression, so that both results are reported.
+      - name: Unit tests
+        if: ${{ !cancelled() }}
+        run: make -C src unit-test
+
+      - name: Release script tests
+        if: ${{ !cancelled() }}
+        run: python3 -m unittest discover -s .github/scripts/release -p 'test_*.py' -v
+
+      - name: Compare flow self-test
+        if: ${{ !cancelled() }}
+        run: bash tests/compare-test/run.sh
+
+      - name: Upload regression logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: regression-logs
+          if-no-files-found: warn
+          # An existing artifact of the same name is replaced, not an error.
+          overwrite: true
+          path: |
+            tests/*/summary.log
+            tests/**/run.log
+            tests/**/result.log
+            tests/**/diff.log
+            build/reports/tests/
+            build/test-results/

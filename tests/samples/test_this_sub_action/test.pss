@@ -1,0 +1,17 @@
+// PSS 2.0 17.1.3, 21.3: this is the action whose definition holds the reference; only in an
+// in-line with constraint is it the action that contains the traversal.
+component pss_top {
+    action sub_a {
+        rand bit[8] v;
+        rand bit[8] w;
+        constraint this.v == 5;
+        exec body ASM = """sub v={{this.v}} w={{w}}""";
+    }
+    action root_a {
+        rand bit[8] v;
+        constraint v == 9;
+        activity {
+            do sub_a with { w == this.v; };
+        }
+    }
+}

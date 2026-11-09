@@ -1,0 +1,20 @@
+// PSS 2.0 22.5.3: a template reference prints int as %d, bit as %ud, bool as true/false,
+// string as %s and, in a non-ASM language, an enum field as its item name (Example 326).
+component pss_top {
+    enum e_t { A = 5, B = -3, C = 9 };
+    action root_a {
+        e_t          e    = e_t::B;
+        rand e_t     r;
+        int          neg  = -7;
+        bit [8]      byte = 8'hFF;
+        bit [100]    wide = 0;
+        bool         flag = true;
+        string       s    = "text";
+        constraint r == e_t::C;
+        exec post_solve {
+            wide[99] = 1;
+        }
+        exec body C   = """C:   e={{e}} r={{r}} neg={{neg}} byte={{byte}} wide={{wide}} flag={{flag}} s={{s}}""";
+        exec body ASM = """ASM: e={{e}} r={{r}} neg={{neg}} byte={{byte}} wide={{wide}} flag={{flag}} s={{s}}""";
+    }
+}

@@ -1,0 +1,16 @@
+// Each relation operator in a constraint whose operands are all non-random.
+component pss_top {
+    action root_a {
+        bit[8] a = 5;
+        rand bit[4] r;
+        constraint a in [4..6];
+        constraint a == 5;
+        constraint a != 4;
+        constraint a > 1;
+        constraint a >= 5;
+        constraint a < 9;
+        constraint a <= 5;
+        constraint a + 1 == 6 && r < 8;
+        exec body ASM = """r={{r}}""";
+    }
+}

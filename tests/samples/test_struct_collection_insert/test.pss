@@ -1,0 +1,38 @@
+// PSS 2.0 8.8.3, 8.8.4, 8.8.5: a struct value is pushed into a list and inserted into a set
+// and a map; the element is a copy of the value.
+component pss_top {
+    struct s_t {
+        int a = 0;
+        int b = 0;
+    };
+
+    action root_a {
+        s_t           one;
+        s_t           two;
+        list<s_t>     lst;
+        set<s_t>      st;
+        map<int, s_t> mp;
+        int lst_size = 0;
+        int lst_a    = 0;
+        int set_size = 0;
+        int map_b    = 0;
+        bit in_list  = 0;
+        exec post_solve {
+            one.a = 1;
+            two.b = 2;
+            lst.push_back(one);
+            lst.push_front(two);
+            st.insert(one);
+            st.insert(two);
+            st.insert(one);
+            mp.insert(7, two);
+            one.a = 9;
+            lst_size = lst.size();
+            lst_a    = lst[1].a;
+            set_size = st.size();
+            map_b    = mp[7].b;
+            if (two in lst) in_list = 1;
+        }
+        exec body ASM = """lst_size={{lst_size}} lst_a={{lst_a}} set_size={{set_size}} map_b={{map_b}} in_list={{in_list}}""";
+    }
+}

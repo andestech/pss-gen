@@ -1,0 +1,93 @@
+"""Commit range and issue references of a release.
+
+Reads the commits between the previous release and the release branch and
+extracts the `#N` references that drive the release notes.
+"""
+import re
+import subprocess
+from dataclasses import dataclass
+
+REF_RE = re.compile(r"#(\d+)")
+CLOSING_RE = re.compile(
+    r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b:?[ \t]*#(\d+)",
+    re.IGNORECASE)
+RELEASE_RE = re.compile(r"^\[RELEASE\] v\d+\.\d+\.\d+$")
+PR_MERGE_RE = re.compile(r"^Merge pull request #(\d+) from ")
+REVERT_PREFIX = 'Revert "'
+
+
+@dataclass
+class Commit:
+    sha: str
+    subject: str
+    body: str
+    is_merge: bool
+
+
+def commits(repo, rev_range):
+    """Commits of rev_range, oldest first."""
+    out = subprocess.run(
+        ["git", "-C", repo, "log", "--reverse", "--topo-order",
+         "--format=%H%x1f%P%x1f%s%x1f%b%x1e", rev_range],
+        check=True, capture_output=True, text=True).stdout
+    result = []
+    for rec in out.split("\x1e"):
+        rec = rec.strip("\n")
+        if not rec:
+            continue
+        sha, parents, subject, body = rec.split("\x1f", 3)
+        result.append(Commit(sha, subject, body, len(parents.split()) > 1))
+    return result
+
+
+def refs(c):
+    return {int(n) for n in REF_RE.findall(c.subject + "\n" + c.body)}
+
+
+def subject_refs(c):
+    """Refs of the subject only; a ref in the body is a mention, not a fix."""
+    return {int(n) for n in REF_RE.findall(c.subject)}
+
+
+def named_refs(c):
+    """Refs a commit stands for: its subject refs, or the PR of a PR merge."""
+    if c.is_merge:
+        m = PR_MERGE_RE.match(c.subject)
+        return {int(m.group(1))} if m else set()
+    return subject_refs(c)
+
+
+def closing_refs(text):
+    return {int(n) for n in CLOSING_RE.findall(text)}
+
+
+def fixed_issues(cs):
+    """(fixed, reverted): the last commit that mentions an issue decides."""
+    fixed, reverted = set(), set()
+    for c in cs:
+        if c.is_merge:
+            # A PR merge commit names the PR; any other merge (a sync of a
+            # release back into a branch) carries no change of its own.
+            m = PR_MERGE_RE.match(c.subject)
+            if m:
+                fixed.add(int(m.group(1)))
+                reverted.discard(int(m.group(1)))
+            continue
+        found = subject_refs(c)
+        if c.subject.startswith(REVERT_PREFIX):
+            reverted |= found
+            fixed -= found
+        else:
+            fixed |= found
+            reverted -= found
+    return fixed, reverted
+
+
+def is_release_commit(c):
+    return bool(RELEASE_RE.match(c.subject))
+
+
+def unreferenced(cs):
+    return [c for c in cs
+            if not c.is_merge and not is_release_commit(c)
+            and not subject_refs(c)]

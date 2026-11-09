@@ -1,0 +1,51 @@
+package pssgen.proc;
+
+import java.util.*;
+
+import pssgen.expr.PSSExpression;
+import pssgen.inst.PSSInst;
+import pssgen.inst.PSSNamespaceInst;
+
+public class PSSRepeatWhileProcStmt extends PSSProcStmt {
+
+	private PSSExpression m_cond;
+	private PSSProcStmt m_stmt;
+
+	public PSSRepeatWhileProcStmt(PSSExpression cond, PSSProcStmt stmt) {
+		m_cond = cond;
+		m_stmt = stmt;
+	}
+
+	public void eval(PSSInst inst) {
+		PSSNamespaceInst body_inst = new PSSNamespaceInst("");
+		inst.addInst(body_inst);
+		try {
+			do {
+				try {
+					m_stmt.eval(body_inst);
+				} catch (PSSContinueException e) {
+					// continue
+				}
+			} while (m_cond.eval(inst).toBool());
+		} catch (PSSBreakException e) {
+			// break
+		}
+	}
+
+	public void dump(String indent) {
+		String str_cond = m_cond.getText();
+
+		System.out.println(indent + "repeat {");
+		m_stmt.dump(indent + "\t");
+		System.out.println(indent + "} while (" + str_cond + ")");
+
+	}
+
+	public final PSSExpression getCond() {
+		return m_cond;
+	}
+
+	public final PSSProcStmt getStmt() {
+		return m_stmt;
+	}
+}

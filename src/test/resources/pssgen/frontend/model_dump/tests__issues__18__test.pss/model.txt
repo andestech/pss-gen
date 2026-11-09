@@ -1,0 +1,3 @@
+--- messages
+--- failure
+[T] PSS-ERROR: [SYNTAX] <input>:23:49 : no viable alternative at input 'component pss_top {\n    action root_a {\n        activity {\n            do printStr with { str == "one ;"; };\n            do printStr with { str == "two ;"; };;'

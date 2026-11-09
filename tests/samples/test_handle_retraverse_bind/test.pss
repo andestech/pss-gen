@@ -1,0 +1,30 @@
+// PSS 2.0 13.3.1 a): each traversal of a handle is randomized anew; a bind statement names
+// the handle, so every traversal of it consumes the bound flow object.
+component pss_top {
+    buffer data_b {
+        rand bit[8] v;
+        constraint v in [10..20];
+    }
+
+    action prod_a {
+        output data_b o;
+        exec body ASM = """prod {{o.v}}""";
+    }
+
+    action cons_a {
+        input data_b i;
+        rand bit[8] x;
+        exec body ASM = """cons {{i.v}} {{x}}""";
+    }
+
+    action root_a {
+        prod_a p;
+        cons_a c;
+        activity {
+            p;
+            c with { x == 1; };
+            c with { x == 2; };
+            bind p.o c.i;
+        }
+    }
+}

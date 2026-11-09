@@ -1,0 +1,17 @@
+// "this" in an inline constraint is the traversing action; in a root action, the action.
+component pss_top {
+    action root_a {
+        rand bit[4] v;
+        constraint v == 9;
+        activity {
+            do sub_a with { w == this.v; };
+        }
+        exec body ASM = """root this.v={{this.v}}""";
+    }
+    action sub_a {
+        rand bit[4] v;
+        rand bit[4] w;
+        constraint v == 1;
+        exec body ASM = """sub v={{v}} w={{w}}""";
+    }
+}

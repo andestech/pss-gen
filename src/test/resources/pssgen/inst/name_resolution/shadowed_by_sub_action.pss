@@ -1,0 +1,15 @@
+// A field of the traversed action shadows the same name in the traversing action.
+component pss_top {
+    action root_a {
+        bit[4] v = 9;
+        activity {
+            do sub_a with { w == v; };
+        }
+    }
+    action sub_a {
+        rand bit[4] v;
+        rand bit[4] w;
+        constraint v == 1;
+        exec body ASM = """v={{v}} w={{w}}""";
+    }
+}

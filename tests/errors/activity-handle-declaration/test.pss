@@ -1,0 +1,12 @@
+// An action handle declared inside an activity, which PSSGen does not support.
+component pss_top {
+	action sub_a {
+	}
+
+	action root_a {
+		activity {
+			sub_a extra;
+			do sub_a;
+		}
+	}
+}

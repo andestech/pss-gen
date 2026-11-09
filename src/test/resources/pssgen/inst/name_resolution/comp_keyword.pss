@@ -1,0 +1,9 @@
+// "comp" in an action is the action's component.
+component pss_top {
+    bit[4] cv = 6;
+    action root_a {
+        rand bit[4] x;
+        constraint x == comp.cv;
+        exec body ASM = """x={{x}} cv={{comp.cv}}""";
+    }
+}

@@ -1,0 +1,16 @@
+// PSS 2.0 9.5.1: the result of a modulus operation takes the sign of the first operand.
+component pss_top {
+    action root_a {
+        int pp = 0;
+        int np = 0;
+        int pn = 0;
+        int nn = 0;
+        exec post_solve {
+            pp = 7 % 3;
+            np = -7 % 3;
+            pn = 7 % -3;
+            nn = -7 % -3;
+        }
+        exec body ASM = """pp={{pp}} np={{np}} pn={{pn}} nn={{nn}}""";
+    }
+}

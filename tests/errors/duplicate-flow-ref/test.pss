@@ -1,0 +1,16 @@
+// PSS 2.0 4.2: a flow-object reference and a data field of one action share its namespace.
+component pss_top {
+    buffer data_b {
+        rand bit[8] v;
+    };
+    action prod_a {
+        output data_b d;
+        bit[8] d = 1;
+        exec body ASM = """prod {{d}}""";
+    }
+    action root_a {
+        activity {
+            do prod_a;
+        }
+    }
+}

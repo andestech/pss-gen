@@ -1,0 +1,23 @@
+// PSS 2.0 21.1.4: 'import p as pp' makes pp a name of package p, for functions, types,
+// enum items and constants.
+package p {
+    enum e_t { A = 3, B = 4 };
+    const int k = 6;
+    function int get() {
+        return 5;
+    }
+}
+component pss_top {
+    import p as pp;
+    action root_a {
+        int v = 0;
+        int w = 0;
+        int c = 0;
+        exec post_solve {
+            v = pp::get();
+            w = pp::e_t::B;
+            c = pp::k;
+        }
+        exec body ASM = """v={{v}} w={{w}} c={{c}} a={{pp::e_t::A}}""";
+    }
+}

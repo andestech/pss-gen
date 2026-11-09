@@ -1,0 +1,10 @@
+// Two locals of one name in one exec block.
+component pss_top {
+    action root_a {
+        exec post_solve {
+            bit[4] t = 1;
+            bit[4] t = 2;
+        }
+        exec body ASM = """done""";
+    }
+}

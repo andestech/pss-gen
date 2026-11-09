@@ -1,0 +1,12 @@
+component pss_top {
+    typedef bit[8] byte_t;
+    action sub_a { }
+    action root_a {
+        activity {
+            parallel {
+                do sub_a;
+                do sub_a;
+            }
+        }
+    }
+}

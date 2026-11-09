@@ -1,0 +1,19 @@
+// A member constraint two traversals down resolves a field of the root action.
+component pss_top {
+    action root_a {
+        bit[5] root_val = 7;
+        activity {
+            do mid_a;
+        }
+    }
+    action mid_a {
+        activity {
+            do leaf_a;
+        }
+    }
+    action leaf_a {
+        rand int val;
+        constraint val == root_val + 3;
+        exec body ASM = """val={{val}}""";
+    }
+}

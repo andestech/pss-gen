@@ -1,0 +1,16 @@
+// PSS 2.0 21.1.3: imports are not transitive; pss_top imports p, which imports q.
+package q {
+    enum b_e { B = 4 };
+}
+package p {
+    import q::*;
+    enum a_e { A = 1 };
+}
+component pss_top {
+    import p::*;
+    action root_a {
+        rand int k;
+        constraint k == B;
+        exec body ASM = """k={{k}}""";
+    }
+}

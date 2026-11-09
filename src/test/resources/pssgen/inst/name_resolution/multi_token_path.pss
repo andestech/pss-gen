@@ -1,0 +1,14 @@
+// A path of several tokens: the first is resolved, the rest goes down the instance tree.
+struct inner_s {
+    rand bit[4] b;
+}
+struct outer_s {
+    rand inner_s a;
+}
+component pss_top {
+    action root_a {
+        rand outer_s s;
+        constraint s.a.b == 13;
+        exec body ASM = """b={{s.a.b}}""";
+    }
+}

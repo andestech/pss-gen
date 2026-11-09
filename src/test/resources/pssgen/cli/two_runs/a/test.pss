@@ -1,0 +1,52 @@
+// Run A of TwoRunsTest: casts of a variable and of a bool literal, a random string,
+// a list shuffled by a package function, select and schedule.
+package util_pkg {
+    function int mix(list<int> l) {
+        l.shuffle();
+        return l[0];
+    }
+}
+
+component pss_top {
+    action root_a {
+        rand bit [8] v;
+        rand string s;
+        rand bool flag;
+        bit [8] narrowed = 0;
+        bit [4] from_bool = 0;
+        list<int> li = {1, 2, 3, 4, 5, 6};
+        int first = 0;
+        constraint v > 200;
+        exec post_solve {
+            narrowed = (bit [4]) v;
+            from_bool = (bit [4]) true;
+            first = util_pkg::mix(li);
+        }
+        activity {
+            select {
+                do sub_a;
+                do sub_b;
+            }
+            schedule {
+                do sub_a;
+                do sub_b;
+            }
+        }
+        exec body ASM = """
+A v={{v}} narrowed={{narrowed}} from_bool={{from_bool}} s={{s}} flag={{flag}} first={{first}} li={{li[0]}},{{li[1]}},{{li[5]}}
+""";
+    }
+    action sub_a {
+        rand bit [16] x;
+        exec body ASM = """
+A sub_a {{x}}
+""";
+    }
+    action sub_b {
+        rand int y;
+        constraint y in [-5..5];
+        exec body ASM = """
+A sub_b {{y}}
+""";
+    }
+}
