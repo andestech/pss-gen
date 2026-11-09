@@ -54,6 +54,9 @@ jobs:
           java-version: '17'
           cache: gradle
 
+      - name: Fetch Gradle
+        run: bash .github/scripts/fetch-gradle.sh
+
       - name: Build
         run: make -C src
 
@@ -113,6 +116,9 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: gradle
+
+      - name: Fetch Gradle
+        run: bash .github/scripts/fetch-gradle.sh
 
       - name: Build
         run: make -C src

@@ -345,7 +345,8 @@ commit of a release pull request:
    `develop` or `hot_fix` of this repository, that `VERSION` is a legal successor, and
    that no tag of that name points elsewhere; it creates the annotated tag locally, so
    the jar is built with the plain name.
-2. Build, regression tests and unit tests.
+2. Build, regression tests and unit tests. The Gradle distribution is downloaded
+   first by `.github/scripts/fetch-gradle.sh`, which retries a failed download.
 3. `release.py publish` pushes the tag, creates the GitHub Release as a draft with the
    release note as its body, uploads the assets, then publishes it as the latest
    release. Then it updates the issues as described under [Issues](#issues).

@@ -304,7 +304,8 @@ The exit status is 0 whenever the comparison ran. `docs/RELEASE.md` describes th
 
 `.github/workflows/ci.yml` runs on every push, on pull requests and on demand. Its job
 runs on `ubuntu-24.04` with Temurin JDK 17: it checks that `gradle/wrapper/gradle-wrapper.jar`
-is the wrapper of an official Gradle release, builds the jar, runs `make -C tests`,
+is the wrapper of an official Gradle release, downloads Gradle with retries
+(`.github/scripts/fetch-gradle.sh`), builds the jar, runs `make -C tests`,
 annotates the tests that did not pass with `check-summary.sh`, runs the unit tests (also
 after a failed regression), and uploads the `summary.log` files, the per-test `run.log`,
 `result.log` and `diff.log` and the unit test reports as the artifact `regression-logs`,
