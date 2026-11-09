@@ -79,3 +79,21 @@ jobs:
             tests/**/diff.log
             build/reports/tests/
             build/test-results/
+
+  # Pull requests into main are release pull requests, which do change VERSION.
+  contribution:
+    name: Contribution rules
+    if: ${{ github.event_name == 'pull_request' && github.base_ref != 'main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      # The checkout is the merge of the pull request into its base: its first parent
+      # is the base, so the diff is what merging the pull request changes.
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Check VERSION and build output
+        run: bash .github/scripts/check-contribution.sh HEAD^1 HEAD

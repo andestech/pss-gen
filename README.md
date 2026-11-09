@@ -311,7 +311,9 @@ after a failed regression), and uploads the `summary.log` files, the per-test `r
 `result.log` and `diff.log` and the unit test reports as the artifact `regression-logs`,
 also after a failure. It also runs the tests of the release scripts
 (`python3 -m unittest discover -s .github/scripts/release -p 'test_*.py'`) and the self-test of
-the comparison flow (`bash tests/compare-test/run.sh`).
+the comparison flow (`bash tests/compare-test/run.sh`). On a pull request into `develop` or
+`hot_fix`, the job "Contribution rules" (`.github/scripts/check-contribution.sh`) fails when the
+pull request changes `VERSION` or adds a `.jar` or `.class` file.
 
 `.github/workflows/release-check.yml` runs on pull requests into `main`: it checks the version,
 the issue range and the release note of a release pull request, runs the build and the tests,
@@ -341,7 +343,7 @@ annotated tag, the `^{}` line), and replace both the SHA and the comment.
 | `docs/RELEASE.md` | Branches, versions and the release flow |
 | `docs/Doxyfile` | API documentation: `mkdir -p build && doxygen docs/Doxyfile` writes `build/doxygen/` |
 | `build.gradle`, `settings.gradle`, `gradlew`, `gradle/` | Gradle build and wrapper |
-| `.github/` | CI and release workflows, the check script, issue and pull request templates |
+| `.github/` | CI and release workflows, their check scripts, issue and pull request templates |
 | `.github/scripts/release/` | `release.py` and its modules, the release flow, with their unit tests |
 | `tools/` | Local toolchains such as GraalVM; not stored in git |
 | `build/` | Build output; not stored in git |

@@ -92,13 +92,18 @@ release; other contributions wait until it is merged.
   the jar. A jar built from a working tree is named after `git describe`, so it is
   never taken for a release.
 
+The CI job "Contribution rules" fails a pull request into `develop` or `hot_fix` that
+changes `VERSION` or adds a `.jar` or `.class` file other than
+`gradle/wrapper/gradle-wrapper.jar`.
+
 ## Repository owner
 
 ### Taking a contribution
 
 1. Check the target branch (`develop` or `hot_fix`; retarget a pull request into
    `main`), the tests, the release-note line, the issue in each commit subject, and
-   that `VERSION` and build output are untouched.
+   that `VERSION` and build output are untouched (the CI job "Contribution rules"
+   checks these two).
 2. Wait for CI, then merge into `develop` or `hot_fix`.
 
 ### Cutting a release
