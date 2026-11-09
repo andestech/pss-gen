@@ -413,6 +413,22 @@ class PublishTest(unittest.TestCase):
         self.assertIsNone(self.remote_git("rev-parse", "-q", "--verify",
                                           "refs/tags/v1.1.0"))
 
+    def test_incomplete_note_errors(self):
+        for body in ("", None, PR_BODY.replace("The next minor.", "<!-- write -->")):
+            with self.subTest(body=body):
+                pr = self.pull(10, self.sha, "develop")
+                pr["body"] = body
+                self.fake.commit_pulls[self.sha] = [pr]
+                with self.assertRaises(publish.PublishError) as cm:
+                    publish.tag_local(self.repo.path, self.fake, self.sha)
+                self.assertIn("not a complete release note", str(cm.exception))
+                self.assertEqual(self.repo.git("tag", "--list"), "v1.0.0")
+                self.refused("PR #10")
+
+    def test_closing_keyword_in_merged_note_accepted(self):
+        self.assertIn("Closes #8", PR_BODY)
+        self.assertIn("publish release v1.1.0", self.tag_and_publish())
+
     def test_no_release_pr_errors(self):
         self.fake.commit_pulls[self.sha] = [self.pull(9, "0" * 40, "develop")]
         self.refused("no pull request")

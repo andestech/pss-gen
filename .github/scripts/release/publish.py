@@ -96,6 +96,14 @@ def _check(repo, gh, sha):
         raise PublishError("local tag %s points at %s, not at the merge "
                            "commit %s" % (tag, local, sha))
     pr = release_pr(gh, sha)
+    # The release body is the PR description, and the issues it does not list
+    # as fixed are reopened, so an incomplete note stops the release before
+    # the tag is pushed; the description can still be edited after the merge.
+    note_errors = notes.validate(pr.get("body") or "", closing_keywords=False)
+    if note_errors:
+        raise PublishError("the description of PR #%d is not a complete release "
+                           "note: %s; complete it and re-run"
+                           % (pr["number"], "; ".join(note_errors)))
     head_repo = ((pr["head"].get("repo") or {}).get("full_name")
                  or "an unknown repository")
     base_repo = pr["base"]["repo"]["full_name"]

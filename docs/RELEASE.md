@@ -203,10 +203,10 @@ request from that branch passes release-check.
 Every step first checks what is already done, so re-running the release workflow from
 the Actions tab is the recovery for a failed run. A run that failed before
 `release.py publish`, for example in the build, has pushed nothing: no tag, no release
-and no issue change. Before a re-run, complete the description of the merged pull
-request if it is not (it can still be edited after the merge): the re-run publishes the
-release note from it and reopens every issue closed by the merge that it does not list
-as fixed. A re-run builds again, and:
+and no issue change. A run whose pull request description is not a complete release
+note stops at `release.py tag`; complete the description (it can still be edited after
+the merge) and re-run. The re-run publishes the release note from it and reopens every
+issue closed by the merge that it does not list as fixed. A re-run builds again, and:
 
 - A draft release gets all its assets replaced by the new build and is then published.
 - A published release is never modified. A re-run only checks that it is complete
@@ -358,9 +358,13 @@ The release-check workflow runs the comparison against the previous release, put
 commit of a release pull request:
 
 1. `release.py tag` checks that the commit is the merge of a pull request from
-   `develop` or `hot_fix` of this repository, that `VERSION` is a legal successor, and
+   `develop` or `hot_fix` of this repository, that `VERSION` is a legal successor,
+   that the description of the pull request is a complete release note (the
+   description checks of release-check, see [Cutting a release](#cutting-a-release)
+   step 5, except the closing keywords, which have taken effect with the merge), and
    that no tag of that name points elsewhere; it creates the annotated tag locally, so
-   the jar is built with the plain name.
+   the jar is built with the plain name. `release.py publish` repeats these checks
+   before its first push.
 2. Build, regression tests and unit tests. The Gradle distribution is downloaded
    first by `.github/scripts/fetch-gradle.sh`, which retries a failed download.
 3. `release.py publish` pushes the tag, creates the GitHub Release as a draft with the

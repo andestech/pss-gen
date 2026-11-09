@@ -39,6 +39,7 @@ class DraftTest(unittest.TestCase):
         errs = notes.validate(bad)
         self.assertEqual(len(errs), 1)
         self.assertIn("#7", errs[0])
+        self.assertEqual(notes.validate(bad, closing_keywords=False), [])
 
     def test_validate_missing_and_placeholder(self):
         body = notes.draft([], [], [])

@@ -59,10 +59,15 @@ def parse(body):
     return sections
 
 
-def validate(body):
+def validate(body, closing_keywords=True):
+    """Errors of the release note in a release PR description.
+
+    closing_keywords=False skips the closing-keyword check, for a PR that is
+    already merged: its keywords have taken effect.
+    """
     found = parse(body or "")
     errors = []
-    closing = gitrange.closing_refs(body or "")
+    closing = gitrange.closing_refs(body or "") if closing_keywords else set()
     if closing:
         errors.append("release note: a closing keyword before %s would close "
                       "the issue when the PR merges; reword it"
