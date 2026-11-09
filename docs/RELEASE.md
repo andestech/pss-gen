@@ -76,7 +76,8 @@ release; other contributions wait until it is merged.
   unit test, that covers the change. `make -C src unit-test` and `make -C tests` pass.
 - **A release-note line** under "Release note" in the pull request description,
   starting with `Feature:`, `Bug fix:` or `Notable change:` (incompatible or changing
-  output), or `None`. The repository owner collects these lines into the release note.
+  output), or `None`. `release.py prepare` and release-check put these lines into the
+  release-note draft.
 - **Issue references in commit subjects.** A commit that fixes issue `#N` names it in
   its subject, as `[ISSUE] Fix #N: summary` or `summary (#N)`. Only a `#N` in a subject
   counts as a fix; a `#N` in the body is a mention. On `hot_fix` every commit names an
@@ -137,14 +138,17 @@ contains.
 
    commit `VERSION` as `[RELEASE] vX.Y.Z` and push the branch; the pull request picks
    the commit up. The script writes the next version to `VERSION` and prints the
-   release-note draft whose Features and Bug fixes are filled from the issue range. It
-   reads GitHub anonymously, or with `GITHUB_TOKEN` when that is set, and warns about
-   references it cannot classify. The branch must contain the previous release tag;
-   when `prepare` refuses because it does not, finish the pending sync first (see
+   release-note draft whose Features and Bug fixes are filled from the issue range,
+   together with the release-note lines of the merged contributions (see
+   [Contribution lines in the draft](#contribution-lines-in-the-draft)). It reads
+   GitHub anonymously, or with `GITHUB_TOKEN` when that is set, and warns about
+   references it cannot classify and merged pull requests without a release-note
+   line. The branch must contain the previous release tag; when `prepare` refuses
+   because it does not, finish the pending sync first (see
    [A sync left to the repository owner](#a-sync-left-to-the-repository-owner)).
 4. Write the release note in the description (see [Release note](#release-note)) from
-   the draft and the release-note lines of the merged contributions. The description
-   must not contain a closing keyword before an issue number (see [Issues](#issues)).
+   the draft; reword its contribution lines as needed. The description must not
+   contain a closing keyword before an issue number (see [Issues](#issues)).
 5. Wait for the release-check workflow. It fails the pull request when
 
    - the head branch is not `develop` or `hot_fix` of this repository;
@@ -286,15 +290,32 @@ GitHub Release. It has these sections, in this order:
 | Section | Content |
 |---|---|
 | `## Summary` | Hand-written. |
-| `## Notable changes` | Every incompatibility and every output change: the contributions' notable-change lines and the comparison report. The draft starts with the issues and pull requests labelled `incompatible`. `None` is allowed. |
-| `## Features` | The feature issues of the range, from the draft, with the contributions' feature lines; edit as needed. `None` is allowed. |
-| `## Bug fixes` | The bug issues of the range, from the draft, with the contributions' bug-fix lines; edit as needed. `None` is allowed. |
+| `## Notable changes` | Every incompatibility and every output change: the contributions' notable-change lines and the comparison report. The draft starts with the issues and pull requests labelled `incompatible` and the contributions' notable-change lines. `None` is allowed. |
+| `## Features` | The feature issues of the range and the contributions' feature lines, from the draft; edit as needed. `None` is allowed. |
+| `## Bug fixes` | The bug issues of the range and the contributions' bug-fix lines, from the draft; edit as needed. `None` is allowed. |
 | `## Known issues / limitations` | Hand-written: open issues labelled `known-issue`, and the README "Known limitations" and `docs/SUPPORT.md`. `None` is allowed. |
 | `## Artifacts` | Leave the filler line; the release workflow replaces it with the checksum of each attached file. |
 
 Text above `## Summary`, such as the template's checklist, is not published. After the
 merge the edited lists in the description are the authority for what the release
 fixed.
+
+#### Contribution lines in the draft
+
+The draft takes the release-note lines from the "Release note" section of each pull
+request merged in the range (a merge commit `Merge pull request #N from ...` or a
+squash commit ending in `(#N)`):
+
+| Line | Goes to |
+|---|---|
+| `Feature: <text>` | Features, as `- <text> (#N)`, unless the pull request closes a feature or bug issue already in the draft |
+| `Bug fix: <text>` | Bug fixes, as `- <text> (#N)`, with the same exception |
+| `Notable change: <text>` | Notable changes, as `- <text> (#N)` |
+| `None` | Nothing |
+
+A line of a pull request that closes a listed issue is left out because the issue
+already stands for that change. A pull request whose section is missing or holds
+another line gets a warning. Commits pushed without a pull request bring no line.
 
 ### Issues
 

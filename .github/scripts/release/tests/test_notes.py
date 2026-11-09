@@ -58,6 +58,37 @@ class DraftTest(unittest.TestCase):
         self.assertEqual(errs, [e for e in errs if "Summary" in e])
         self.assertEqual(len(errs), 1)
 
+    def test_contribution_lines(self):
+        template = ("## What and why\n\nFixes #3\n\n## Release note\n\n"
+                    "<!-- One line for the release note, starting with Feature:,\n"
+                    "Bug fix: or Notable change:, or None. -->\n\n%s\n\n"
+                    "## Target branch\n\n- Features: target `develop`.\n")
+        cases = [
+            ("Bug fix: crash on empty input",
+             ([("Bug fixes", "crash on empty input")], True)),
+            ("- Feature: option -x\nNotable change: output of y changes",
+             ([("Features", "option -x"),
+               ("Notable changes", "output of y changes")], True)),
+            ("None", ([], True)),
+            ("", ([], False)),
+            ("Fixed the parser", ([], False)),
+            ("Feature: a\nsomething else", ([("Features", "a")], False)),
+        ]
+        for line, expected in cases:
+            with self.subTest(line=line):
+                self.assertEqual(notes.contribution_lines(template % line),
+                                 expected)
+        self.assertEqual(notes.contribution_lines(None), ([], False))
+        self.assertEqual(notes.contribution_lines("Fixes #3"), ([], False))
+
+    def test_draft_contributions(self):
+        bug = notes.Contribution(12, "Bug fixes", "Fixes #4 crash")
+        notable = notes.Contribution(13, "Notable changes", "output changes")
+        found = notes.parse(notes.draft([], [], [], [bug, notable]))
+        self.assertEqual(found["Bug fixes"], "- Fixes issue 4 crash (#12)")
+        self.assertEqual(found["Notable changes"], "- output changes (#13)")
+        self.assertEqual(found["Features"], "None")
+
     def test_listed(self):
         text = notes.draft([issue(1), issue(8)], [issue(2, kind="bug")], [])
         self.assertEqual(notes.listed(text, "Features"), {1, 8})

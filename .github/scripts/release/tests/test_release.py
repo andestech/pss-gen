@@ -73,6 +73,24 @@ class CliTest(unittest.TestCase):
         with open(os.path.join(self.repo.path, "VERSION")) as f:
             self.assertEqual(f.read(), "v1.1.0\n")
 
+    def test_prepare_drafts_contribution_lines(self):
+        self.fake.add_pull(12, body="## Release note\n\nFeature: option -y\n")
+        self.fake.add_pull(13, body="no note")
+        self.repo.git("checkout", "-q", "-b", "develop")
+        for n in (12, 13):
+            self.repo.git("checkout", "-q", "-b", "c%d" % n)
+            self.repo.commit("work %d" % n)
+            self.repo.git("checkout", "-q", "develop")
+            self.repo.git("merge", "-q", "--no-ff", "-m",
+                          "Merge pull request #%d from a/c%d" % (n, n),
+                          "c%d" % n)
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            self.assertEqual(release.main(["prepare", "minor"]), 0)
+        self.assertIn("- option -y (#12)", out.getvalue())
+        self.assertIn("warning: PR #13 has no release-note line",
+                      err.getvalue())
+
     def check(self, event):
         path = os.path.join(self.repo.path, "..", "event%d.json" % id(self))
         with open(path, "w") as f:

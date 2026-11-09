@@ -4,6 +4,7 @@ The note lives in the release PR description and later in the GitHub Release
 body; it has six fixed sections.
 """
 import re
+from dataclasses import dataclass
 
 import gitrange
 
@@ -15,6 +16,21 @@ NONE_OK = {"Notable changes", "Features", "Bug fixes",
            "Known issues / limitations"}
 HEADING_RE = re.compile(r"^## +(.*?) *$")
 REF_RE = re.compile(r"#(\d+)")
+# The "Release note" section of a contribution PR (pull_request_template.md)
+# holds one line per change, or None.
+CONTRIBUTION_SECTION = "Release note"
+CONTRIBUTION_KINDS = {"Feature": "Features", "Bug fix": "Bug fixes",
+                      "Notable change": "Notable changes"}
+CONTRIBUTION_RE = re.compile(r"^(Feature|Bug fix|Notable change): *(\S.*)$")
+COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
+
+
+@dataclass
+class Contribution:
+    """A release-note line of the contribution PR #pr, for `section`."""
+    pr: int
+    section: str
+    text: str
 
 
 def _title(title):
@@ -24,19 +40,21 @@ def _title(title):
     return title
 
 
-def _items(issues):
-    if not issues:
-        return "None"
-    return "\n".join("- #%d %s" % (i.number, _title(i.title))
-                     for i in issues)
+def _items(issues, contributions=()):
+    lines = ["- #%d %s" % (i.number, _title(i.title)) for i in issues]
+    lines += ["- %s (#%d)" % (_title(c.text), c.pr) for c in contributions]
+    return "\n".join(lines) or "None"
 
 
-def draft(features, bugs, incompatible):
+def draft(features, bugs, incompatible, contributions=()):
+    def extra(section):
+        return [c for c in contributions if c.section == section]
+
     content = {
         "Summary": PLACEHOLDER,
-        "Notable changes": _items(incompatible),
-        "Features": _items(features),
-        "Bug fixes": _items(bugs),
+        "Notable changes": _items(incompatible, extra("Notable changes")),
+        "Features": _items(features, extra("Features")),
+        "Bug fixes": _items(bugs, extra("Bug fixes")),
         "Known issues / limitations": PLACEHOLDER,
         "Artifacts": ARTIFACTS_FILLER,
     }
@@ -57,6 +75,29 @@ def parse(body):
     if current is not None:
         sections[current] = "\n".join(lines).strip()
     return sections
+
+
+def contribution_lines(body):
+    """([(section, text)], ok) of the release-note lines of a contribution PR.
+
+    ok is False when the PR has no such line, or a line that is neither None
+    nor starts with Feature:, Bug fix: or Notable change:.
+    """
+    text = COMMENT_RE.sub("", parse(body or "").get(CONTRIBUTION_SECTION, ""))
+    lines, ok, seen = [], True, False
+    for raw in text.split("\n"):
+        line = raw.strip()
+        if line[:2] in ("- ", "* "):
+            line = line[2:].strip()
+        if not line:
+            continue
+        seen = True
+        m = CONTRIBUTION_RE.match(line)
+        if m:
+            lines.append((CONTRIBUTION_KINDS[m.group(1)], m.group(2).strip()))
+        elif line != "None":
+            ok = False
+    return lines, ok and seen
 
 
 def validate(body, closing_keywords=True):

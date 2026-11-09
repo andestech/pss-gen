@@ -86,7 +86,10 @@ def cmd_prepare(args):
     for n in sorted(rng.reverted):
         print("warning: the fix of #%d was reverted in this range" % n,
               file=sys.stderr)
-    print(notes.draft(rng.features, rng.bugs, rng.incompatible), end="")
+    for n in rng.no_note:
+        print("warning: PR #%d has no release-note line" % n, file=sys.stderr)
+    print(notes.draft(rng.features, rng.bugs, rng.incompatible,
+                      rng.contributions), end="")
     print("VERSION is now %s; commit it as '[RELEASE] %s'"
           % (version.fmt(new), version.fmt(new)), file=sys.stderr)
     return 0

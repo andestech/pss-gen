@@ -99,6 +99,30 @@ class CheckTest(unittest.TestCase):
             check.run(self.repo.path, self.gh, self.pr("develop", base)).draft
         )["Bug fixes"])
 
+    def test_contribution_lines_in_draft(self):
+        self.gh.add_issue(9, "bug", type_name="Bug")
+        note = "\n\n## Release note\n\n<!-- one line -->\n%s\n"
+        self.gh.add_pull(12, body="Fixes #9" + note % "Bug fix: crash on x")
+        self.gh.add_pull(14, body=note % "Feature: option -y")
+        self.gh.add_pull(15, body="Fixes #9" + note
+                         % "Notable change: output of z changes")
+        self.gh.add_pull(16, body="no release note")
+        base = self.repo.git("rev-parse", "main")
+        self.repo.git("checkout", "-q", "-b", "develop")
+        for n in (12, 14, 15, 16):
+            self.merge_pr(n, "contrib%d" % n)
+        write_version(self.repo, "v1.1.0")
+        self.repo.commit("[RELEASE] v1.1.0")
+        rep = check.run(self.repo.path, self.gh, self.pr("develop", base))
+        found = notes.parse(rep.draft)
+        self.assertEqual(found["Bug fixes"], "- #9 bug")
+        self.assertEqual(found["Features"], "- option -y (#14)")
+        self.assertEqual(found["Notable changes"],
+                         "- output of z changes (#15)")
+        self.assertTrue(any("release-note line" in w and "#16" in w
+                            and "#14" not in w for w in rep.warnings),
+                        rep.warnings)
+
     def test_hotfix_pr_without_issue_rejected(self):
         self.gh.add_pull(13, body="no closing ref")
         base = self.repo.git("rev-parse", "main")

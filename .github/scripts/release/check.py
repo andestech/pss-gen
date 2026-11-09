@@ -34,6 +34,8 @@ class Range:
     empty_prs: list
     reverted: set
     commits: list
+    contributions: list
+    no_note: list
 
 
 def _git(repo, *args):
@@ -47,20 +49,31 @@ def collect(repo, gh, rev_range):
     fixed, reverted = gitrange.fixed_issues(cs)
     found, prs, missing = issues.resolve(gh, fixed)
     incompatible = [i for i in found if "incompatible" in i.labels]
-    empty_prs = []
+    listed = {i.number for i in found if i.kind in ("feature", "bug")}
+    empty_prs, contributions, no_note = [], [], []
     for n in sorted(prs):
         payload = gh.issue(n)
-        if not gitrange.closing_refs(payload.get("body") or ""):
+        body = payload.get("body") or ""
+        closes = gitrange.closing_refs(body)
+        if not closes:
             empty_prs.append(n)
         pr_issue = issues.to_issue(payload)
         if "incompatible" in pr_issue.labels:
             incompatible.append(pr_issue)
+        # A feature or bug-fix line of a PR that closes a listed issue is
+        # left out: the issue already stands for the change in the draft.
+        lines, ok = notes.contribution_lines(body)
+        for section, text in lines:
+            if section == "Notable changes" or not (closes & listed):
+                contributions.append(notes.Contribution(n, section, text))
+        if not ok:
+            no_note.append(n)
     return Range(
         [i for i in found if i.kind == "feature"],
         [i for i in found if i.kind == "bug"],
         incompatible,
         [i for i in found if i.kind == "unclassified"],
-        missing, empty_prs, reverted, cs)
+        missing, empty_prs, reverted, cs, contributions, no_note)
 
 
 def _refs(numbers):
@@ -102,7 +115,8 @@ def run(repo, gh, pr):
         rep.errors.append(str(e))
 
     rng = collect(repo, gh, "%s..%s" % (prev_tag, pr["head_sha"]))
-    rep.draft = notes.draft(rng.features, rng.bugs, rng.incompatible)
+    rep.draft = notes.draft(rng.features, rng.bugs, rng.incompatible,
+                            rng.contributions)
 
     if rng.missing:
         msg = "referenced numbers GitHub does not know: %s" % _refs(rng.missing)
@@ -126,6 +140,10 @@ def run(repo, gh, pr):
             rep.errors.append("commits that name only a PR whose description "
                               "closes no issue, so they name no bug: %s"
                               % ", ".join(c.sha[:9] for c in empty))
+    if rng.no_note:
+        rep.warnings.append("merged PRs without a release-note line (Feature:, "
+                            "Bug fix:, Notable change: or None): %s"
+                            % _refs(rng.no_note))
     if rng.reverted:
         rep.warnings.append("fixes reverted in this range, not counted as "
                             "fixed (move to Known issues if still open): %s"
