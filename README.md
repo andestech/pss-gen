@@ -376,7 +376,7 @@ workflow checks it. Merging it tags the commit, publishes the GitHub Release wit
 
 ## Known limitations
 
-`docs/SUPPORT.md` lists, per section of the LRM, which constructs PSSGen supports, which it
+[docs/SUPPORT.md](docs/SUPPORT.md) lists, per section of the LRM, which constructs PSSGen supports, which it
 accepts with a deviation, and the message it stops with for the others.
 
 ### `int` is 65 bits
