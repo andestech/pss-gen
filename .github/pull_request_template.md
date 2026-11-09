@@ -1,3 +1,5 @@
+<!-- See CONTRIBUTING.md for what a pull request needs. -->
+
 ## What and why
 
 <!-- Describe the change and link the issue. -->

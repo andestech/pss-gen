@@ -341,6 +341,7 @@ annotated tag, the `^{}` line), and replace both the SHA and the comment.
 | `antlr4/` | License of ANTLR; `make -C src` installs the ANTLR jar here |
 | `docs/SUPPORT.md` | Support matrix: LRM sections, their status, messages and tests |
 | `docs/RELEASE.md` | Branches, versions and the release flow |
+| `CONTRIBUTING.md` | How to report an issue and open a pull request |
 | `docs/Doxyfile` | API documentation: `mkdir -p build && doxygen docs/Doxyfile` writes `build/doxygen/` |
 | `build.gradle`, `settings.gradle`, `gradlew`, `gradle/` | Gradle build and wrapper |
 | `.github/` | CI and release workflows, their check scripts, issue and pull request templates |
@@ -375,7 +376,8 @@ jar. A release is a pull request from `develop` (minor or major) or `hot_fix` (p
 workflow checks it. Merging it tags the commit, publishes the GitHub Release with
 `pssgen_vX.Y.Z.jar`, `antlr-4.9.3-complete.jar` and `SHA256SUMS`, and syncs `develop` and
 `hot_fix` to the tag. A jar built from any other commit is named after `git describe`. See
-[docs/RELEASE.md](docs/RELEASE.md).
+[docs/RELEASE.md](docs/RELEASE.md), and [CONTRIBUTING.md](CONTRIBUTING.md) for issues and
+pull requests.
 
 ## Known limitations
 
