@@ -275,7 +275,7 @@ def _check_published(release, assets):
     if problems:
         raise PublishError(
             "release %s is published and is left as it is: %s; the "
-            "maintainer decides how to correct it"
+            "repository owner decides how to correct it"
             % (release["tag_name"], "; ".join(problems)))
 
 

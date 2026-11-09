@@ -6,7 +6,7 @@ any other branch gets a merge of the tag. The merge is pushed only when it
 merges cleanly, changes no workflow file (the workflow token may not push
 those) and the test command passes on it. Every push is a plain push, so a
 branch that moved on origin meanwhile rejects it. When the sync cannot be
-done here, an issue asks the maintainer to do it by hand.
+done here, an issue asks the repository owner to do it by hand.
 
 The merge is made in a temporary worktree, so the checkout of the caller
 stays where it is.
@@ -24,7 +24,8 @@ NEEDS_MANUAL = "needs-manual"
 MANUAL_TEST = "make -C src && make -C tests"
 WORKFLOWS_DIR = ".github/workflows"
 WORKFLOWS_NOTE = ("The workflow token cannot push changes under "
-                  "`.github/workflows/`, so a maintainer must push this sync.")
+                  "`.github/workflows/`, so the repository owner must push "
+                  "this sync.")
 
 
 class SyncError(RuntimeError):
