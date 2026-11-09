@@ -118,6 +118,9 @@ contains.
    https://github.com/andestech/pss-gen/compare/main...<branch>?quick_pull=1&template=release.md
    ```
 
+   GitHub does not always fill the description from the template. When it is empty,
+   paste the content of `.github/PULL_REQUEST_TEMPLATE/release.md` into it.
+
    The release-check workflow runs on it. Its job summary holds the release-note
    draft and the issues the merge will close, and the version-comparison job reports
    which test results differ from the previous release (see
@@ -161,8 +164,11 @@ contains.
    description lists each as fixed, and it prints the release-note draft again, for an
    owner who cannot reach GitHub from the shell. The version comparison runs as a
    separate job; its result is information and does not fail the pull request.
-6. Review with the checklist at the top of the release template, mark the pull request
-   ready for review, then merge with "Create a merge commit" (no squash, no rebase).
+6. Review with the checklist at the top of the release template and mark the pull
+   request ready for review. Merge only when every check except the version comparison
+   passes, with "Create a merge commit" (no squash, no rebase). The release workflow
+   takes the release note from the description when it publishes, so the description
+   is complete before the merge.
 
 The [release workflow](#release-workflow) then tags, builds, publishes and syncs.
 
@@ -195,7 +201,12 @@ request from that branch passes release-check.
 ### Recovery
 
 Every step first checks what is already done, so re-running the release workflow from
-the Actions tab is the recovery for a failed run. A re-run builds again, and:
+the Actions tab is the recovery for a failed run. A run that failed before
+`release.py publish`, for example in the build, has pushed nothing: no tag, no release
+and no issue change. Before a re-run, complete the description of the merged pull
+request if it is not (it can still be edited after the merge): the re-run publishes the
+release note from it and reopens every issue closed by the merge that it does not list
+as fixed. A re-run builds again, and:
 
 - A draft release gets all its assets replaced by the new build and is then published.
 - A published release is never modified. A re-run only checks that it is complete
