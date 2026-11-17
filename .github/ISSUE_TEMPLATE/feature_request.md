@@ -10,10 +10,10 @@ assignees: LeeKaiXuan
 
 ## Description
 A clear and concise description of what you want to happen.
-E.g., Wish PSS-Gen supports Boolean type.
+E.g., Wish PSSGen supports Boolean type.
 
 ## Definition of the feature located in LRM
-e.g., PSSv3.0/7.4 Booleans
+e.g., PSSv3.1/7.4 Booleans
 **OR**
 None; if the feature isn't located in LRM.
 
